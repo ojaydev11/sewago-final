@@ -1,0 +1,28 @@
+{
+  "name": "sewago",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "postinstall": "playwright install --with-deps || npx playwright install || echo \"Playwright already installed\"",
+    "install:all": "npm --prefix backend i && npm --prefix frontend i",
+    "dev": "concurrently -n backend,frontend -c blue,magenta \"npm --prefix backend run dev\" \"npm --prefix frontend run dev\"",
+    "build": "npm --prefix backend run build && npm --prefix frontend run build",
+    "start": "concurrently -n backend,frontend -c blue,magenta \"npm --prefix backend run start\" \"npm --prefix frontend run start\"",
+    "test": "npm run test --prefix backend && npm run test --prefix frontend",
+    "lint": "npm run lint --prefix backend && npm run lint --prefix frontend",
+    "e2e:prepare": "node ./scripts/e2e/prepare.js",
+    "e2e:start": "node ./scripts/e2e/run.js",
+    "e2e": "npm run e2e:prepare && npm run e2e:start",
+    "e2e:ci": "cross-env CI=1 npm run e2e"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0",
+    "cross-env": "^7.0.3",
+    "wait-on": "^8.0.2",
+    "playwright": "^1.47.2",
+    "@playwright/test": "^1.47.2",
+    "tsx": "^4.15.7"
+  }
+}
+
+
