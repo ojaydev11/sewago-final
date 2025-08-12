@@ -1,4 +1,5 @@
-[build]
+﻿[
+build]
 root = "backend"
 
 [deploy]
@@ -7,5 +8,4 @@ command = "npm start"
 [env]
 NODE_ENV = "production"
 PORT = "4000"
-
 
