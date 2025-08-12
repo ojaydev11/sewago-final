@@ -1,11 +1,6 @@
 import type { NextConfig } from "next";
 
-const nextConfig: NextConfig = {
-  async redirects() {
-    return [
-      { source: "/", destination: "/services", permanent: false },
-    ];
-  },
-};
+// Keep Next.js defaults; no redirects so the custom homepage at "/" renders
+const nextConfig: NextConfig = {};
 
 export default nextConfig;
