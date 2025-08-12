@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "postinstall": "playwright install --with-deps || npx playwright install || echo \"Playwright already installed\"",
+    "postinstall": "node -e \"process.exit(process.env.VERCEL?0:1)\" || (playwright install --with-deps || npx playwright install || echo \"Playwright already installed\")",
     "install:all": "npm --prefix backend i && npm --prefix frontend i",
     "dev": "concurrently -n backend,frontend -c blue,magenta \"npm --prefix backend run dev\" \"npm --prefix frontend run dev\"",
     "build": "npm --prefix backend run build && npm --prefix frontend run build",
