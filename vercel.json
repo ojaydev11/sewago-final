@@ -1,4 +1,5 @@
 {
+
   "version": 2,
   "builds": [
     { "src": "sewago/frontend/package.json", "use": "@vercel/next" }
