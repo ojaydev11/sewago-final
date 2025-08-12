@@ -1,16 +1,19 @@
-{
 
-  "version": 2,
-  "builds": [
-    { "src": "sewago/frontend/package.json", "use": "@vercel/next" }
-  ]
 }
+
 
 {
   "version": 2,
   "builds": [
-    { "src": "sewago/frontend/package.json", "use": "@vercel/next" }
+    {
+      "src": "sewago/backend/dist/server.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "sewago/backend/dist/server.js"
+    }
   ]
 }
-
-
