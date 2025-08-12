@@ -3,6 +3,7 @@ import { Server as SocketIOServer } from "socket.io";
 import { env } from "./config/env.js";
 import { connectToDatabase } from "./config/db.js";
 import { createApp } from "./app.js";
+import { pathToFileURL } from "url";
 
 export async function bootstrap() {
   await connectToDatabase();
@@ -28,11 +29,20 @@ export async function bootstrap() {
   });
 
   server.listen(env.port, () => {
-    console.log(`API listening on http://localhost:${env.port}`);
+    console.log(`API on http://localhost:${env.port}/api`);
   });
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+const isDirectRun = (() => {
+  try {
+    const argHref = pathToFileURL(process.argv[1] ?? "").href;
+    return import.meta.url === argHref;
+  } catch {
+    return false;
+  }
+})();
+
+if (isDirectRun) {
   bootstrap().catch((err) => {
     console.error("Fatal error during bootstrap", err);
     process.exit(1);

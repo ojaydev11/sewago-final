@@ -2,11 +2,13 @@
   "name": "backend",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
+  "engines": { "node": ">=20" },
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "build": "tsc -p .",
     "start": "node dist/server.js",
-    "dev:test": "cross-env NODE_ENV=test PORT=4100 npx -y tsx src/server.ts",
+    "dev:test": "cross-env NODE_ENV=test PORT=4000 tsx src/server.ts",
     "lint": "eslint . --ext .ts",
     "test": "vitest run"
   },
@@ -14,7 +16,6 @@
   "author": "",
   "license": "ISC",
   "description": "",
-  "type": "module",
   "dependencies": {
     "axios": "^1.11.0",
     "bcrypt": "^6.0.0",

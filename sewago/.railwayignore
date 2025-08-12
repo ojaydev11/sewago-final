@@ -1,0 +1,6 @@
+**/*.py
+requirements.txt
+Pipfile
+runtime.txt
+scripts/python/**
+
