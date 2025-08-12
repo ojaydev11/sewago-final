@@ -7,4 +7,11 @@ declare module "express-serve-static-core" {
   }
 }
 
+// Minimal compression module typing to satisfy TS without installing @types
+declare module "compression" {
+  import { RequestHandler } from "express";
+  const compression: (opts?: any) => RequestHandler;
+  export default compression;
+}
+
 
