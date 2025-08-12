@@ -17,6 +17,7 @@ const serviceSchema = new Schema(
 
 serviceSchema.index({ category: 1, location: 1 });
 serviceSchema.index({ title: "text", description: "text" });
+serviceSchema.index({ providerId: 1 });
 
 export type ServiceDocument = InferSchemaType<typeof serviceSchema> & {
   _id: mongoose.Types.ObjectId;
