@@ -10,6 +10,7 @@ export default function robots(): MetadataRoute.Robots {
       { userAgent: "*", disallow: "/auth" },
     ],
     sitemap: `${base}/sitemap.xml`,
+    host: base,
   };
 }
 

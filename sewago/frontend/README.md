@@ -16,6 +16,22 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+### Feature flags
+
+Add these env vars (no secrets):
+
+```
+NEXT_PUBLIC_SEWAAI_ENABLED=false
+NEXT_PUBLIC_QUOTE_ESTIMATOR_ENABLED=false
+NEXT_PUBLIC_I18N_ENABLED=true
+```
+
+Set to "true" to enable SewaAI widget or Quote Estimator. Defaults are safe and non‑breaking.
+
+### Sitemap
+
+`/sitemap.xml` is generated via app route. It includes `/services` and attempts to include service detail slugs when the API is reachable. No failures on build if API is down.
+
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
