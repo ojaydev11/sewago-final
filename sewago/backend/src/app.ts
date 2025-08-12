@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
+import compression from "compression";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import rateLimit from "express-rate-limit";
@@ -14,6 +15,8 @@ export function createApp() {
   const app = express();
   app.set("trust proxy", true);
   app.use(cors({ origin: env.clientOrigin, credentials: true }));
+  // Global gzip compression for payloads
+  app.use(compression());
   // Health endpoint early, before potentially incompatible middlewares
   app.get("/api/health", (_req, res) =>
     res.json({ ok: true, service: "sewago-backend", env: process.env.NODE_ENV || "dev" })

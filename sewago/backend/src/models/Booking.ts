@@ -25,6 +25,7 @@ const bookingSchema = new Schema(
 
 bookingSchema.index({ userId: 1 });
 bookingSchema.index({ providerId: 1 });
+bookingSchema.index({ status: 1, date: 1 });
 
 export type BookingDocument = InferSchemaType<typeof bookingSchema> & {
   _id: mongoose.Types.ObjectId;
