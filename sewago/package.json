@@ -6,7 +6,7 @@
     "postinstall": "node -e \"process.exit(process.env.VERCEL?0:1)\" || (playwright install --with-deps || npx playwright install || echo \"Playwright already installed\")",
     "install:all": "npm --prefix backend i && npm --prefix frontend i",
     "dev": "concurrently -n backend,frontend -c blue,magenta \"npm --prefix backend run dev\" \"npm --prefix frontend run dev\"",
-    "build": "npm --prefix backend run build && npm --prefix frontend run build",
+    "build": "node -e \"process.exit(process.env.VERCEL?0:1)\" || (npm --prefix backend run build && npm --prefix frontend run build)",
     "start": "concurrently -n backend,frontend -c blue,magenta \"npm --prefix backend run start\" \"npm --prefix frontend run start\"",
     "test": "npm run test --prefix backend && npm run test --prefix frontend",
     "lint": "npm run lint --prefix backend && npm run lint --prefix frontend",
