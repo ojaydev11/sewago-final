@@ -1,6 +1,6 @@
 import { ServiceModel } from "../models/Service.js";
 export async function listServices(req, res) {
-    const { q, category, location, city, min, max, rating, sort } = req.query;
+    const { q, category, location, city, min, max, rating, sort, page, limit } = req.query;
     const filter = {};
     if (q)
         filter.$text = { $search: q };
@@ -22,7 +22,16 @@ export async function listServices(req, res) {
         lowest: { basePrice: 1 },
     };
     const sortSpec = sortMap[sort ?? "highest"] ?? { rating: -1 };
-    const services = await ServiceModel.find(filter).sort(sortSpec).limit(50);
+    const pageNum = Math.max(1, Number(page ?? 1));
+    const perPage = Math.min(50, Math.max(1, Number(limit ?? 12)));
+    const total = await ServiceModel.countDocuments(filter);
+    const services = await ServiceModel.find(filter)
+        .sort(sortSpec)
+        .skip((pageNum - 1) * perPage)
+        .limit(perPage);
+    res.setHeader("X-Total-Count", String(total));
+    res.setHeader("X-Page", String(pageNum));
+    res.setHeader("X-Per-Page", String(perPage));
     res.json(services);
 }
 export async function getService(req, res) {

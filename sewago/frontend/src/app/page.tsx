@@ -1,3 +1,4 @@
+import Link from "next/link";
 export const dynamic = "force-static";
 
 export default function Home() {
@@ -11,12 +12,12 @@ export default function Home() {
               Book trusted local services in Nepal — plumbing, electrical, repairs, moving and more.
             </p>
             <div className="mt-8 flex gap-4">
-              <a href="/services" className="rounded-md bg-blue-600 px-5 py-3 text-white hover:bg-blue-700">
+              <Link className="rounded-md bg-blue-600 px-5 py-3 text-white hover:bg-blue-700" href="/services">
                 Explore Services
-              </a>
-              <a href="/auth/register" className="rounded-md border px-5 py-3 hover:bg-gray-100 dark:hover:bg-gray-800">
+              </Link>
+              <Link className="rounded-md border px-5 py-3 hover:bg-gray-100 dark:hover:bg-gray-800" href="/auth/register">
                 Become a Provider
-              </a>
+              </Link>
             </div>
           </div>
           <div className="rounded-xl border p-6 dark:border-gray-800">
