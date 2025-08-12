@@ -9,7 +9,7 @@ const bookingSchema = new Schema(
     timeSlot: { type: String, required: true },
     status: {
       type: String,
-      enum: ["pending", "accepted", "completed", "cancelled"],
+      enum: ["pending", "accepted", "in-progress", "completed", "cancelled"],
       default: "pending",
     },
     price: { type: Number, required: true },
