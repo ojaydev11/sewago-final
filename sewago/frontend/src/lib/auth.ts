@@ -1,37 +1,96 @@
-import { api } from "./api";
+import NextAuth from 'next-auth';
+import CredentialsProvider from 'next-auth/providers/credentials';
+import bcrypt from 'bcryptjs';
+import { db } from './db';
 
-let isRefreshing = false;
-let pending: Array<() => void> = [];
-
-api.interceptors.request.use((config) => {
-  const token = typeof window !== "undefined" ? localStorage.getItem("sewago_access") : null;
-  if (token) config.headers.Authorization = `Bearer ${token}`;
-  return config;
-});
-
-api.interceptors.response.use(
-  (res) => res,
-  async (error) => {
-    const original = error.config;
-    if (error.response?.status === 401 && !original._retry) {
-      if (isRefreshing) {
-        await new Promise<void>((resolve) => pending.push(resolve));
-        return api(original);
-      }
-      original._retry = true;
-      isRefreshing = true;
-      try {
-        const res = await api.post("/auth/refresh");
-        localStorage.setItem("sewago_access", res.data.accessToken);
-        pending.forEach((fn) => fn());
-        pending = [];
-        return api(original);
-      } finally {
-        isRefreshing = false;
-      }
-    }
-    return Promise.reject(error);
+// Extend the built-in session types
+declare module "next-auth" {
+  interface User {
+    id: string;
+    email: string;
+    name: string;
+    role: string;
   }
-);
+  
+  interface Session {
+    user: {
+      id: string;
+      email: string;
+      name: string;
+      role: string;
+    };
+  }
+}
+
+declare module "next-auth/jwt" {
+  interface JWT {
+    role?: string;
+  }
+}
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [
+    CredentialsProvider({
+      name: 'credentials',
+      credentials: {
+        email: { label: 'Email', type: 'email' },
+        password: { label: 'Password', type: 'password' }
+      },
+      async authorize(credentials) {
+        if (!credentials?.email || !credentials?.password) {
+          return null;
+        }
+
+        try {
+          const user = await db.user.findUnique({
+            where: { email: credentials.email }
+          });
+
+          if (!user) {
+            return null;
+          }
+
+          const isPasswordValid = await bcrypt.compare(credentials.password, user.passwordHash);
+
+          if (!isPasswordValid) {
+            return null;
+          }
+
+          return {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            role: user.role,
+          };
+        } catch (error) {
+          console.error('Auth error:', error);
+          return null;
+        }
+      }
+    })
+  ],
+  session: {
+    strategy: 'jwt',
+  },
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.role = user.role;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (token) {
+        session.user.id = token.sub!;
+        session.user.role = token.role as string;
+      }
+      return session;
+    }
+  },
+  pages: {
+    signIn: '/account/login',
+  },
+  secret: process.env.AUTH_SECRET || 'fallback-secret-for-development',
+});
 
 

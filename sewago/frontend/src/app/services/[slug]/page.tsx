@@ -1,0 +1,123 @@
+import { Metadata } from 'next';
+import { notFound } from 'next/navigation';
+import { db } from '@/lib/db';
+import { SeoJsonLd } from '@/app/components/SeoJsonLd';
+import { ServiceDetailClient } from './service-detail.client';
+
+interface ServiceDetailPageProps {
+  params: Promise<{ slug: string }>;
+}
+
+export async function generateMetadata({ params }: ServiceDetailPageProps): Promise<Metadata> {
+  try {
+    const { slug } = await params;
+    const service = await db.service.findUnique({
+      where: { slug }
+    });
+
+    if (!service) {
+      return {
+        title: 'Service Not Found | SewaGo',
+        description: 'The requested service could not be found.',
+      };
+    }
+
+    return {
+      title: `${service.title} | SewaGo`,
+      description: service.description,
+      alternates: {
+        canonical: `/services/${service.slug}`,
+        languages: process.env.NEXT_PUBLIC_I18N_ENABLED === 'true' ? {
+          'en': `/en/services/${service.slug}`,
+          'ne': `/ne/services/${service.slug}`,
+        } : undefined,
+      },
+      openGraph: {
+        title: service.title,
+        description: service.description,
+        url: `/services/${service.slug}`,
+        images: service.imageUrl ? [{ url: service.imageUrl }] : [],
+        type: 'website',
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: service.title,
+        description: service.description,
+        images: service.imageUrl ? [service.imageUrl] : [],
+      },
+    };
+  } catch (error) {
+    return {
+      title: 'Service | SewaGo',
+      description: 'Service details',
+    };
+  }
+}
+
+export default async function ServiceDetailPage({ params }: ServiceDetailPageProps) {
+  try {
+    const { slug } = await params;
+    const service = await db.service.findUnique({
+      where: { slug }
+    });
+
+    if (!service) {
+      notFound();
+    }
+
+    // Get reviews for this service
+    const reviews = await db.review.findMany({
+      where: { serviceId: service.id }
+    });
+
+    // Calculate average rating
+    const averageRating = reviews.length > 0 
+      ? reviews.reduce((sum: number, review: { rating: number }) => sum + review.rating, 0) / reviews.length 
+      : 0;
+
+    const jsonLdData = {
+      '@context': 'https://schema.org',
+      '@type': 'Service',
+      name: service.title,
+      description: service.description,
+      category: service.category,
+      provider: {
+        '@type': 'Organization',
+        name: 'SewaGo',
+      },
+      areaServed: {
+        '@type': 'Country',
+        name: 'Nepal',
+      },
+      ...(service.priceRange && {
+        offers: {
+          '@type': 'Offer',
+          priceCurrency: 'NPR',
+          price: service.priceRange.min,
+          priceValidUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(), // 30 days
+        },
+      }),
+      ...(reviews.length > 0 && {
+        aggregateRating: {
+          '@type': 'AggregateRating',
+          ratingValue: averageRating,
+          reviewCount: reviews.length,
+        },
+      }),
+    };
+
+    return (
+      <div className="max-w-6xl mx-auto px-4 py-6">
+        <SeoJsonLd data={jsonLdData} />
+        <ServiceDetailClient 
+          service={service} 
+          reviews={reviews}
+          averageRating={averageRating}
+        />
+      </div>
+    );
+  } catch (error) {
+    console.error('Error fetching service:', error);
+    notFound();
+  }
+}
