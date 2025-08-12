@@ -20,5 +20,4 @@ const userSchema = new Schema({
 }, { timestamps: true });
 userSchema.index({ "provider.categories": 1 });
 userSchema.index({ role: 1 });
-userSchema.index({ email: 1 });
 export const UserModel = mongoose.model("User", userSchema);

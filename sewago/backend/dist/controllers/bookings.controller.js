@@ -21,6 +21,12 @@ export async function listMyBookings(req, res) {
     const bookings = await BookingModel.find(filter).sort({ createdAt: -1 });
     res.json(bookings);
 }
+export async function getBooking(req, res) {
+    const booking = await BookingModel.findById(req.params.id);
+    if (!booking)
+        return res.status(404).json({ message: "not_found" });
+    res.json(booking);
+}
 export async function updateBookingStatus(req, res) {
     const userId = req.userId;
     const role = req.userRole;

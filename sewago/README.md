@@ -1,4 +1,18 @@
 # SewaGo E2E
+## Deploy to Railway (Backend)
+
+Set these variables in Railway:
+- NODE_ENV=production
+- PORT=4000
+- MONGODB_URI=your Atlas SRV
+- JWT_ACCESS_SECRET=64-char
+- JWT_REFRESH_SECRET=64-char
+- CLIENT_ORIGIN=https://<your-vercel-site>
+- SEED_KEY=32+ char (optional)
+- ALLOW_SEEDING=false
+
+With `railway.toml` present, Railway will deploy from `backend/`.
+
 
 ## Run E2E locally (Windows)
 

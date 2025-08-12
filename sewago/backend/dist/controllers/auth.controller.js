@@ -21,7 +21,7 @@ export async function register(req, res) {
     res
         .cookie(REFRESH_COOKIE, refreshToken, {
         httpOnly: true,
-        sameSite: "lax",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
         secure: true,
         path: "/api/auth/refresh",
     })
@@ -48,7 +48,7 @@ export async function login(req, res) {
     res
         .cookie(REFRESH_COOKIE, refreshToken, {
         httpOnly: true,
-        sameSite: "lax",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
         secure: true,
         path: "/api/auth/refresh",
     })
@@ -73,7 +73,7 @@ export async function refresh(req, res) {
         res
             .cookie(REFRESH_COOKIE, newRefreshToken, {
             httpOnly: true,
-            sameSite: "lax",
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
             secure: true,
             path: "/api/auth/refresh",
         })
@@ -92,7 +92,13 @@ export async function logout(req, res) {
         }
         catch { }
     }
-    res.clearCookie(REFRESH_COOKIE, { path: "/api/auth/refresh" }).json({ success: true });
+    res
+        .clearCookie(REFRESH_COOKIE, {
+        path: "/api/auth/refresh",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+        secure: true,
+    })
+        .json({ success: true });
 }
 export async function me(req, res) {
     if (!req.userId)
