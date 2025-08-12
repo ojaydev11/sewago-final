@@ -60,6 +60,10 @@ export function createApp() {
   app.use(express.urlencoded({ extended: true }));
   app.use(cookieParser());
   app.use(morgan(isProd ? "combined" : "dev"));
+  // Generic 404 for unknown API routes
+  app.use("/api", (_req, res, _next) => {
+    res.status(404).json({ message: "not_found" });
+  });
 
   app.use("/api", api);
   // Basic error handler for tests and development
