@@ -1,16 +1,13 @@
 import mongoose, { Schema, Document, Types } from 'mongoose';
 
 export interface IProviderProfile extends Document {
+  _id: string;
   userId: Types.ObjectId;
+  skills: string[];
   bio?: string;
-  specialties: string[];
-  experience: number; // years of experience
-  rating: number;
-  totalJobs: number;
-  isVerified: boolean;
-  phone?: string;
-  city: string;
-  state: string;
+  ratingAvg: number;
+  jobsCompleted: number;
+  verified: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -22,47 +19,28 @@ const ProviderProfileSchema = new Schema<IProviderProfile>({
     required: true,
     unique: true,
   },
+  skills: [{
+    type: String,
+    trim: true,
+  }],
   bio: {
     type: String,
     trim: true,
   },
-  specialties: [{
-    type: String,
-    trim: true,
-  }],
-  experience: {
-    type: Number,
-    default: 0,
-    min: 0,
-  },
-  rating: {
+  ratingAvg: {
     type: Number,
     default: 0,
     min: 0,
     max: 5,
   },
-  totalJobs: {
+  jobsCompleted: {
     type: Number,
     default: 0,
     min: 0,
   },
-  isVerified: {
+  verified: {
     type: Boolean,
     default: false,
-  },
-  phone: {
-    type: String,
-    trim: true,
-  },
-  city: {
-    type: String,
-    required: true,
-    trim: true,
-  },
-  state: {
-    type: String,
-    required: true,
-    trim: true,
   },
   createdAt: {
     type: Date,
@@ -82,11 +60,10 @@ ProviderProfileSchema.pre('save', function(next) {
 
 // Indexes for performance
 ProviderProfileSchema.index({ userId: 1 });
-ProviderProfileSchema.index({ specialties: 1 });
-ProviderProfileSchema.index({ city: 1 });
-ProviderProfileSchema.index({ rating: 1 });
-ProviderProfileSchema.index({ isVerified: 1 });
-ProviderProfileSchema.index({ experience: 1 });
+ProviderProfileSchema.index({ skills: 1 });
+ProviderProfileSchema.index({ ratingAvg: 1 });
+ProviderProfileSchema.index({ verified: 1 });
+ProviderProfileSchema.index({ jobsCompleted: 1 });
 
 // Hot-reload guard
 export const ProviderProfile = mongoose.models.ProviderProfile || mongoose.model<IProviderProfile>('ProviderProfile', ProviderProfileSchema);

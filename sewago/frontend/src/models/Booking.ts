@@ -1,90 +1,56 @@
 import mongoose, { Schema, Document, Types } from 'mongoose';
 
 export interface IBooking extends Document {
-  userId: Types.ObjectId;
-  serviceId: Types.ObjectId;
+  _id: string;
+  customerId: Types.ObjectId;
   providerId?: Types.ObjectId;
-  status: 'PENDING' | 'CONFIRMED' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED';
-  scheduledAt: Date;
-  address: {
-    street: string;
-    city: string;
-    state: string;
-    postalCode: string;
-    country: string;
-  };
+  serviceId: Types.ObjectId;
+  date: Date;
+  timeSlot: string;
+  address: string;
   notes?: string;
-  priceEstimateMin: number;
-  priceEstimateMax: number;
+  status: 'pending' | 'confirmed' | 'completed' | 'cancelled';
   createdAt: Date;
   updatedAt: Date;
 }
 
 const BookingSchema = new Schema<IBooking>({
-  userId: {
+  customerId: {
     type: Schema.Types.ObjectId,
     ref: 'User',
     required: true,
+  },
+  providerId: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
   },
   serviceId: {
     type: Schema.Types.ObjectId,
     ref: 'Service',
     required: true,
   },
-  providerId: {
-    type: Schema.Types.ObjectId,
-    ref: 'ProviderProfile',
-  },
-  status: {
-    type: String,
-    enum: ['PENDING', 'CONFIRMED', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED'],
-    default: 'PENDING',
-  },
-  scheduledAt: {
+  date: {
     type: Date,
     required: true,
   },
+  timeSlot: {
+    type: String,
+    required: true,
+    trim: true,
+  },
   address: {
-    street: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    city: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    state: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    postalCode: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    country: {
-      type: String,
-      required: true,
-      default: 'Nepal',
-      trim: true,
-    },
+    type: String,
+    required: true,
+    trim: true,
   },
   notes: {
     type: String,
     trim: true,
   },
-  priceEstimateMin: {
-    type: Number,
-    required: true,
-    min: 0,
-  },
-  priceEstimateMax: {
-    type: Number,
-    required: true,
-    min: 0,
+  status: {
+    type: String,
+    enum: ['pending', 'confirmed', 'completed', 'cancelled'],
+    default: 'pending',
   },
   createdAt: {
     type: Date,
@@ -103,11 +69,11 @@ BookingSchema.pre('save', function(next) {
 });
 
 // Indexes for performance
-BookingSchema.index({ userId: 1 });
+BookingSchema.index({ customerId: 1 });
 BookingSchema.index({ serviceId: 1 });
 BookingSchema.index({ providerId: 1 });
 BookingSchema.index({ status: 1 });
-BookingSchema.index({ scheduledAt: 1 });
+BookingSchema.index({ date: 1 });
 BookingSchema.index({ createdAt: 1 });
 
 // Hot-reload guard
