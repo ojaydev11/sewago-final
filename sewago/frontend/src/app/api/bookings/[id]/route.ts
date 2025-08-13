@@ -1,8 +1,92 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
-import { dbConnect } from '@/lib/mongodb';
+import { authOptions } from '@/lib/auth';
+import dbConnect from '@/lib/db';
 import { Booking } from '@/models/Booking';
-import { mockStore } from '@/lib/mockStore';
+
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params;
+    
+    if (!id) {
+      return NextResponse.json(
+        { error: 'Booking ID is required' },
+        { status: 400 }
+      );
+    }
+
+    // Check authentication
+    const session = await getServerSession(authOptions);
+    if (!session) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
+    await dbConnect();
+
+    const { status, providerId } = await request.json();
+
+    // Validate status
+    const validStatuses = ['pending', 'confirmed', 'completed', 'cancelled'];
+    if (status && !validStatuses.includes(status)) {
+      return NextResponse.json(
+        { error: 'Invalid status' },
+        { status: 400 }
+      );
+    }
+
+    // Get the booking
+    const booking = await Booking.findById(id);
+    if (!booking) {
+      return NextResponse.json(
+        { error: 'Booking not found' },
+        { status: 404 }
+      );
+    }
+
+    // Check permissions based on user role
+    const canUpdate = 
+      session.user.role === 'admin' ||
+      (session.user.role === 'customer' && booking.customerId.toString() === session.user.id) ||
+      (session.user.role === 'provider' && booking.providerId?.toString() === session.user.id);
+
+    if (!canUpdate) {
+      return NextResponse.json(
+        { error: 'Forbidden' },
+        { status: 403 }
+      );
+    }
+
+    // Update the booking
+    const updateData: any = {};
+    if (status) updateData.status = status;
+    if (providerId) updateData.providerId = providerId;
+    updateData.updatedAt = new Date();
+
+    const updatedBooking = await Booking.findByIdAndUpdate(
+      id,
+      updateData,
+      { new: true }
+    ).populate('serviceId customerId providerId');
+
+    return NextResponse.json({
+      message: 'Booking updated successfully',
+      booking: updatedBooking,
+    });
+
+  } catch (error) {
+    console.error('Update booking error:', error);
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
+  }
+}
 
 export async function GET(
   request: NextRequest,
@@ -10,65 +94,55 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
-    const session = await getServerSession();
     
-    // Type assertion for session user
-    const sessionUser = session?.user as any;
-    
-    if (!sessionUser?.id) {
+    if (!id) {
+      return NextResponse.json(
+        { error: 'Booking ID is required' },
+        { status: 400 }
+      );
+    }
+
+    // Check authentication
+    const session = await getServerSession(authOptions);
+    if (!session) {
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
       );
     }
 
-    const connection = await dbConnect();
-    
-    if (connection) {
-      // Use MongoDB
-      const booking = await Booking.findById(id)
-        .populate('serviceId', 'name slug description basePrice')
-        .populate('userId', 'name email');
-      
-      if (!booking) {
-        return NextResponse.json(
-          { error: 'Booking not found' },
-          { status: 404 }
-        );
-      }
-      
-      // Check if user owns this booking or is admin
-      if (booking.userId.toString() !== sessionUser.id && sessionUser.role !== 'admin') {
-        return NextResponse.json(
-          { error: 'Forbidden' },
-          { status: 403 }
-        );
-      }
-      
-      return NextResponse.json(booking);
-    } else {
-      // Use mock store
-      const booking = await mockStore.findById(id);
-      
-      if (!booking) {
-        return NextResponse.json(
-          { error: 'Booking not found' },
-          { status: 404 }
-        );
-      }
-      
-      // Check if user owns this booking or is admin
-      if (booking && booking.userId !== sessionUser.id && sessionUser.role !== 'admin') {
-        return NextResponse.json(
-          { error: 'Forbidden' },
-          { status: 403 }
-        );
-      }
-      
-      return NextResponse.json(booking);
+    await dbConnect();
+
+    // Get the booking
+    const booking = await Booking.findById(id)
+      .populate('serviceId', 'name category basePrice')
+      .populate('customerId', 'name email phone')
+      .populate('providerId', 'name email phone');
+
+    if (!booking) {
+      return NextResponse.json(
+        { error: 'Booking not found' },
+        { status: 404 }
+      );
     }
+
+    // Check permissions
+    const canView = 
+      session.user.role === 'admin' ||
+      (session.user.role === 'customer' && booking.customerId._id.toString() === session.user.id) ||
+      (session.user.role === 'provider' && booking.providerId?._id.toString() === session.user.id);
+
+    if (!canView) {
+      return NextResponse.json(
+        { error: 'Forbidden' },
+        { status: 403 }
+      );
+    }
+
+    return NextResponse.json({ booking });
+
   } catch (error) {
-    console.error('Get booking detail API error:', error);
+    console.error('Get booking error:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
