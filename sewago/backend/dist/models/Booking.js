@@ -7,7 +7,7 @@ const bookingSchema = new Schema({
     timeSlot: { type: String, required: true },
     status: {
         type: String,
-        enum: ["pending", "accepted", "completed", "cancelled"],
+        enum: ["pending", "accepted", "in-progress", "completed", "cancelled"],
         default: "pending",
     },
     price: { type: Number, required: true },
@@ -20,4 +20,5 @@ const bookingSchema = new Schema({
 }, { timestamps: true });
 bookingSchema.index({ userId: 1 });
 bookingSchema.index({ providerId: 1 });
+bookingSchema.index({ status: 1, date: 1 });
 export const BookingModel = mongoose.model("Booking", bookingSchema);

@@ -14,6 +14,7 @@ export async function bootstrap() {
     cors: { origin: env.clientOrigin, credentials: true },
     path: "/ws/socket.io",
   }).of("/ws");
+  // Redis adapter can be enabled by providing pub/sub clients; omitted for now
 
   // Socket.io basic events for chat and live booking updates
   io.on("connection", (socket) => {

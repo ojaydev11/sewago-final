@@ -1,0 +1,130 @@
+import type { Config } from "tailwindcss";
+
+const config: Config = {
+  content: [
+    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+  ],
+  theme: {
+    extend: {
+      colors: {
+        // Himalaya Design System
+        primary: {
+          DEFAULT: 'rgb(var(--color-primary) / <alpha-value>)',
+          50: 'rgb(var(--color-primary) / 0.05)',
+          100: 'rgb(var(--color-primary) / 0.1)',
+          200: 'rgb(var(--color-primary) / 0.2)',
+          300: 'rgb(var(--color-primary) / 0.3)',
+          400: 'rgb(var(--color-primary) / 0.4)',
+          500: 'rgb(var(--color-primary) / 0.5)',
+          600: 'rgb(var(--color-primary) / 0.6)',
+          700: 'rgb(var(--color-primary) / 0.7)',
+          800: 'rgb(var(--color-primary) / 0.8)',
+          900: 'rgb(var(--color-primary) / 0.9)',
+          950: 'rgb(var(--color-primary) / 0.95)',
+        },
+        'primary-muted': 'rgb(var(--color-primary-muted))',
+        'accent-saffron': 'rgb(var(--color-accent-saffron))',
+        jade: 'rgb(var(--color-jade))',
+        slate: {
+          50: 'rgb(var(--color-bone))',
+          100: 'rgb(var(--color-bone))',
+          200: 'rgb(226 232 240)',
+          300: 'rgb(203 213 225)',
+          400: 'rgb(148 163 184)',
+          500: 'rgb(var(--color-slate-500))',
+          600: 'rgb(71 85 105)',
+          700: 'rgb(var(--color-slate-700))',
+          800: 'rgb(51 65 85)',
+          900: 'rgb(var(--color-slate-900))',
+        },
+        bone: 'rgb(var(--color-bone))',
+        snow: 'rgb(var(--color-snow))',
+        success: 'rgb(var(--color-success))',
+        warning: 'rgb(var(--color-warning))',
+        error: 'rgb(var(--color-error))',
+        info: 'rgb(var(--color-info))',
+        border: 'rgb(var(--color-slate-200))',
+        input: 'rgb(var(--color-slate-200))',
+        ring: 'rgb(var(--color-primary))',
+        background: 'rgb(var(--color-bone))',
+        foreground: 'rgb(var(--color-slate-900))',
+      },
+      fontFamily: {
+        sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        display: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        body: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        devanagari: ['Noto Sans Devanagari', 'Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+      },
+      fontSize: {
+        'xs': ['var(--font-size-xs)', { lineHeight: 'var(--line-height-tight)' }],
+        'sm': ['var(--font-size-sm)', { lineHeight: 'var(--line-height-snug)' }],
+        'base': ['var(--font-size-base)', { lineHeight: 'var(--line-height-normal)' }],
+        'lg': ['var(--font-size-lg)', { lineHeight: 'var(--line-height-relaxed)' }],
+        'xl': ['var(--font-size-xl)', { lineHeight: 'var(--line-height-relaxed)' }],
+        '2xl': ['var(--font-size-2xl)', { lineHeight: 'var(--line-height-snug)' }],
+        '3xl': ['var(--font-size-3xl)', { lineHeight: 'var(--line-height-tight)' }],
+        '4xl': ['var(--font-size-4xl)', { lineHeight: 'var(--line-height-tight)' }],
+        '5xl': ['var(--font-size-5xl)', { lineHeight: 'var(--line-height-tight)' }],
+        '6xl': ['var(--font-size-6xl)', { lineHeight: 'var(--line-height-tight)' }],
+      },
+      spacing: {
+        'xs': 'var(--spacing-xs)',
+        'sm': 'var(--spacing-sm)',
+        'md': 'var(--spacing-md)',
+        'lg': 'var(--spacing-lg)',
+        'xl': 'var(--spacing-xl)',
+        '2xl': 'var(--spacing-2xl)',
+        '3xl': 'var(--spacing-3xl)',
+        '4xl': 'var(--spacing-4xl)',
+      },
+      borderRadius: {
+        'sm': 'var(--radius-sm)',
+        'md': 'var(--radius-md)',
+        'lg': 'var(--radius-lg)',
+        'xl': 'var(--radius-xl)',
+        '2xl': 'var(--radius-2xl)',
+      },
+      boxShadow: {
+        'sm': 'var(--shadow-sm)',
+        'md': 'var(--shadow-md)',
+        'lg': 'var(--shadow-lg)',
+        'xl': 'var(--shadow-xl)',
+      },
+      animation: {
+        'fade-in': 'fadeIn 0.6s ease-out',
+        'slide-up': 'slideUp 0.6s ease-out',
+        'scale-in': 'scaleIn 0.4s ease-out',
+        'float': 'float 3s ease-in-out infinite',
+      },
+      keyframes: {
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        slideUp: {
+          '0%': { opacity: '0', transform: 'translateY(20px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        scaleIn: {
+          '0%': { opacity: '0', transform: 'scale(0.95)' },
+          '100%': { opacity: '1', transform: 'scale(1)' },
+        },
+        float: {
+          '0%, 100%': { transform: 'translateY(0px)' },
+          '50%': { transform: 'translateY(-10px)' },
+        },
+      },
+      backgroundImage: {
+        'gradient-primary': 'linear-gradient(to bottom right, rgb(var(--color-primary)), rgb(var(--color-primary) / 0.8))',
+        'gradient-secondary': 'linear-gradient(to bottom right, rgb(var(--color-jade)), rgb(var(--color-accent-saffron)))',
+        'gradient-hero': 'linear-gradient(to bottom right, rgb(var(--color-slate-900)), rgb(var(--color-slate-800)), rgb(var(--color-slate-900)))',
+        'nepali-pattern': 'radial-gradient(circle at 25% 25%, rgba(244, 175, 27, 0.1) 0%, transparent 50%), radial-gradient(circle at 75% 75%, rgba(11, 175, 135, 0.1) 0%, transparent 50%)',
+      },
+    },
+  },
+  plugins: [],
+};
+
+export default config;

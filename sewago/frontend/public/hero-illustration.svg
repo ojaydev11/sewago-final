@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" width="800" height="400">
+  <rect width="800" height="400" fill="#fff"/>
+  <circle cx="120" cy="280" r="60" fill="#1976D2"/>
+  <rect x="220" y="220" width="140" height="120" rx="12" fill="#D32F2F"/>
+  <rect x="380" y="180" width="160" height="160" rx="16" fill="#FFD700"/>
+  <text x="40" y="60" font-size="28" font-family="Poppins, Arial" fill="#111">SewaGo — Kathmandu</text>
+</svg>
+
+
