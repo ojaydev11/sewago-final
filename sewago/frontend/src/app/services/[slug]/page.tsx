@@ -1,338 +1,242 @@
-'use client';
-
-import { useState, useEffect } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { Metadata } from 'next';
+import { notFound } from 'next/navigation';
+import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
-import { 
-  MapPin, 
-  Star, 
-  Clock, 
-  Shield, 
-  CheckCircle, 
-  ArrowRight,
-  Calendar,
-  Phone,
-  MessageSquare
-} from 'lucide-react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { MapPin, Star, Clock, Shield, CheckCircle, ArrowLeft } from 'lucide-react';
+import { getServiceBySlug } from '@/lib/services';
 
-interface Service {
-  _id: string;
-  slug: string;
-  name: string;
-  category: string;
-  shortDesc: string;
-  longDesc: string;
-  basePrice: number;
-  image?: string;
-  active: boolean;
+interface ServiceDetailPageProps {
+  params: {
+    slug: string;
+  };
 }
 
-export default function ServiceDetailPage() {
-  const params = useParams();
-  const router = useRouter();
-  const [service, setService] = useState<Service | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState('');
-
-  const slug = params.slug as string;
-
-  useEffect(() => {
-    fetchService();
-  }, [slug]);
-
-  const fetchService = async () => {
-    try {
-      const response = await fetch(`/api/services/${slug}`);
-      if (response.ok) {
-        const data = await response.json();
-        setService(data.service);
-      } else {
-        setError('Service not found');
-      }
-    } catch (error) {
-      console.error('Error fetching service:', error);
-      setError('Failed to load service');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gray-50 py-12">
-        <div className="container mx-auto px-4">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary mx-auto"></div>
-            <p className="mt-4 text-gray-600">Loading service details...</p>
-          </div>
-        </div>
-      </div>
-    );
+export async function generateMetadata({ params }: ServiceDetailPageProps): Promise<Metadata> {
+  const service = await getServiceBySlug(params.slug);
+  
+  if (!service) {
+    return {
+      title: 'Service Not Found - SewaGo',
+    };
   }
 
-  if (error || !service) {
-    return (
-      <div className="min-h-screen bg-gray-50 py-12">
-        <div className="container mx-auto px-4">
-          <div className="text-center">
-            <div className="mx-auto w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-4">
-              <CheckCircle className="w-8 h-8 text-red-600" />
-            </div>
-            <h1 className="text-2xl font-bold text-gray-900 mb-4">
-              {error || 'Service Not Found'}
-            </h1>
-            <p className="text-gray-600 mb-6">
-              The service you're looking for doesn't exist or has been removed.
-            </p>
-            <Link href="/services">
-              <Button>
-                Browse All Services
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </div>
-    );
+  return {
+    title: `${service.name} - SewaGo`,
+    description: service.shortDesc,
+    keywords: `${service.name}, ${service.category}, local services, ${service.category.toLowerCase()}`,
+  };
+}
+
+export default async function ServiceDetailPage({ params }: ServiceDetailPageProps) {
+  const service = await getServiceBySlug(params.slug);
+
+  if (!service) {
+    notFound();
   }
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Hero Section */}
-      <section className="bg-white">
-        <div className="container mx-auto px-4 py-12">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            {/* Service Info */}
-            <div>
-              <div className="flex items-center gap-2 mb-4">
-                <Badge variant="secondary">{service.category}</Badge>
-                <span className="text-sm text-gray-500">•</span>
-                <div className="flex items-center text-sm text-gray-500">
-                  <Star className="w-4 h-4 text-yellow-400 mr-1" />
-                  <span>4.8+ rating</span>
+      {/* Back Navigation */}
+      <div className="bg-white border-b">
+        <div className="container mx-auto px-4 py-4">
+          <Link 
+            href="/services" 
+            className="inline-flex items-center text-gray-600 hover:text-primary transition-colors"
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back to Services
+          </Link>
+        </div>
+      </div>
+
+      <div className="container mx-auto px-4 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Main Content */}
+          <div className="lg:col-span-2">
+            {/* Service Header */}
+            <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
+              <div className="flex items-start justify-between mb-4">
+                <div>
+                  <div className="flex items-center space-x-2 mb-2">
+                    <Badge variant="secondary">{service.category}</Badge>
+                    {service.isVerified && (
+                      <Badge variant="default" className="bg-green-100 text-green-800">
+                        Verified Service
+                      </Badge>
+                    )}
+                    {service.hasWarranty && (
+                      <Badge variant="outline" className="border-blue-200 text-blue-700">
+                        {service.warrantyDays} Day Warranty
+                      </Badge>
+                    )}
+                  </div>
+                  <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                    {service.name}
+                  </h1>
+                  <p className="text-xl text-gray-600">
+                    {service.shortDesc}
+                  </p>
+                </div>
+                <div className="text-right">
+                  <div className="text-3xl font-bold text-primary mb-1">
+                    From ₹{service.basePrice}
+                  </div>
+                  <div className="text-sm text-gray-500">Starting price</div>
                 </div>
               </div>
-              
-              <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
-                {service.name}
-              </h1>
-              
-              <p className="text-xl text-gray-600 mb-6 leading-relaxed">
-                {service.shortDesc}
-              </p>
-              
-              <div className="flex items-center gap-6 mb-8">
-                <div className="flex items-center text-gray-600">
-                  <MapPin className="w-5 h-5 mr-2" />
-                  <span>Available in your area</span>
+
+              {/* Service Stats */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t">
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-gray-900">
+                    {service.reviewStats?.averageRating?.toFixed(1) || '4.8'}
+                  </div>
+                  <div className="text-sm text-gray-500">Rating</div>
                 </div>
-                <div className="flex items-center text-gray-600">
-                  <Clock className="w-5 h-5 mr-2" />
-                  <span>Quick response</span>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-gray-900">
+                    {service.reviewStats?.totalReviews || '50+'}
+                  </div>
+                  <div className="text-sm text-gray-500">Reviews</div>
                 </div>
-                <div className="flex items-center text-gray-600">
-                  <Shield className="w-5 h-5 mr-2" />
-                  <span>Verified providers</span>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-gray-900">24h</div>
+                  <div className="text-sm text-gray-500">Response Time</div>
                 </div>
-              </div>
-              
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Link href={`/book?service=${service.slug}`}>
-                  <Button size="lg" className="bg-primary hover:bg-primary/90 h-12 px-8 text-lg">
-                    Book This Service
-                    <ArrowRight className="ml-2 w-5 h-5" />
-                  </Button>
-                </Link>
-                <Link href="/contact">
-                  <Button size="lg" variant="outline" className="h-12 px-8 text-lg">
-                    <Phone className="w-5 h-5 mr-2" />
-                    Contact Support
-                  </Button>
-                </Link>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-gray-900">100%</div>
+                  <div className="text-sm text-gray-500">Satisfaction</div>
+                </div>
               </div>
             </div>
-            
+
             {/* Service Image */}
-            <div className="relative">
-              <div className="aspect-square bg-gradient-to-br from-primary/20 to-primary/10 rounded-2xl flex items-center justify-center">
-                {service.image ? (
-                  <img
+            {service.image && (
+              <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
+                <div className="relative h-96 overflow-hidden rounded-lg">
+                  <Image
                     src={service.image}
                     alt={service.name}
-                    className="w-full h-full object-cover rounded-2xl"
+                    fill
+                    className="object-cover"
                   />
-                ) : (
-                  <div className="text-center">
-                    <div className="w-24 h-24 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
-                      <span className="text-white text-4xl font-bold">
-                        {service.name.charAt(0)}
-                      </span>
-                    </div>
-                    <p className="text-gray-500">Service Image</p>
+                </div>
+              </div>
+            )}
+
+            {/* Service Description */}
+            <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
+              <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+                About This Service
+              </h2>
+              <div className="prose prose-gray max-w-none">
+                <p className="text-gray-700 leading-relaxed">
+                  {service.longDesc}
+                </p>
+              </div>
+            </div>
+
+            {/* Service Features */}
+            <div className="bg-white rounded-lg shadow-sm p-6">
+              <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+                What's Included
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="flex items-center space-x-3">
+                  <CheckCircle className="h-5 w-5 text-green-500" />
+                  <span className="text-gray-700">Professional service provider</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <CheckCircle className="h-5 w-5 text-green-500" />
+                  <span className="text-gray-700">Quality guaranteed work</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <CheckCircle className="h-5 w-5 text-green-500" />
+                  <span className="text-gray-700">On-time service delivery</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <CheckCircle className="h-5 w-5 text-green-500" />
+                  <span className="text-gray-700">Customer support</span>
+                </div>
+                {service.hasWarranty && (
+                  <div className="flex items-center space-x-3">
+                    <Shield className="h-5 w-5 text-blue-500" />
+                    <span className="text-gray-700">{service.warrantyDays} day warranty</span>
                   </div>
                 )}
               </div>
-              
-              {/* Price Badge */}
-              <div className="absolute -bottom-4 -right-4 bg-white rounded-full shadow-lg p-4">
+            </div>
+          </div>
+
+          {/* Sidebar */}
+          <div className="lg:col-span-1">
+            {/* Booking Card */}
+            <Card className="sticky top-24">
+              <CardHeader>
+                <CardTitle className="text-xl">Book This Service</CardTitle>
+                <CardDescription>
+                  Get started with your booking in just a few steps
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
                 <div className="text-center">
-                  <p className="text-sm text-gray-500">Starting from</p>
-                  <p className="text-2xl font-bold text-primary">₹{service.basePrice}</p>
+                  <div className="text-3xl font-bold text-primary mb-1">
+                    From ₹{service.basePrice}
+                  </div>
+                  <div className="text-sm text-gray-500">Starting price</div>
                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+                
+                <div className="space-y-3">
+                  <div className="flex items-center space-x-3 text-sm text-gray-600">
+                    <Clock className="h-4 w-4" />
+                    <span>Quick booking process</span>
+                  </div>
+                  <div className="flex items-center space-x-3 text-sm text-gray-600">
+                    <MapPin className="h-4 w-4" />
+                    <span>Available in your area</span>
+                  </div>
+                  <div className="flex items-center space-x-3 text-sm text-gray-600">
+                    <Star className="h-4 w-4" />
+                    <span>Verified professionals</span>
+                  </div>
+                </div>
 
-      {/* Service Details */}
-      <section className="py-16">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Main Content */}
-            <div className="lg:col-span-2">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-2xl">About This Service</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="prose prose-gray max-w-none">
-                    <p className="text-gray-700 leading-relaxed mb-6">
-                      {service.longDesc}
-                    </p>
-                    
-                    <Separator className="my-6" />
-                    
-                    <h3 className="text-xl font-semibold text-gray-900 mb-4">
-                      What's Included
-                    </h3>
-                    <ul className="space-y-2 text-gray-700">
-                      <li className="flex items-center">
-                        <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
-                        Professional service delivery
-                      </li>
-                      <li className="flex items-center">
-                        <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
-                        Quality assurance guarantee
-                      </li>
-                      <li className="flex items-center">
-                        <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
-                        Verified and background-checked providers
-                      </li>
-                      <li className="flex items-center">
-                        <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
-                        Customer support throughout the process
-                      </li>
-                    </ul>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-            
-            {/* Sidebar */}
-            <div className="space-y-6">
-              {/* Quick Actions */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">Quick Actions</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <Link href={`/book?service=${service.slug}`}>
-                    <Button className="w-full" size="lg">
-                      <Calendar className="w-4 h-4 mr-2" />
-                      Book Now
-                    </Button>
-                  </Link>
-                  <Link href="/contact">
-                    <Button variant="outline" className="w-full" size="lg">
-                      <MessageSquare className="w-4 h-4 mr-2" />
-                      Ask Questions
-                    </Button>
-                  </Link>
-                </CardContent>
-              </Card>
-              
-              {/* Service Info */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">Service Information</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Category:</span>
-                    <span className="font-medium">{service.category}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Base Price:</span>
-                    <span className="font-medium text-primary">₹{service.basePrice}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Response Time:</span>
-                    <span className="font-medium">Within 2 hours</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Availability:</span>
-                    <span className="font-medium text-green-600">Available</span>
-                  </div>
-                </CardContent>
-              </Card>
-              
-              {/* Why Choose SewaGo */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">Why Choose SewaGo?</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <div className="flex items-center text-sm">
-                    <Shield className="w-4 h-4 text-green-500 mr-2" />
-                    <span>Verified providers</span>
-                  </div>
-                  <div className="flex items-center text-sm">
-                    <Star className="w-4 h-4 text-yellow-400 mr-2" />
-                    <span>Quality guaranteed</span>
-                  </div>
-                  <div className="flex items-center text-sm">
-                    <Clock className="w-4 h-4 text-blue-500 mr-2" />
-                    <span>Quick response</span>
-                  </div>
-                  <div className="flex items-center text-sm">
-                    <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
-                    <span>Customer support</span>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </div>
-      </section>
+                <Link href={`/services/${service.slug}/book`} className="w-full">
+                  <Button className="w-full bg-primary hover:bg-primary/90 text-lg py-3">
+                    Book Now
+                  </Button>
+                </Link>
 
-      {/* CTA Section */}
-      <section className="py-16 bg-primary text-white">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-6">
-            Ready to Book {service.name}?
-          </h2>
-          <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
-            Get started with just a few clicks. Our verified professionals are ready to help you.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href={`/book?service=${service.slug}`}>
-              <Button size="lg" className="bg-accent-saffron hover:bg-accent-saffron/90 text-gray-900 h-12 px-8 text-lg">
-                Book Now
-                <ArrowRight className="ml-2 w-5 h-5" />
-              </Button>
-            </Link>
-            <Link href="/contact">
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-gray-900 h-12 px-8 text-lg">
-                Contact Support
-              </Button>
-            </Link>
+                <div className="text-center">
+                  <p className="text-xs text-gray-500">
+                    No booking fees • Cancel anytime • Secure payment
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Contact Support */}
+            <Card className="mt-6">
+              <CardHeader>
+                <CardTitle className="text-lg">Need Help?</CardTitle>
+                <CardDescription>
+                  Have questions about this service?
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Link href="/contact" className="w-full">
+                  <Button variant="outline" className="w-full">
+                    Contact Support
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
           </div>
         </div>
-      </section>
+      </div>
     </div>
   );
 }

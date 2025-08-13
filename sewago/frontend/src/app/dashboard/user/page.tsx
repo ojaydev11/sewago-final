@@ -1,5 +1,8 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
+
+// Force dynamic rendering to prevent build-time pre-rendering
+export const dynamic = 'force-dynamic';
 import { api } from "@/lib/api";
 
 type Booking = { _id: string; status: string; price: number; createdAt: string };

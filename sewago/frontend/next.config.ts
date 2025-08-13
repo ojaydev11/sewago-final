@@ -6,6 +6,24 @@ const nextConfig: NextConfig = {
   compress: true,
   generateEtags: true,
   
+  // Disable prerendering for pages that use client-side hooks
+  experimental: {
+    optimizeCss: true,
+    optimizePackageImports: ['@heroicons/react', 'lucide-react'],
+    // Disable static generation for problematic pages
+    workerThreads: false,
+    cpus: 1,
+  },
+
+  // Disable static generation entirely
+  output: 'standalone',
+  trailingSlash: false,
+  
+  // Force all pages to be dynamic
+  generateBuildId: async () => {
+    return 'build-' + Date.now();
+  },
+
   // Image optimization
   images: {
     domains: [
@@ -15,12 +33,6 @@ const nextConfig: NextConfig = {
     ],
     formats: ['image/webp', 'image/avif'],
     minimumCacheTTL: 60,
-  },
-
-  // Experimental features for better performance
-  experimental: {
-    optimizeCss: true,
-    optimizePackageImports: ['@heroicons/react', 'lucide-react'],
   },
 
   // Webpack optimizations
@@ -96,9 +108,6 @@ const nextConfig: NextConfig = {
     CUSTOM_KEY: process.env.CUSTOM_KEY,
   },
 
-  // Build output configuration
-  output: 'standalone',
-  
   // Temporarily disable TypeScript checking for build
   typescript: {
     ignoreBuildErrors: true,

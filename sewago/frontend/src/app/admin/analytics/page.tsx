@@ -2,6 +2,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+
+// Force dynamic rendering to prevent build-time pre-rendering
+export const dynamic = 'force-dynamic';
 import { analyticsService } from '@/lib/analytics';
 import type { KPIMetrics } from '@/lib/analytics';
 

@@ -1,5 +1,9 @@
 
 import { Metadata } from 'next';
+
+// Force dynamic rendering to prevent build-time prerendering
+export const dynamic = 'force-dynamic';
+
 import { 
   ShieldCheckIcon, 
   UserGroupIcon, 
