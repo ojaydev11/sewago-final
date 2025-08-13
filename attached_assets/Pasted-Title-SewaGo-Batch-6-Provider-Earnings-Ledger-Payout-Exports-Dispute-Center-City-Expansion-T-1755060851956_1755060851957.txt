@@ -1,0 +1,93 @@
+Title: SewaGo – Batch 6: Provider Earnings Ledger + Payout Exports, Dispute Center, City Expansion Toolkit (COD-only) + Push to main
+
+Objective
+Analyze the existing Next.js App Router codebase and ship three capabilities:
+1) Provider earnings ledger + payout exports (finance-grade, COD-aware)
+2) Dispute Resolution Center (customer/provider/admin flows)
+3) City Expansion Toolkit (admin city manager + service×city generation)
+Keep live payment = COD only. Keep eSewa in codebase but DISABLED behind flag. Push to GitHub MAIN for Vercel deploy.
+
+Guardrails
+- Do NOT paste large code here; inspect and modify the repo directly.
+- Keep only the modern Next app; no duplicate headers or legacy CSS; no blue blobs.
+- Re-use our design system, content model, feature flags, and booking statuses from prior batches.
+
+Tasks (do in order)
+
+0) Safety & setup
+- Create backup branch: chore/sewago-batch6-backup from HEAD.
+- Confirm PAYMENTS_ESEWA_ENABLED=false; COD is the only live payment.
+- Ensure one globals.css; Tailwind content globs only scan the Next app.
+
+1) Provider Earnings Ledger (server-side, audit-friendly)
+- Add a ledger entity recording money events per booking:
+  fields: ledgerId, bookingId, providerId, service, city, createdAt,
+  amount_gross, discounts_or_credits, platform_fee, taxes, tips,
+  payment_method ("COD" | "ESEWA"), cod_collected (bool, timestamp, by whom),
+  amount_net_to_provider, provider_remit_due (if our fee is owed back),
+  status ("Pending","Approved","Paid","Adjusted"),
+  payout_batch_id (nullable), notes, audit trail (who/when changed).
+- On booking lifecycle:
+  - At “Completed”: write/lock ledger entry with computed net.
+  - When provider marks COLLECTED (COD): set cod_collected=true, update net/remit fields.
+- Provider dashboard: Earnings → totals, weekly breakdown, statements; “Download CSV”.
+- Admin → Ledger: filters (date, provider, status, city), entry detail, manual adjustments with audit reasons.
+
+2) Payout Exports (finance ops)
+- Admin “Payouts”: select date range → compute provider totals and create a payout batch.
+- Export CSV and XLSX with stable headers: providerId, providerName, contact, city, total_jobs, total_gross, total_platform_fee, tips, credits, net_payable, payout_batch_id.
+- Ability to mark batch as “Paid” and auto-update all included ledger entries to status=Paid (with timestamp/user).
+- Keep fields for future eSewa/Khalti payouts (ids) but do not activate flows yet.
+
+3) Dispute Resolution Center (quality & warranty)
+- Dispute entity linked to booking:
+  fields: disputeId, bookingId, openedBy (customer|provider|admin), type (NoShow|Quality|Damage|Overcharge|Safety|Other),
+  status (Open|UnderReview|AwaitingEvidence|Resolved), openAt/SLAs, evidence (file urls), internalNotes,
+  outcome (Rework|PartialCredit|FullCredit|Rejected|ProviderPenalty), outcomeAt, audit log.
+- Customer portal: can open dispute within warranty window; attach photos; see status.
+- Provider view: notified; can respond and upload evidence.
+- Admin triage dashboard: timers, filters, decision actions; when outcome applies:
+  - Rework → spawn a priority booking linked back.
+  - Credits → issue ledger “adjustment” entry to customer wallet/credits (no cash refund yet).
+  - ProviderPenalty → ledger adjustment against provider earnings (audit).
+- Email notifications gated by EMAILS_ENABLED flag.
+
+4) City Expansion Toolkit (scale playbook)
+- Admin → Cities:
+  - CRUD city with zones/neighborhoods.
+  - Toggle services per city and apply pricing modifiers (e.g., +10% for far zones).
+  - SLA defaults per city (arrival window, warranty days).
+  - Marketing copy: hero blurb, bullets.
+  - Toggle “Live” to publish.
+- Programmatic SEO: auto-generate service×city pages with localized H1/meta and JSON-LD Service schema (areaServed=city).
+- Ops checklist: per-city launch tasks (provider onboarding target, KYC rate, pricing review, test bookings).
+- City KPIs dashboard: fill rate, time-to-accept, on-time %, CSAT, rework rate, repeat rate.
+
+5) Retention & Growth hooks (wire to earlier batches)
+- Post-completion: auto request review + NPS; if negative, open guided dispute path.
+- Loyalty/referral integration: credits shown on booking confirm; repeat in 1-click rebook.
+- Subscriptions respected per city/service availability.
+
+6) Flags, docs, QA
+- Centralize feature flags: { ESEWA_ENABLED=false, LOYALTY_ENABLED=true, REFERRALS_ENABLED=true, SUBSCRIPTIONS_ENABLED=true, DISPUTES_ENABLED=true, CITIES_TOOLKIT_ENABLED=true }.
+- Update README: ledger logic, COD flow, how payouts work, how to add a city and generate pages, how disputes flow; how to enable eSewa later.
+- CHANGELOG: Batch-6 summary.
+- Add smoke tests:
+  - Complete a booking → ledger entry appears.
+  - Admin creates payout batch → CSV/XLSX download → marks as Paid updates entries.
+  - Customer opens a dispute → Admin resolves → outcome reflects in ledger/credits.
+  - Admin creates a new city → service×city page becomes reachable.
+
+7) Performance & a11y guardrails
+- Lighthouse (mobile): Perf ≥ 90, Best Practices ≥ 95, A11y ≥ 95, SEO ≥ 95.
+- No CLS; next/image for media; proper labels/alt; keyboard focus visible.
+
+8) Push to GitHub MAIN (deploy)
+- Commit: 
+  feat(ops+scale): provider earnings ledger & payout exports, dispute center, city expansion toolkit (COD-only)
+- Push directly to origin main. If protected, open a PR with same title and ask me to approve.
+
+9) Final verification
+- Share production Vercel URL.
+- Paste a concise 10-line summary of changes + Lighthouse (mobile) for / and one service×city page.
+- Confirm: COD-only payment; ledger and payout exports working; disputes end-to-end; new city pages publish on toggle; single navbar; all main flows work.

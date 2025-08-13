@@ -1,0 +1,63 @@
+Title: SewaGo – Batch 8: Scale & Monetization (Surge/Dynamic Pricing, Promotions, Wallet, Partner API/Webhooks, Search, Data Warehouse Prep)
+
+Objective
+Extend SewaGo for aggressive growth and enterprise-grade readiness while retaining COD as the only live payment (eSewa off behind flag). No code in chat; modify the repo directly. Do NOT push to main yet (save push for my last prompt).
+
+Guardrails
+- Keep the modern Next.js app only; one global stylesheet; no duplicate headers; no blue blobs.
+- Respect existing feature flags, content system, and design tokens. Keep accessibility and lighthouse targets intact.
+
+Scope (deliver all)
+
+1) Dynamic Pricing & Availability
+- Optional surge/discount modifiers by service × city × time window (feature-flagged).
+- Express slot surcharge label; off-peak discount window support.
+- Clear UX: base price + modifier line item; COD note remains visible.
+
+2) Promotions & Coupons (growth)
+- Promo codes with start/end, usage caps, per-user limits; track redemptions in ledger.
+- Launch “First Booking” and “Win-back” campaigns (in code, toggled by flag).
+- Stacked with loyalty credits but capped by business rules; clear receipt line items.
+
+3) Wallet & Credits (retention)
+- Single “SewaGo Wallet”: holds loyalty, referral, and resolution credits.
+- Automatic application at checkout (COD: show “X credits will be applied; pay remaining cash”).
+- Wallet history page with filters and export (CSV).
+
+4) Partner API + Webhooks (extensibility)
+- Read-only REST endpoints (token-protected) for services, cities, and public booking slots.
+- Webhooks for booking lifecycle (created/accepted/in-progress/completed/cancelled) and dispute outcomes.
+- Security: HMAC signatures, replay protection, IP allowlist (flags to disable entirely).
+
+5) Search & Discovery
+- Robust search with filters: service, city, price range, earliest slot, verified providers.
+- Autocomplete for services and cities; SEO-friendly query params.
+- Track search → booking conversion; feed insights to personalization.
+
+6) Data Warehouse & Reporting Prep
+- Structured event schema (bookings, ledger events, disputes, support tickets, NPS, training).
+- One “export job” endpoint or script to dump CSV/JSON for external BI (no PII leakage).
+- Admin “Analytics” page with daily/weekly KPIs: repeat rate, CAC proxy, SLA breaches, NPS, city-wise fill rate.
+
+7) Internationalization Readiness (future)
+- Keep site monolingual now, but ensure copy keys exist (i18n scaffolding) so Nepali can be enabled later without refactor.
+
+8) Mobile & PWA Enhancements
+- Add “Add to Home Screen” nudge logic; push notification opt-in (flagged).
+- Low-data mode refinements: swap heavy components, image density, and animation off.
+
+9) Compliance, Logs, Backups
+- Redaction of PII in logs; secure access to admin routes; role-based permissions reviewed.
+- Backups/exports documented; data retention policy surfaced in docs.
+
+10) QA & Docs
+- Smoke tests expanded to cover promo application, wallet deductions, surge modifiers, search filters, and webhook signature verification (unit tests ok).
+- README: dynamic pricing rules, promos, wallet, partner API, webhooks, data export.
+- CHANGELOG: Batch 8 summary.
+
+Deliverables
+- All features above implemented behind sensible flags where appropriate: { SURGE_ENABLED, PROMOS_ENABLED, WALLET_ENABLED, PARTNER_API_ENABLED, WEBHOOKS_ENABLED, SEARCH_ENABLED }.
+- REPORT.md updated with monetization and scale architecture notes.
+- Build passes; lighthouse + a11y targets maintained.
+
+Do NOT push to main yet. Stage commits locally and confirm app builds. I will send a final “errors + push to main” prompt next.

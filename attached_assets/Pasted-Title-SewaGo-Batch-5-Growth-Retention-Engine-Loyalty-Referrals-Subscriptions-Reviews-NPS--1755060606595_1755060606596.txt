@@ -1,0 +1,85 @@
+Title: SewaGo – Batch 5: Growth & Retention Engine (Loyalty, Referrals, Subscriptions, Reviews, NPS) + Push to main
+
+Objective
+Analyze the existing Next.js App Router codebase and implement growth + retention features that beat local/global competitors. Keep live payment = COD only; keep eSewa/Khalti integrated but disabled behind flags. Deliver a modern, future-proof system and push to GitHub MAIN for Vercel deploy.
+
+Guardrails
+- No large code in chat; modify repo directly.
+- Keep only the modern Next.js app; no duplicate headers or legacy CSS.
+- Respect existing feature flags and design system from previous batches.
+
+Tasks (do in order)
+
+0) Safety & setup
+- Create backup branch: chore/sewago-batch5-backup from HEAD.
+- Confirm PAYMENTS_ESEWA_ENABLED=false (COD only). Ensure only one globals.css and no giant background shapes.
+
+1) Loyalty Credits (repeat-use engine)
+- Add a simple credits ledger to user profiles (server-side storage you’re already using).
+- Earn: % of booking value or fixed NPR per job completed.
+- Spend: apply credits at checkout (COD: show “You have NPR X credits; will be applied to your total”).
+- Admin view: manual credit/debit adjustments and audit log.
+
+2) Referral Program
+- Each user gets a referral code/link.
+- “Give NPR X, Get NPR Y”: new user gets credits on first completed booking; referrer gets credits once service is marked Completed.
+- Anti-abuse guard: one reward per referred account; threshold before payout.
+
+3) Subscriptions / Recurring Bookings
+- For eligible services (e.g., cleaning), add recurring options (weekly/biweekly/monthly).
+- Auto-generate future bookings; reminders 24h before. COD remains the payment method; note “Pay on service day”.
+
+4) Reviews & Photos (trust moat)
+- Post-completion prompt → 1–5 stars + short text + optional before/after photos.
+- Service detail: show avg rating, count, top 3 reviews; spam/abuse filter; admin hide/unhide.
+
+5) Warranty & Rework
+- Sitewide badge: “Workmanship warranty (30–60 days).”
+- Rework flow: within warranty window, customer requests a fix → creates a priority job ticket; provider or alternate re-assigned. Track rework rate in provider score.
+
+6) Provider Quality & Fair Jobs Board
+- Provider score = weighted mix of on-time %, CSAT, rework rate, completion rate.
+- Tier badges (Bronze/Silver/Gold) unlock perks (lead priority, zero-fee payout).
+- Jobs board fairness: balanced routing by proximity, tier, and recent opportunity count.
+
+7) In-app Chat + Notifications
+- Lightweight chat between customer and provider per booking (masked contact info).
+- Email/push reminders: upcoming service, provider on the way, completion receipt. Feature-flagged so we can disable easily.
+
+8) Programmatic SEO expansion
+- Ensure service × city pages exist and are internally linked from / and /services.
+- Add JSON-LD for Organization, Service (with areaServed), and Breadcrumbs across these pages.
+- Update sitemap.xml to include all service and service×city URLs; robots.txt remains friendly.
+
+9) Analytics, NPS & A/B testing
+- Add NPS survey (7 days post-completion). Store score + tag free-text themes.
+- Instrument funnels (home → service → booking → complete). Track repeat-rate, rebook latency, referral conversions.
+- Add a lightweight A/B framework (env-flag variants) for: homepage hero copy, CTA labels, and services grid ordering.
+
+10) Ops polish
+- 24h “Happiness check” banner/email after completion with quick “Not happy? Get free rework” path.
+- Clear receipts with line items, credits applied, and COD note; downloadable PDF optional.
+- Add “Express (2–4 hr)” slot type for eligible services with a small surcharge label.
+
+11) Feature flags (centralized)
+- Create/extend flags: { ESEWA_ENABLED=false, KHALTI_ENABLED=false, EMAILS_ENABLED=true, PUSH_ENABLED=true, REFERRALS_ENABLED=true, LOYALTY_ENABLED=true, SUBSCRIPTIONS_ENABLED=true, CHAT_ENABLED=true, WARRANTY_ENABLED=true, ABTESTS_ENABLED=true }.
+- Document how to toggle each without redeploy (if possible) or at least via env and redeploy.
+
+12) Performance & a11y guardrails
+- Lighthouse mobile targets: Perf ≥ 90, BP ≥ 95, A11y ≥ 95, SEO ≥ 95.
+- No CLS on key pages; next/image for media; alt text everywhere; focus rings visible.
+
+13) Docs
+- README: how loyalty/referrals/subscriptions work; how to add a new service or city; flags; how to enable eSewa later.
+- CHANGELOG: Batch-5 summary.
+- DEPLOY_NOTES.md: any new env vars + Vercel notes.
+
+14) Push to GitHub MAIN (deploy)
+- Ensure Git remote is set; commit with:
+  feat(growth): loyalty credits, referrals, subscriptions, reviews, warranty, chat, NPS, SEO expansion
+- Push directly to origin main. If protected, open a PR with same title and ask me to approve.
+
+15) Final verification
+- Share production Vercel URL.
+- Paste a concise summary of changes + Lighthouse (mobile) for / and one /services/[slug].
+- Confirm: COD only live; eSewa disabled; loyalty/referrals/subscriptions active; reviews & warranty visible; single navbar; all main flows work.

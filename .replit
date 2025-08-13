@@ -1,0 +1,24 @@
+modules = ["nodejs-20", "python-3.12", "web"]
+run = "python main.py"
+
+[nix]
+channel = "stable-25_05"
+
+[deployment]
+run = ["sh", "-c", "python main.py"]
+
+[workflows]
+runButton = "Next.js Dev Server"
+
+[[workflows.workflow]]
+name = "Next.js Dev Server"
+author = 44760586
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd sewago/frontend && npm install && npm run dev -- -p 5000"
+
+[[ports]]
+localPort = 5000
+externalPort = 80

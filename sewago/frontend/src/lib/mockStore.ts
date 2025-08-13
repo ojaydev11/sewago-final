@@ -123,7 +123,7 @@ class MockStore {
   }
 
   // Service methods
-  async find(filter?: any): Promise<MockService[]> {
+  async findServices(filter?: any): Promise<MockService[]> {
     if (filter?.category) {
       return this.services.filter(s => s.category === filter.category);
     }
@@ -133,12 +133,12 @@ class MockStore {
     return [...this.services];
   }
 
-  async findById(id: string): Promise<MockService | null> {
+  async findServiceById(id: string): Promise<MockService | null> {
     return this.services.find(s => s._id === id) || null;
   }
 
   // Booking methods
-  async create(data: Omit<MockBooking, '_id' | 'createdAt'>): Promise<MockBooking> {
+  async createBooking(data: Omit<MockBooking, '_id' | 'createdAt'>): Promise<MockBooking> {
     const booking: MockBooking = {
       _id: new Types.ObjectId().toString(),
       ...data,
@@ -148,7 +148,7 @@ class MockStore {
     return booking;
   }
 
-  async find(filter?: any): Promise<MockBooking[]> {
+  async findBookings(filter?: any): Promise<MockBooking[]> {
     if (filter?.userId) {
       return this.bookings.filter(b => b.userId === filter.userId);
     }
@@ -158,7 +158,7 @@ class MockStore {
     return [...this.bookings];
   }
 
-  async findById(id: string): Promise<MockBooking | null> {
+  async findBookingById(id: string): Promise<MockBooking | null> {
     return this.bookings.find(b => b._id === id) || null;
   }
 

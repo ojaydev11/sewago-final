@@ -1,0 +1,78 @@
+Title: SewaGo – Batch 2/3 Full Upgrade + Push to main
+
+Objective
+Analyze the existing codebase and ship a premium, modern SewaGo with working pages and buttons. Remove the legacy UI that causes the giant blue shapes. Keep ONLY the modern Next.js App Router app. Optimize SEO, performance, accessibility, and push the finished changes to GitHub MAIN so Vercel auto-deploys.
+
+Repo Facts / What to detect
+- Modern app: Next.js App Router under sewago/frontend/src/app (or sewago/frontend/app).
+- Legacy bits: any root-level React/Vite app (App.jsx, App.css, index.html, vite configs, src/*) or stray global CSS producing oversized blue gradients/blobs.
+
+Do (in this order)
+0) Repository sanity & backup
+- Create a safety branch chore/sewago-upgrade-backup from current HEAD.
+- Confirm the Next.js app path. If more than one candidate exists, keep the one with Next.js App Router and pages already edited recently.
+
+1) Purge legacy frontend (destructive, but safe)
+- Remove any legacy React/Vite app at the repository ROOT that’s not part of the Next.js app.
+- Remove any global stylesheet outside the Next.js app that could leak styles into pages (especially gradients, ::before/::after blobs).
+- Ensure the Next.js app has exactly one global stylesheet (globals.css). Make sure no other global CSS is imported anywhere.
+
+2) Kill “giant blue shapes”
+- Search the entire repo for radial/conic/linear gradients, full-screen ::before/::after decorations, or bg-[...] utilities applied to html/body/main or layout wrappers.
+- Remove/neutralize them unless they are inside a dedicated hero/CTA component bounded by section/container classes.
+- Ensure only ONE Navbar renders globally; no duplicate header markup in page components.
+
+3) Design system (no code dump; use the project’s current setup)
+- Enforce a strict spacing and grid scale: one container (max-w-7xl + responsive horizontal padding) and one section padding (uniform vertical rhythm) applied consistently across pages.
+- Typography: strong hierarchy (H1/H2/H3 + body). No emojis as icons. Use one consistent icon library already present (e.g., lucide) or a neutral replacement.
+- Palette: use the site’s established primary blue, neutral greys, white surfaces; avoid heavy gradients outside hero/CTA.
+- Make the UI look premium/trustworthy, Nepal-first (subtle, not kitschy).
+
+4) Pages & navigation (all working)
+- Homepage: hero, How it works, Services grid (cards), Testimonials, CTA, Footer. Clean, aligned, responsive.
+- Services index (/services): render a grid of services from a content source (scan repo for existing service slugs and unify). Each card links to /services/[slug].
+- Service detail (/services/[slug]): show title, summary, starting price, features list, FAQs, and a clear CTA (“Book Now” -> /contact or booking placeholder).
+- About (/about) and Contact (/contact): real content and working links (no lorem). Contact should include a simple form that validates client-side and posts to an API route or logs on server (no secrets exposed).
+- 404 and error pages present and branded.
+- Ensure Navbar “Book Now” -> /services, and all footer links work.
+
+5) Content-first services (analyze existing codebase)
+- If services are hard-coded in multiple places, refactor to a single content source (JSON/MDX or an existing server-side loader in the repo) and read from there.
+- Seed at least 3 slugs based on what’s already in the repo (e.g., house-cleaning, electrical-work, plus one more if present). Don’t invent new categories unless needed.
+
+6) SEO & performance
+- Use Next Metadata API for unique titles/descriptions per route. Add canonical tags and OG/Twitter images where supported by the repo.
+- Add JSON-LD schema for Organization + per-service Service schema.
+- Generate sitemap.xml and robots.txt via the App Router.
+- Images: use next/image where applicable, proper sizes, load priority only above-the-fold.
+- Lighthouse targets (mobile): Performance ≥ 90, Best Practices ≥ 95, SEO ≥ 95, Accessibility ≥ 95. Fix any blocking findings (render-blocking CSS/JS, missing alt, low contrast, etc.).
+
+7) Accessibility & quality
+- Semantic landmarks (header/nav/main/footer), labels/aria on interactive elements, visible focus styles, color contrast AA+.
+- No layout shift between load states. Provide loading and empty states where data is async.
+
+8) Clean build & deployability
+- Ensure tailwind content globs ONLY scan the Next.js app folders; remove unused globs pointing to legacy paths.
+- Remove unused packages related to the legacy app.
+- App builds locally in Replit. No runtime reference to removed files.
+
+9) Documentation
+- Update README: “How to run locally”, “How to add a new service”, and a short CHANGELOG of exactly what changed in this upgrade.
+- Add DEPLOY_NOTES.md with Vercel settings (root directory path, Node version if relevant) and a reminder to clear build cache if necessary.
+
+10) Git push to MAIN (so Vercel redeploys)
+- Configure the Git remote to the provided GitHub repo for SewaGo. If not configured, ask me for the GitHub URL and authentication (PAT with repo scope) or use Replit’s Git integration.
+- Commit with conventional message: 
+  fix(frontend): modern UI + routes + purge legacy app + SEO/QA
+- Push directly to origin main (as requested). If main is protected, create a PR named:
+  “fix: modern UI + routes + purge legacy app + SEO/QA”
+  and notify me; otherwise push to main successfully.
+
+11) Final verification
+- Paste the updated Vercel preview/production URL here.
+- Provide a 10-line summary of changes + a short Lighthouse report (mobile) for / and /services/[slug].
+- Confirm that the giant blue shapes are gone, only one navbar is visible, and all buttons/links work.
+
+Constraints / Notes
+- Do NOT paste large code blobs to chat; analyze and modify the existing codebase directly.
+- Ask me ONLY if blocked by missing Git credentials or unclear repo root. Otherwise proceed.

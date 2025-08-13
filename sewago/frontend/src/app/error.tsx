@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect } from 'react';
-import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import { ExclamationTriangleIcon, ArrowPathIcon } from '@heroicons/react/24/outline';
 
 export default function Error({
   error,
@@ -11,65 +12,36 @@ export default function Error({
   reset: () => void;
 }) {
   useEffect(() => {
-    // Log the error to an error reporting service
-    console.error('Application error:', error);
+    console.error(error);
   }, [error]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="max-w-md w-full bg-white shadow-lg rounded-lg p-6 text-center">
-        <div className="mb-6">
-          <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
-            <svg
-              className="h-6 w-6 text-red-600"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"
-              />
-            </svg>
+    <div className="min-h-screen bg-white flex items-center justify-center px-4">
+      <div className="text-center">
+        <div className="w-24 h-24 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-8">
+          <ExclamationTriangleIcon className="w-12 h-12 text-red-500" />
+        </div>
+
+        <h1 className="text-4xl font-bold text-slate-900 mb-4">Something went wrong</h1>
+        <p className="text-slate-600 mb-8 max-w-md mx-auto">
+          We encountered an unexpected error. Don't worry, our team has been notified.
+        </p>
+
+        <div className="space-y-4">
+          <button onClick={reset} className="btn-primary inline-flex items-center">
+            <ArrowPathIcon className="w-5 h-5 mr-2" />
+            Try Again
+          </button>
+          <div>
+            <Link href="/" className="text-primary hover:underline">
+              Go Home
+            </Link>
+            <span className="text-slate-400 mx-2">•</span>
+            <Link href="/contact" className="text-primary hover:underline">
+              Contact Support
+            </Link>
           </div>
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">
-            Something went wrong!
-          </h2>
-          <p className="text-gray-600 mb-6">
-            We apologize for the inconvenience. Please try again or contact support if the problem persists.
-          </p>
         </div>
-
-        <div className="space-y-3">
-          <Button
-            onClick={reset}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-          >
-            Try again
-          </Button>
-          
-          <Button
-            onClick={() => window.location.href = '/'}
-            variant="outline"
-            className="w-full"
-          >
-            Go to homepage
-          </Button>
-        </div>
-
-        {process.env.NODE_ENV === 'development' && (
-          <details className="mt-6 text-left">
-            <summary className="cursor-pointer text-sm text-gray-500 hover:text-gray-700">
-              Error details (development only)
-            </summary>
-            <pre className="mt-2 text-xs text-red-600 bg-red-50 p-3 rounded overflow-auto">
-              {error.message}
-              {error.stack}
-            </pre>
-          </details>
-        )}
       </div>
     </div>
   );
