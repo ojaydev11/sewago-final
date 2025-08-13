@@ -12,6 +12,16 @@ const csrfTokens = new Map<string, { token: string; expires: number }>();
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   
+  // 🚨 CRITICAL: Skip RSC/Flight requests to prevent infinite redirects
+  if (pathname.includes('_rsc') || pathname.includes('_flight') || pathname.includes('_next')) {
+    return NextResponse.next();
+  }
+  
+  // Skip static assets and API routes
+  if (pathname.startsWith('/_next/') || pathname.startsWith('/api/')) {
+    return NextResponse.next();
+  }
+  
   // Apply security headers
   const response = NextResponse.next();
   
@@ -120,9 +130,13 @@ export const config = {
      * Match all request paths except for the ones starting with:
      * - _next/static (static files)
      * - _next/image (image optimization files)
+     * - _next/data (RSC data requests)
+     * - _rsc (React Server Components)
+     * - _flight (React Flight)
      * - favicon.ico (favicon file)
      * - public (public files)
+     * - API routes
      */
-    '/((?!_next/static|_next/image|favicon.ico|public|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    '/((?!_next/static|_next/image|_next/data|_rsc|_flight|favicon.ico|public|api|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 };
