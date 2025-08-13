@@ -26,7 +26,7 @@ export const authOptions = {
             return null;
           }
 
-          const isPasswordValid = await bcrypt.compare(credentials.password, user.passwordHash);
+          const isPasswordValid = await bcrypt.compare(credentials.password, user.hash);
           
           if (!isPasswordValid) {
             return null;
@@ -107,11 +107,11 @@ export async function requireRole(role: string) {
 }
 
 export async function requireProvider() {
-  return await requireRole('PROVIDER');
+  return await requireRole('provider');
 }
 
 export async function requireCustomer() {
-  return await requireRole('CUSTOMER');
+  return await requireRole('customer');
 }
 
 
