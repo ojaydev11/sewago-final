@@ -1,10 +1,14 @@
 import type { Config } from "tailwindcss";
 
 const config: Config = {
+  darkMode: ['class'],
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
     extend: {
@@ -56,6 +60,10 @@ const config: Config = {
         display: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
         body: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
         devanagari: ['Noto Sans Devanagari', 'Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+      },
+      container: {
+        center: true,
+        padding: '1rem',
       },
       fontSize: {
         'xs': ['var(--font-size-xs)', { lineHeight: 'var(--line-height-tight)' }],
