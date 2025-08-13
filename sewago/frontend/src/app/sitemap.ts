@@ -1,8 +1,8 @@
 import { MetadataRoute } from 'next';
-import { db } from '@/lib/db';
+import { prisma } from '@/lib/db';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.NEXTAUTH_URL || 'https://your-domain.vercel.app';
+  const baseUrl = process.env.NEXTAUTH_URL || 'https://sewago-final.vercel.app';
   
   // Static pages
   const staticPages = [
@@ -36,9 +36,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   let servicePages: MetadataRoute.Sitemap = [];
   
   try {
-    if (process.env.MONGODB_URI) {
-      const services = await db.service.findMany({
-        where: { isActive: true },
+    if (process.env.DATABASE_URL) {
+      const services = await prisma.service.findMany({
+        where: { active: true },
         select: { slug: true, updatedAt: true }
       });
 
