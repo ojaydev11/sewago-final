@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useSession } from 'next-auth/react';
+
 import Link from 'next/link';
 import { 
   ExclamationCircleIcon, 
@@ -13,7 +13,7 @@ import {
   EnvelopeIcon
 } from '@heroicons/react/24/outline';
 import { Button } from '@/components/ui/button';
-import { FEATURE_FLAGS } from '@/config/flags';
+import { FEATURE_FLAGS } from '@/lib/feature-flags';
 
 interface FAQ {
   id: string;
@@ -56,10 +56,28 @@ const FAQS: FAQ[] = [
 ];
 
 export default function SupportCenter() {
-  const { data: session } = useSession();
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [showContactForm, setShowContactForm] = useState(false);
+  const [session, setSession] = useState<any>(null);
+
+  useEffect(() => {
+    // Only fetch session if auth is enabled
+    if (typeof window !== 'undefined' && process.env.NEXT_PUBLIC_AUTH_ENABLED === 'true') {
+      const fetchSession = async () => {
+        try {
+          const response = await fetch('/api/auth/session');
+          if (response.ok) {
+            const sessionData = await response.json();
+            setSession(sessionData);
+          }
+        } catch (error) {
+          console.error('Failed to fetch session:', error);
+        }
+      };
+      fetchSession();
+    }
+  }, []);
 
   if (!FEATURE_FLAGS.SUPPORT_CENTER_ENABLED) {
     return (
@@ -67,6 +85,18 @@ export default function SupportCenter() {
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-4">Support Center</h1>
           <p className="text-gray-600">Support center is currently unavailable.</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Check if auth is enabled
+  if (typeof window !== 'undefined' && !process.env.NEXT_PUBLIC_AUTH_ENABLED) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">Authentication Required</h1>
+          <p className="text-gray-600">Authentication is currently disabled.</p>
         </div>
       </div>
     );
