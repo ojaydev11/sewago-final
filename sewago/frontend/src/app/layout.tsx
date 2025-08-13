@@ -6,6 +6,7 @@ import { LanguageProvider } from "@/providers/language";
 import { cn } from "@/lib/utils";
 import { Navbar } from "@/components/Navbar";
 import { LiteModeProvider } from "@/providers/lite";
+import { AuthProvider } from "@/providers/auth";
 import "@/lib/auth";
 
 const geistSans = Geist({
@@ -42,14 +43,16 @@ export default function RootLayout({
       <body
         className={cn(`${geistSans.variable} ${geistMono.variable} antialiased`, "bg-white text-slate-900")}
       >
-        <ReactQueryProvider>
-          <LanguageProvider>
-            <LiteModeProvider>
-              <Navbar />
-              {children}
-            </LiteModeProvider>
-          </LanguageProvider>
-        </ReactQueryProvider>
+        <AuthProvider>
+          <ReactQueryProvider>
+            <LanguageProvider>
+              <LiteModeProvider>
+                <Navbar />
+                {children}
+              </LiteModeProvider>
+            </LanguageProvider>
+          </ReactQueryProvider>
+        </AuthProvider>
       </body>
     </html>
   );
