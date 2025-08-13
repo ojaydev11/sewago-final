@@ -79,7 +79,7 @@ export async function POST(request: NextRequest) {
     // 4. Handle actionable intents
     let toolResult = null;
     let answer = '';
-    let sources: Array<{ kind: 'db' | 'doc'; label: string; section?: string }> = [];
+    const sources: Array<{ kind: 'db' | 'doc'; label: string; section?: string }> = [];
     
     if (intent === 'book_service' && enrichedSlots.service && enrichedSlots.district && enrichedSlots.date && enrichedSlots.time) {
       // Handle service booking
