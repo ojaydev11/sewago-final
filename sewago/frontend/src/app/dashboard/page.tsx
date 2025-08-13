@@ -330,7 +330,7 @@ export default function DashboardPage() {
                         </span>
                       </div>
                     </div>
-                  </CardContent>
+                  </CardHeader>
                   <CardContent>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                       <div className="flex items-start gap-2">

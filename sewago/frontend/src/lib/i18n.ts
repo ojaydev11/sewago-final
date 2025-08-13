@@ -3,6 +3,16 @@
 
 export type Locale = 'en' | 'ne';
 
+// i18n Configuration
+export const i18nConfig = {
+  locales: ['en', 'ne'] as Locale[],
+  defaultLocale: 'en' as Locale,
+  localeNames: {
+    en: 'English',
+    ne: 'नेपाली'
+  }
+};
+
 // Translation dictionaries
 const TRANSLATIONS: Record<Locale, Record<string, string>> = {
   en: {
@@ -102,7 +112,7 @@ const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'house_cleaning': 'घर सफाई',
     'electrical_work': 'बिजुली काम',
     'plumbing': 'प्लम्बिङ',
-    'gardening': 'बगैंचा',
+    'gardening': 'बगैंचा काम',
     
     // Cities/Districts
     'kathmandu': 'काठमाडौं',
@@ -119,28 +129,28 @@ const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'night': 'रात',
     
     // Status
-    'requested': 'अनुरोध गरिएको',
-    'accepted': 'स्वीकृत',
+    'requested': 'अनुरोध गरियो',
+    'accepted': 'स्वीकार गरियो',
     'in_progress': 'प्रगतिमा',
-    'completed': 'पूरा भएको',
-    'cancelled': 'रद्द गरिएको',
+    'completed': 'पूरा भयो',
+    'cancelled': 'रद्द गरियो',
     
     // Payment
-    'cod': 'क्यास अन डेलिभरी',
+    'cod': 'क्यास अन डिलिभरी',
     'esewa': 'ईसेवा',
     'pending': 'प्रक्रियामा',
-    'paid': 'भुक्तानी भएको',
-    'refunded': 'फिर्ता गरिएको',
+    'paid': 'भुक्तानी गरियो',
+    'refunded': 'फिर्ता गरियो',
     
     // Messages
-    'booking_confirmed': 'बुकिङ पुष्टि भएको',
+    'booking_confirmed': 'बुकिङ पुष्टि गरियो',
     'service_scheduled': 'सेवा तोकिएको',
     'payment_required': 'भुक्तानी आवश्यक',
     'cancellation_successful': 'रद्दीकरण सफल',
-    'refund_processed': 'फिर्ता प्रक्रिया गरिएको',
+    'refund_processed': 'फिर्ता प्रक्रिया गरियो',
     
     // AI Responses
-    'ai_booking_success': 'बुक गरिएको: {service} {date} मा {time} बजे {district} मा',
+    'ai_booking_success': 'बुक गरियो: {service} {date} मा {time} बजे {district} मा',
     'ai_quote_response': 'अनुमानित लागत: रु. {amount} {service} को लागि {district} मा',
     'ai_availability_response': 'उपलब्ध समय: {slots}',
     'ai_cancellation_success': 'बुकिङ {bookingId} सफलतापूर्वक रद्द गरिएको',
@@ -214,6 +224,30 @@ export function getLocaleFromHeader(acceptLanguage: string): Locale {
   
   // Default to English
   return 'en';
+}
+
+// Get locale from cookie
+export function getLocaleFromCookie(): Locale {
+  if (typeof document === 'undefined') return 'en';
+  
+  const cookies = document.cookie.split(';');
+  const localeCookie = cookies.find(cookie => cookie.trim().startsWith('locale='));
+  
+  if (localeCookie) {
+    const locale = localeCookie.split('=')[1];
+    if (isValidLocale(locale)) {
+      return locale;
+    }
+  }
+  
+  return 'en';
+}
+
+// Set locale cookie
+export function setLocaleCookie(locale: Locale): void {
+  if (typeof document === 'undefined') return;
+  
+  document.cookie = `locale=${locale}; path=/; max-age=31536000`; // 1 year
 }
 
 // Format currency based on locale

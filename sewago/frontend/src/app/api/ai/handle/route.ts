@@ -5,7 +5,7 @@ import { retrieve, getPolicy } from '@/lib/ai/rag';
 import { moderate, ground, formatAnswer, checkAnswerQuality, generateFallbackResponse } from '@/lib/ai/guardrails';
 import { generateAIResponse } from '@/lib/ai/provider';
 import { t, tInterpolate, type Locale } from '@/lib/i18n';
-import { connectDB } from '@/lib/mongodb';
+import { dbConnect } from '@/lib/mongodb';
 import { Service } from '@/models/Service';
 import { checkRateLimit } from '@/lib/rate-limit-adapters';
 import { ratePolicies } from '@/lib/rate-policies';
@@ -250,7 +250,7 @@ async function enrichSlots(slots: Slots, context?: any, locale: Locale = 'en'): 
   const enriched = { ...slots };
   
   try {
-    await connectDB();
+    await dbConnect();
     
     // Enrich from context
     if (context?.district && !enriched.district) {

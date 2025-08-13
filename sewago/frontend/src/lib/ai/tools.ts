@@ -1,7 +1,7 @@
 import { Service } from '@/models/Service';
 import { Booking } from '@/models/Booking';
 import { User } from '@/models/User';
-import { connectDB } from '@/lib/mongodb';
+import { dbConnect } from '@/lib/mongodb';
 
 // Tool result interface
 export interface ToolResult<T = any> {
@@ -20,7 +20,7 @@ export async function bookService(params: {
   notes?: string;
 }): Promise<ToolResult<{ bookingId: string; totalAmount: number }>> {
   try {
-    await connectDB();
+    await dbConnect();
     
     // Validate service exists
     const service = await Service.findById(params.serviceId);
@@ -83,7 +83,7 @@ export async function getQuote(params: {
   hours?: number;
 }): Promise<ToolResult<{ minPrice: number; maxPrice: number; estimatedPrice: number }>> {
   try {
-    await connectDB();
+    await dbConnect();
     
     const service = await Service.findById(params.serviceId);
     if (!service) {
@@ -120,7 +120,7 @@ export async function findAvailability(params: {
   dateRange: { start: string; end: string };
 }): Promise<ToolResult<{ availableSlots: Array<{ date: string; times: string[] }> }>> {
   try {
-    await connectDB();
+    await dbConnect();
     
     // Mock availability for now - in real app, this would check provider schedules
     const availableSlots = [
@@ -152,7 +152,7 @@ export async function cancelBooking(params: {
   reason?: string;
 }): Promise<ToolResult<{ refundAmount?: number }>> {
   try {
-    await connectDB();
+    await dbConnect();
     
     const booking = await Booking.findById(params.bookingId);
     if (!booking) {
@@ -191,7 +191,7 @@ export async function getService(params: {
   serviceId: string;
 }): Promise<ToolResult<{ service: any }>> {
   try {
-    await connectDB();
+    await dbConnect();
     
     const service = await Service.findById(params.serviceId);
     if (!service) {
@@ -216,7 +216,7 @@ export async function getUserBookings(params: {
   status?: string;
 }): Promise<ToolResult<{ bookings: any[] }>> {
   try {
-    await connectDB();
+    await dbConnect();
     
     const filter: any = { userId: params.userId };
     if (params.status) {
