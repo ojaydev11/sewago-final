@@ -1,8 +1,0 @@
-flask
-gunicorn
-pymongo
-flask-cors
-flask-sqlalchemy
-sqlalchemy
-tarsafe
-werkzeug
