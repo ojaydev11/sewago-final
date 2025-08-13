@@ -44,6 +44,7 @@
       ]
     }
   ]
+  // Trigger redeploy for static pages
 }
 
 
