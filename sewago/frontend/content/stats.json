@@ -1,0 +1,28 @@
+{
+  "stats": [
+    {
+      "number": "10,000+",
+      "label": "Completed Jobs",
+      "description": "Successfully delivered services across Nepal",
+      "icon": "check-circle"
+    },
+    {
+      "number": "4.9",
+      "label": "Average Rating",
+      "description": "Customer satisfaction score out of 5",
+      "icon": "star"
+    },
+    {
+      "number": "25+",
+      "label": "Cities Covered",
+      "description": "Service coverage across major Nepali cities",
+      "icon": "map-pin"
+    },
+    {
+      "number": "500+",
+      "label": "Verified Providers",
+      "description": "Background-checked and certified professionals",
+      "icon": "shield-check"
+    }
+  ]
+}

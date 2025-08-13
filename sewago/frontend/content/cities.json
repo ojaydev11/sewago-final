@@ -1,0 +1,44 @@
+{
+  "cities": [
+    {
+      "name": "Kathmandu",
+      "slug": "kathmandu",
+      "description": "Capital city with comprehensive service coverage",
+      "population": "1.5M+",
+      "services": ["house-cleaning", "electrical-work", "gardening", "plumbing", "carpentry", "painting"],
+      "image": "/images/cities/kathmandu.jpg"
+    },
+    {
+      "name": "Lalitpur",
+      "slug": "lalitpur",
+      "description": "Historic city with modern service infrastructure",
+      "population": "300K+",
+      "services": ["house-cleaning", "electrical-work", "gardening", "plumbing"],
+      "image": "/images/cities/lalitpur.jpg"
+    },
+    {
+      "name": "Bhaktapur",
+      "slug": "bhaktapur",
+      "description": "Cultural heritage city with growing service demand",
+      "population": "200K+",
+      "services": ["house-cleaning", "electrical-work", "gardening"],
+      "image": "/images/cities/bhaktapur.jpg"
+    },
+    {
+      "name": "Pokhara",
+      "slug": "pokhara",
+      "description": "Tourist destination with expanding service coverage",
+      "population": "500K+",
+      "services": ["house-cleaning", "electrical-work", "gardening", "plumbing"],
+      "image": "/images/cities/pokhara.jpg"
+    },
+    {
+      "name": "Chitwan",
+      "slug": "chitwan",
+      "description": "Emerging service market with growing opportunities",
+      "population": "400K+",
+      "services": ["house-cleaning", "electrical-work"],
+      "image": "/images/cities/chitwan.jpg"
+    }
+  ]
+}
