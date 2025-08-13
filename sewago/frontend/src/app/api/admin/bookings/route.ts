@@ -15,7 +15,13 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    await dbConnect();
+    const db = await dbConnect();
+    if (!db) {
+      return NextResponse.json(
+        { error: 'Database connection not available' },
+        { status: 503 }
+      );
+    }
 
     const bookings = await Booking.find({})
       .populate('serviceId', 'name category basePrice')
