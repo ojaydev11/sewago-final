@@ -43,14 +43,7 @@
         }
       ]
     }
-  ],
-  "env": {
-    "MONGODB_URI": "@mongodb_uri",
-    "AUTH_SECRET": "@auth_secret",
-    "AUTH_URL": "@auth_url",
-    "NEXTAUTH_URL": "@nextauth_url",
-    "NEXTAUTH_SECRET": "@nextauth_secret"
-  }
+  ]
 }
 
 
