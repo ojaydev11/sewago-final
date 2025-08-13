@@ -4,7 +4,7 @@ import "./globals.css";
 import { ReactQueryProvider } from "@/providers/react-query";
 import { LanguageProvider } from "@/providers/language";
 import { cn } from "@/lib/utils";
-import { Navbar } from "@/components/Navbar";
+import Navbar from "@/components/Navbar";
 import { LiteModeProvider } from "@/providers/lite";
 import { AuthProvider } from "@/providers/auth";
 import "@/lib/auth";

@@ -7,7 +7,7 @@ import {
   ShieldCheckIcon,
   SparklesIcon,
   TrophyIcon,
-  HandshakeIcon
+  UserIcon
 } from '@heroicons/react/24/outline';
 
 const stats = [
@@ -37,7 +37,7 @@ const values = [
     color: "from-purple-500 to-indigo-500"
   },
   {
-    icon: HandshakeIcon,
+    icon: UserIcon,
     title: "Community Impact",
     description: "Supporting local businesses and creating employment opportunities in Nepal.",
     color: "from-green-500 to-emerald-500"
