@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useSession } from 'next-auth/react';
+
 import Link from 'next/link';
 import { 
   ClockIcon,
@@ -26,13 +26,40 @@ interface DashboardStats {
 }
 
 export default function AdminDashboard() {
-  const { data: session } = useSession();
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
+  const [session, setSession] = useState<any>(null);
 
   useEffect(() => {
+    // Only fetch session if auth is enabled
+    if (typeof window !== 'undefined' && process.env.NEXT_PUBLIC_AUTH_ENABLED === 'true') {
+      const fetchSession = async () => {
+        try {
+          const response = await fetch('/api/auth/session');
+          if (response.ok) {
+            const sessionData = await response.json();
+            setSession(sessionData);
+          }
+        } catch (error) {
+          console.error('Failed to fetch session:', error);
+        }
+      };
+      fetchSession();
+    }
     fetchDashboardStats();
   }, []);
+
+  // Check if auth is enabled
+  if (typeof window !== 'undefined' && process.env.NEXT_PUBLIC_AUTH_ENABLED !== 'true') {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">Authentication Required</h1>
+          <p className="text-gray-600">Authentication is currently disabled.</p>
+        </div>
+      </div>
+    );
+  }
 
   const fetchDashboardStats = async () => {
     try {

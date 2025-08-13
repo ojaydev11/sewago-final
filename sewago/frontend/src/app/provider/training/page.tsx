@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useSession } from 'next-auth/react';
+
 import Link from 'next/link';
 import { 
   AcademicCapIcon,
@@ -13,7 +13,7 @@ import {
   PlayIcon
 } from '@heroicons/react/24/outline';
 import { Button } from '@/components/ui/button';
-import { FEATURE_FLAGS } from '@/config/flags';
+import { FEATURE_FLAGS } from '@/lib/feature-flags';
 
 interface Course {
   id: string;
@@ -41,21 +41,36 @@ interface TrainingData {
 }
 
 export default function ProviderTraining() {
-  const { data: session } = useSession();
   const [courses, setCourses] = useState<Course[]>([]);
   const [trainingData, setTrainingData] = useState<TrainingData | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
+  const [session, setSession] = useState<any>(null);
 
   useEffect(() => {
-    if (session?.user?.id) {
-      fetchTrainingData();
+    // Only fetch session if auth is enabled
+    if (FEATURE_FLAGS.AUTH_ENABLED) {
+      const fetchSession = async () => {
+        try {
+          const response = await fetch('/api/auth/session');
+          if (response.ok) {
+            const sessionData = await response.json();
+            setSession(sessionData);
+            if (sessionData?.user?.id) {
+              fetchTrainingData(sessionData.user.id);
+            }
+          }
+        } catch (error) {
+          console.error('Failed to fetch session:', error);
+        }
+      };
+      fetchSession();
     }
-  }, [session]);
+  }, []);
 
-  const fetchTrainingData = async () => {
+  const fetchTrainingData = async (userId: string) => {
     try {
-      const response = await fetch(`/api/training/courses?providerId=${session?.user?.id}`);
+      const response = await fetch(`/api/training/courses?providerId=${userId}`);
       if (response.ok) {
         const data = await response.json();
         setCourses(data.courses);
@@ -74,6 +89,17 @@ export default function ProviderTraining() {
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-4">Training Hub</h1>
           <p className="text-gray-600">Training hub is currently unavailable.</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!FEATURE_FLAGS.AUTH_ENABLED) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">Authentication Required</h1>
+          <p className="text-gray-600">Authentication is currently disabled.</p>
         </div>
       </div>
     );

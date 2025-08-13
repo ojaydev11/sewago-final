@@ -4,6 +4,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useSession, signOut } from 'next-auth/react';
+import { FEATURE_FLAGS } from '@/lib/feature-flags';
 import { 
   Bars3Icon, 
   XMarkIcon, 
@@ -16,10 +17,130 @@ import {
   ArrowRightOnRectangleIcon
 } from '@heroicons/react/24/outline';
 
+// Conditional auth component that only renders when auth is enabled
+function AuthNavbar({ isScrolled }: { isScrolled: boolean }) {
+  const { data: session } = useSession();
+
+  const handleSignOut = () => {
+    signOut({ callbackUrl: '/' });
+  };
+
+  return (
+    <>
+      {session ? (
+        <div className="relative group">
+          <button className="flex items-center space-x-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-lg text-white hover:bg-white/30 transition-all duration-300">
+            <UserCircleIcon className="w-5 h-5" />
+            <span className="text-sm font-medium">{session.user?.name || 'User'}</span>
+          </button>
+          
+          <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-slate-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
+            <div className="py-2">
+              <Link 
+                href="/dashboard/user" 
+                className="flex items-center px-4 py-2 text-slate-700 hover:bg-slate-50 transition-colors duration-200"
+              >
+                <UserCircleIcon className="w-4 h-4 mr-3" />
+                Dashboard
+              </Link>
+              <Link 
+                href="/account" 
+                className="flex items-center px-4 py-2 text-slate-700 hover:bg-slate-50 transition-colors duration-200"
+              >
+                <Cog6ToothIcon className="w-4 h-4 mr-3" />
+                Account
+              </Link>
+              <hr className="my-1" />
+              <button 
+                onClick={handleSignOut}
+                className="flex items-center w-full px-4 py-2 text-red-600 hover:bg-red-50 transition-colors duration-200"
+              >
+                <ArrowRightOnRectangleIcon className="w-4 h-4 mr-3" />
+                Sign Out
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <>
+          <Link 
+            href="/auth/login" 
+            className={`text-sm font-medium transition-colors duration-300 ${
+              isScrolled 
+                ? 'text-slate-700 hover:text-primary' 
+                : 'text-white hover:text-primary-200'
+            }`}
+          >
+            Sign In
+          </Link>
+          <Link 
+            href="/auth/register" 
+            className="btn-primary text-sm px-4 py-2"
+          >
+            Get Started
+          </Link>
+        </>
+      )}
+    </>
+  );
+}
+
+// Mobile auth component
+function MobileAuthNavbar({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (open: boolean) => void }) {
+  const { data: session } = useSession();
+
+  const handleSignOut = () => {
+    signOut({ callbackUrl: '/' });
+    setIsOpen(false);
+  };
+
+  return (
+    <>
+      {session ? (
+        <>
+          <hr className="my-2" />
+          <Link 
+            href="/dashboard/user" 
+            className="flex items-center px-4 py-2 text-slate-700 hover:bg-slate-50 rounded-lg transition-colors duration-200"
+            onClick={() => setIsOpen(false)}
+          >
+            <UserCircleIcon className="w-4 h-4 mr-3" />
+            Dashboard
+          </Link>
+          <button 
+            onClick={handleSignOut}
+            className="flex items-center w-full px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-200"
+          >
+            <ArrowRightOnRectangleIcon className="w-4 h-4 mr-3" />
+            Sign Out
+          </button>
+        </>
+      ) : (
+        <>
+          <hr className="my-2" />
+          <Link 
+            href="/auth/login" 
+            className="block px-4 py-2 text-slate-700 hover:bg-slate-50 rounded-lg transition-colors duration-200"
+            onClick={() => setIsOpen(false)}
+          >
+            Sign In
+          </Link>
+          <Link 
+            href="/auth/register" 
+            className="block px-4 py-2 bg-primary text-white rounded-lg text-center font-medium"
+            onClick={() => setIsOpen(false)}
+          >
+            Get Started
+          </Link>
+        </>
+      )}
+    </>
+  );
+}
+
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const { data: session } = useSession();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -29,10 +150,6 @@ export default function Navbar() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  const handleSignOut = () => {
-    signOut({ callbackUrl: '/' });
-  };
 
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
@@ -96,59 +213,17 @@ export default function Navbar() {
 
           {/* Auth Buttons / User Menu */}
           <div className="hidden lg:flex items-center space-x-4">
-            {session ? (
-              <div className="relative group">
-                <button className="flex items-center space-x-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-lg text-white hover:bg-white/30 transition-all duration-300">
-                  <UserCircleIcon className="w-5 h-5" />
-                  <span className="text-sm font-medium">{session.user?.name || 'User'}</span>
-                </button>
-                
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-slate-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
-                  <div className="py-2">
-                    <Link 
-                      href="/dashboard/user" 
-                      className="flex items-center px-4 py-2 text-slate-700 hover:bg-slate-50 transition-colors duration-200"
-                    >
-                      <UserCircleIcon className="w-4 h-4 mr-3" />
-                      Dashboard
-                    </Link>
-                    <Link 
-                      href="/account" 
-                      className="flex items-center px-4 py-2 text-slate-700 hover:bg-slate-50 transition-colors duration-200"
-                    >
-                      <Cog6ToothIcon className="w-4 h-4 mr-3" />
-                      Account
-                    </Link>
-                    <hr className="my-1" />
-                    <button 
-                      onClick={handleSignOut}
-                      className="flex items-center w-full px-4 py-2 text-red-600 hover:bg-red-50 transition-colors duration-200"
-                    >
-                      <ArrowRightOnRectangleIcon className="w-4 h-4 mr-3" />
-                      Sign Out
-                    </button>
-                  </div>
-                </div>
-              </div>
+            {FEATURE_FLAGS.AUTH_ENABLED ? (
+              <AuthNavbar isScrolled={isScrolled} />
             ) : (
-              <>
-                <Link 
-                  href="/auth/login" 
-                  className={`text-sm font-medium transition-colors duration-300 ${
-                    isScrolled 
-                      ? 'text-slate-700 hover:text-primary' 
-                      : 'text-white hover:text-primary-200'
-                  }`}
-                >
-                  Sign In
-                </Link>
-                <Link 
-                  href="/auth/register" 
-                  className="btn-primary text-sm px-4 py-2"
-                >
-                  Get Started
-                </Link>
-              </>
+              // Auth disabled - show "coming soon" message
+              <span className={`text-sm font-medium transition-colors duration-300 ${
+                isScrolled 
+                  ? 'text-slate-500' 
+                  : 'text-white/70'
+              }`}>
+                Login (coming soon)
+              </span>
             )}
           </div>
 
@@ -206,45 +281,14 @@ export default function Navbar() {
                 Contact
               </Link>
               
-              {session ? (
-                <>
-                  <hr className="my-2" />
-                  <Link 
-                    href="/dashboard/user" 
-                    className="flex items-center px-4 py-2 text-slate-700 hover:bg-slate-50 rounded-lg transition-colors duration-200"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    <UserCircleIcon className="w-4 h-4 mr-3" />
-                    Dashboard
-                  </Link>
-                  <button 
-                    onClick={() => {
-                      handleSignOut();
-                      setIsOpen(false);
-                    }}
-                    className="flex items-center w-full px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-200"
-                  >
-                    <ArrowRightOnRectangleIcon className="w-4 h-4 mr-3" />
-                    Sign Out
-                  </button>
-                </>
+              {FEATURE_FLAGS.AUTH_ENABLED ? (
+                <MobileAuthNavbar isOpen={isOpen} setIsOpen={setIsOpen} />
               ) : (
                 <>
                   <hr className="my-2" />
-                  <Link 
-                    href="/auth/login" 
-                    className="block px-4 py-2 text-slate-700 hover:bg-slate-50 rounded-lg transition-colors duration-200"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    Sign In
-                  </Link>
-                  <Link 
-                    href="/auth/register" 
-                    className="block px-4 py-2 bg-primary text-white rounded-lg text-center font-medium"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    Get Started
-                  </Link>
+                  <span className="block px-4 py-2 text-slate-500 text-center">
+                    Login (coming soon)
+                  </span>
                 </>
               )}
             </div>
