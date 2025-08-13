@@ -26,7 +26,7 @@ const BookingForm = () => {
             This page is under development. Browse our services on the homepage to get started.
           </p>
           <Link to="/">
-            <Button className="bg-[#0F62FE] hover:bg-[#0052CC] text-white font-semibold px-8 py-4 text-lg rounded-lg">
+            <Button className="bg-[#0F62FE] hover:bg-[#0052CC] text-white font-semibold">
               Browse Services
             </Button>
           </Link>

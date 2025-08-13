@@ -26,7 +26,7 @@ const Dashboard = () => {
             This page is under development. Sign in to access your dashboard.
           </p>
           <Link to="/login">
-            <Button className="bg-[#0F62FE] hover:bg-[#0052CC] text-white font-semibold px-8 py-4 text-lg rounded-lg">
+            <Button className="bg-[#0F62FE] hover:bg-[#0052CC] text-white font-semibold">
               Sign In
             </Button>
           </Link>

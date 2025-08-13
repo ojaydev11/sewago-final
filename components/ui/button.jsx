@@ -21,8 +21,8 @@ const Button = React.forwardRef(({
   const sizes = {
     default: "h-10 px-4 py-2 text-sm",
     sm: "h-8 px-3 py-1 text-xs",
-    lg: "h-12 px-6 py-3 text-base",
-    xl: "h-14 px-8 py-4 text-lg"
+    lg: "h-11 px-5 py-2.5 text-base",
+    xl: "h-12 px-6 py-3 text-lg"
   }
 
   return (
