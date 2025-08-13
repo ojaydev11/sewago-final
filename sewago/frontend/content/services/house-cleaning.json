@@ -1,0 +1,50 @@
+{
+  "slug": "house-cleaning",
+  "title": "House Cleaning",
+  "summary": "Professional home cleaning services including deep cleaning, regular maintenance, and post-construction cleanup.",
+  "descriptionMdx": "Professional house cleaning services that transform your living space. Our certified cleaners use eco-friendly products and proven techniques to deliver spotless results every time.",
+  "icon": "sparkles",
+  "startingPrice": 500,
+  "features": [
+    "Eco-friendly cleaning products",
+    "Flexible scheduling options",
+    "Satisfaction guaranteed",
+    "Deep cleaning available",
+    "Post-construction cleanup",
+    "Regular maintenance plans"
+  ],
+  "faqs": [
+    {
+      "q": "How long does a typical cleaning take?",
+      "a": "A standard cleaning typically takes 2-4 hours depending on the size of your home and the level of cleaning required."
+    },
+    {
+      "q": "Do you provide cleaning supplies?",
+      "a": "Yes, we bring all necessary eco-friendly cleaning supplies and equipment. You don't need to provide anything."
+    },
+    {
+      "q": "Are your cleaners insured and bonded?",
+      "a": "Absolutely! All our cleaners are fully insured, bonded, and undergo thorough background checks for your peace of mind."
+    },
+    {
+      "q": "Can I schedule recurring cleanings?",
+      "a": "Yes, we offer flexible recurring cleaning plans including weekly, bi-weekly, and monthly schedules to keep your home consistently clean."
+    }
+  ],
+  "seo": {
+    "title": "Professional House Cleaning Services in Nepal | SewaGo",
+    "description": "Get professional house cleaning services in Nepal. Eco-friendly cleaning, flexible scheduling, and guaranteed satisfaction. Book now with SewaGo!",
+    "keywords": ["house cleaning", "home cleaning", "cleaning services", "Nepal", "eco-friendly cleaning", "professional cleaners"],
+    "ogImage": "/og/house-cleaning.png"
+  },
+  "schema": {
+    "@type": "Service",
+    "serviceType": "House Cleaning",
+    "areaServed": ["Kathmandu", "Lalitpur", "Bhaktapur", "Pokhara", "Chitwan"],
+    "provider": {
+      "@type": "Organization",
+      "name": "SewaGo",
+      "url": "https://sewago-final.vercel.app"
+    }
+  }
+}
