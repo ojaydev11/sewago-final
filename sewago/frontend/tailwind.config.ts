@@ -60,6 +60,7 @@ const config: Config = {
         display: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
         body: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
         devanagari: ['Noto Sans Devanagari', 'Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        nepali: ['Mukta', 'Noto Sans Devanagari', 'Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
       },
       container: {
         center: true,
