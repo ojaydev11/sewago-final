@@ -90,7 +90,7 @@ After deployment, run the seed script:
 export MONGODB_URI="your-production-connection-string"
 
 # Run seed script
-npm run db:seed
+npm run seed
 ```
 
 ### **2. Verify Data**

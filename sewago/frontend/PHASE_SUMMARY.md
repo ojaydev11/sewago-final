@@ -177,7 +177,7 @@ NEXT_PUBLIC_BASE_URL=http://localhost:3000
 ### 1. Database Setup
 ```bash
 # Seed the database
-npm run db:seed
+npm run seed
 ```
 
 ### 2. Build and Deploy
@@ -244,7 +244,7 @@ npm run test:watch
 
 ### Immediate Actions
 1. **Set up environment variables** in `.env.local`
-2. **Run database seed** with `npm run db:seed`
+2. **Run database seed** with `npm run seed`
 3. **Start development server** with `npm run dev`
 4. **Test all functionality** across different user roles
 
