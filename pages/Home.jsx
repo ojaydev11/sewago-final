@@ -98,8 +98,9 @@ const Home = () => {
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link to="/services">
                   <Button 
-                    size="lg" 
-                    className="bg-[#F4AF1B] hover:bg-[#E69A0D] text-[#0B1220] font-semibold px-8 py-4 text-lg rounded-lg transition-all duration-300 hover:scale-105"
+                    variant="secondary"
+                    size="lg"
+                    className="font-semibold"
                   >
                     Book a Service
                     <ArrowRight className="ml-2" size={20} />
@@ -109,7 +110,7 @@ const Home = () => {
                   <Button 
                     variant="outline" 
                     size="lg" 
-                    className="border-white text-white hover:bg-white hover:text-[#0F62FE] font-semibold px-8 py-4 text-lg rounded-lg transition-all duration-300"
+                    className="border-white text-white hover:bg-white hover:text-[#0F62FE] font-semibold"
                   >
                     Become a Provider
                   </Button>
@@ -281,8 +282,9 @@ const Home = () => {
           </p>
           <Link to="/services">
             <Button 
+              variant="secondary"
               size="lg" 
-              className="bg-[#F4AF1B] hover:bg-[#E69A0D] text-[#0B1220] font-semibold px-8 py-4 text-lg rounded-lg transition-all duration-300 hover:scale-105"
+              className="font-semibold"
             >
               Book Now
             </Button>
