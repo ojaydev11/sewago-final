@@ -1,0 +1,50 @@
+{
+  "slug": "electrical-work",
+  "title": "Electrical Work",
+  "summary": "Certified electrical repairs, installations, and maintenance by licensed professionals.",
+  "descriptionMdx": "Professional electrical services delivered by certified electricians. From simple repairs to complex installations, we ensure safety and quality in every project.",
+  "icon": "zap",
+  "startingPrice": 800,
+  "features": [
+    "Licensed electricians",
+    "24/7 emergency service",
+    "Warranty included",
+    "Safety certified",
+    "Modern equipment",
+    "Code compliance"
+  ],
+  "faqs": [
+    {
+      "q": "Are your electricians licensed?",
+      "a": "Yes, all our electricians are fully licensed and certified by the Nepal Electricity Authority (NEA)."
+    },
+    {
+      "q": "Do you offer emergency services?",
+      "a": "Yes, we provide 24/7 emergency electrical services for urgent repairs and safety issues."
+    },
+    {
+      "q": "What types of electrical work do you do?",
+      "a": "We handle residential and commercial electrical work including repairs, installations, maintenance, and safety inspections."
+    },
+    {
+      "q": "Do you provide warranties?",
+      "a": "Yes, all our electrical work comes with a comprehensive warranty for your peace of mind."
+    }
+  ],
+  "seo": {
+    "title": "Professional Electrical Services in Nepal | SewaGo",
+    "description": "Get certified electrical services in Nepal. Licensed electricians, 24/7 emergency service, and warranty included. Book now with SewaGo!",
+    "keywords": ["electrical services", "electrician", "electrical repair", "Nepal", "licensed electrician", "electrical installation"],
+    "ogImage": "/og/electrical-work.png"
+  },
+  "schema": {
+    "@type": "Service",
+    "serviceType": "Electrical Work",
+    "areaServed": ["Kathmandu", "Lalitpur", "Bhaktapur", "Pokhara", "Chitwan"],
+    "provider": {
+      "@type": "Organization",
+      "name": "SewaGo",
+      "url": "https://sewago-final.vercel.app"
+    }
+  }
+}
