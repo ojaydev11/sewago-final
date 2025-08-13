@@ -2,93 +2,99 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
 export interface ISupportTicket extends Document {
-  ticketId: string;
-  userId?: string;
-  email: string;
+  _id: string;
   name: string;
+  email: string;
   phone?: string;
-  bookingId?: string;
-  category: 'booking' | 'payment' | 'service' | 'technical' | 'other';
-  priority: 'low' | 'medium' | 'high' | 'urgent';
-  status: 'open' | 'assigned' | 'waiting_customer' | 'resolved' | 'closed';
   subject: string;
-  description: string;
+  message: string;
+  status: 'open' | 'in_progress' | 'resolved' | 'closed';
+  priority: 'low' | 'medium' | 'high' | 'urgent';
+  category: 'general' | 'technical' | 'billing' | 'service' | 'other';
   assignedTo?: string;
-  resolution?: string;
-  tags: string[];
-  notes: {
-    content: string;
-    addedBy: string;
-    isPrivate: boolean;
-    createdAt: Date;
-  }[];
+  notes?: string;
+  resolvedAt?: Date;
   createdAt: Date;
   updatedAt: Date;
-  resolvedAt?: Date;
 }
 
-const SupportTicketSchema: Schema = new Schema({
-  ticketId: { 
-    type: String, 
-    required: true, 
-    unique: true,
-    index: true
-  },
-  userId: { 
+const SupportTicketSchema = new Schema<ISupportTicket>({
+  name: {
     type: String,
-    index: true 
-  },
-  email: { 
-    type: String, 
     required: true,
-    index: true
+    trim: true,
   },
-  name: { type: String, required: true },
-  phone: { type: String },
-  bookingId: { 
+  email: {
     type: String,
-    index: true 
-  },
-  category: { 
-    type: String, 
     required: true,
-    enum: ['booking', 'payment', 'service', 'technical', 'other'],
-    index: true
+    trim: true,
+    lowercase: true,
   },
-  priority: { 
-    type: String, 
+  phone: {
+    type: String,
+    trim: true,
+  },
+  subject: {
+    type: String,
     required: true,
+    trim: true,
+    maxlength: 200,
+  },
+  message: {
+    type: String,
+    required: true,
+    trim: true,
+    maxlength: 2000,
+  },
+  status: {
+    type: String,
+    enum: ['open', 'in_progress', 'resolved', 'closed'],
+    default: 'open',
+  },
+  priority: {
+    type: String,
     enum: ['low', 'medium', 'high', 'urgent'],
     default: 'medium',
-    index: true
   },
-  status: { 
-    type: String, 
-    required: true,
-    enum: ['open', 'assigned', 'waiting_customer', 'resolved', 'closed'],
-    default: 'open',
-    index: true
+  category: {
+    type: String,
+    enum: ['general', 'technical', 'billing', 'service', 'other'],
+    default: 'general',
   },
-  subject: { type: String, required: true },
-  description: { type: String, required: true },
-  assignedTo: { type: String },
-  resolution: { type: String },
-  tags: [{ type: String }],
-  notes: [{
-    content: { type: String, required: true },
-    addedBy: { type: String, required: true },
-    isPrivate: { type: Boolean, default: false },
-    createdAt: { type: Date, default: Date.now }
-  }],
-  resolvedAt: { type: Date }
-}, {
-  timestamps: true,
-  collection: 'support_tickets'
+  assignedTo: {
+    type: String,
+    trim: true,
+  },
+  notes: {
+    type: String,
+    trim: true,
+    maxlength: 1000,
+  },
+  resolvedAt: {
+    type: Date,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+  updatedAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
-// Indexes for efficient querying
-SupportTicketSchema.index({ status: 1, priority: -1, createdAt: -1 });
-SupportTicketSchema.index({ assignedTo: 1, status: 1 });
-SupportTicketSchema.index({ category: 1, status: 1 });
+// Update the updatedAt field before saving
+SupportTicketSchema.pre('save', function(next) {
+  this.updatedAt = new Date();
+  next();
+});
 
-export default mongoose.models.SupportTicket || mongoose.model<ISupportTicket>('SupportTicket', SupportTicketSchema);
+// Indexes for performance
+SupportTicketSchema.index({ email: 1 });
+SupportTicketSchema.index({ status: 1 });
+SupportTicketSchema.index({ priority: 1 });
+SupportTicketSchema.index({ category: 1 });
+SupportTicketSchema.index({ createdAt: -1 });
+
+// Hot-reload guard
+export const SupportTicket = mongoose.models.SupportTicket || mongoose.model<ISupportTicket>('SupportTicket', SupportTicketSchema);

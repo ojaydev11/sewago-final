@@ -1,4 +1,8 @@
-"use client";
+'use client';
+
+// Force dynamic rendering to prevent build-time prerendering
+export const dynamic = 'force-dynamic';
+
 import { useParams, useSearchParams, useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";

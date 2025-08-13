@@ -1,104 +1,98 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import dbConnect from '@/lib/db';
+import { dbConnect } from '@/lib/mongodb';
 import { Booking } from '@/models/Booking';
 import { Service } from '@/models/Service';
-import { checkRateLimit } from '@/lib/rate-limit-adapters';
-import { ratePolicies } from '@/lib/rate-policies';
-import { getIdentifier } from '@/lib/request-identity';
+import { User } from '@/models/User';
 
+// POST /api/bookings - Create a new booking
 export async function POST(request: NextRequest) {
   try {
-    // Rate limiting defense in depth for booking creation
-    const identifier = getIdentifier(request);
-    const rateLimitResult = await checkRateLimit(identifier, ratePolicies.default);
+    const session = await getServerSession(authOptions);
     
-    if (!rateLimitResult.success) {
+    if (!session?.user) {
       return NextResponse.json(
-        { 
-          error: 'Too many booking requests. Please wait before trying again.',
-          retryAfter: rateLimitResult.retryAfter 
-        },
-        { 
-          status: 429,
-          headers: rateLimitResult.headers
-        }
+        { message: 'Authentication required' },
+        { status: 401 }
       );
     }
 
-    // Check authentication
-    const session = await getServerSession(authOptions);
-    if (!session || session.user.role !== 'customer') {
+    const body = await request.json();
+    const { serviceSlug, date, timeSlot, address, notes } = body;
+
+    // Validate required fields
+    if (!serviceSlug || !date || !timeSlot || !address) {
       return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
+        { message: 'Missing required fields' },
+        { status: 400 }
       );
     }
 
     await dbConnect();
 
-    const { serviceId, date, timeSlot, address, notes } = await request.json();
-
-    // Validation
-    if (!serviceId || !date || !timeSlot || !address) {
+    // Find the service
+    const service = await Service.findOne({ slug: serviceSlug, active: true });
+    if (!service) {
       return NextResponse.json(
-        { error: 'Missing required fields' },
-        { status: 400 }
-      );
-    }
-
-    // Verify service exists and is active
-    const service = await Service.findById(serviceId);
-    if (!service || !service.active) {
-      return NextResponse.json(
-        { error: 'Service not found or inactive' },
+        { message: 'Service not found' },
         { status: 404 }
       );
     }
 
-    // Create booking
-    const booking = await Booking.create({
-      customerId: session.user.id,
-      serviceId,
+    // Find the user
+    const user = await User.findById(session.user.id);
+    if (!user) {
+      return NextResponse.json(
+        { message: 'User not found' },
+        { status: 404 }
+      );
+    }
+
+    // Create the booking
+    const booking = new Booking({
+      customerId: user._id,
+      serviceId: service._id,
       date: new Date(date),
       timeSlot,
       address,
       notes: notes || '',
-      status: 'pending',
+      status: 'pending'
     });
 
-    // Populate service details for response
-    await booking.populate('serviceId');
+    await booking.save();
 
-    const response = NextResponse.json({
-      message: 'Booking created successfully',
-      booking,
-    }, { status: 201 });
+    // Populate the booking with service and customer details
+    const populatedBooking = await Booking.findById(booking._id)
+      .populate('serviceId', 'name slug basePrice')
+      .populate('customerId', 'name email phone')
+      .lean();
 
-    // Add rate limit headers to successful response
-    Object.entries(rateLimitResult.headers).forEach(([key, value]) => {
-      response.headers.set(key, value);
-    });
-
-    return response;
+    return NextResponse.json(
+      { 
+        message: 'Booking created successfully',
+        booking: populatedBooking
+      },
+      { status: 201 }
+    );
 
   } catch (error) {
-    console.error('Create booking error:', error);
+    console.error('Error creating booking:', error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { message: 'Internal server error' },
       { status: 500 }
     );
   }
 }
 
+// GET /api/bookings - Get bookings based on user role
 export async function GET(request: NextRequest) {
   try {
-    // Check authentication
     const session = await getServerSession(authOptions);
-    if (!session) {
+    
+    if (!session?.user) {
       return NextResponse.json(
-        { error: 'Unauthorized' },
+        { message: 'Authentication required' },
         { status: 401 }
       );
     }
@@ -106,46 +100,54 @@ export async function GET(request: NextRequest) {
     await dbConnect();
 
     const { searchParams } = new URL(request.url);
-    const role = searchParams.get('role') || session.user.role;
     const status = searchParams.get('status');
-    const limit = parseInt(searchParams.get('limit') || '50');
+    const limit = parseInt(searchParams.get('limit') || '10');
     const page = parseInt(searchParams.get('page') || '1');
 
-    // Build query based on user role
-    const query: any = {};
+               const query: any = {};
+    let populateFields = '';
 
-    if (role === 'customer') {
-      query.customerId = session.user.id;
-    } else if (role === 'provider') {
-      query.providerId = session.user.id;
-    } else if (role === 'admin') {
-      // Admin can see all bookings
-    } else {
-      return NextResponse.json(
-        { error: 'Invalid role specified' },
-        { status: 400 }
-      );
+    // Build query based on user role
+    switch (session.user.role) {
+      case 'customer':
+        query.customerId = session.user.id;
+        populateFields = 'serviceId providerId';
+        break;
+      case 'provider':
+        query.providerId = session.user.id;
+        populateFields = 'serviceId customerId';
+        break;
+      case 'admin':
+        // Admins can see all bookings
+        populateFields = 'serviceId customerId providerId';
+        break;
+      default:
+        return NextResponse.json(
+          { message: 'Invalid user role' },
+          { status: 400 }
+        );
     }
 
-    // Filter by status if specified
-    if (status) {
+    // Add status filter if provided
+    if (status && status !== 'all') {
       query.status = status;
     }
 
-    // Execute query with pagination
+    // Calculate pagination
     const skip = (page - 1) * limit;
-    
-    const [bookings, total] = await Promise.all([
-      Booking.find(query)
-        .populate('serviceId', 'name category basePrice')
-        .populate('customerId', 'name email phone')
-        .populate('providerId', 'name email phone')
-        .sort({ createdAt: -1 })
-        .skip(skip)
-        .limit(limit)
-        .lean(),
-      Booking.countDocuments(query)
-    ]);
+
+    // Fetch bookings
+    const bookings = await Booking.find(query)
+      .populate('serviceId', 'name slug basePrice category')
+      .populate('customerId', 'name email phone')
+      .populate('providerId', 'name email phone')
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .lean();
+
+    // Get total count for pagination
+    const total = await Booking.countDocuments(query);
 
     return NextResponse.json({
       bookings,
@@ -153,14 +155,14 @@ export async function GET(request: NextRequest) {
         page,
         limit,
         total,
-        pages: Math.ceil(total / limit),
-      },
+        pages: Math.ceil(total / limit)
+      }
     });
 
   } catch (error) {
-    console.error('Get bookings error:', error);
+    console.error('Error fetching bookings:', error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { message: 'Internal server error' },
       { status: 500 }
     );
   }

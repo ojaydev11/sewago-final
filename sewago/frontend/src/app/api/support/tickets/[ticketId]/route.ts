@@ -1,6 +1,6 @@
 
 import { NextRequest, NextResponse } from 'next/server';
-import SupportTicket from '@/models/SupportTicket';
+import { SupportTicket } from '@/models/SupportTicket';
 import { AuditLogger } from '@/lib/audit-logger';
 import { dbConnect } from '@/lib/mongodb';
 
