@@ -19,7 +19,7 @@ function App() {
       <Router>
         <div className="min-h-screen bg-background">
           <Navbar />
-          <main className="container mx-auto px-4 py-6">
+          <main className="pt-20">
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
