@@ -2,8 +2,16 @@ import mongoose from 'mongoose';
 
 const MONGODB_URI = process.env.MONGODB_URI;
 
+// Skip database connection during build time or when no URI is provided
 if (!MONGODB_URI) {
-  throw new Error('Please define the MONGODB_URI environment variable inside .env.local');
+  // During build time, this is expected and not an error
+  if (process.env.NODE_ENV === 'production' && process.env.VERCEL) {
+    // We're in Vercel build environment, skip connection
+    console.warn('Build time detected, skipping MongoDB connection');
+  } else {
+    // Local development without URI
+    console.warn('MONGODB_URI not set, skipping database connection');
+  }
 }
 
 /**
@@ -18,6 +26,11 @@ if (!cached) {
 }
 
 async function dbConnect() {
+  // Skip connection if no URI is available
+  if (!MONGODB_URI) {
+    return null;
+  }
+
   if (cached.conn) {
     return cached.conn;
   }
@@ -27,7 +40,7 @@ async function dbConnect() {
       bufferCommands: false,
     };
 
-    cached.promise = mongoose.connect(MONGODB_URI!, opts).then((mongoose) => {
+    cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
       return mongoose;
     });
   }
