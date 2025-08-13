@@ -12,18 +12,15 @@
     "test:watch": "vitest --reporter=dot",
     "test:coverage": "vitest run --coverage",
     "test:ui": "vitest --ui",
-    "db:seed": "tsx scripts/seed.ts",
-    "db:reset": "tsx scripts/seed.ts",
-    "db:studio": "echo 'MongoDB Atlas provides web interface at cloud.mongodb.com'",
-    "vercel-build": "npm run build",
-    "postinstall": "echo 'SewaGo dependencies installed successfully!'"
+    "seed": "tsx scripts/seed.ts",
+    "vercel-build": "npm run build"
   },
   "dependencies": {
     "@auth/mongodb-adapter": "^3.10.0",
     "@formatjs/intl-localematcher": "^0.6.1",
     "@heroicons/react": "^2.2.0",
     "@hookform/resolvers": "^3.9.1",
-    "@prisma/client": "^6.14.0",
+
     "@radix-ui/react-avatar": "^1.1.10",
     "@radix-ui/react-dialog": "^1.1.14",
     "@radix-ui/react-dropdown-menu": "^2.1.15",
@@ -46,7 +43,7 @@
     "next-auth": "^4.24.11",
     "next-intl": "^4.3.4",
     "next-themes": "^0.4.6",
-    "prisma": "^6.14.0",
+
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-hook-form": "^7.53.2",

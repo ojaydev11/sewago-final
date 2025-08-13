@@ -4,9 +4,29 @@ import { authOptions } from '@/lib/auth';
 import dbConnect from '@/lib/db';
 import { Booking } from '@/models/Booking';
 import { Service } from '@/models/Service';
+import { checkRateLimit } from '@/lib/rate-limit-adapters';
+import { ratePolicies } from '@/lib/rate-policies';
+import { getIdentifier } from '@/lib/request-identity';
 
 export async function POST(request: NextRequest) {
   try {
+    // Rate limiting defense in depth for booking creation
+    const identifier = getIdentifier(request);
+    const rateLimitResult = await checkRateLimit(identifier, ratePolicies.default);
+    
+    if (!rateLimitResult.success) {
+      return NextResponse.json(
+        { 
+          error: 'Too many booking requests. Please wait before trying again.',
+          retryAfter: rateLimitResult.retryAfter 
+        },
+        { 
+          status: 429,
+          headers: rateLimitResult.headers
+        }
+      );
+    }
+
     // Check authentication
     const session = await getServerSession(authOptions);
     if (!session || session.user.role !== 'customer') {
@@ -51,10 +71,17 @@ export async function POST(request: NextRequest) {
     // Populate service details for response
     await booking.populate('serviceId');
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       message: 'Booking created successfully',
       booking,
     }, { status: 201 });
+
+    // Add rate limit headers to successful response
+    Object.entries(rateLimitResult.headers).forEach(([key, value]) => {
+      response.headers.set(key, value);
+    });
+
+    return response;
 
   } catch (error) {
     console.error('Create booking error:', error);
