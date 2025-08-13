@@ -3,9 +3,6 @@
     "app/**/*.ts": {
       "maxDuration": 30
     }
-  },
-  "env": {
-    "NEXT_PUBLIC_CSP_OVERRIDE": "true"
   }
 }
 
