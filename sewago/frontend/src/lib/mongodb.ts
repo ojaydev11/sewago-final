@@ -15,7 +15,14 @@ if (!global.mongoose) {
 }
 
 export async function dbConnect(): Promise<typeof mongoose | null> {
+  // Skip database connection during build time if no URI is provided
+  if (process.env.NODE_ENV === 'production' && !process.env.MONGODB_URI) {
+    console.warn('Build time detected without MONGODB_URI, skipping database connection');
+    return null;
+  }
+  
   if (!process.env.MONGODB_URI) {
+    console.warn('MONGODB_URI not set, skipping database connection');
     return null;
   }
 

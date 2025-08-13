@@ -86,7 +86,7 @@ export async function ground(
   const answerLower = answer.toLowerCase();
   const missing: string[] = [];
   let verifiedFacts = 0;
-  let totalFacts = facts.length;
+  const totalFacts = facts.length;
   
   // Check each fact against the answer
   for (const fact of facts) {

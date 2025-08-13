@@ -33,7 +33,7 @@ export async function GET(request: NextRequest) {
     const page = parseInt(searchParams.get('page') || '1');
 
     // Build query
-    let query: any = { active: true };
+    const query: any = { active: true };
 
     if (category && category !== 'all') {
       query.category = category;

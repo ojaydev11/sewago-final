@@ -112,7 +112,7 @@ export async function GET(request: NextRequest) {
     const page = parseInt(searchParams.get('page') || '1');
 
     // Build query based on user role
-    let query: any = {};
+    const query: any = {};
 
     if (role === 'customer') {
       query.customerId = session.user.id;
