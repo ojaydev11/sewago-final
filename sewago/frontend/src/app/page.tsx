@@ -21,32 +21,32 @@ export default function HomePage() {
         <div className="floating-element"></div>
         
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center min-h-screen">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center min-h-[80vh] lg:min-h-screen">
             <div className="animate-slide-in-left">
               <div className="inline-flex items-center px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-white text-sm font-medium mb-6">
                 <SparklesIcon className="w-4 h-4 mr-2" />
                 <span>Nepal's Premier Service Platform</span>
               </div>
               
-              <h1 className="text-5xl lg:text-7xl font-bold text-white mb-6 leading-tight">
+              <h1 className="text-4xl lg:text-6xl xl:text-7xl font-bold text-white mb-6 leading-tight">
                 Find Trusted
                 <span className="block text-gradient-secondary">Local Services</span>
-                <span className="block text-3xl lg:text-4xl font-normal mt-4 opacity-90">
+                <span className="block text-2xl lg:text-3xl xl:text-4xl font-normal mt-4 opacity-90">
                   in Nepal 🇳🇵
                 </span>
               </h1>
               
-              <p className="text-xl text-white/90 mb-8 leading-relaxed">
+              <p className="text-lg lg:text-xl text-white/90 mb-8 leading-relaxed">
                 Connect with verified local service providers for cleaning, electrical work, 
                 gardening, and more. Quality services, trusted professionals, 
                 <span className="font-semibold"> Namaste! 🙏</span>
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4">
-                <Link href="/services" className="btn-primary text-lg px-8 py-4">
+                <Link href="/services" className="btn-primary text-base lg:text-lg px-6 lg:px-8 py-3 lg:py-4">
                   Explore Services
                 </Link>
-                <Link href="/auth/register" className="btn-outline text-lg px-8 py-4 border-white text-white hover:bg-white hover:text-red-600">
+                <Link href="/auth/register" className="btn-outline text-base lg:text-lg px-6 lg:px-8 py-3 lg:py-4 border-white text-white hover:bg-white hover:text-red-600">
                   Join as Provider
                 </Link>
               </div>
@@ -54,26 +54,26 @@ export default function HomePage() {
             
             <div className="animate-slide-in-right">
               <div className="relative">
-                <div className="card-modern p-8 bg-white/95 backdrop-blur-sm">
+                <div className="card-modern p-6 lg:p-8 bg-white/95 backdrop-blur-sm">
                   <div className="text-center">
-                    <div className="w-24 h-24 bg-gradient-primary rounded-full flex items-center justify-center mx-auto mb-6">
-                      <HeartIcon className="w-12 h-12 text-white" />
+                    <div className="w-20 h-20 lg:w-24 lg:h-24 bg-gradient-primary rounded-full flex items-center justify-center mx-auto mb-6">
+                      <HeartIcon className="w-10 h-10 lg:w-12 lg:h-12 text-white" />
                     </div>
-                    <h3 className="text-2xl font-bold text-gray-800 mb-4">
+                    <h3 className="text-xl lg:text-2xl font-bold text-gray-800 mb-4">
                       Why Choose SewaGo?
                     </h3>
-                    <div className="space-y-4 text-left">
+                    <div className="space-y-3 lg:space-y-4 text-left">
                       <div className="flex items-center">
-                        <StarIcon className="w-5 h-5 text-yellow-500 mr-3" />
-                        <span className="text-gray-700">Verified & Trusted Providers</span>
+                        <StarIcon className="w-4 h-4 lg:w-5 lg:h-5 text-yellow-500 mr-3" />
+                        <span className="text-sm lg:text-base text-gray-700">Verified & Trusted Providers</span>
                       </div>
                       <div className="flex items-center">
-                        <ShieldCheckIcon className="w-5 h-5 text-green-500 mr-3" />
-                        <span className="text-gray-700">100% Secure & Reliable</span>
+                        <ShieldCheckIcon className="w-4 h-4 lg:w-5 lg:h-5 text-green-500 mr-3" />
+                        <span className="text-sm lg:text-base text-gray-700">100% Secure & Reliable</span>
                       </div>
                       <div className="flex items-center">
-                        <ClockIcon className="w-5 h-5 text-blue-500 mr-3" />
-                        <span className="text-gray-700">Quick & Efficient Service</span>
+                        <ClockIcon className="w-4 h-4 lg:w-5 lg:w-5 text-blue-500 mr-3" />
+                        <span className="text-sm lg:text-base text-gray-700">Quick & Efficient Service</span>
                       </div>
                     </div>
                   </div>
