@@ -1,6 +1,6 @@
 
 import crypto from 'crypto';
-import { featureFlags } from './feature-flags';
+import { FEATURE_FLAGS } from './feature-flags';
 
 export interface WebhookPayload {
   event: 'booking.created' | 'booking.accepted' | 'booking.in_progress' | 'booking.completed' | 'booking.cancelled' | 'dispute.resolved';
@@ -44,7 +44,7 @@ export class WebhookService {
   }
 
   async deliverWebhook(payload: WebhookPayload): Promise<void> {
-    if (!featureFlags.WEBHOOKS_ENABLED) {
+    if (!FEATURE_FLAGS.WEBHOOKS_ENABLED) {
       console.log('Webhooks disabled, skipping delivery');
       return;
     }

@@ -26,7 +26,7 @@ export async function GET(
       return NextResponse.json(service);
     } else {
       // Use mock store
-      const services = await mockStore.find({ slug });
+      const services = await mockStore.findServices({ slug });
       const service = services[0];
       
       if (!service) {

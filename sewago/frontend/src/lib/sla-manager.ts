@@ -78,10 +78,10 @@ export class SLAManager {
     const completedBookings = bookings.filter(b => b.status === 'completed');
     const totalJobs = bookings.length;
     
-    let totalAcceptTime = 0;
+    const totalAcceptTime = 0;
     let onTimeJobs = 0;
     let lateJobs = 0;
-    let autoReassignments = bookings.filter(b => b.reassignmentCount > 0).length;
+    const autoReassignments = bookings.filter(b => b.reassignmentCount > 0).length;
 
     completedBookings.forEach(booking => {
       // Calculate accept time (simplified - would need actual accept timestamp)

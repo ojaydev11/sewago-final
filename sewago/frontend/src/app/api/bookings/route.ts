@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { z } from 'zod';
-import { dbConnect } from '@/lib/mongodb';
-import { Booking } from '@/models/Booking';
 import { mockStore } from '@/lib/mockStore';
 
 const createBookingSchema = z.object({
@@ -28,21 +26,10 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const connection = await dbConnect();
+    // Use mock store for now
+    const bookings = await mockStore.findBookings({ userId: session.user.id });
     
-    if (connection) {
-      // Use MongoDB
-      const bookings = await Booking.find({ userId: session.user.id })
-        .populate('serviceId', 'name slug')
-        .sort({ createdAt: -1 });
-      
-      return NextResponse.json(bookings);
-    } else {
-      // Use mock store
-      const bookings = await mockStore.find({ userId: session.user.id });
-      
-      return NextResponse.json(bookings);
-    }
+    return NextResponse.json(bookings);
   } catch (error) {
     console.error('Get bookings API error:', error);
     return NextResponse.json(
@@ -67,41 +54,21 @@ export async function POST(request: NextRequest) {
     const { serviceId, scheduledAt, address, notes, priceEstimateMin, priceEstimateMax } = 
       createBookingSchema.parse(body);
 
-    const connection = await dbConnect();
+    // Use mock store for now
+    const booking = await mockStore.createBooking({
+      userId: session.user.id,
+      serviceId,
+      scheduledAt: new Date(scheduledAt),
+      address,
+      notes,
+      priceEstimateMin,
+      priceEstimateMax,
+    });
     
-    if (connection) {
-      // Use MongoDB
-      const booking = await Booking.create({
-        userId: session.user.id,
-        serviceId,
-        scheduledAt: new Date(scheduledAt),
-        address,
-        notes,
-        priceEstimateMin,
-        priceEstimateMax,
-      });
-      
-      return NextResponse.json({
-        message: 'Booking created successfully',
-        booking,
-      }, { status: 201 });
-    } else {
-      // Use mock store
-      const booking = await mockStore.create({
-        userId: session.user.id,
-        serviceId,
-        scheduledAt: new Date(scheduledAt),
-        address,
-        notes,
-        priceEstimateMin,
-        priceEstimateMax,
-      });
-      
-      return NextResponse.json({
-        message: 'Booking created successfully (mock mode)',
-        booking,
-      }, { status: 201 });
-    }
+    return NextResponse.json({
+      message: 'Booking created successfully (mock mode)',
+      booking,
+    }, { status: 201 });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(

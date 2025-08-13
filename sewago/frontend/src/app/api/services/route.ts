@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
     } else {
       // Use mock store
       const filter = category ? { category } : undefined;
-      const services = await mockStore.find(filter);
+      const services = await mockStore.findServices(filter);
       
       return NextResponse.json(services);
     }

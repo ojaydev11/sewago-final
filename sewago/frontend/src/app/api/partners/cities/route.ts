@@ -1,9 +1,9 @@
 
 import { NextRequest, NextResponse } from 'next/server';
-import { featureFlags } from '@/lib/feature-flags';
+import { FEATURE_FLAGS } from '@/lib/feature-flags';
 
 export async function GET(request: NextRequest) {
-  if (!featureFlags.PARTNER_API_ENABLED) {
+  if (!FEATURE_FLAGS.PARTNER_API_ENABLED) {
     return NextResponse.json(
       { error: 'Partner API is disabled' },
       { status: 503 }
