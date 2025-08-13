@@ -3,8 +3,7 @@ import {
   PhoneIcon,
   MapPinIcon,
   ClockIcon,
-  ChatBubbleLeftRightIcon,
-  SparklesIcon
+  ChatBubbleLeftRightIcon
 } from '@heroicons/react/24/outline';
 
 const contactInfo = [

@@ -5,7 +5,6 @@ import {
   ChevronDownIcon,
   ChevronUpIcon,
   QuestionMarkCircleIcon,
-  SparklesIcon,
   ChatBubbleLeftRightIcon
 } from '@heroicons/react/24/outline';
 
