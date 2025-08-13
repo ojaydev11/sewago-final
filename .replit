@@ -17,4 +17,4 @@ mode = "sequential"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "cd sewago/frontend && npm run dev"
+args = "cd sewago/frontend && npm install && npm run dev -- -p 5000"

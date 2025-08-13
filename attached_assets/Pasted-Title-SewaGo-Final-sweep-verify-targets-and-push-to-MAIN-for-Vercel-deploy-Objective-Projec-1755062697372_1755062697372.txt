@@ -1,0 +1,61 @@
+Title: SewaGo – Final sweep, verify targets, and push to MAIN for Vercel deploy
+
+Objective
+Project is tuned to Lighthouse targets. Do a last error sweep, verify metrics & core flows, ensure flags/env are correct (COD-only), and PUSH to GitHub MAIN so Vercel deploys. No code in chat; analyze and edit the repo directly.
+
+Guardrails
+- Keep ONLY the modern Next.js App Router app; one global stylesheet; no legacy CSS/“blue blobs”.
+- Payments: COD is the ONLY live method. eSewa/Khalti remain integrated but DISABLED via flags.
+- Preserve PWA installability and the achieved Lighthouse scores.
+
+Tasks (in order)
+
+0) Sanity & flags
+- Confirm we’re operating in the Next app folder.
+- Verify env/flags for production build:
+  ESEWA_ENABLED=false
+  KHALTI_ENABLED=false
+  EMAILS_ENABLED=true
+  WALLET_ENABLED=true
+  PROMOS_ENABLED=true
+  SURGE_ENABLED=false
+  DISPUTES_ENABLED=true
+  CITIES_TOOLKIT_ENABLED=true
+  SUPPORT_CENTER_ENABLED=true
+  TRAINING_HUB_ENABLED=true
+  PERSONALIZATION_ENABLED=true
+  PARTNER_API_ENABLED=false
+  WEBHOOKS_ENABLED=false
+- Ensure there is only ONE <Navbar/> (in layout), and NO full-screen gradients/pseudo-elements.
+
+1) Final checks – PWA / SEO / A11y / Perf
+- Confirm manifest + icons, service worker registered, offline page works for pre-cached routes.
+- Validate JSON-LD (Organization + Service + Breadcrumb on service/city pages).
+- Ensure canonical URLs, robots.txt, sitemap.xml include /, /services, service slugs, and service×city pages.
+- Re-run Lighthouse (mobile) on / and one /services/[slug]; record final scores.
+
+2) Core smoke tests (fast)
+- Home renders once; no duplicate nav; no oversize backgrounds.
+- /services grid loads; cards link to /services/[slug].
+- One /services/[slug]: features, FAQs, reviews/warranty, “Book Now” works.
+- Contact form submits (server log/OK state).
+- Booking flow (COD only) completes; confirmation shows “Pay cash after service.”
+- Provider onboarding (lite) completes; admin approval toggles “Verified” badge.
+- Dispute flow: open → status shown.
+- PWA: “Install app” works; offline-lite shows cached pages.
+
+3) Vercel deploy readiness
+- Verify Vercel root directory is the Next app path; add DEPLOY_NOTES if anything changed.
+- Clear any large unoptimized images >200KB above the fold.
+- No console errors in production build.
+
+4) Git push to MAIN
+- Ensure git remote points to the correct GitHub repo.
+- Conventional commit:
+  chore(release): finalize PWA/SEO/a11y/perf, verify flows, push to main for Vercel
+- Push directly to origin main. If main is protected, open a PR with same title and note it needs approval.
+
+5) Post-deploy verification
+- Paste the production Vercel URL.
+- Paste final Lighthouse numbers (mobile) for / and one /services/[slug] and confirm PWA “Installable”.
+- Confirm: COD-only live; eSewa/Khalti disabled; sitemap/robots present; JSON-LD valid; single navbar; all main buttons/flows work (contact, booking, provider approve, dispute).

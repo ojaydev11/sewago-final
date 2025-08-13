@@ -1,4 +1,3 @@
-
 import Link from 'next/link';
 import { 
   CheckCircleIcon,
@@ -11,7 +10,9 @@ import {
   TruckIcon,
   PhoneIcon,
   MapPinIcon,
-  EnvelopeIcon
+  EnvelopeIcon,
+  CheckBadgeIcon,
+  BanknotesIcon
 } from '@heroicons/react/24/outline';
 
 const services = [
@@ -81,12 +82,12 @@ export default function HomePage() {
                   in Nepal
                 </span>
               </h1>
-              
+
               <p className="text-lg lg:text-xl text-white/90 mb-8 leading-relaxed">
                 Connect with verified local service providers for cleaning, electrical work, 
                 gardening, and more. Quality services, trusted professionals.
               </p>
-              
+
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link href="/services" className="btn-primary text-lg px-8 py-4">
                   Explore Services
@@ -96,7 +97,7 @@ export default function HomePage() {
                 </Link>
               </div>
             </div>
-            
+
             <div className="animate-slide-up">
               <div className="card p-8">
                 <div className="text-center">
@@ -138,7 +139,7 @@ export default function HomePage() {
               Getting the service you need is simple and straightforward
             </p>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
               {
@@ -186,7 +187,7 @@ export default function HomePage() {
               From home cleaning to professional repairs, find the perfect service for your needs
             </p>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {services.map((service, index) => (
               <Link key={index} href={`/services/${service.slug}`} className="group">
@@ -199,7 +200,7 @@ export default function HomePage() {
               </Link>
             ))}
           </div>
-          
+
           <div className="text-center mt-12">
             <Link href="/services" className="btn-primary text-lg px-8 py-4">
               View All Services
@@ -219,7 +220,7 @@ export default function HomePage() {
               Don't just take our word for it - hear from our satisfied customers
             </p>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {testimonials.map((testimonial, index) => (
               <div key={index} className="card p-6">
@@ -239,23 +240,99 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="section bg-primary text-white">
-        <div className="container text-center">
-          <h2 className="text-3xl lg:text-4xl font-bold mb-6">
-            Ready to Get Started?
-          </h2>
-          <p className="text-xl text-primary-100 mb-8 max-w-2xl mx-auto">
-            Join thousands of satisfied customers who trust SewaGo for their local service needs
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/auth/register" className="bg-white text-primary hover:bg-slate-100 px-8 py-4 rounded-lg font-semibold text-lg transition-colors">
-              Get Started Now
-            </Link>
-            <Link href="/contact" className="border-2 border-white text-white hover:bg-white hover:text-primary px-8 py-4 rounded-lg font-semibold text-lg transition-colors">
-              Contact Us
-            </Link>
+      {/* Cities We Serve */}
+      <section className="py-16 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              Cities We Serve
+            </h2>
+            <p className="text-xl text-gray-600">
+              Professional services available across Nepal's major cities
+            </p>
           </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              {
+                name: 'Kathmandu',
+                description: 'Nepal\'s capital and largest metropolitan area',
+                services: ['house-cleaning', 'electrical-work', 'plumbing'],
+                image: '🏛️'
+              },
+              {
+                name: 'Lalitpur',
+                description: 'Historic city known for arts and culture',
+                services: ['house-cleaning', 'electrical-work', 'gardening'],
+                image: '🏛️'
+              },
+              {
+                name: 'Bhaktapur',
+                description: 'Ancient city with rich cultural heritage',
+                services: ['house-cleaning', 'electrical-work', 'appliance-repair'],
+                image: '🏯'
+              }
+            ].map((city, index) => (
+              <div key={index} className="bg-white rounded-lg p-6 text-center hover:shadow-lg transition-shadow">
+                <div className="text-4xl mb-4">{city.image}</div>
+                <h3 className="text-xl font-semibold mb-2">{city.name}</h3>
+                <p className="text-gray-600 mb-4">{city.description}</p>
+                <div className="space-y-2">
+                  {city.services.map((service) => (
+                    <Link
+                      key={service}
+                      href={`/services/${service}/${city.name.toLowerCase()}`}
+                      className="block text-sm text-blue-600 hover:text-blue-700"
+                    >
+                      {service.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())} in {city.name}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Trust & Warranty Banner */}
+      <section className="py-8 bg-green-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-wrap items-center justify-center gap-8 text-center">
+            <div className="flex items-center gap-2">
+              <ShieldCheckIcon className="w-6 h-6 text-green-600" />
+              <span className="font-medium text-green-700">30-Day Workmanship Warranty</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <CheckBadgeIcon className="w-6 h-6 text-blue-600" />
+              <span className="font-medium text-blue-700">Verified Professionals</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <BanknotesIcon className="w-6 h-6 text-orange-600" />
+              <span className="font-medium text-orange-700">Cash on Delivery</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <PhoneIcon className="w-6 h-6 text-purple-600" />
+              <span className="font-medium text-purple-700">24/7 Support</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-16 bg-blue-600">
+        <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-bold text-white mb-4">
+            Ready to Book Your Service?
+          </h2>
+          <p className="text-xl text-blue-100 mb-8">
+            Join thousands of satisfied customers across Nepal
+          </p>
+          <Link
+            href="/services"
+            className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
+          >
+            Browse Services
+          </Link>
         </div>
       </section>
 
@@ -269,7 +346,7 @@ export default function HomePage() {
                 Nepal's premier platform for local services. Connecting trusted providers with customers.
               </p>
             </div>
-            
+
             <div>
               <h4 className="text-lg font-semibold mb-4">Services</h4>
               <ul className="space-y-2 text-slate-400">
@@ -279,7 +356,7 @@ export default function HomePage() {
                 <li><Link href="/services/moving" className="hover:text-white transition-colors">Moving</Link></li>
               </ul>
             </div>
-            
+
             <div>
               <h4 className="text-lg font-semibold mb-4">Company</h4>
               <ul className="space-y-2 text-slate-400">
@@ -289,7 +366,7 @@ export default function HomePage() {
                 <li><Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link></li>
               </ul>
             </div>
-            
+
             <div>
               <h4 className="text-lg font-semibold mb-4">Contact Info</h4>
               <div className="space-y-2 text-slate-400">
@@ -308,7 +385,7 @@ export default function HomePage() {
               </div>
             </div>
           </div>
-          
+
           <div className="border-t border-slate-800 pt-8 text-center text-slate-400">
             <p>&copy; 2024 SewaGo. All rights reserved. Made with care in Nepal</p>
           </div>

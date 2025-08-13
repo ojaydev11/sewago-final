@@ -1,135 +1,196 @@
+
+import { Metadata } from 'next';
 import { 
-  UserGroupIcon,
-  StarIcon,
-  ShieldCheckIcon,
+  ShieldCheckIcon, 
+  UserGroupIcon, 
+  MapPinIcon,
+  PhoneIcon,
   ClockIcon,
-  HeartIcon,
-  CheckCircleIcon
+  CheckBadgeIcon
 } from '@heroicons/react/24/outline';
 
-const stats = [
-  { number: '10,000+', label: 'Happy Customers' },
-  { number: '500+', label: 'Service Providers' },
-  { number: '50,000+', label: 'Services Completed' },
-  { number: '4.9', label: 'Average Rating' },
-];
-
-const values = [
-  {
-    icon: ShieldCheckIcon,
-    title: 'Trust & Safety',
-    description: 'All our service providers are thoroughly verified and background-checked.',
-  },
-  {
-    icon: StarIcon,
-    title: 'Quality Service',
-    description: 'We maintain high standards and ensure customer satisfaction in every service.',
-  },
-  {
-    icon: ClockIcon,
-    title: 'Reliability',
-    description: 'Dependable service delivery with punctual and professional providers.',
-  },
-  {
-    icon: HeartIcon,
-    title: 'Customer Care',
-    description: '24/7 customer support to assist you whenever you need help.',
-  },
-];
+export const metadata: Metadata = {
+  title: 'About SewaGo - Professional Home Services in Nepal',
+  description: 'Learn about SewaGo, Nepal\'s trusted platform for professional home services. Our mission, vetting process, and commitment to quality.',
+  keywords: 'about sewago, home services nepal, professional services, trusted platform',
+};
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-white pt-16">
-      {/* Hero Section */}
-      <section className="section bg-slate-50">
-        <div className="container">
-          <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-4xl lg:text-5xl font-bold text-slate-900 mb-6">
-              About SewaGo
-            </h1>
-            <p className="text-xl text-slate-600 mb-8">
-              We're Nepal's leading platform connecting customers with trusted local service providers. 
-              Our mission is to make finding reliable services simple, safe, and convenient.
-            </p>
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-              {stats.map((stat, index) => (
-                <div key={index} className="text-center">
-                  <div className="text-3xl lg:text-4xl font-bold text-primary mb-2">
-                    {stat.number}
-                  </div>
-                  <div className="text-slate-600">{stat.label}</div>
-                </div>
-              ))}
-            </div>
-          </div>
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Hero Section */}
+        <div className="text-center mb-16">
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+            About SewaGo
+          </h1>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            Nepal's most trusted platform for professional home services. 
+            Connecting homeowners with verified, skilled professionals across major cities.
+          </p>
         </div>
-      </section>
 
-      {/* Our Story */}
-      <section className="section">
-        <div className="container">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        {/* Mission Section */}
+        <div className="bg-white rounded-lg p-8 mb-12">
+          <div className="grid lg:grid-cols-2 gap-8 items-center">
             <div>
-              <h2 className="text-3xl font-bold text-slate-900 mb-6">
-                Our Story
-              </h2>
-              <p className="text-slate-600 mb-6">
-                SewaGo was founded with a simple vision: to bridge the gap between customers 
-                seeking reliable services and skilled professionals looking for opportunities. 
-                We recognized the challenges people face in finding trustworthy service providers 
-                in Nepal.
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">Our Mission</h2>
+              <p className="text-gray-600 mb-6">
+                To revolutionize home services in Nepal by providing a reliable, transparent, 
+                and convenient platform that connects homeowners with skilled professionals. 
+                We believe every home deserves quality service at fair prices.
               </p>
-              <p className="text-slate-600 mb-6">
-                Since our launch, we've grown to become Nepal's most trusted platform for local 
-                services, serving thousands of customers and empowering hundreds of service 
-                providers across the country.
-              </p>
-              <div className="flex items-center">
-                <CheckCircleIcon className="w-6 h-6 text-jade mr-3" />
-                <span className="text-slate-700 font-medium">
-                  Verified and trusted since 2024
-                </span>
+              <div className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <CheckBadgeIcon className="w-6 h-6 text-green-600" />
+                  <span>Quality guaranteed services</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <ShieldCheckIcon className="w-6 h-6 text-blue-600" />
+                  <span>30-day workmanship warranty</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <UserGroupIcon className="w-6 h-6 text-purple-600" />
+                  <span>Thoroughly vetted professionals</span>
+                </div>
               </div>
             </div>
-            <div className="bg-primary/5 rounded-2xl p-8">
-              <UserGroupIcon className="w-16 h-16 text-primary mb-6" />
-              <h3 className="text-xl font-bold text-slate-900 mb-4">
-                Building Trust in Nepal
-              </h3>
-              <p className="text-slate-600">
-                We're committed to creating a trusted marketplace where quality services 
-                meet genuine customer needs, contributing to Nepal's growing service economy.
-              </p>
+            <div className="bg-blue-50 rounded-lg p-6">
+              <h3 className="text-xl font-semibold mb-4">Why Choose SewaGo?</h3>
+              <div className="space-y-3 text-sm">
+                <p><strong>Verified Professionals:</strong> All service providers undergo background checks and skill verification</p>
+                <p><strong>Transparent Pricing:</strong> Clear, upfront pricing with no hidden fees</p>
+                <p><strong>Quality Guarantee:</strong> 30-day warranty on all services</p>
+                <p><strong>Easy Booking:</strong> Simple online booking with cash on delivery</p>
+                <p><strong>Local Expertise:</strong> Professionals familiar with local requirements</p>
+              </div>
             </div>
           </div>
         </div>
-      </section>
 
-      {/* Our Values */}
-      <section className="section bg-slate-50">
-        <div className="container">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-slate-900 mb-4">
-              Our Values
-            </h2>
-            <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-              These core values guide everything we do and shape our commitment to customers and providers
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {values.map((value, index) => (
+        {/* Vetting Process */}
+        <div className="bg-white rounded-lg p-8 mb-12">
+          <h2 className="text-3xl font-bold text-gray-900 text-center mb-8">
+            Our Professional Vetting Process
+          </h2>
+          <div className="grid md:grid-cols-4 gap-6">
+            {[
+              {
+                step: '1',
+                title: 'Application Review',
+                description: 'Detailed application with work history and references'
+              },
+              {
+                step: '2',
+                title: 'Background Check',
+                description: 'Comprehensive background verification and identity checks'
+              },
+              {
+                step: '3',
+                title: 'Skill Assessment',
+                description: 'Practical skills test and certification verification'
+              },
+              {
+                step: '4',
+                title: 'Ongoing Monitoring',
+                description: 'Continuous performance monitoring and customer feedback'
+              }
+            ].map((item, index) => (
               <div key={index} className="text-center">
-                <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-6">
-                  <value.icon className="w-8 h-8 text-white" />
+                <div className="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center text-lg font-bold mx-auto mb-4">
+                  {item.step}
                 </div>
-                <h3 className="text-xl font-bold text-slate-900 mb-4">{value.title}</h3>
-                <p className="text-slate-600">{value.description}</p>
+                <h3 className="font-semibold mb-2">{item.title}</h3>
+                <p className="text-sm text-gray-600">{item.description}</p>
               </div>
             ))}
           </div>
         </div>
-      </section>
+
+        {/* Service Areas */}
+        <div className="bg-white rounded-lg p-8 mb-12">
+          <h2 className="text-3xl font-bold text-gray-900 text-center mb-8">
+            Cities We Serve
+          </h2>
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              {
+                city: 'Kathmandu',
+                description: 'Nepal\'s capital and largest metropolitan area',
+                areas: ['Thamel', 'Baluwatar', 'New Baneshwor', 'Kalanki', 'Koteshwor', 'Durbarmarg'],
+                professionals: '200+'
+              },
+              {
+                city: 'Lalitpur',
+                description: 'Historic city known for arts and culture',
+                areas: ['Patan', 'Jawalakhel', 'Sanepa', 'Kupondole', 'Pulchowk', 'Lagankhel'],
+                professionals: '150+'
+              },
+              {
+                city: 'Bhaktapur',
+                description: 'Ancient city with rich cultural heritage',
+                areas: ['Durbar Square', 'Thimi', 'Madhyapur', 'Suryabinayak', 'Changunarayan'],
+                professionals: '100+'
+              }
+            ].map((location, index) => (
+              <div key={index} className="border border-gray-200 rounded-lg p-6">
+                <div className="flex items-center gap-2 mb-3">
+                  <MapPinIcon className="w-5 h-5 text-blue-600" />
+                  <h3 className="text-xl font-semibold">{location.city}</h3>
+                </div>
+                <p className="text-gray-600 mb-4">{location.description}</p>
+                <div className="mb-4">
+                  <p className="text-sm font-medium text-gray-900 mb-2">Service Areas:</p>
+                  <div className="text-sm text-gray-600">
+                    {location.areas.join(', ')}
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <UserGroupIcon className="w-4 h-4 text-green-600" />
+                  <span className="text-green-600 font-medium">{location.professionals} Active Professionals</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Support Information */}
+        <div className="bg-white rounded-lg p-8">
+          <h2 className="text-3xl font-bold text-gray-900 text-center mb-8">
+            Customer Support
+          </h2>
+          <div className="grid md:grid-cols-2 gap-8">
+            <div>
+              <h3 className="text-xl font-semibold mb-4">Get Help When You Need It</h3>
+              <div className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <PhoneIcon className="w-5 h-5 text-blue-600" />
+                  <div>
+                    <p className="font-medium">Phone Support</p>
+                    <p className="text-sm text-gray-600">+977-9800000000</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <ClockIcon className="w-5 h-5 text-green-600" />
+                  <div>
+                    <p className="font-medium">Available Hours</p>
+                    <p className="text-sm text-gray-600">7 AM - 10 PM, 7 days a week</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="bg-gray-50 rounded-lg p-6">
+              <h4 className="font-semibold mb-3">Payment Policy</h4>
+              <div className="space-y-2 text-sm">
+                <p><strong>Cash on Service Delivery:</strong> Pay only after the service is completed to your satisfaction</p>
+                <p><strong>No Advance Payment:</strong> We don't require any upfront payment for bookings</p>
+                <p><strong>Transparent Pricing:</strong> All costs are clearly communicated before service begins</p>
+                <p><strong>Warranty:</strong> 30-day guarantee on all completed work</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
