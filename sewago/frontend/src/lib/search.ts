@@ -1,5 +1,5 @@
 
-import { featureFlags } from './feature-flags';
+import { FEATURE_FLAGS } from './feature-flags';
 
 export interface SearchFilters {
   query?: string;
@@ -69,7 +69,7 @@ export class SearchEngine {
   private popularSearches = ['house cleaning', 'electrical work', 'plumbing', 'gardening'];
 
   async search(filters: SearchFilters, userId?: string): Promise<SearchResponse> {
-    if (!featureFlags.SEARCH_ENABLED) {
+    if (!FEATURE_FLAGS.SEARCH_ENABLED) {
       return {
         results: [],
         totalCount: 0,

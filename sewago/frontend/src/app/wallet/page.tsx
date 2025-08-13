@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import { walletService } from '@/lib/wallet';
-import { featureFlags } from '@/lib/feature-flags';
+import { FEATURE_FLAGS } from '@/lib/feature-flags';
 import type { WalletBalance, WalletEntry } from '@/lib/wallet';
 
 export default function WalletPage() {
@@ -13,7 +13,7 @@ export default function WalletPage() {
   const [filter, setFilter] = useState<'all' | 'loyalty' | 'referral' | 'resolution' | 'promotion'>('all');
 
   useEffect(() => {
-    if (featureFlags.WALLET_ENABLED) {
+    if (FEATURE_FLAGS.WALLET_ENABLED) {
       loadWalletData();
     } else {
       setLoading(false);
@@ -62,7 +62,7 @@ export default function WalletPage() {
     }
   };
 
-  if (!featureFlags.WALLET_ENABLED) {
+      if (!FEATURE_FLAGS.WALLET_ENABLED) {
     return (
       <div className="min-h-screen bg-gray-50 p-8 flex items-center justify-center">
         <div className="text-center">

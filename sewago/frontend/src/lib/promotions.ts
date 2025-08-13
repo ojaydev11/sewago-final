@@ -1,5 +1,5 @@
 
-import { featureFlags } from './feature-flags';
+import { FEATURE_FLAGS } from './feature-flags';
 
 export interface Promotion {
   id: string;
@@ -92,7 +92,7 @@ export class PromotionEngine {
     city: string,
     isFirstBooking: boolean
   ): Promise<PromoApplication> {
-    if (!featureFlags.PROMOS_ENABLED) {
+    if (!FEATURE_FLAGS.PROMOS_ENABLED) {
       return {
         promotionId: '',
         code,

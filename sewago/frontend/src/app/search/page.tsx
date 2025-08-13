@@ -4,7 +4,7 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { searchEngine } from '@/lib/search';
-import { featureFlags } from '@/lib/feature-flags';
+import { FEATURE_FLAGS } from '@/lib/feature-flags';
 import type { SearchFilters, SearchResult } from '@/lib/search';
 
 export default function SearchPage() {
@@ -22,7 +22,7 @@ export default function SearchPage() {
   });
 
   useEffect(() => {
-    if (featureFlags.SEARCH_ENABLED) {
+    if (FEATURE_FLAGS.SEARCH_ENABLED) {
       performSearch();
     }
   }, [filters]);
@@ -54,7 +54,7 @@ export default function SearchPage() {
     router.push(`/search?${params.toString()}`);
   };
 
-  if (!featureFlags.SEARCH_ENABLED) {
+      if (!FEATURE_FLAGS.SEARCH_ENABLED) {
     return (
       <div className="min-h-screen bg-gray-50 p-8 flex items-center justify-center">
         <div className="text-center">

@@ -1,5 +1,5 @@
 
-import { featureFlags } from './feature-flags';
+import { FEATURE_FLAGS } from './feature-flags';
 
 export interface PricingModifier {
   id: string;
@@ -75,7 +75,7 @@ export class PricingEngine {
     isExpressSlot: boolean = false,
     demandLevel: 'high' | 'medium' | 'low' = 'medium'
   ): PricingResult {
-    if (!featureFlags.SURGE_ENABLED) {
+    if (!FEATURE_FLAGS.SURGE_ENABLED) {
       return {
         basePrice,
         modifiers: [],
