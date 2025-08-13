@@ -1,9 +1,29 @@
 import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import { Service } from '@/models/Service';
+import { checkRateLimit } from '@/lib/rate-limit-adapters';
+import { ratePolicies } from '@/lib/rate-policies';
+import { getIdentifier } from '@/lib/request-identity';
 
 export async function GET(request: NextRequest) {
   try {
+    // Rate limiting defense in depth for public API
+    const identifier = getIdentifier(request);
+    const rateLimitResult = await checkRateLimit(identifier, ratePolicies.publicApi);
+    
+    if (!rateLimitResult.success) {
+      return NextResponse.json(
+        { 
+          error: 'Too many requests. Please wait before trying again.',
+          retryAfter: rateLimitResult.retryAfter 
+        },
+        { 
+          status: 429,
+          headers: rateLimitResult.headers
+        }
+      );
+    }
+
     await dbConnect();
 
     const { searchParams } = new URL(request.url);
@@ -39,7 +59,7 @@ export async function GET(request: NextRequest) {
       Service.countDocuments(query)
     ]);
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       services,
       pagination: {
         page,
@@ -48,6 +68,13 @@ export async function GET(request: NextRequest) {
         pages: Math.ceil(total / limit),
       },
     });
+
+    // Add rate limit headers to successful response
+    Object.entries(rateLimitResult.headers).forEach(([key, value]) => {
+      response.headers.set(key, value);
+    });
+
+    return response;
 
   } catch (error) {
     console.error('Services API error:', error);
