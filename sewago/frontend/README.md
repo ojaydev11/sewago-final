@@ -113,7 +113,7 @@ NEXT_PUBLIC_BASE_URL=http://localhost:3000
 mongod
 
 # In another terminal, seed the database
-npm run db:seed
+npm run seed
 ```
 
 #### Option B: MongoDB Atlas
@@ -123,7 +123,7 @@ npm run db:seed
 4. Update `MONGODB_URI` in `.env.local`
 5. Run the seed script:
 ```bash
-npm run db:seed
+npm run seed
 ```
 
 ### 5. Start Development Server
@@ -269,13 +269,10 @@ npm run format
 ### Database Management
 ```bash
 # Seed database
-npm run db:seed
-
-# Reset database
-npm run db:reset
+npm run seed
 
 # View database (MongoDB Atlas)
-npm run db:studio
+echo 'MongoDB Atlas provides web interface at cloud.mongodb.com'
 ```
 
 ### Component Development

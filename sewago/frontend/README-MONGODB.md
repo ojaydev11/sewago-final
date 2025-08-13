@@ -75,7 +75,7 @@ npm install
 ### **4. Seed Database**
 ```bash
 # Populate with sample data
-npm run db:seed
+npm run seed
 
 # Reset database (clears all data)
 npm run db:reset
