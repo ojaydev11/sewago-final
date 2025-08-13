@@ -1,37 +1,117 @@
-import { api } from "./api";
+import NextAuth from 'next-auth';
+import { MongoDBAdapter } from '@auth/mongodb-adapter';
+import CredentialsProvider from 'next-auth/providers/credentials';
+import bcrypt from 'bcryptjs';
+import { getMongoClient } from './mongodb';
+import { User } from '../models/User';
 
-let isRefreshing = false;
-let pending: Array<() => void> = [];
+export const authOptions = {
+  adapter: MongoDBAdapter(getMongoClient()!),
+  providers: [
+    CredentialsProvider({
+      name: 'credentials',
+      credentials: {
+        email: { label: 'Email', type: 'email' },
+        password: { label: 'Password', type: 'password' }
+      },
+      async authorize(credentials) {
+        if (!credentials?.email || !credentials?.password) {
+          return null;
+        }
 
-api.interceptors.request.use((config) => {
-  const token = typeof window !== "undefined" ? localStorage.getItem("sewago_access") : null;
-  if (token) config.headers.Authorization = `Bearer ${token}`;
-  return config;
-});
+        try {
+          const user = await User.findOne({ email: credentials.email });
+          
+          if (!user) {
+            return null;
+          }
 
-api.interceptors.response.use(
-  (res) => res,
-  async (error) => {
-    const original = error.config;
-    if (error.response?.status === 401 && !original._retry) {
-      if (isRefreshing) {
-        await new Promise<void>((resolve) => pending.push(resolve));
-        return api(original);
+          const isPasswordValid = await bcrypt.compare(credentials.password, user.passwordHash);
+          
+          if (!isPasswordValid) {
+            return null;
+          }
+
+          return {
+            id: user._id.toString(),
+            email: user.email,
+            name: user.name,
+            role: user.role,
+            phone: user.phone,
+          };
+        } catch (error) {
+          console.error('Auth error:', error);
+          return null;
+        }
       }
-      original._retry = true;
-      isRefreshing = true;
-      try {
-        const res = await api.post("/auth/refresh");
-        localStorage.setItem("sewago_access", res.data.accessToken);
-        pending.forEach((fn) => fn());
-        pending = [];
-        return api(original);
-      } finally {
-        isRefreshing = false;
+    })
+  ],
+  session: {
+    strategy: 'jwt',
+  },
+  callbacks: {
+    async jwt({ token, user }: any) {
+      if (user) {
+        token.role = user.role;
+        token.phone = user.phone;
       }
-    }
-    return Promise.reject(error);
+      return token;
+    },
+    async session({ session, token }: any) {
+      if (token) {
+        session.user.role = token.role;
+        session.user.phone = token.phone;
+      }
+      return session;
+    },
+  },
+  pages: {
+    signIn: '/account/login',
+  },
+  secret: process.env.AUTH_SECRET,
+};
+
+export default NextAuth(authOptions);
+
+// Helper functions for server-side auth
+export async function getSession() {
+  const { getServerSession } = await import('next-auth');
+  return await getServerSession(authOptions);
+}
+
+export async function getCurrentUser() {
+  const session = await getSession();
+  return session?.user;
+}
+
+export async function requireAuth() {
+  const session = await getSession();
+  
+  if (!session?.user) {
+    const { redirect } = await import('next/navigation');
+    redirect('/account/login');
   }
-);
+  
+  return session.user;
+}
+
+export async function requireRole(role: string) {
+  const user = await requireAuth();
+  
+  if (user.role !== role) {
+    const { redirect } = await import('next/navigation');
+    redirect('/');
+  }
+  
+  return user;
+}
+
+export async function requireProvider() {
+  return await requireRole('PROVIDER');
+}
+
+export async function requireCustomer() {
+  return await requireRole('CUSTOMER');
+}
 
 

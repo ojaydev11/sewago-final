@@ -1,15 +1,59 @@
-import type { MetadataRoute } from "next";
+import { MetadataRoute } from 'next';
+import { db } from '@/lib/db';
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const base = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
-  const routes: MetadataRoute.Sitemap = [
-    { url: `${base}/`, changeFrequency: "weekly", priority: 1 },
-    { url: `${base}/services`, changeFrequency: "weekly", priority: 0.8 },
-    { url: `${base}/about`, changeFrequency: "monthly", priority: 0.5 },
-    { url: `${base}/contact`, changeFrequency: "monthly", priority: 0.5 },
-    { url: `${base}/faqs`, changeFrequency: "monthly", priority: 0.5 },
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const baseUrl = process.env.NEXTAUTH_URL || 'https://your-domain.vercel.app';
+  
+  // Static pages
+  const staticPages = [
+    {
+      url: baseUrl,
+      lastModified: new Date(),
+      changeFrequency: 'daily' as const,
+      priority: 1,
+    },
+    {
+      url: `${baseUrl}/services`,
+      lastModified: new Date(),
+      changeFrequency: 'daily' as const,
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/about`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/contact`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.6,
+    },
   ];
-  return routes;
+
+  // Dynamic service pages
+  let servicePages: MetadataRoute.Sitemap = [];
+  
+  try {
+    if (process.env.MONGODB_URI) {
+      const services = await db.service.findMany({
+        where: { isActive: true },
+        select: { slug: true, updatedAt: true }
+      });
+
+      servicePages = services.map((service) => ({
+        url: `${baseUrl}/services/${service.slug}`,
+        lastModified: service.updatedAt || new Date(),
+        changeFrequency: 'weekly' as const,
+        priority: 0.8,
+      }));
+    }
+  } catch (error) {
+    console.warn('Could not fetch services for sitemap:', error);
+  }
+
+  return [...staticPages, ...servicePages];
 }
 
 
