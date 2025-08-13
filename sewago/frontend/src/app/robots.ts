@@ -1,16 +1,66 @@
-import type { MetadataRoute } from "next";
+import { MetadataRoute } from 'next'
 
 export default function robots(): MetadataRoute.Robots {
-  const base = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://sewago.com'
+  
   return {
     rules: [
-      { userAgent: "*", allow: "/" },
-      { userAgent: "*", disallow: "/admin" },
-      { userAgent: "*", disallow: "/dashboard" },
-      { userAgent: "*", disallow: "/auth" },
+      {
+        userAgent: '*',
+        allow: [
+          '/',
+          '/services',
+          '/about',
+          '/contact',
+          '/faqs',
+          '/privacy',
+          '/terms',
+          '/auth/login',
+          '/auth/register',
+          '/provider/register',
+        ],
+        disallow: [
+          '/api/',
+          '/admin/',
+          '/dashboard/',
+          '/provider/',
+          '/book/',
+          '/chat/',
+          '/wallet/',
+          '/_next/',
+          '/static/',
+        ],
+      },
+      {
+        userAgent: 'Googlebot',
+        allow: '/',
+        disallow: [
+          '/api/',
+          '/admin/',
+          '/dashboard/',
+          '/provider/',
+          '/book/',
+          '/chat/',
+          '/wallet/',
+        ],
+      },
+      {
+        userAgent: 'Bingbot',
+        allow: '/',
+        disallow: [
+          '/api/',
+          '/admin/',
+          '/dashboard/',
+          '/provider/',
+          '/book/',
+          '/chat/',
+          '/wallet/',
+        ],
+      },
     ],
-    sitemap: `${base}/sitemap.xml`,
-  };
+    sitemap: `${baseUrl}/sitemap.xml`,
+    host: baseUrl,
+  }
 }
 
 
