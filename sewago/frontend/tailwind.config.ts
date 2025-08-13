@@ -1,10 +1,12 @@
 import type { Config } from "tailwindcss";
 
 const config: Config = {
+  darkMode: ['class'],
   content: [
-    "./src/app/**/*.{ts,tsx,mdx}",
-    "./src/components/**/*.{ts,tsx}",
-    "./src/lib/**/*.{ts,tsx}",
+    './app/**/*.{js,ts,jsx,tsx,mdx}',
+    './pages/**/*.{js,ts,jsx,tsx,mdx}',
+    './components/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/**/*.{js,ts,jsx,tsx,mdx}'
   ],
   theme: {
     extend: {
@@ -29,6 +31,11 @@ const config: Config = {
       },
     },
   },
+  safelist: [
+    { pattern: /(bg|text|border)-(red|blue|green|yellow|gray|zinc|neutral)-(50|100|200|300|400|500|600|700|800|900)/ },
+    { pattern: /(p|px|py|m|mx|my)-([0-9]|1[0-2])/ },
+    { pattern: /(sm|md|lg|xl|2xl):.*/ }
+  ],
   plugins: [],
 };
 
