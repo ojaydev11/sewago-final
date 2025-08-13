@@ -10,6 +10,13 @@ export interface IService extends Document {
   basePrice: number;
   image?: string;
   active: boolean;
+  hasWarranty: boolean;
+  warrantyDays?: number;
+  isVerified: boolean;
+  reviewStats?: {
+    averageRating: number;
+    totalReviews: number;
+  };
   createdAt: Date;
   updatedAt: Date;
 }
@@ -55,6 +62,28 @@ const ServiceSchema = new Schema<IService>({
     type: Boolean,
     default: true,
   },
+  hasWarranty: {
+    type: Boolean,
+    default: false,
+  },
+  warrantyDays: {
+    type: Number,
+    min: 0,
+  },
+  isVerified: {
+    type: Boolean,
+    default: false,
+  },
+  reviewStats: {
+    averageRating: {
+      type: Number,
+      default: 0,
+    },
+    totalReviews: {
+      type: Number,
+      default: 0,
+    },
+  },
   createdAt: {
     type: Date,
     default: Date.now,
@@ -76,6 +105,7 @@ ServiceSchema.index({ slug: 1 });
 ServiceSchema.index({ category: 1 });
 ServiceSchema.index({ active: 1 });
 ServiceSchema.index({ basePrice: 1 });
+ServiceSchema.index({ createdAt: 1 });
 
 // Hot-reload guard
 export const Service = mongoose.models.Service || mongoose.model<IService>('Service', ServiceSchema);

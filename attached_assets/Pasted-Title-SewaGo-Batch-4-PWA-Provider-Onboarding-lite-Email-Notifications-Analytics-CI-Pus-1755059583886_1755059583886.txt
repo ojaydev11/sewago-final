@@ -1,0 +1,113 @@
+Title: SewaGo – Batch 4: PWA + Provider Onboarding (lite) + Email Notifications + Analytics/CI + Push to main
+
+Objective
+Analyze the existing Next.js App Router codebase and ship these upgrades end-to-end:
+- PWA: installable app with offline-lite cache for /, /services, /services/[slug], /about, /contact.
+- Provider Onboarding (lite) + Admin review panel.
+- Email notifications (booking + contact form), feature-flagged.
+- Analytics & error monitoring.
+- QA (Playwright smoke) + CI (GitHub Actions).
+- Keep payment **COD only**; **eSewa remains in codebase but disabled** behind feature flag as in Batch 3.
+- Push to GitHub MAIN so Vercel redeploys automatically.
+
+Guardrails
+- Do NOT paste big code here; inspect and modify the repo directly.
+- Preserve the modern Next.js app only. No duplicate headers, no legacy CSS. No blue blobs.
+- Keep existing routing and design system established in Batch 2/3.
+
+Tasks (do in order)
+
+0) Pre-flight & backup
+- Create a safety branch: chore/sewago-batch4-backup from current HEAD.
+- Confirm only one global stylesheet is loaded; ensure Tailwind content globs point ONLY to the Next app.
+- Reconfirm: PAYMENTS_ESEWA_ENABLED=false (feature flag); COD is live.
+
+1) PWA (installable + offline-lite)
+- Add manifest.json and proper app icons (192/512). Theme color = SewaGo primary.
+- Add a service worker strategy (next-pwa or App Router SW) with:
+  - HTML/CSS/JS: Stale-While-Revalidate
+  - images/fonts: Cache-First with versioned cache
+  - pages pre-cache: /, /services, top 2–3 /services/[slug], /about, /contact
+- Add “Install app” prompt UX (non-intrusive button in Navbar menu or footer).
+- Acceptance:
+  - Lighthouse PWA checklist passes (installable).
+  - App loads offline for the pre-cached routes with a friendly offline fallback page.
+  - No layout shift introduced.
+
+2) Provider Onboarding (lite) + Admin review
+- Add a multi-step wizard for providers (name, phone, email, services offered, cities served, short bio, availability, docs placeholder).
+- Data persistence: Use server actions to store records in a durable location the app already supports (e.g., a JSON file under /data/providers.json or adapter you’ve been using). Avoid exposing secrets. (If a DB already exists in repo, use it.)
+- “Verified Provider” badge toggled by an `approved` flag.
+- Provider dashboard (read-only list of own submissions is OK for now).
+- Admin page `/admin/providers` (protected by simple gate: env ADMIN_EMAILS or password prompt) to approve/reject providers, toggle `approved`, and view submitted fields.
+- Acceptance:
+  - New provider can complete the wizard and see a success state.
+  - Admin can approve/reject; approved providers show “Verified” badge on relevant lists/cards.
+
+3) Email notifications (feature-flagged)
+- Feature flags: EMAILS_ENABLED=true/false; EMAIL_PROVIDER=resend|smtp|log.
+- Templates:
+  - Booking created (to customer + internal ops).
+  - Contact form received (to internal ops + autoreply to user).
+- Transport:
+  - If RESEND_API_KEY present → send via Resend.
+  - Else if SMTP creds present → Nodemailer SMTP.
+  - Else → log mode (capture payload server-side; no runtime error).
+- Acceptance:
+  - With EMAILS_ENABLED=true + RESEND_API_KEY set, messages are sent successfully.
+  - With EMAILS_ENABLED=false or no keys, app logs the would-be send (no crash, no 500).
+
+4) Booking UX polish & trust
+- Add reschedule/cancel requests (server actions) that update booking status and send email (if EMAILS_ENABLED).
+- Confirm “Cash on delivery” is visible on booking confirmation + service detail.
+- Keep or add “30-day workmanship warranty” and “Verified Provider” trust strip sitewide.
+- Add ratings micro-component (stars + count) to service detail (seed data ok) to match/beat local/global competitors.
+
+5) Programmatic SEO expansion (finish)
+- Ensure service × city landing pages are generated (Kathmandu, Lalitpur, Bhaktapur) with localized H1/meta and JSON-LD Service schema (include `areaServed`).
+- Add Organization and LocalBusiness JSON-LD on home/about; ensure canonical links, robots, and sitemap include all service and service×city URLs.
+- Acceptance:
+  - Rich Results test passes for at least one service detail and one service×city page.
+  - Lighthouse SEO ≥ 95 (mobile).
+
+6) Analytics & monitoring
+- Enable Vercel Analytics and Speed Insights.
+- Add Sentry (optional): wire only if SENTRY_DSN present; otherwise noop.
+- Error boundaries and not-found pages branded and helpful.
+
+7) Performance & a11y hardening
+- Lighthouse mobile targets: Performance ≥ 90, Best Practices ≥ 95, Accessibility ≥ 95, SEO ≥ 95.
+- Ensure next/image usage; compress large assets; eliminate CLS; visible focus rings; contrast AA+; aria-labels for buttons/links.
+
+8) QA & CI
+- Add Playwright smoke tests for:
+  - Home renders with single navbar.
+  - /services loads and cards link to /services/[slug].
+  - One /services/[slug] page renders features/FAQs and a “Book Now” CTA.
+  - Contact form submits (server logs/ok state).
+  - Provider onboarding wizard completes a submission and admin can approve.
+- GitHub Actions workflow:
+  - On push to main: install, typecheck, build, run smoke tests headless.
+  - Upload test artifacts (screenshots if failures).
+- Acceptance: CI green on main.
+
+9) Docs
+- Update README: PWA usage, provider onboarding steps, email flag behavior, how to add services/cities, and acceptance criteria.
+- Update CHANGELOG with Batch-4 summary.
+- Update DEPLOY_NOTES.md for Vercel (root dir, Node version if needed, “clear build cache” note after big changes).
+
+10) Push to GitHub MAIN (deploy)
+- Ensure the Git remote is set to the SewaGo GitHub repo (same as earlier). If not, prompt me to provide credentials or use Replit Git integration.
+- Commit with:
+  feat(pwa+providers): installable PWA, provider onboarding (lite) w/ admin review, emails (flagged), analytics/CI
+- Push directly to origin main. If main is protected, open a PR with same title and ask me to approve; otherwise push to main.
+
+11) Final verification
+- Share the production Vercel URL.
+- Paste a concise summary (10 lines) of what changed and a short Lighthouse (mobile) report for / and one /services/[slug] page.
+- Confirm:
+  - App is installable; offline-lite works for the core routes.
+  - COD is the only live payment; eSewa remains disabled behind a flag.
+  - Provider onboarding + admin approval flows work.
+  - Emails behave per feature flags.
+  - Single navbar; no blue blobs; all buttons/links function.

@@ -1,245 +1,282 @@
-# SewaGo Premium - Nepal's Most Trusted Service Booking Platform
 
-A premium, mobile-first web application for booking local services in Nepal. Built with React, Tailwind CSS, and modern web technologies.
+# 🏠 SewaGo - Professional Home Services Platform
 
-## 🎨 Design System
+**SewaGo** is Nepal's premier platform for booking professional home services. Connect with verified service providers for house cleaning, electrical work, plumbing, and more across Kathmandu, Lalitpur, and Bhaktapur.
 
-### Colors
-- **Primary**: #0F62FE (Trustworthy Blue)
-- **Secondary**: #F4AF1B (Premium Gold)
-- **Background**: #F8FAFC (Light Gray)
-- **Text Primary**: #0B1220 (Dark Blue)
-- **Text Secondary**: #475569 (Medium Gray)
-- **Surface**: #FFFFFF (White)
+## ✨ **Latest Features (Batch 3)**
 
-### Typography
-- **Font Family**: Inter (Google Fonts)
-- **Heading Weights**: 600, 700
-- **Body Weights**: 400, 500
+### 🔒 **Cash on Delivery Payment System**
+- **Primary Payment**: Cash on Service Delivery (COD) - pay after service completion
+- **Future Ready**: eSewa integration built-in but disabled (feature flagged)
+- **No Advance Payment**: Book services without upfront costs
+- **Transparent Pricing**: Clear cost breakdown before booking
 
-### Layout
-- **Max Width**: 7xl (80rem)
-- **Section Padding**: px-6 md:px-8 lg:px-12 py-16
-- **Mobile-First**: Responsive design starting from mobile
+### 🌟 **Trust & Quality Features**
+- **30-Day Workmanship Warranty** on applicable services
+- **Verified Provider Badges** with KYC verification
+- **Customer Reviews System** with star ratings and testimonials
+- **Quality Guarantee** on all services
 
-## ✨ Features
+### 📍 **Programmatic SEO**
+- **Service × City Pages**: Dedicated landing pages for each service in each city
+- **Local SEO Optimization**: City-specific content and targeting
+- **Structured Data**: JSON-LD schema for better search visibility
+- **Internal Linking**: Strategic cross-linking between services and cities
 
-### Homepage
-- **Hero Section**: Compelling headline with dual CTAs
-- **How It Works**: 3-step process explanation
-- **Service Categories**: Grid of popular services
-- **Why Choose Us**: Trust badges and benefits
-- **Testimonials**: Customer reviews carousel
-- **CTA Banner**: Full-width call-to-action
-- **Footer**: Quick links, contact info, social media
+### 🎛️ **Feature Flag System**
+- `PAYMENTS_ESEWA_ENABLED`: Toggle eSewa payment method
+- `REVIEWS_ENABLED`: Enable/disable reviews functionality  
+- `WARRANTY_BADGE_ENABLED`: Show/hide warranty badges
+- Easy feature management through environment variables
 
-### Navigation
-- **Sticky Navbar**: Logo left, navigation center, CTA right
-- **Mobile Menu**: Responsive hamburger menu
-- **Active States**: Visual feedback for current page
+## 🚀 **Quick Start**
 
-### Authentication
-- **Login Page**: Email/password with social options
-- **Register Page**: User registration with type selection
-- **Form Validation**: Client-side validation
-- **Error Handling**: User-friendly error messages
+### **Prerequisites**
+- Node.js 18+
+- npm 8+
+- MongoDB (local or Atlas)
 
-## 🚀 Getting Started
-
-### Prerequisites
-- Node.js 18+ 
-- npm or yarn
-
-### Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd sewago-final
-   ```
-
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **Start development server**
-   ```bash
-   npm run dev
-   ```
-
-4. **Open in browser**
-   Navigate to `http://localhost:3000`
-
-### Build for Production
+### **Installation**
 
 ```bash
-npm run build
-npm run preview
+# Clone the repository
+git clone <repository-url>
+cd sewago/frontend
+
+# Install dependencies
+npm install
+
+# Set up environment variables
+cp env.example .env.local
+# Edit .env.local with your configuration
+
+# Run development server
+npm run dev
 ```
 
-## 🏗️ Project Structure
+### **Environment Configuration**
 
-```
-sewago-final/
-├── components/          # Reusable UI components
-│   ├── ui/             # Base UI components (Button, Card, etc.)
-│   └── Navbar.jsx      # Navigation component
-├── pages/              # Page components
-│   ├── Home.jsx        # Homepage
-│   ├── Login.jsx       # Login page
-│   ├── Register.jsx    # Registration page
-│   └── ...             # Other pages
-├── contexts/            # React contexts
-│   └── AuthContext.jsx # Authentication context
-├── lib/                 # Utility functions
-│   └── utils.js        # Helper functions
-├── App.jsx              # Main app component
-├── App.css              # Global styles
-├── main.jsx            # App entry point
-├── index.html          # HTML template
-├── package.json        # Dependencies
-├── tailwind.config.js  # Tailwind configuration
-├── vite.config.js      # Vite configuration
-└── README.md           # This file
+```env
+# Feature Flags
+NEXT_PUBLIC_PAYMENTS_ESEWA_ENABLED=false
+NEXT_PUBLIC_REVIEWS_ENABLED=true
+NEXT_PUBLIC_WARRANTY_BADGE_ENABLED=true
+
+# Database
+MONGODB_URI=mongodb://localhost:27017/sewago
+
+# Authentication
+AUTH_SECRET=your-super-secure-32-character-secret-key
+NEXTAUTH_URL=http://localhost:5000
+NEXTAUTH_SECRET=your-super-secure-32-character-secret-key
+
+# Feature toggles
+NEXT_PUBLIC_BOOKING_ENABLED=true
+NEXT_PUBLIC_AUTH_ENABLED=true
 ```
 
-## 🎯 Key Components
+## 💰 **Payment System**
 
-### Home Component
-- **Hero Section**: Large headline with background gradient
-- **Service Grid**: 4-column responsive grid
-- **Trust Indicators**: Icons and benefits
-- **Customer Reviews**: Testimonial cards
-- **Call-to-Action**: Multiple CTA buttons
+### **Current: Cash on Delivery (COD)**
+- **Default Payment Method**: Cash payment after service completion
+- **No Risk**: Customers pay only after satisfactory service delivery
+- **Booking Process**: Select COD → Schedule service → Pay provider directly
 
-### Navbar Component
-- **Sticky Positioning**: Fixed top navigation
-- **Responsive Design**: Mobile-first approach
-- **Active States**: Current page highlighting
-- **CTA Button**: Prominent "Book Now" button
+### **Future: eSewa Integration**
+The eSewa payment system is built-in but disabled by default. To enable:
 
-### UI Components
-- **Button**: Multiple variants (primary, secondary, outline, ghost)
-- **Card**: Flexible card component with header, content, footer
-- **Form Elements**: Styled inputs, labels, and validation
+1. Set environment variable: `NEXT_PUBLIC_PAYMENTS_ESEWA_ENABLED=true`
+2. Add eSewa credentials to environment:
+   ```env
+   ESEWA_MERCHANT_CODE=your-merchant-code
+   ESEWA_SECRET_KEY=your-secret-key
+   ```
+3. The eSewa option will automatically appear in the payment selection
 
-## 🎨 Styling
+## 🛠️ **Adding New Services**
 
-### Tailwind CSS
-- **Custom Colors**: Brand color palette
-- **Custom Spacing**: Consistent spacing scale
-- **Custom Shadows**: Soft, medium, and large shadows
-- **Custom Animations**: Fade, slide, and scale animations
+### **1. Add Service Content**
+Create a new service file in `content/services/`:
 
-### CSS Custom Properties
-- **Design Tokens**: Consistent color and spacing values
-- **Component Classes**: Reusable utility classes
-- **Animation Classes**: Smooth transitions and hover effects
+```json
+{
+  "name": "New Service",
+  "slug": "new-service",
+  "description": "Service description",
+  "category": "Category",
+  "price": {
+    "min": 1000,
+    "max": 5000,
+    "unit": "per service"
+  },
+  "features": ["Feature 1", "Feature 2"],
+  "hasWarranty": true,
+  "warrantyDays": 30
+}
+```
 
-## 📱 Responsive Design
+### **2. Update Constants**
+Add the service slug to relevant arrays in:
+- `src/app/services/[slug]/[city]/page.tsx` (SERVICES array)
+- `src/app/sitemap.ts` (SERVICES array)
 
-### Breakpoints
-- **Mobile**: Default (320px+)
-- **Tablet**: md (768px+)
-- **Desktop**: lg (1024px+)
-- **Large Desktop**: xl (1280px+)
+### **3. Add City Pages**
+City-specific pages are automatically generated for each service in:
+- `/services/[service-slug]/kathmandu`
+- `/services/[service-slug]/lalitpur`
+- `/services/[service-slug]/bhaktapur`
 
-### Mobile-First Approach
-- Base styles for mobile devices
-- Progressive enhancement for larger screens
-- Touch-friendly interactions
-- Optimized for mobile performance
+## 🏙️ **Supported Cities**
 
-## 🔧 Development
+- **Kathmandu**: Nepal's capital and largest metropolitan area
+- **Lalitpur**: Historic city known for arts and culture  
+- **Bhaktapur**: Ancient city with rich cultural heritage
 
-### Scripts
-- `npm run dev`: Start development server
-- `npm run build`: Build for production
-- `npm run preview`: Preview production build
-- `npm run lint`: Run ESLint
+Each city has dedicated service pages with local SEO optimization.
 
-### Code Quality
-- **ESLint**: Code linting and formatting
-- **Prettier**: Code formatting (via ESLint)
-- **TypeScript**: Type checking (future enhancement)
+## 🧪 **Development**
 
-## 🌟 Performance Features
+### **Available Scripts**
+```bash
+npm run dev          # Start development server
+npm run build        # Build for production
+npm run start        # Start production server
+npm run lint         # Run ESLint
+npm run test         # Run tests
+```
 
-### Optimization
-- **Lazy Loading**: Images and components below fold
-- **Code Splitting**: Route-based code splitting
-- **Tree Shaking**: Unused code elimination
-- **Minification**: Production build optimization
+### **Testing**
+```bash
+# Run all tests
+npm test
 
-### Best Practices
-- **Semantic HTML**: Accessible markup
-- **CSS Optimization**: Efficient selectors and properties
-- **JavaScript Optimization**: Modern ES6+ features
-- **Image Optimization**: WebP format support (future)
+# Run tests in watch mode
+npm run test:watch
 
-## 🚀 Deployment
+# Run with coverage
+npm run test:coverage
+```
 
-### Vercel (Recommended)
-1. Connect GitHub repository
-2. Configure build settings
-3. Deploy automatically on push
+## 📈 **Performance & SEO**
 
-### Other Platforms
-- **Netlify**: Static site hosting
-- **AWS S3**: Cloud hosting
-- **GitHub Pages**: Free hosting for open source
+### **Lighthouse Targets**
+- Performance: ≥ 90 (mobile)
+- Best Practices: ≥ 95
+- Accessibility: ≥ 95  
+- SEO: ≥ 95
 
-## 📈 SEO & Accessibility
+### **SEO Features**
+- Dynamic meta tags for all pages
+- JSON-LD structured data
+- Automatic sitemap generation
+- Service × city landing pages
+- Internal linking optimization
 
-### SEO Features
-- **Meta Tags**: Proper title and description
-- **Structured Data**: JSON-LD markup (future)
-- **Open Graph**: Social media sharing
-- **Sitemap**: XML sitemap generation (future)
+## 🔧 **Deployment**
 
-### Accessibility
-- **ARIA Labels**: Screen reader support
-- **Keyboard Navigation**: Full keyboard support
-- **Color Contrast**: WCAG AA compliance
-- **Focus Management**: Proper focus indicators
+### **Vercel (Recommended)**
+1. Connect GitHub repository to Vercel
+2. Set environment variables in Vercel dashboard
+3. Deploy automatically on push to main
 
-## 🔮 Future Enhancements
+### **Environment Variables for Production**
+```env
+NEXT_PUBLIC_PAYMENTS_ESEWA_ENABLED=false
+NEXT_PUBLIC_REVIEWS_ENABLED=true
+NEXT_PUBLIC_WARRANTY_BADGE_ENABLED=true
+MONGODB_URI=your-production-mongodb-uri
+AUTH_SECRET=your-production-secret
+NEXTAUTH_URL=https://your-domain.vercel.app
+```
 
-### Planned Features
-- **Service Provider Dashboard**: Provider management interface
-- **Real-time Chat**: Customer-provider communication
-- **Payment Integration**: Secure payment processing
-- **Review System**: Customer feedback and ratings
-- **Admin Panel**: Content and user management
-- **Mobile App**: React Native application
+### **Clear Build Cache**
+If you encounter build issues, clear Vercel's build cache:
+```bash
+# In Vercel dashboard: Settings > Functions > Clear Build Cache
+```
 
-### Technical Improvements
-- **TypeScript**: Full type safety
-- **Testing**: Jest and React Testing Library
-- **State Management**: Redux Toolkit or Zustand
-- **API Integration**: Backend service integration
-- **PWA**: Progressive Web App features
+## 🚀 **Batch 8: Scale & Monetization Features**
 
-## 🤝 Contributing
+### **Dynamic Pricing & Surge System**
+- Smart pricing modifiers based on demand, time, and location
+- Express slot surcharges and off-peak discounts
+- Transparent pricing breakdown for customers
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
+### **Promotions & Loyalty**
+- Promo code system with usage limits and expiration
+- First booking and win-back campaigns
+- Stackable promotions with business rule validation
 
-## 📄 License
+### **SewaGo Wallet**
+- Unified credit system for loyalty, referrals, and resolutions
+- Automatic credit application at checkout
+- Comprehensive transaction history and export
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+### **Partner API & Webhooks**
+- RESTful API for partners with token authentication
+- Real-time webhooks for booking lifecycle events
+- HMAC signature verification and replay protection
 
-## 📞 Support
+### **Advanced Search & Discovery**
+- Multi-filter search with autocomplete
+- Personalized suggestions based on search history
+- Search analytics and conversion tracking
 
-For support and questions:
-- **Email**: info@sewago.com
-- **Website**: https://sewago.com
-- **Documentation**: [Link to docs]
+### **Data Analytics & Export**
+- Comprehensive KPI dashboard for admins
+- Data export capabilities for external BI tools
+- Event tracking and warehouse preparation
+
+### **Feature Flags for Batch 8**
+```env
+NEXT_PUBLIC_SURGE_ENABLED=false
+NEXT_PUBLIC_PROMOS_ENABLED=false
+NEXT_PUBLIC_WALLET_ENABLED=false
+NEXT_PUBLIC_PARTNER_API_ENABLED=false
+NEXT_PUBLIC_WEBHOOKS_ENABLED=false
+NEXT_PUBLIC_SEARCH_ENABLED=true
+```
+
+## 📝 **Changelog - Batch 3**
+
+### **Added**
+- ✅ Cash on Delivery (COD) payment system
+- ✅ 30-day workmanship warranty program
+- ✅ Customer reviews and ratings system
+- ✅ Verified provider badges
+- ✅ Programmatic SEO with service × city pages
+- ✅ Feature flag system for easy configuration
+- ✅ Enhanced booking wizard with location and payment selection
+- ✅ Trust elements and quality guarantees
+- ✅ Local SEO optimization for all major cities
+
+### **Enhanced**
+- ✅ Service detail pages with reviews and warranty information
+- ✅ Homepage with cities section and trust indicators
+- ✅ About page with vetting process and company information
+- ✅ Sitemap with all service and city combinations
+- ✅ JSON-LD structured data for better search visibility
+
+### **Technical**
+- ✅ Next.js App Router with TypeScript
+- ✅ Feature flag configuration system
+- ✅ Enhanced booking model with payment status tracking
+- ✅ Review system with verification status
+- ✅ Programmatic page generation for SEO
+
+## 🎯 **Business Model**
+
+- **Cash on Delivery**: Primary payment method, no advance required
+- **Service Warranty**: 30-day guarantee on workmanship
+- **Provider Verification**: Thorough vetting process for quality assurance
+- **Local Focus**: City-specific services with local professional networks
+
+## 📞 **Support**
+
+- **Phone**: +977-9800000000
+- **Hours**: 7 AM - 10 PM, 7 days a week
+- **Coverage**: Kathmandu, Lalitpur, Bhaktapur
 
 ---
 
-**Built with ❤️ for Nepal's service industry** 
+**SewaGo** - Professional services at your doorstep 🏠✨

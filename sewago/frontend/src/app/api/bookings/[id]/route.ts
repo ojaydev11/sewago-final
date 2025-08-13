@@ -51,9 +51,9 @@ export async function PATCH(
 
     // Check permissions based on user role
     const canUpdate = 
-      session.user.role === 'admin' ||
-      (session.user.role === 'customer' && booking.customerId.toString() === session.user.id) ||
-      (session.user.role === 'provider' && booking.providerId?.toString() === session.user.id);
+      (session.user as any).role === 'admin' ||
+      ((session.user as any).role === 'customer' && booking.customerId.toString() === session.user.id) ||
+      ((session.user as any).role === 'provider' && booking.providerId?.toString() === session.user.id);
 
     if (!canUpdate) {
       return NextResponse.json(
@@ -113,11 +113,11 @@ export async function GET(
 
     await dbConnect();
 
-    // Get the booking
     const booking = await Booking.findById(id)
       .populate('serviceId', 'name category basePrice')
       .populate('customerId', 'name email phone')
-      .populate('providerId', 'name email phone');
+      .populate('providerId', 'name email phone')
+      .lean();
 
     if (!booking) {
       return NextResponse.json(
@@ -126,11 +126,11 @@ export async function GET(
       );
     }
 
-    // Check permissions
+    // Check permissions based on user role
     const canView = 
-      session.user.role === 'admin' ||
-      (session.user.role === 'customer' && booking.customerId._id.toString() === session.user.id) ||
-      (session.user.role === 'provider' && booking.providerId?._id.toString() === session.user.id);
+      (session.user as any).role === 'admin' ||
+      ((session.user as any).role === 'customer' && booking.customerId._id.toString() === session.user.id) ||
+      ((session.user as any).role === 'provider' && booking.providerId?._id.toString() === session.user.id);
 
     if (!canView) {
       return NextResponse.json(

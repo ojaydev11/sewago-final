@@ -1,0 +1,73 @@
+Title: SewaGo – Finalize, Auto-Fix, Test, Lighthouse, and Push to MAIN for Vercel Deploy
+
+Objective
+Do a full pre-deploy sweep: fix all errors, run smoke tests, verify feature flags (COD-only), confirm PWA/SEO/a11y/perf, and then PUSH EVERYTHING to GitHub MAIN so Vercel deploys. Do not paste code here—analyze and modify the existing Next.js App Router repo directly.
+
+Guardrails
+- Keep ONLY the modern Next.js app. One global stylesheet. No legacy CSS. No “blue blob” backgrounds. One Navbar globally.
+- Payments: **COD is the only live method**. Keep eSewa/Khalti present but DISABLED behind flags.
+- Maintain the design system and routes from earlier batches. Keep accessibility & Lighthouse targets.
+
+Tasks (do in this order)
+
+0) Sanity & flags
+- Confirm the active app path (Next.js App Router) and that the app builds locally.
+- Verify feature flags/env:
+  - ESEWA_ENABLED=false, KHALTI_ENABLED=false (COD-only live)
+  - EMAILS_ENABLED=true (falls back to log mode if no keys)
+  - WALLET_ENABLED=true, PROMOS_ENABLED=true, SURGE_ENABLED=false (or as documented)
+  - DISPUTES_ENABLED=true, CITIES_TOOLKIT_ENABLED=true
+  - SUPPORT_CENTER_ENABLED=true, TRAINING_HUB_ENABLED=true, PERSONALIZATION_ENABLED=true
+  - PARTNER_API_ENABLED=false, WEBHOOKS_ENABLED=false (enable later if needed)
+- Ensure ONLY ONE global CSS file is imported. Remove/neutralize any remaining global gradients/pseudo-elements.
+
+1) Auto-fix & cleanup
+- Run typecheck and lint; auto-fix where safe. Resolve remaining TS/ESLint issues.
+- Remove dead imports, unused packages, and unreachable routes.
+- Ensure Tailwind “content” globs scan ONLY the Next app (no legacy paths).
+- Verify there is exactly one `<Navbar />` in layout; no headers in page components.
+- Check images/OG assets exist; no broken src paths. Compress any >200KB above-the-fold.
+
+2) Build & PWA
+- Build the app. Fix any Next.js, RSC, or server action errors.
+- Verify PWA: manifest, icons, service worker. App is installable.
+- Offline-lite: pre-cache /, /services, at least one /services/[slug], /about, /contact. Provide a friendly offline page.
+
+3) Smoke tests (headless; keep fast)
+- Home renders with a single navbar and no oversized backgrounds.
+- /services loads and cards link to /services/[slug].
+- One /services/[slug] shows features, FAQs, reviews/warranty, and working “Book Now”.
+- Contact form submits (server logs or success state).
+- Booking flow (COD only): creates a booking → shows confirmation with “Cash on delivery”.
+- Provider onboarding (lite) completes, Admin can approve, badge appears.
+- Dispute flow opens from an eligible booking and reaches “UnderReview”.
+- Admin can create a new city; a service×city page becomes reachable.
+
+4) Lighthouse (mobile) quick pass
+- Targets: Performance ≥ 90, Best Practices ≥ 95, Accessibility ≥ 95, SEO ≥ 95.
+- Measure on `/` and one `/services/[slug]`. If under target, fix the top offenders (images, font loading, CLS, metadata, contrast, missing alts).
+
+5) Documentation
+- Update README: current flags (COD-only), how to enable eSewa later, how to add a service/city, PWA usage, support/disputes, training hub, loyalty/referrals, wallet.
+- Update CHANGELOG with the final batch summaries.
+- Update DEPLOY_NOTES.md with any Vercel root directory notes and “Clear build cache if major UI changes”.
+
+6) Git: push to MAIN (deploy)
+- Ensure git remote points to the correct GitHub repo.
+- Conventional commit:
+  chore(release): finalize UI/flags, fix errors, tests + lighthouse pass, deploy to main
+- **Push directly to origin main** (as requested). If main is protected, open a PR with the same title and tell me it needs approval.
+
+7) Verification
+- Paste the production Vercel URL after deploy finishes.
+- Paste a concise 10-line summary of changes.
+- Paste the Lighthouse (mobile) scores for `/` and one `/services/[slug]`.
+- Confirm: 
+  - COD is the only live payment; eSewa/Khalti disabled behind flags.
+  - Single navbar; no blue blobs; all core buttons/links work.
+  - PWA installable; offline-lite OK; sitemap/robots present.
+  - Disputes, provider onboarding approval, loyalty/wallet, referrals, service×city pages all function behind their flags as specified.
+
+Notes
+- If missing Git credentials/remotes, prompt me once to provide or use Replit’s Git integration.
+- If any smoke test fails, fix it and re-run before pushing to main.

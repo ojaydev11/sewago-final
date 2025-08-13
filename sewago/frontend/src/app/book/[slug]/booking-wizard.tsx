@@ -1,549 +1,366 @@
 'use client';
 
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { CalendarIcon, MapPinIcon, UserIcon, DocumentTextIcon, CheckIcon } from '@heroicons/react/24/outline';
-
-const bookingSchema = z.object({
-  serviceType: z.string().min(1, 'Service type is required'),
-  city: z.string().min(1, 'City is required'),
-  hours: z.number().min(1, 'Hours must be at least 1').max(24, 'Hours cannot exceed 24'),
-  extras: z.array(z.string()).optional(),
-  scheduledDate: z.string().min(1, 'Date is required'),
-  scheduledTime: z.string().min(1, 'Time is required'),
-  street: z.string().min(1, 'Street address is required'),
-  city: z.string().min(1, 'City is required'),
-  state: z.string().min(1, 'State is required'),
-  postalCode: z.string().min(1, 'Postal code is required'),
-  name: z.string().min(1, 'Name is required'),
-  email: z.string().email('Valid email is required'),
-  phone: z.string().min(1, 'Phone number is required'),
-  notes: z.string().optional(),
-});
-
-type BookingFormData = z.infer<typeof bookingSchema>;
+import { useState } from 'react';
+import { Service } from '@/models/Service';
+import { BookingFormData, PaymentMethod } from '@/models/Booking';
+import { isFeatureEnabled } from '@/lib/feature-flags';
+import { Button } from '@/components/ui/button';
+import { 
+  CalendarIcon, 
+  ClockIcon, 
+  MapPinIcon, 
+  CreditCardIcon,
+  BanknotesIcon,
+  InformationCircleIcon
+} from '@heroicons/react/24/outline';
 
 interface BookingWizardProps {
-  service: any;
+  service: Service;
 }
 
-const steps = [
-  { id: 'details', label: 'Service Details', icon: DocumentTextIcon },
-  { id: 'schedule', label: 'Schedule', icon: CalendarIcon },
-  { id: 'address', label: 'Address', icon: MapPinIcon },
-  { id: 'contact', label: 'Contact', icon: UserIcon },
-  { id: 'review', label: 'Review', icon: CheckIcon },
+const CITIES = ['Kathmandu', 'Lalitpur', 'Bhaktapur'] as const;
+const TIME_SLOTS = [
+  '09:00', '10:00', '11:00', '12:00', 
+  '13:00', '14:00', '15:00', '16:00', '17:00'
 ];
 
 export default function BookingWizard({ service }: BookingWizardProps) {
-  const [currentStep, setCurrentStep] = useState(0);
-  const [formData, setFormData] = useState<Partial<BookingFormData>>({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [estimate, setEstimate] = useState<{ min: number; max: number } | null>(null);
-  const router = useRouter();
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isValid },
-    watch,
-    setValue,
-  } = useForm<BookingFormData>({
-    resolver: zodResolver(bookingSchema),
-    mode: 'onChange',
+  const [formData, setFormData] = useState<Partial<BookingFormData>>({
+    serviceName: service.name,
+    servicePrice: service.price.min,
+    paymentMethod: 'COD' as PaymentMethod
   });
+  const [currentStep, setCurrentStep] = useState(1);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const watchedValues = watch();
-
-  // Update form data when form values change
-  React.useEffect(() => {
-    setFormData(watchedValues);
-  }, [watchedValues]);
-
-  const nextStep = () => {
-    if (currentStep < steps.length - 1) {
-      setCurrentStep(currentStep + 1);
-    }
+  const handleInputChange = (field: keyof BookingFormData, value: any) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const prevStep = () => {
-    if (currentStep > 0) {
-      setCurrentStep(currentStep - 1);
-    }
-  };
-
-  const getEstimate = async () => {
-    try {
-      const response = await fetch('/api/estimate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          serviceType: formData.serviceType,
-          city: formData.city,
-          hours: formData.hours,
-          extras: formData.extras || [],
-        }),
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        setEstimate(data);
-      }
-    } catch (error) {
-      console.error('Failed to get estimate:', error);
-    }
-  };
-
-  const onSubmit = async (data: BookingFormData) => {
+  const handleSubmit = async () => {
     setIsSubmitting(true);
     try {
       const response = await fetch('/api/bookings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          serviceId: service.id,
-          scheduledAt: new Date(`${data.scheduledDate}T${data.scheduledTime}`).toISOString(),
-          priceEstimateMin: estimate?.min || 1000,
-          priceEstimateMax: estimate?.max || 5000,
-          addressId: 'temp', // Will be created in the API
-          notes: data.notes,
-          // Address and user details
-          address: {
-            street: data.street,
-            city: data.city,
-            state: data.state,
-            postalCode: data.postalCode,
-            country: 'Nepal',
-          },
-          user: {
-            name: data.name,
-            email: data.email,
-            phone: data.phone,
-          },
-        }),
+          ...formData,
+          paymentStatus: 'PendingCollection',
+          status: 'Requested'
+        })
       });
 
       if (response.ok) {
-        const booking = await response.json();
-        router.push(`/orders/${booking.id}`);
-      } else {
-        throw new Error('Failed to create booking');
+        // Redirect to confirmation page
+        window.location.href = '/booking/confirmation';
       }
     } catch (error) {
       console.error('Booking failed:', error);
-      alert('Failed to create booking. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const renderStep = () => {
-    switch (currentStep) {
-      case 0: // Service Details
-        return (
-          <div className="space-y-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Service Type
-              </label>
-              <select
-                {...register('serviceType')}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="">Select service type</option>
-                <option value="basic">Basic Service</option>
-                <option value="standard">Standard Service</option>
-                <option value="premium">Premium Service</option>
-              </select>
-              {errors.serviceType && (
-                <p className="text-red-500 text-sm mt-1">{errors.serviceType.message}</p>
-              )}
-            </div>
+  const renderStep1 = () => (
+    <div className="space-y-6">
+      <h3 className="text-lg font-semibold flex items-center gap-2">
+        <CalendarIcon className="w-5 h-5" />
+        Select Date & Time
+      </h3>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                City
-              </label>
-              <input
-                type="text"
-                {...register('city')}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Enter your city"
-              />
-              {errors.city && (
-                <p className="text-red-500 text-sm mt-1">{errors.city.message}</p>
-              )}
-            </div>
+      <div className="grid md:grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm font-medium mb-2">Date</label>
+          <input
+            type="date"
+            min={new Date().toISOString().split('T')[0]}
+            value={formData.scheduledDate || ''}
+            onChange={(e) => handleInputChange('scheduledDate', e.target.value)}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          />
+        </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Estimated Hours
-              </label>
-              <input
-                type="number"
-                {...register('hours', { valueAsNumber: true })}
-                min="1"
-                max="24"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Enter estimated hours"
-              />
-              {errors.hours && (
-                <p className="text-red-500 text-sm mt-1">{errors.hours.message}</p>
-              )}
-            </div>
+        <div>
+          <label className="block text-sm font-medium mb-2">Time Slot</label>
+          <select
+            value={formData.scheduledTime || ''}
+            onChange={(e) => handleInputChange('scheduledTime', e.target.value)}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          >
+            <option value="">Select time</option>
+            {TIME_SLOTS.map(time => (
+              <option key={time} value={time}>{time}</option>
+            ))}
+          </select>
+        </div>
+      </div>
+    </div>
+  );
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Additional Services
-              </label>
-              <div className="space-y-2">
-                {['Emergency Service', 'Weekend Service', 'Extended Warranty', 'Premium Materials'].map((extra) => (
-                  <label key={extra} className="flex items-center">
-                    <input
-                      type="checkbox"
-                      value={extra}
-                      {...register('extras')}
-                      className="mr-2"
-                    />
-                    <span className="text-sm text-gray-700">{extra}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
+  const renderStep2 = () => (
+    <div className="space-y-6">
+      <h3 className="text-lg font-semibold flex items-center gap-2">
+        <MapPinIcon className="w-5 h-5" />
+        Service Location
+      </h3>
 
-            <button
-              type="button"
-              onClick={getEstimate}
-              className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors"
-            >
-              Get Estimate
-            </button>
+      <div className="space-y-4">
+        <div>
+          <label className="block text-sm font-medium mb-2">City</label>
+          <select
+            value={formData.city || ''}
+            onChange={(e) => handleInputChange('city', e.target.value)}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          >
+            <option value="">Select city</option>
+            {CITIES.map(city => (
+              <option key={city} value={city}>{city}</option>
+            ))}
+          </select>
+        </div>
 
-            {estimate && (
-              <div className="bg-blue-50 p-4 rounded-md">
-                <h4 className="font-medium text-blue-900 mb-2">Price Estimate</h4>
-                <p className="text-blue-700">
-                  Rs. {estimate.min} - Rs. {estimate.max}
-                </p>
-              </div>
-            )}
-          </div>
-        );
+        <div>
+          <label className="block text-sm font-medium mb-2">Full Address</label>
+          <textarea
+            value={formData.address || ''}
+            onChange={(e) => handleInputChange('address', e.target.value)}
+            placeholder="Street address, house/apartment number"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            rows={3}
+            required
+          />
+        </div>
 
-      case 1: // Schedule
-        return (
-          <div className="space-y-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Preferred Date
-              </label>
-              <input
-                type="date"
-                {...register('scheduledDate')}
-                min={new Date().toISOString().split('T')[0]}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-              {errors.scheduledDate && (
-                <p className="text-red-500 text-sm mt-1">{errors.scheduledDate.message}</p>
-              )}
-            </div>
+        <div>
+          <label className="block text-sm font-medium mb-2">Landmark (Optional)</label>
+          <input
+            type="text"
+            value={formData.landmark || ''}
+            onChange={(e) => handleInputChange('landmark', e.target.value)}
+            placeholder="Nearby landmark for easy location"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+      </div>
+    </div>
+  );
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Preferred Time
-              </label>
-              <select
-                {...register('scheduledTime')}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="">Select time</option>
-                <option value="09:00">9:00 AM</option>
-                <option value="10:00">10:00 AM</option>
-                <option value="11:00">11:00 AM</option>
-                <option value="12:00">12:00 PM</option>
-                <option value="13:00">1:00 PM</option>
-                <option value="14:00">2:00 PM</option>
-                <option value="15:00">3:00 PM</option>
-                <option value="16:00">4:00 PM</option>
-                <option value="17:00">5:00 PM</option>
-              </select>
-              {errors.scheduledTime && (
-                <p className="text-red-500 text-sm mt-1">{errors.scheduledTime.message}</p>
-              )}
-            </div>
-          </div>
-        );
+  const renderStep3 = () => (
+    <div className="space-y-6">
+      <h3 className="text-lg font-semibold">Contact Information</h3>
 
-      case 2: // Address
-        return (
-          <div className="space-y-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Street Address
-              </label>
-              <input
-                type="text"
-                {...register('street')}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Enter your street address"
-              />
-              {errors.street && (
-                <p className="text-red-500 text-sm mt-1">{errors.street.message}</p>
-              )}
-            </div>
+      <div className="grid md:grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm font-medium mb-2">Full Name</label>
+          <input
+            type="text"
+            value={formData.customerName || ''}
+            onChange={(e) => handleInputChange('customerName', e.target.value)}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          />
+        </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm font-medium mb-2">Phone Number</label>
+          <input
+            type="tel"
+            value={formData.customerPhone || ''}
+            onChange={(e) => handleInputChange('customerPhone', e.target.value)}
+            placeholder="+977-"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          />
+        </div>
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium mb-2">Email Address</label>
+        <input
+          type="email"
+          value={formData.customerEmail || ''}
+          onChange={(e) => handleInputChange('customerEmail', e.target.value)}
+          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          required
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium mb-2">Special Instructions (Optional)</label>
+        <textarea
+          value={formData.specialInstructions || ''}
+          onChange={(e) => handleInputChange('specialInstructions', e.target.value)}
+          placeholder="Any specific requirements or instructions"
+          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          rows={3}
+        />
+      </div>
+    </div>
+  );
+
+  const renderStep4 = () => (
+    <div className="space-y-6">
+      <h3 className="text-lg font-semibold flex items-center gap-2">
+        <CreditCardIcon className="w-5 h-5" />
+        Payment Method
+      </h3>
+
+      <div className="space-y-4">
+        {/* Cash on Delivery */}
+        <div 
+          className={`border-2 rounded-lg p-4 cursor-pointer transition-colors ${
+            formData.paymentMethod === 'COD' 
+              ? 'border-blue-500 bg-blue-50' 
+              : 'border-gray-200 hover:border-gray-300'
+          }`}
+          onClick={() => handleInputChange('paymentMethod', 'COD')}
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <BanknotesIcon className="w-6 h-6 text-green-600" />
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  City
-                </label>
-                <input
-                  type="text"
-                  {...register('city')}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Enter city"
-                />
-                {errors.city && (
-                  <p className="text-red-500 text-sm mt-1">{errors.city.message}</p>
-                )}
+                <h4 className="font-medium">Cash on Service Delivery</h4>
+                <p className="text-sm text-gray-600">Pay after service completion</p>
               </div>
+            </div>
+            <input
+              type="radio"
+              name="paymentMethod"
+              value="COD"
+              checked={formData.paymentMethod === 'COD'}
+              readOnly
+              className="w-4 h-4 text-blue-600"
+            />
+          </div>
+        </div>
 
+        {/* eSewa (Coming Soon) */}
+        <div className={`border-2 rounded-lg p-4 opacity-50 ${
+          isFeatureEnabled('PAYMENTS_ESEWA_ENABLED') 
+            ? 'cursor-pointer hover:border-gray-300' 
+            : 'cursor-not-allowed'
+        }`}>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <CreditCardIcon className="w-6 h-6 text-purple-600" />
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  State
-                </label>
-                <input
-                  type="text"
-                  {...register('state')}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Enter state"
-                />
-                {errors.state && (
-                  <p className="text-red-500 text-sm mt-1">{errors.state.message}</p>
-                )}
+                <h4 className="font-medium flex items-center gap-2">
+                  eSewa
+                  {!isFeatureEnabled('PAYMENTS_ESEWA_ENABLED') && (
+                    <span className="text-xs bg-gray-100 px-2 py-1 rounded">Coming Soon</span>
+                  )}
+                </h4>
+                <p className="text-sm text-gray-600">Digital wallet payment</p>
               </div>
             </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Postal Code
-              </label>
-              <input
-                type="text"
-                {...register('postalCode')}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Enter postal code"
-              />
-              {errors.postalCode && (
-                <p className="text-red-500 text-sm mt-1">{errors.postalCode.message}</p>
-              )}
-            </div>
+            <input
+              type="radio"
+              name="paymentMethod"
+              value="ESEWA"
+              disabled={!isFeatureEnabled('PAYMENTS_ESEWA_ENABLED')}
+              className="w-4 h-4 text-purple-600"
+            />
           </div>
-        );
+        </div>
+      </div>
 
-      case 3: // Contact
-        return (
-          <div className="space-y-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Full Name
-              </label>
-              <input
-                type="text"
-                {...register('name')}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Enter your full name"
-              />
-              {errors.name && (
-                <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Email
-              </label>
-              <input
-                type="email"
-                {...register('email')}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Enter your email"
-              />
-              {errors.email && (
-                <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Phone Number
-              </label>
-              <input
-                type="tel"
-                {...register('phone')}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Enter your phone number"
-              />
-              {errors.phone && (
-                <p className="text-red-500 text-sm mt-1">{errors.phone.message}</p>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Additional Notes
-              </label>
-              <textarea
-                {...register('notes')}
-                rows={3}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Any special instructions or requirements?"
-              />
-            </div>
+      {/* Price Summary */}
+      <div className="bg-gray-50 p-4 rounded-lg">
+        <h4 className="font-medium mb-3">Price Summary</h4>
+        <div className="space-y-2">
+          <div className="flex justify-between">
+            <span>Service</span>
+            <span>NPR {service.price.min.toLocaleString()}</span>
           </div>
-        );
-
-      case 4: // Review
-        return (
-          <div className="space-y-6">
-            <div className="bg-gray-50 p-4 rounded-md">
-              <h4 className="font-medium text-gray-900 mb-3">Service Details</h4>
-              <div className="space-y-2 text-sm text-gray-600">
-                <p><strong>Service:</strong> {service.title}</p>
-                <p><strong>Type:</strong> {formData.serviceType}</p>
-                <p><strong>City:</strong> {formData.city}</p>
-                <p><strong>Hours:</strong> {formData.hours}</p>
-                {formData.extras && formData.extras.length > 0 && (
-                  <p><strong>Extras:</strong> {formData.extras.join(', ')}</p>
-                )}
-              </div>
-            </div>
-
-            <div className="bg-gray-50 p-4 rounded-md">
-              <h4 className="font-medium text-gray-900 mb-3">Schedule</h4>
-              <div className="space-y-2 text-sm text-gray-600">
-                <p><strong>Date:</strong> {formData.scheduledDate}</p>
-                <p><strong>Time:</strong> {formData.scheduledTime}</p>
-              </div>
-            </div>
-
-            <div className="bg-gray-50 p-4 rounded-md">
-              <h4 className="font-medium text-gray-900 mb-3">Address</h4>
-              <div className="space-y-2 text-sm text-gray-600">
-                <p>{formData.street}</p>
-                <p>{formData.city}, {formData.state} {formData.postalCode}</p>
-                <p>Nepal</p>
-              </div>
-            </div>
-
-            <div className="bg-gray-50 p-4 rounded-md">
-              <h4 className="font-medium text-gray-900 mb-3">Contact</h4>
-              <div className="space-y-2 text-sm text-gray-600">
-                <p><strong>Name:</strong> {formData.name}</p>
-                <p><strong>Email:</strong> {formData.email}</p>
-                <p><strong>Phone:</strong> {formData.phone}</p>
-                {formData.notes && (
-                  <p><strong>Notes:</strong> {formData.notes}</p>
-                )}
-              </div>
-            </div>
-
-            {estimate && (
-              <div className="bg-blue-50 p-4 rounded-md">
-                <h4 className="font-medium text-blue-900 mb-2">Price Estimate</h4>
-                <p className="text-blue-700 text-lg font-semibold">
-                  Rs. {estimate.min} - Rs. {estimate.max}
-                </p>
-              </div>
-            )}
+          <div className="border-t pt-2 flex justify-between font-medium">
+            <span>Total Amount</span>
+            <span>NPR {service.price.min.toLocaleString()}</span>
           </div>
-        );
+        </div>
 
-      default:
-        return null;
-    }
-  };
+        <div className="mt-3 flex items-start gap-2 text-sm text-gray-600">
+          <InformationCircleIcon className="w-4 h-4 mt-0.5 flex-shrink-0" />
+          <p>Payment will be collected after service completion. Our team will contact you to confirm the booking.</p>
+        </div>
+      </div>
+    </div>
+  );
 
   return (
-    <div className="bg-white rounded-lg shadow-sm">
+    <div className="max-w-2xl mx-auto">
       {/* Progress Steps */}
-      <div className="border-b border-gray-200 p-6">
+      <div className="mb-8">
         <div className="flex items-center justify-between">
-          {steps.map((step, index) => {
-            const Icon = step.icon;
-            const isActive = index === currentStep;
-            const isCompleted = index < currentStep;
-            
-            return (
-              <div key={step.id} className="flex items-center">
-                <div className={`flex items-center justify-center w-8 h-8 rounded-full border-2 ${
-                  isCompleted
-                    ? 'bg-green-500 border-green-500 text-white'
-                    : isActive
-                    ? 'border-blue-500 text-blue-500'
-                    : 'border-gray-300 text-gray-400'
-                }`}>
-                  {isCompleted ? (
-                    <CheckIcon className="w-5 h-5" />
-                  ) : (
-                    <Icon className="w-5 h-5" />
-                  )}
-                </div>
-                <span className={`ml-2 text-sm font-medium ${
-                  isActive ? 'text-blue-600' : 'text-gray-500'
-                }`}>
-                  {step.label}
-                </span>
-                {index < steps.length - 1 && (
-                  <div className={`w-16 h-0.5 mx-4 ${
-                    isCompleted ? 'bg-green-500' : 'bg-gray-300'
-                  }`} />
-                )}
+          {[1, 2, 3, 4].map((step) => (
+            <div key={step} className="flex items-center">
+              <div
+                className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
+                  step <= currentStep
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-gray-200 text-gray-600'
+                }`}
+              >
+                {step}
               </div>
-            );
-          })}
+              {step < 4 && (
+                <div
+                  className={`w-16 h-1 mx-2 ${
+                    step < currentStep ? 'bg-blue-600' : 'bg-gray-200'
+                  }`}
+                />
+              )}
+            </div>
+          ))}
+        </div>
+        <div className="flex justify-between mt-2 text-xs text-gray-600">
+          <span>Schedule</span>
+          <span>Location</span>
+          <span>Contact</span>
+          <span>Payment</span>
         </div>
       </div>
 
       {/* Step Content */}
-      <div className="p-6">
-        <form onSubmit={handleSubmit(onSubmit)}>
-          {renderStep()}
+      <div className="bg-white rounded-lg border p-6 mb-6">
+        {currentStep === 1 && renderStep1()}
+        {currentStep === 2 && renderStep2()}
+        {currentStep === 3 && renderStep3()}
+        {currentStep === 4 && renderStep4()}
+      </div>
 
-          {/* Navigation */}
-          <div className="flex justify-between mt-8">
-            <button
-              type="button"
-              onClick={prevStep}
-              disabled={currentStep === 0}
-              className="px-4 py-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              Previous
-            </button>
+      {/* Navigation */}
+      <div className="flex justify-between">
+        <Button
+          variant="outline"
+          onClick={() => setCurrentStep(Math.max(1, currentStep - 1))}
+          disabled={currentStep === 1}
+        >
+          Previous
+        </Button>
 
-            {currentStep < steps.length - 1 ? (
-              <button
-                type="button"
-                onClick={nextStep}
-                disabled={!isValid}
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                Next
-              </button>
-            ) : (
-              <button
-                type="submit"
-                disabled={!isValid || isSubmitting}
-                className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {isSubmitting ? 'Creating Booking...' : 'Confirm Booking'}
-              </button>
-            )}
-          </div>
-        </form>
+        {currentStep < 4 ? (
+          <Button
+            onClick={() => setCurrentStep(Math.min(4, currentStep + 1))}
+            disabled={
+              (currentStep === 1 && (!formData.scheduledDate || !formData.scheduledTime)) ||
+              (currentStep === 2 && (!formData.city || !formData.address)) ||
+              (currentStep === 3 && (!formData.customerName || !formData.customerPhone || !formData.customerEmail))
+            }
+          >
+            Next
+          </Button>
+        ) : (
+          <Button
+            onClick={handleSubmit}
+            disabled={isSubmitting || !formData.paymentMethod}
+            className="bg-blue-600 hover:bg-blue-700"
+          >
+            {isSubmitting ? 'Booking...' : 'Confirm Booking'}
+          </Button>
+        )}
       </div>
     </div>
   );
