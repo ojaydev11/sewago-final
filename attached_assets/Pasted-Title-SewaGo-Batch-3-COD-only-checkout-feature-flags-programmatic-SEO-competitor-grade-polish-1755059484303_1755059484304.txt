@@ -1,0 +1,87 @@
+Title: SewaGo – Batch 3: COD-only checkout, feature flags, programmatic SEO, competitor-grade polish + push to main
+
+Objective
+Analyze the existing Next.js App Router codebase and ship the next set of upgrades:
+- Live payments = CASH ON SERVICE DELIVERY (COD) ONLY.
+- Keep eSewa integration in the codebase but DISABLED behind a feature flag; UX shows it as “Coming soon”.
+- Modern, trustworthy UI with competitor-grade polish. 
+- Programmatic SEO (service × city pages), reviews, trust, and performance hardening.
+- Push all changes to GitHub MAIN so Vercel redeploys.
+
+Guardrails
+- Do NOT paste big code blobs here; inspect and modify the repo directly.
+- Keep only the modern Next.js app; do not re-introduce legacy CSS or duplicate headers.
+- Maintain existing folder conventions you already created in Batch-2.
+
+Tasks (do in order)
+
+0) Sanity + safety
+- Create a safety branch: chore/sewago-batch3-backup from current HEAD.
+- Confirm we are operating in the Next.js app folder (sewago/frontend/…).
+- Ensure only ONE global stylesheet is loaded; verify no leftover blue blob gradients/pseudo-elements exist sitewide.
+
+1) Payments: COD live, eSewa disabled but integrated
+- Introduce a feature flag (e.g., env var PAYMENTS_ESEWA_ENABLED=false by default).
+- Payment methods UI on the booking/confirmation step:
+  - “Cash on service delivery” (default, required).
+  - “eSewa (coming soon)” disabled with a tooltip; retain the wiring and types for easy enable later.
+- Booking model/state:
+  - Add fields: paymentMethod (“COD” | “ESEWA”), paymentStatus (“PendingCollection” | “Paid” | “Refunded”), and status machine (Requested → Accepted → InProgress → Completed → Cancelled).
+  - On confirm with COD: set paymentMethod=COD, paymentStatus=PendingCollection.
+  - Provider dashboard can mark “Collected” to transition paymentStatus=Paid (server side).
+- Leave eSewa handlers/routes in place but gated by the feature flag; unit tests should pass even when disabled.
+
+2) Booking UX (trust & clarity)
+- Date/time picker with slot validation (no double bookings).
+- Address + landmark field, city dropdown (Kathmandu/Lalitpur/Bhaktapur).
+- Transparent price area: “From NPR X” + line items if present; show “Pay cash after service.”
+- Post-booking screen with next steps, support contact, and “reschedule/cancel” request UI (server placeholder ok).
+
+3) Trust, reviews & warranty (beat local competitors)
+- Add a compact reviews module on service detail: star rating avg + count + 2–3 recent reviews (seed data ok).
+- Add a **“30-day workmanship warranty”** banner on relevant services (house cleaning, electrical, plumbing) and sitewide trust strip. (Sajilo Sewa highlights warranty; we at least match it.) 
+- Verified Provider badge (KYC/approved flag from profile or seed) on cards and service detail.
+
+4) Programmatic SEO & content system (beat global competitors)
+- Turn services into content-driven entities (keep your current content layer if present). 
+- Generate **service pages** and **service × city landing pages** (e.g., /services/house-cleaning/kathmandu) with localized H1, meta, and structured data.
+- Use Next Metadata API for unique title/description per page and **JSON-LD**:
+  - Organization + per-service `Service` schema (include areaServed and provider=SewaGo).
+- Add sitemap.xml and robots.txt covering all services and all city pages.
+- Internal linking: homepage and /services link to top service × city pages.
+
+5) Navigation & pages (finish core)
+- Homepage: ensure consistent sections and one header; add “Cities we serve” with internal links.
+- /services: server-rendered grid from content.
+- /services/[slug]: title, summary, features, FAQs, reviews, warranty badge, CTA.
+- /about: mission, vetting process, cities, support.
+- /contact: working form (server logs/console OK), fallback email link; show “Cash on delivery” policy.
+- 404 and error pages branded; no duplicate footers/headers.
+
+6) Performance, a11y, quality
+- Lighthouse (mobile) targets: Performance ≥ 90, Best Practices ≥ 95, Accessibility ≥ 95, SEO ≥ 95.
+- Use next/image with proper sizes; defer non-critical JS; no layout shift.
+- Keyboard focus, ARIA labels, and color contrast AA+.
+
+7) Feature toggles & future-proofing
+- Feature flags file/env: { PAYMENTS_ESEWA_ENABLED=false, REVIEWS_ENABLED=true, WARRANTY_BADGE_ENABLED=true }.
+- Document how to enable eSewa later (set PAYMENTS_ESEWA_ENABLED=true and add required env credentials).
+
+8) Docs
+- Update README:
+  - How to run locally
+  - How to add a new service (and a city page)
+  - Payment policy (COD) and how to enable eSewa later
+- CHANGELOG: summarize Batch-3 improvements.
+- DEPLOY_NOTES.md: Vercel settings + “clear build cache” note.
+
+9) Git push to MAIN (deploy)
+- Configure Git remote to the SewaGo GitHub repo (if not already).
+- Commit with: 
+  feat(frontend): COD-only checkout, programmatic SEO, reviews & warranty, flags for eSewa (disabled)
+- Push directly to origin main (as requested). If main is protected, open a PR with the same title and ask me to approve; otherwise push to main.
+
+10) Final verification
+- Share the production Vercel URL.
+- Paste a 10-line summary of what changed and a short Lighthouse (mobile) report for / and one /services/[slug] page.
+- Confirm: COD is the only live payment, eSewa is present but disabled, one navbar, no blue blobs, all main buttons work.
