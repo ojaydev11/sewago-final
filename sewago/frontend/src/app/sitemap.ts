@@ -1,10 +1,20 @@
-import { MetadataRoute } from 'next';
-import { getServices } from '@/lib/content';
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.NEXTAUTH_URL || 'https://sewago-final.vercel.app';
+import { MetadataRoute } from 'next';
+
+const SERVICES = [
+  'house-cleaning',
+  'electrical-work',
+  'plumbing',
+  'gardening',
+  'appliance-repair',
+  'home-security'
+];
+
+const CITIES = ['kathmandu', 'lalitpur', 'bhaktapur'];
+
+export default function sitemap(): MetadataRoute.Sitemap {
+  const baseUrl = 'https://sewago.vercel.app';
   
-  // Static pages
   const staticPages = [
     {
       url: baseUrl,
@@ -28,27 +38,30 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url: `${baseUrl}/contact`,
       lastModified: new Date(),
       changeFrequency: 'monthly' as const,
-      priority: 0.6,
+      priority: 0.7,
     },
   ];
 
-  // Dynamic service pages
-  let servicePages: MetadataRoute.Sitemap = [];
-  
-  try {
-    const services = await getServices();
-    
-    servicePages = services.map((service) => ({
-      url: `${baseUrl}/services/${service.slug}`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly' as const,
-      priority: 0.8,
-    }));
-  } catch (error) {
-    console.warn('Could not fetch services for sitemap:', error);
+  // Service pages
+  const servicePages = SERVICES.map(service => ({
+    url: `${baseUrl}/services/${service}`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly' as const,
+    priority: 0.8,
+  }));
+
+  // Service × City pages
+  const serviceCityPages = [];
+  for (const service of SERVICES) {
+    for (const city of CITIES) {
+      serviceCityPages.push({
+        url: `${baseUrl}/services/${service}/${city}`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly' as const,
+        priority: 0.6,
+      });
+    }
   }
 
-  return [...staticPages, ...servicePages];
+  return [...staticPages, ...servicePages, ...serviceCityPages];
 }
-
-

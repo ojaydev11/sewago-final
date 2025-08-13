@@ -1,114 +1,59 @@
-import mongoose, { Schema, Document, Types } from 'mongoose';
 
-export interface IBooking extends Document {
-  userId: Types.ObjectId;
-  serviceId: Types.ObjectId;
-  providerId?: Types.ObjectId;
-  status: 'PENDING' | 'CONFIRMED' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED';
-  scheduledAt: Date;
-  address: {
-    street: string;
-    city: string;
-    state: string;
-    postalCode: string;
-    country: string;
-  };
-  notes?: string;
-  priceEstimateMin: number;
-  priceEstimateMax: number;
-  createdAt: Date;
-  updatedAt: Date;
+export type PaymentMethod = 'COD' | 'ESEWA';
+export type PaymentStatus = 'PendingCollection' | 'Paid' | 'Refunded';
+export type BookingStatus = 'Requested' | 'Accepted' | 'InProgress' | 'Completed' | 'Cancelled';
+
+export interface Booking {
+  _id: string;
+  serviceId: string;
+  userId: string;
+  providerId?: string;
+  
+  // Service details
+  serviceName: string;
+  servicePrice: number;
+  
+  // Customer details
+  customerName: string;
+  customerEmail: string;
+  customerPhone: string;
+  
+  // Location
+  address: string;
+  landmark?: string;
+  city: 'Kathmandu' | 'Lalitpur' | 'Bhaktapur';
+  
+  // Scheduling
+  scheduledDate: string;
+  scheduledTime: string;
+  
+  // Payment
+  paymentMethod: PaymentMethod;
+  paymentStatus: PaymentStatus;
+  totalAmount: number;
+  
+  // Status
+  status: BookingStatus;
+  
+  // Notes
+  specialInstructions?: string;
+  
+  // Timestamps
+  createdAt: string;
+  updatedAt: string;
 }
 
-const BookingSchema = new Schema<IBooking>({
-  userId: {
-    type: Schema.Types.ObjectId,
-    ref: 'User',
-    required: true,
-  },
-  serviceId: {
-    type: Schema.Types.ObjectId,
-    ref: 'Service',
-    required: true,
-  },
-  providerId: {
-    type: Schema.Types.ObjectId,
-    ref: 'ProviderProfile',
-  },
-  status: {
-    type: String,
-    enum: ['PENDING', 'CONFIRMED', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED'],
-    default: 'PENDING',
-  },
-  scheduledAt: {
-    type: Date,
-    required: true,
-  },
-  address: {
-    street: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    city: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    state: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    postalCode: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    country: {
-      type: String,
-      required: true,
-      default: 'Nepal',
-      trim: true,
-    },
-  },
-  notes: {
-    type: String,
-    trim: true,
-  },
-  priceEstimateMin: {
-    type: Number,
-    required: true,
-    min: 0,
-  },
-  priceEstimateMax: {
-    type: Number,
-    required: true,
-    min: 0,
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-  updatedAt: {
-    type: Date,
-    default: Date.now,
-  },
-});
-
-// Update the updatedAt field before saving
-BookingSchema.pre('save', function(next) {
-  this.updatedAt = new Date();
-  next();
-});
-
-// Indexes for performance
-BookingSchema.index({ userId: 1 });
-BookingSchema.index({ serviceId: 1 });
-BookingSchema.index({ providerId: 1 });
-BookingSchema.index({ status: 1 });
-BookingSchema.index({ scheduledAt: 1 });
-BookingSchema.index({ createdAt: 1 });
-
-// Hot-reload guard
-export const Booking = mongoose.models.Booking || mongoose.model<IBooking>('Booking', BookingSchema);
+export interface BookingFormData {
+  serviceName: string;
+  servicePrice: number;
+  customerName: string;
+  customerEmail: string;
+  customerPhone: string;
+  address: string;
+  landmark?: string;
+  city: 'Kathmandu' | 'Lalitpur' | 'Bhaktapur';
+  scheduledDate: string;
+  scheduledTime: string;
+  paymentMethod: PaymentMethod;
+  specialInstructions?: string;
+}

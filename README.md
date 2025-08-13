@@ -1,44 +1,46 @@
 
-# SewaGo - Nepal's Premier Service Booking Platform
+# 🏠 SewaGo - Professional Home Services Platform
 
-A modern, premium web application for booking local services in Nepal. Built with Next.js 14, Tailwind CSS, and modern web technologies.
+**SewaGo** is Nepal's premier platform for booking professional home services. Connect with verified service providers for house cleaning, electrical work, plumbing, and more across Kathmandu, Lalitpur, and Bhaktapur.
 
-## 🚀 Recent Changes (Modern UI Rebuild)
+## ✨ **Latest Features (Batch 3)**
 
-### What's New:
-- **Complete UI/UX Modernization**: Clean, premium design with strict design system
-- **Performance Optimized**: Lighthouse scores 90+ Performance, 95+ other categories
-- **Consolidated Architecture**: Single Next.js App Router application
-- **Tightened Tailwind**: Optimized CSS bundle, removed unused classes
-- **Working Routes**: All buttons and navigation work correctly
-- **Service Detail Pages**: Created demo pages for house-cleaning, electrical-work, gardening, moving
-- **Error Handling**: Proper 404 and error pages
-- **Responsive Design**: Mobile-first, works perfectly on all devices
+### 🔒 **Cash on Delivery Payment System**
+- **Primary Payment**: Cash on Service Delivery (COD) - pay after service completion
+- **Future Ready**: eSewa integration built-in but disabled (feature flagged)
+- **No Advance Payment**: Book services without upfront costs
+- **Transparent Pricing**: Clear cost breakdown before booking
 
-### Design System:
-- **Colors**: Primary blue (#0F62FE), Jade (#0BAF87), Saffron (#F4AF1B)
-- **Typography**: Inter font family with consistent scale
-- **Components**: Reusable button, card, and section classes
-- **Icons**: Heroicons for consistent visual language
-- **Spacing**: Standardized section/container spacing
+### 🌟 **Trust & Quality Features**
+- **30-Day Workmanship Warranty** on applicable services
+- **Verified Provider Badges** with KYC verification
+- **Customer Reviews System** with star ratings and testimonials
+- **Quality Guarantee** on all services
 
-### Technical Improvements:
-- Removed legacy React/Vite code and blue blob backgrounds
-- Single `globals.css` with clean component system
-- Optimized Tailwind config scanning only Next.js paths
-- Sticky navbar with smooth scroll effects
-- Clean homepage sections: hero, how it works, services, testimonials, CTA, footer
-- Working service detail pages with features and FAQs
+### 📍 **Programmatic SEO**
+- **Service × City Pages**: Dedicated landing pages for each service in each city
+- **Local SEO Optimization**: City-specific content and targeting
+- **Structured Data**: JSON-LD schema for better search visibility
+- **Internal Linking**: Strategic cross-linking between services and cities
 
-## 🛠️ Development
+### 🎛️ **Feature Flag System**
+- `PAYMENTS_ESEWA_ENABLED`: Toggle eSewa payment method
+- `REVIEWS_ENABLED`: Enable/disable reviews functionality  
+- `WARRANTY_BADGE_ENABLED`: Show/hide warranty badges
+- Easy feature management through environment variables
 
-### Prerequisites
-- Node.js 18+ 
-- npm or yarn
+## 🚀 **Quick Start**
 
-### Local Setup
+### **Prerequisites**
+- Node.js 18+
+- npm 8+
+- MongoDB (local or Atlas)
+
+### **Installation**
+
 ```bash
-# Navigate to frontend
+# Clone the repository
+git clone <repository-url>
 cd sewago/frontend
 
 # Install dependencies
@@ -46,88 +48,235 @@ npm install
 
 # Set up environment variables
 cp env.example .env.local
+# Edit .env.local with your configuration
 
 # Run development server
 npm run dev
 ```
 
-The application will be available at `http://localhost:3000`
+### **Environment Configuration**
 
-### Project Structure
-```
-sewago/frontend/
-├── src/
-│   ├── app/                 # Next.js App Router
-│   │   ├── (static)/       # Static pages (about, contact, etc.)
-│   │   ├── services/       # Service pages and details
-│   │   ├── auth/          # Authentication pages
-│   │   └── globals.css    # Global styles
-│   ├── components/        # Reusable components
-│   └── lib/              # Utilities and configurations
-```
+```env
+# Feature Flags
+NEXT_PUBLIC_PAYMENTS_ESEWA_ENABLED=false
+NEXT_PUBLIC_REVIEWS_ENABLED=true
+NEXT_PUBLIC_WARRANTY_BADGE_ENABLED=true
 
-### Available Scripts
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run start` - Start production server
-- `npm run lint` - Run ESLint
+# Database
+MONGODB_URI=mongodb://localhost:27017/sewago
 
-## 🌟 Features
+# Authentication
+AUTH_SECRET=your-super-secure-32-character-secret-key
+NEXTAUTH_URL=http://localhost:5000
+NEXTAUTH_SECRET=your-super-secure-32-character-secret-key
 
-### For Customers:
-- Browse verified service providers
-- Book services with trusted professionals
-- Real-time chat and notifications
-- Secure payment processing
-- Review and rating system
-
-### For Service Providers:
-- Create detailed profiles
-- Manage bookings and schedule
-- Chat with customers
-- Receive payments securely
-- Build reputation through reviews
-
-### Platform Features:
-- Responsive mobile-first design
-- Real-time messaging
-- Secure authentication
-- Payment integration
-- Admin dashboard
-- Multi-language support (English/Nepali)
-
-## 🚀 Deployment
-
-The application is optimized for deployment on Vercel, Netlify, or any Node.js hosting platform.
-
-### Environment Variables
-```
-NEXTAUTH_SECRET=your-secret-key
-NEXTAUTH_URL=your-domain.com
-DATABASE_URL=your-database-url
+# Feature toggles
+NEXT_PUBLIC_BOOKING_ENABLED=true
+NEXT_PUBLIC_AUTH_ENABLED=true
 ```
 
-## 📱 Mobile Experience
+## 💰 **Payment System**
 
-SewaGo is built mobile-first with:
-- Touch-friendly interface
-- Fast loading times
-- Offline capability
-- Progressive Web App features
+### **Current: Cash on Delivery (COD)**
+- **Default Payment Method**: Cash payment after service completion
+- **No Risk**: Customers pay only after satisfactory service delivery
+- **Booking Process**: Select COD → Schedule service → Pay provider directly
 
-## 🔧 Tech Stack
+### **Future: eSewa Integration**
+The eSewa payment system is built-in but disabled by default. To enable:
 
-- **Frontend**: Next.js 14, React, TypeScript
-- **Styling**: Tailwind CSS
-- **Icons**: Heroicons
-- **Authentication**: NextAuth.js
-- **Database**: MongoDB/PostgreSQL
-- **Deployment**: Vercel/Railway
+1. Set environment variable: `NEXT_PUBLIC_PAYMENTS_ESEWA_ENABLED=true`
+2. Add eSewa credentials to environment:
+   ```env
+   ESEWA_MERCHANT_CODE=your-merchant-code
+   ESEWA_SECRET_KEY=your-secret-key
+   ```
+3. The eSewa option will automatically appear in the payment selection
 
-## 📄 License
+## 🛠️ **Adding New Services**
 
-© 2024 SewaGo. All rights reserved.
+### **1. Add Service Content**
+Create a new service file in `content/services/`:
+
+```json
+{
+  "name": "New Service",
+  "slug": "new-service",
+  "description": "Service description",
+  "category": "Category",
+  "price": {
+    "min": 1000,
+    "max": 5000,
+    "unit": "per service"
+  },
+  "features": ["Feature 1", "Feature 2"],
+  "hasWarranty": true,
+  "warrantyDays": 30
+}
+```
+
+### **2. Update Constants**
+Add the service slug to relevant arrays in:
+- `src/app/services/[slug]/[city]/page.tsx` (SERVICES array)
+- `src/app/sitemap.ts` (SERVICES array)
+
+### **3. Add City Pages**
+City-specific pages are automatically generated for each service in:
+- `/services/[service-slug]/kathmandu`
+- `/services/[service-slug]/lalitpur`
+- `/services/[service-slug]/bhaktapur`
+
+## 🏙️ **Supported Cities**
+
+- **Kathmandu**: Nepal's capital and largest metropolitan area
+- **Lalitpur**: Historic city known for arts and culture  
+- **Bhaktapur**: Ancient city with rich cultural heritage
+
+Each city has dedicated service pages with local SEO optimization.
+
+## 🧪 **Development**
+
+### **Available Scripts**
+```bash
+npm run dev          # Start development server
+npm run build        # Build for production
+npm run start        # Start production server
+npm run lint         # Run ESLint
+npm run test         # Run tests
+```
+
+### **Testing**
+```bash
+# Run all tests
+npm test
+
+# Run tests in watch mode
+npm run test:watch
+
+# Run with coverage
+npm run test:coverage
+```
+
+## 📈 **Performance & SEO**
+
+### **Lighthouse Targets**
+- Performance: ≥ 90 (mobile)
+- Best Practices: ≥ 95
+- Accessibility: ≥ 95  
+- SEO: ≥ 95
+
+### **SEO Features**
+- Dynamic meta tags for all pages
+- JSON-LD structured data
+- Automatic sitemap generation
+- Service × city landing pages
+- Internal linking optimization
+
+## 🔧 **Deployment**
+
+### **Vercel (Recommended)**
+1. Connect GitHub repository to Vercel
+2. Set environment variables in Vercel dashboard
+3. Deploy automatically on push to main
+
+### **Environment Variables for Production**
+```env
+NEXT_PUBLIC_PAYMENTS_ESEWA_ENABLED=false
+NEXT_PUBLIC_REVIEWS_ENABLED=true
+NEXT_PUBLIC_WARRANTY_BADGE_ENABLED=true
+MONGODB_URI=your-production-mongodb-uri
+AUTH_SECRET=your-production-secret
+NEXTAUTH_URL=https://your-domain.vercel.app
+```
+
+### **Clear Build Cache**
+If you encounter build issues, clear Vercel's build cache:
+```bash
+# In Vercel dashboard: Settings > Functions > Clear Build Cache
+```
+
+## 🚀 **Batch 8: Scale & Monetization Features**
+
+### **Dynamic Pricing & Surge System**
+- Smart pricing modifiers based on demand, time, and location
+- Express slot surcharges and off-peak discounts
+- Transparent pricing breakdown for customers
+
+### **Promotions & Loyalty**
+- Promo code system with usage limits and expiration
+- First booking and win-back campaigns
+- Stackable promotions with business rule validation
+
+### **SewaGo Wallet**
+- Unified credit system for loyalty, referrals, and resolutions
+- Automatic credit application at checkout
+- Comprehensive transaction history and export
+
+### **Partner API & Webhooks**
+- RESTful API for partners with token authentication
+- Real-time webhooks for booking lifecycle events
+- HMAC signature verification and replay protection
+
+### **Advanced Search & Discovery**
+- Multi-filter search with autocomplete
+- Personalized suggestions based on search history
+- Search analytics and conversion tracking
+
+### **Data Analytics & Export**
+- Comprehensive KPI dashboard for admins
+- Data export capabilities for external BI tools
+- Event tracking and warehouse preparation
+
+### **Feature Flags for Batch 8**
+```env
+NEXT_PUBLIC_SURGE_ENABLED=false
+NEXT_PUBLIC_PROMOS_ENABLED=false
+NEXT_PUBLIC_WALLET_ENABLED=false
+NEXT_PUBLIC_PARTNER_API_ENABLED=false
+NEXT_PUBLIC_WEBHOOKS_ENABLED=false
+NEXT_PUBLIC_SEARCH_ENABLED=true
+```
+
+## 📝 **Changelog - Batch 3**
+
+### **Added**
+- ✅ Cash on Delivery (COD) payment system
+- ✅ 30-day workmanship warranty program
+- ✅ Customer reviews and ratings system
+- ✅ Verified provider badges
+- ✅ Programmatic SEO with service × city pages
+- ✅ Feature flag system for easy configuration
+- ✅ Enhanced booking wizard with location and payment selection
+- ✅ Trust elements and quality guarantees
+- ✅ Local SEO optimization for all major cities
+
+### **Enhanced**
+- ✅ Service detail pages with reviews and warranty information
+- ✅ Homepage with cities section and trust indicators
+- ✅ About page with vetting process and company information
+- ✅ Sitemap with all service and city combinations
+- ✅ JSON-LD structured data for better search visibility
+
+### **Technical**
+- ✅ Next.js App Router with TypeScript
+- ✅ Feature flag configuration system
+- ✅ Enhanced booking model with payment status tracking
+- ✅ Review system with verification status
+- ✅ Programmatic page generation for SEO
+
+## 🎯 **Business Model**
+
+- **Cash on Delivery**: Primary payment method, no advance required
+- **Service Warranty**: 30-day guarantee on workmanship
+- **Provider Verification**: Thorough vetting process for quality assurance
+- **Local Focus**: City-specific services with local professional networks
+
+## 📞 **Support**
+
+- **Phone**: +977-9800000000
+- **Hours**: 7 AM - 10 PM, 7 days a week
+- **Coverage**: Kathmandu, Lalitpur, Bhaktapur
 
 ---
 
-Made with ❤️ in Nepal 🇳🇵
+**SewaGo** - Professional services at your doorstep 🏠✨

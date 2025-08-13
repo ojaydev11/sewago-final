@@ -1,0 +1,63 @@
+Title: SewaGo – Batch 7: Quality, Trust & Risk Engine (Fraud/Risk, SLA Automation, Support Center, Training Hub, Personalization, A11y/Security/Perf)
+
+Objective
+Analyze the existing Next.js App Router repo and implement systems that guarantee premium quality at scale while keeping payment = COD only. eSewa remains integrated but DISABLED behind a feature flag. No code in chat; modify the repo directly. Do NOT push to main yet (save that for my final prompt).
+
+Guardrails
+- Keep ONLY the modern Next.js app. One global stylesheet. No legacy CSS/“blue blobs”. One Navbar globally.
+- Respect existing feature flags and content model from prior batches.
+- Keep COD the only live payment; ESEWA_ENABLED=false. Show eSewa as “Coming soon”.
+
+Scope (deliver all)
+
+1) Fraud & Risk Controls (COD-aware)
+- Booking risk score (0–100) computed from: repeated cancellations/no-shows, device/browser fingerprint, IP/city mismatch, throwaway email patterns, velocity of bookings, blacklisted phone numbers.
+- Soft-gate UX: if high risk, require OTP re-verify (feature-flagged) and suppress “Express” slots.
+- Duplicate detection: auto-warn on duplicate phone/email/address for same-day bookings.
+- Abuse guardrails: rate limits on booking attempts, contact form submissions, and provider accept/decline actions.
+- Audit log: record risk inputs, score, and gate outcomes (internal-only).
+
+2) SLA Automation (speed + reliability)
+- Time-to-accept SLA: if provider does not accept within X minutes, auto-reassign to next best provider; notify customer.
+- On-time ETA SLA: “late threshold” triggers: alert, optional compensation credits; admin configurable per service/city.
+- Job aging dashboard for ops: requested/accepted/in-progress with SLA timers.
+
+3) Support Center (fast resolutions)
+- Help Center pages: FAQs grouped by service, booking, payments, warranty.
+- Contact widget with smart triage: topic → captures bookingId (if any) → routes to the right inbox/label.
+- Ticketing (internal lightweight): statuses Open/Assigned/WaitingOnCustomer/Resolved + notes & private tags.
+- Integrate with Dispute Center if enabled (link from Help to Dispute flow for eligible bookings).
+
+4) Provider Training Hub (quality moat)
+- Micro-courses (content-driven), short quizzes, and certification levels (Bronze/Silver/Gold).
+- Certification ties to provider tier and jobs board priority; show “Certified” badges on provider cards.
+- Training completion & quiz score stored server-side; visible to provider and admin.
+
+5) Personalization & Guided Booking
+- Recently booked + recommended services block on Home and /services for logged-in users.
+- Lightweight “guided booking” wizard: ask 2–3 questions (home size, urgency, pet at home) to prefill add-ons/time estimates.
+- Remember last address and preferred time window (cookie/local storage + server profile).
+
+6) Accessibility, Security, Privacy, Compliance
+- WCAG 2.2 AA: focus order, roles, labels, skip-to-content, reduced motion, keyboard-only nav.
+- Security headers: CSP, Referrer-Policy, Permissions-Policy, Frame-Options, HSTS (where compatible).
+- CSRF on sensitive actions; input validation on all API routes; server-only secrets.
+- Privacy basics: consent text, data retention note, delete-my-data request path.
+- Audit trails for admin actions (approvals, adjustments, refunds/credits).
+
+7) Performance Budgets & Observability
+- Enforce budgets: ≤160KB JS on Home, no layout shift >0.05 CLS, images <200KB above the fold.
+- Add spans/metrics for key flows (book, accept, complete). Keep Sentry optional (DSN flag).
+- Lighthouse (mobile) targets: Perf ≥ 90, Best Practices ≥ 95, A11y ≥ 95, SEO ≥ 95.
+
+8) Documentation & Flags
+- Centralize feature flags in one place (e.g., /config/flags). Document each: RISK_GATES_ENABLED, OTP_REVERIFY_ENABLED, DISPUTES_ENABLED, TRAINING_HUB_ENABLED, PERSONALIZATION_ENABLED, SUPPORT_CENTER_ENABLED.
+- README updates: how risk score works, OTP flow, SLA config, support tickets, training hub, and accessibility checklist.
+- CHANGELOG: Batch 7 summary.
+
+Deliverables
+- All features above implemented and feature-flagged where noted.
+- No UI regressions; single Navbar; no oversized backgrounds.
+- A short internal REPORT.md summarizing: risk inputs, SLAs, support setup, training levels, and budgets.
+
+Do NOT push to main yet. Stage commits locally and confirm app builds. I’ll run a final prompt for error handling + push.

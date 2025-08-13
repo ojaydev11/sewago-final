@@ -62,3 +62,34 @@ ReviewSchema.index({ createdAt: 1 });
 
 // Hot-reload guard
 export const Review = mongoose.models.Review || mongoose.model<IReview>('Review', ReviewSchema);
+export interface Review {
+  _id: string;
+  serviceId: string;
+  userId: string;
+  bookingId: string;
+  
+  // Review content
+  rating: number; // 1-5
+  title: string;
+  comment: string;
+  
+  // Customer info
+  customerName: string;
+  isVerified: boolean;
+  
+  // Timestamps
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ServiceReviewStats {
+  averageRating: number;
+  totalReviews: number;
+  ratingDistribution: {
+    5: number;
+    4: number;
+    3: number;
+    2: number;
+    1: number;
+  };
+}
