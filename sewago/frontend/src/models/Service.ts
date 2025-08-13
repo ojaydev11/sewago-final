@@ -1,26 +1,20 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
 export interface IService extends Document {
-  title: string;
+  _id: string;
   slug: string;
-  description: string;
+  name: string;
   category: string;
-  imageUrl?: string;
-  priceRange: {
-    min: number;
-    max: number;
-  };
-  isActive: boolean;
+  shortDesc: string;
+  longDesc: string;
+  basePrice: number;
+  image?: string;
+  active: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
 
 const ServiceSchema = new Schema<IService>({
-  title: {
-    type: String,
-    required: true,
-    trim: true,
-  },
   slug: {
     type: String,
     required: true,
@@ -28,7 +22,7 @@ const ServiceSchema = new Schema<IService>({
     lowercase: true,
     trim: true,
   },
-  description: {
+  name: {
     type: String,
     required: true,
     trim: true,
@@ -38,23 +32,26 @@ const ServiceSchema = new Schema<IService>({
     required: true,
     trim: true,
   },
-  imageUrl: {
+  shortDesc: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  longDesc: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  basePrice: {
+    type: Number,
+    required: true,
+    min: 0,
+  },
+  image: {
     type: String,
     trim: true,
   },
-  priceRange: {
-    min: {
-      type: Number,
-      required: true,
-      min: 0,
-    },
-    max: {
-      type: Number,
-      required: true,
-      min: 0,
-    },
-  },
-  isActive: {
+  active: {
     type: Boolean,
     default: true,
   },
@@ -77,8 +74,8 @@ ServiceSchema.pre('save', function(next) {
 // Indexes for performance
 ServiceSchema.index({ slug: 1 });
 ServiceSchema.index({ category: 1 });
-ServiceSchema.index({ isActive: 1 });
-ServiceSchema.index({ 'priceRange.min': 1, 'priceRange.max': 1 });
+ServiceSchema.index({ active: 1 });
+ServiceSchema.index({ basePrice: 1 });
 
 // Hot-reload guard
 export const Service = mongoose.models.Service || mongoose.model<IService>('Service', ServiceSchema);

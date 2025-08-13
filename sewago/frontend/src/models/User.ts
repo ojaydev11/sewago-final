@@ -1,11 +1,13 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
 export interface IUser extends Document {
+  _id: string;
+  role: 'customer' | 'provider' | 'admin';
   name: string;
   email: string;
-  passwordHash: string;
-  role: 'CUSTOMER' | 'PROVIDER' | 'ADMIN';
+  hash: string;
   phone?: string;
+  district?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -23,16 +25,20 @@ const UserSchema = new Schema<IUser>({
     lowercase: true,
     trim: true,
   },
-  passwordHash: {
+  role: {
+    type: String,
+    enum: ['customer', 'provider', 'admin'],
+    default: 'customer',
+  },
+  hash: {
     type: String,
     required: true,
   },
-  role: {
-    type: String,
-    enum: ['CUSTOMER', 'PROVIDER', 'ADMIN'],
-    default: 'CUSTOMER',
-  },
   phone: {
+    type: String,
+    trim: true,
+  },
+  district: {
     type: String,
     trim: true,
   },
