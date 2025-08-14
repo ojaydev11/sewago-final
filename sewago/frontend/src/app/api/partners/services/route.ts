@@ -1,24 +1,12 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { FEATURE_FLAGS } from '@/lib/feature-flags';
-import { rateLimit } from '@/lib/rate-limit';
 
 export async function GET(request: NextRequest) {
   if (!FEATURE_FLAGS.PARTNER_API_ENABLED) {
     return NextResponse.json(
       { error: 'Partner API is disabled' },
       { status: 503 }
-    );
-  }
-
-  // Rate limiting for partners
-  const identifier = request.ip || 'anonymous';
-  const rateLimitResult = await rateLimit(identifier, 100, 3600); // 100 requests per hour
-  
-  if (!rateLimitResult.success) {
-    return NextResponse.json(
-      { error: 'Rate limit exceeded' },
-      { status: 429 }
     );
   }
 

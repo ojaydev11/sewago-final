@@ -3,7 +3,7 @@ import type { NextRequest } from 'next/server'
 
 export function middleware(req: NextRequest) {
   const url = req.nextUrl.clone()
-  const needAuth = url.pathname.startsWith('/services') && url.pathname.includes('/book') || url.pathname.startsWith('/bookings')
+  const needAuth = url.pathname.includes('/book') || url.pathname.startsWith('/bookings')
   const isAuthed = req.cookies.get('sg_session')
   
   if (needAuth && !isAuthed) {
@@ -15,5 +15,5 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = { 
-  matcher: ['/services/:slug/book', '/bookings'] 
+  matcher: ['/services/:path*/book', '/bookings'] 
 }
