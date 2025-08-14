@@ -119,3 +119,4 @@ export default function ServiceGrid({ services }: ServiceGridProps) {
     </div>
   );
 }
+

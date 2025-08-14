@@ -31,6 +31,16 @@ const config: Config = {
         'primary-muted': 'rgb(var(--color-primary-muted))',
         'accent-saffron': 'rgb(var(--color-accent-saffron))',
         jade: 'rgb(var(--color-jade))',
+        // SewaGo specific colors
+        sg: {
+          primary: '#0B63C5',
+          primaryDark: '#0A4FA0',
+          text: '#0F2B46',
+          sky1: '#E9F2FF',
+          sky2: '#CFE3FF',
+          sky3: '#BBD4FF',
+          gold: '#F3C54E'
+        },
         slate: {
           50: 'rgb(var(--color-bone))',
           100: 'rgb(var(--color-bone))',
@@ -98,6 +108,7 @@ const config: Config = {
       boxShadow: {
         'sm': 'var(--shadow-sm)',
         'md': 'var(--shadow-md)',
+        'card': '0 6px 24px rgba(15,43,70,0.08)',
         'lg': 'var(--shadow-lg)',
         'xl': 'var(--shadow-xl)',
       },
