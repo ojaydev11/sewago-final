@@ -1,150 +1,67 @@
-import type { Config } from "tailwindcss";
+import type { Config } from 'tailwindcss';
 
-const config: Config = {
-  darkMode: ['class'],
-  content: [
-    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
-    "./app/**/*.{js,ts,jsx,tsx,mdx}",
-    "./components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/**/*.{js,ts,jsx,tsx,mdx}",
-  ],
+export default {
+  content: ['./src/**/*.{ts,tsx}','./app/**/*.{ts,tsx}','./components/**/*.{ts,tsx}','./pages/**/*.{ts,tsx}'],
   theme: {
     extend: {
       colors: {
-        // Himalaya Design System
-        primary: {
-          DEFAULT: 'rgb(var(--color-primary) / <alpha-value>)',
-          50: 'rgb(var(--color-primary) / 0.05)',
-          100: 'rgb(var(--color-primary) / 0.1)',
-          200: 'rgb(var(--color-primary) / 0.2)',
-          300: 'rgb(var(--color-primary) / 0.3)',
-          400: 'rgb(var(--color-primary) / 0.4)',
-          500: 'rgb(var(--color-primary) / 0.5)',
-          600: 'rgb(var(--color-primary) / 0.6)',
-          700: 'rgb(var(--color-primary) / 0.7)',
-          800: 'rgb(var(--color-primary) / 0.8)',
-          900: 'rgb(var(--color-primary) / 0.9)',
-          950: 'rgb(var(--color-primary) / 0.95)',
-        },
-        'primary-muted': 'rgb(var(--color-primary-muted))',
-        'accent-saffron': 'rgb(var(--color-accent-saffron))',
-        jade: 'rgb(var(--color-jade))',
-        // SewaGo specific colors
-        sg: {
-          primary: '#0B63C5',
-          primaryDark: '#0A4FA0',
-          text: '#0F2B46',
-          sky1: '#E9F2FF',
-          sky2: '#CFE3FF',
-          sky3: '#BBD4FF',
-          gold: '#F3C54E'
-        },
-        slate: {
-          50: 'rgb(var(--color-bone))',
-          100: 'rgb(var(--color-bone))',
-          200: 'rgb(226 232 240)',
-          300: 'rgb(203 213 225)',
-          400: 'rgb(148 163 184)',
-          500: 'rgb(var(--color-slate-500))',
-          600: 'rgb(71 85 105)',
-          700: 'rgb(var(--color-slate-700))',
-          800: 'rgb(51 65 85)',
-          900: 'rgb(var(--color-slate-900))',
-        },
-        bone: 'rgb(var(--color-bone))',
-        snow: 'rgb(var(--color-snow))',
-        success: 'rgb(var(--color-success))',
-        warning: 'rgb(var(--color-warning))',
-        error: 'rgb(var(--color-error))',
-        info: 'rgb(var(--color-info))',
-        border: 'rgb(var(--color-slate-200))',
-        input: 'rgb(var(--color-slate-200))',
-        ring: 'rgb(var(--color-primary))',
-        background: 'rgb(var(--color-bone))',
-        foreground: 'rgb(var(--color-slate-900))',
+        // Sleek & Futuristic Palette
+        'sg-primary': '#1C1C2A',      // Deep Slate Blue
+        'sg-secondary': '#E0E0E0',    // Light Gray
+        'sg-accent1': '#FF5C93',      // Hot Pink
+        'sg-accent2': '#00FFA3',      // Spring Green
+        
+        // Classy & Modern Palette (Alternative)
+        'sg-charcoal': '#2C3E50',     // Charcoal
+        'sg-silver': '#ECF0F1',       // Silver
+        'sg-river': '#3498DB',        // Peter River Blue
+        'sg-crimson': '#E74C3C',      // Alizarin Crimson
+        
+        // Legacy colors for backward compatibility
+        'sg-primaryDark': '#0A4FA0',
+        'sg-text': '#0F2B46',
+        'sg-sky1': '#E9F2FF',
+        'sg-sky2': '#CFE3FF',
+        'sg-gold': '#F3C54E'
       },
-      fontFamily: {
-        sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-        display: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-        body: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-        devanagari: ['Noto Sans Devanagari', 'Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-        nepali: ['Mukta', 'Noto Sans Devanagari', 'Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-      },
-      container: {
-        center: true,
-        padding: '1rem',
-      },
-      fontSize: {
-        'xs': ['var(--font-size-xs)', { lineHeight: 'var(--line-height-tight)' }],
-        'sm': ['var(--font-size-sm)', { lineHeight: 'var(--line-height-snug)' }],
-        'base': ['var(--font-size-base)', { lineHeight: 'var(--line-height-normal)' }],
-        'lg': ['var(--font-size-lg)', { lineHeight: 'var(--line-height-relaxed)' }],
-        'xl': ['var(--font-size-xl)', { lineHeight: 'var(--line-height-relaxed)' }],
-        '2xl': ['var(--font-size-2xl)', { lineHeight: 'var(--line-height-snug)' }],
-        '3xl': ['var(--font-size-3xl)', { lineHeight: 'var(--line-height-tight)' }],
-        '4xl': ['var(--font-size-4xl)', { lineHeight: 'var(--line-height-tight)' }],
-        '5xl': ['var(--font-size-5xl)', { lineHeight: 'var(--line-height-tight)' }],
-        '6xl': ['var(--font-size-6xl)', { lineHeight: 'var(--line-height-tight)' }],
-      },
-      spacing: {
-        'xs': 'var(--spacing-xs)',
-        'sm': 'var(--spacing-sm)',
-        'md': 'var(--spacing-md)',
-        'lg': 'var(--spacing-lg)',
-        'xl': 'var(--spacing-xl)',
-        '2xl': 'var(--spacing-2xl)',
-        '3xl': 'var(--spacing-3xl)',
-        '4xl': 'var(--spacing-4xl)',
-      },
-      borderRadius: {
-        'sm': 'var(--radius-sm)',
-        'md': 'var(--radius-md)',
-        'lg': 'var(--radius-lg)',
-        'xl': 'var(--radius-xl)',
-        '2xl': 'var(--radius-2xl)',
+      backgroundImage: {
+        'gradient-futuristic': 'linear-gradient(135deg, #1C1C2A 0%, #3C339A 50%, #FF5C93 100%)',
+        'gradient-hero': 'linear-gradient(135deg, #1C1C2A 0%, #2C3E50 100%)',
+        'gradient-card': 'linear-gradient(145deg, #1C1C2A 0%, #2C3E50 100%)',
+        'gradient-accent': 'linear-gradient(90deg, #FF5C93 0%, #00FFA3 100%)',
+        'gradient-subtle': 'linear-gradient(135deg, #E0E0E0 0%, #ECF0F1 100%)'
       },
       boxShadow: {
-        'sm': 'var(--shadow-sm)',
-        'md': 'var(--shadow-md)',
+        'futuristic': '0 8px 32px rgba(28, 28, 42, 0.3)',
         'card': '0 6px 24px rgba(15,43,70,0.08)',
-        'lg': 'var(--shadow-lg)',
-        'xl': 'var(--shadow-xl)',
+        'glow': '0 0 20px rgba(255, 92, 147, 0.3)',
+        'glow-green': '0 0 20px rgba(0, 255, 163, 0.3)'
       },
       animation: {
-        'fade-in': 'fadeIn 0.6s ease-out',
-        'slide-up': 'slideUp 0.6s ease-out',
-        'scale-in': 'scaleIn 0.4s ease-out',
-        'float': 'float 3s ease-in-out infinite',
+        'fade-in': 'fadeIn 0.6s ease-in-out',
+        'slide-up': 'slideUp 0.8s ease-out',
+        'pulse-glow': 'pulseGlow 2s ease-in-out infinite',
+        'float': 'float 3s ease-in-out infinite'
       },
       keyframes: {
         fadeIn: {
-          '0%': { opacity: '0' },
-          '100%': { opacity: '1' },
+          '0%': { opacity: '0', transform: 'translateY(20px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' }
         },
         slideUp: {
-          '0%': { opacity: '0', transform: 'translateY(20px)' },
-          '100%': { opacity: '1', transform: 'translateY(0)' },
+          '0%': { opacity: '0', transform: 'translateY(40px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' }
         },
-        scaleIn: {
-          '0%': { opacity: '0', transform: 'scale(0.95)' },
-          '100%': { opacity: '1', transform: 'scale(1)' },
+        pulseGlow: {
+          '0%, 100%': { boxShadow: '0 0 20px rgba(255, 92, 147, 0.3)' },
+          '50%': { boxShadow: '0 0 30px rgba(255, 92, 147, 0.6)' }
         },
         float: {
           '0%, 100%': { transform: 'translateY(0px)' },
-          '50%': { transform: 'translateY(-10px)' },
-        },
-      },
-      backgroundImage: {
-        'gradient-primary': 'linear-gradient(to bottom right, rgb(var(--color-primary)), rgb(var(--color-primary) / 0.8))',
-        'gradient-secondary': 'linear-gradient(to bottom right, rgb(var(--color-jade)), rgb(var(--color-accent-saffron)))',
-        'gradient-hero': 'linear-gradient(to bottom right, rgb(var(--color-slate-900)), rgb(var(--color-slate-800)), rgb(var(--color-slate-900)))',
-        'nepali-pattern': 'radial-gradient(circle at 25% 25%, rgba(244, 175, 27, 0.1) 0%, transparent 50%), radial-gradient(circle at 75% 75%, rgba(11, 175, 135, 0.1) 0%, transparent 50%)',
-      },
-    },
+          '50%': { transform: 'translateY(-10px)' }
+        }
+      }
+    }
   },
-  plugins: [],
-};
-
-export default config;
+  plugins: []
+} satisfies Config;
