@@ -1,8 +1,9 @@
 import { prisma } from '@/lib/prisma'
 
+export const dynamic = 'force-dynamic'
+
 export default async function Page() {
-  // TODO: replace with real session user id
-  const userId = 'mock-user'
+  const userId = 'mock-user' // TODO: replace with real session user id
   
   const bookings = await prisma.booking.findMany({
     where: { userId },
@@ -35,8 +36,7 @@ export default async function Page() {
                 Status: <span className="font-medium">{booking.status}</span>
               </div>
               <div className="text-sm">
-                Paid: {booking.paid ? 'Yes' : 'No'}
-              </div>
+                Paid: {booking.paid ? 'Yes' : 'No'}</div>
             </div>
           </div>
         ))}
