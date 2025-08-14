@@ -1,46 +1,52 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
-import { ReactQueryProvider } from "@/providers/react-query";
-import { LanguageProvider } from "@/providers/language";
-import { cn } from "@/lib/utils";
-import Header from "@/components/site/Header";
-import Footer from "@/components/site/Footer";
-import { LiteModeProvider } from "@/providers/lite";
-import { AuthProvider } from "@/providers/auth";
-import "@/lib/auth";
+import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
+import './globals.css';
+import Header from '@/components/site/Header';
+import Analytics from '@/components/Analytics';
 
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-});
+const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: "SewaGo - Reliable Services for Every Home in Nepal",
-  description: "Connect with verified local service providers for cleaning, electrical work, gardening, and more. Quality services, trusted professionals across Nepal.",
-  keywords: "local services, home services, cleaning, electrical work, gardening, Nepal, Kathmandu, service providers",
-  authors: [{ name: "SewaGo Team" }],
-  creator: "SewaGo",
+  title: 'SewaGo - Local Services in Nepal',
+  description: 'Connect with verified local service providers in Nepal. Professional electricians, plumbers, cleaners, and tutors available in Kathmandu, Pokhara, and across Nepal.',
+  keywords: 'local services Nepal, electrician Kathmandu, plumber Pokhara, cleaner Lalitpur, tutor Nepal, home services, professional services, verified providers, SewaGo, सेवागो',
+  authors: [{ name: 'SewaGo Team' }],
+  creator: 'SewaGo',
+  publisher: 'SewaGo',
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  metadataBase: new URL('https://sewago.com'),
+  alternates: {
+    canonical: '/',
+    languages: {
+      'en': '/en',
+      'ne': '/ne',
+    },
+  },
   openGraph: {
-    title: "SewaGo - Reliable Services for Every Home in Nepal",
-    description: "Connect with verified local service providers for cleaning, electrical work, gardening, and more. Quality services, trusted professionals across Nepal.",
-    type: "website",
-    locale: "en_US",
-    siteName: "SewaGo",
+    title: 'SewaGo - Local Services in Nepal',
+    description: 'Connect with verified local service providers in Nepal. Professional services for every home.',
+    url: 'https://sewago.com',
+    siteName: 'SewaGo',
     images: [
       {
-        url: "/og-image.jpg",
+        url: '/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: "SewaGo - Local Services Platform",
+        alt: 'SewaGo - Local Services in Nepal',
       },
     ],
+    locale: 'en_US',
+    type: 'website',
   },
   twitter: {
-    card: "summary_large_image",
-    title: "SewaGo - Local Services Platform",
-    description: "Connect with verified local service providers for cleaning, electrical work, gardening, and more.",
-    images: ["/og-image.jpg"],
+    card: 'summary_large_image',
+    title: 'SewaGo - Local Services in Nepal',
+    description: 'Connect with verified local service providers in Nepal. Professional services for every home.',
+    images: ['/og-image.jpg'],
   },
   robots: {
     index: true,
@@ -48,40 +54,90 @@ export const metadata: Metadata = {
     googleBot: {
       index: true,
       follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
     },
   },
   verification: {
-    google: "your-google-verification-code",
+    google: 'your-google-verification-code',
+    yandex: 'your-yandex-verification-code',
+    yahoo: 'your-yahoo-verification-code',
   },
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={cn(`${inter.variable} antialiased`, "min-h-screen bg-white text-gray-900")}
-      >
-        <AuthProvider>
-          <ReactQueryProvider>
-            <LanguageProvider>
-              <LiteModeProvider>
-                {/* Temporarily disabled Header to resolve build issues */}
-                {/* <Header /> */}
-                <main className="min-h-screen">
-                  {children}
-                </main>
-                <Footer />
-              </LiteModeProvider>
-            </LanguageProvider>
-          </ReactQueryProvider>
-        </AuthProvider>
+    <html lang="en">
+      <head>
+        {/* Preconnect to external domains for performance */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://www.googletagmanager.com" />
+        
+        {/* DNS prefetch for performance */}
+        <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+        <link rel="dns-prefetch" href="//www.googletagmanager.com" />
+        
+        {/* Favicon and app icons */}
+        <link rel="icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+        <link rel="manifest" href="/site.webmanifest" />
+        
+        {/* Theme color for mobile browsers */}
+        <meta name="theme-color" content="#DC143C" />
+        <meta name="msapplication-TileColor" content="#DC143C" />
+        
+        {/* Viewport and mobile optimization */}
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        
+        {/* Structured data for SEO */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              "name": "SewaGo",
+              "alternateName": "सेवागो",
+              "url": "https://sewago.com",
+              "logo": "https://sewago.com/logo.png",
+              "sameAs": [
+                "https://facebook.com/sewago",
+                "https://twitter.com/sewago",
+                "https://instagram.com/sewago",
+                "https://linkedin.com/company/sewago"
+              ],
+              "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+977-9800000000",
+                "contactType": "customer service",
+                "areaServed": "NP",
+                "availableLanguage": ["English", "Nepali", "Newari"]
+              }
+            })
+          }}
+        />
+      </head>
+      <body className={inter.className}>
+        {/* Google Analytics - only in production */}
+        {process.env.NODE_ENV === 'production' && (
+          <Analytics measurementId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || 'G-XXXXXXXXXX'} />
+        )}
+        
+        <Header />
+        <main className="min-h-screen">
+          {children}
+        </main>
       </body>
     </html>
   );

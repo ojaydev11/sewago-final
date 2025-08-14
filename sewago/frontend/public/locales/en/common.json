@@ -1,0 +1,47 @@
+{
+  "nav": {
+    "home": "Home",
+    "services": "Services",
+    "about": "About",
+    "contact": "Contact",
+    "faq": "FAQ",
+    "pricing": "Pricing",
+    "login": "Login",
+    "register": "Register"
+  },
+  "hero": {
+    "title": "Reliable Services",
+    "subtitle": "For Every Home in Nepal",
+    "searchPlaceholder": "What service do you need?",
+    "searchButton": "Search Services"
+  },
+  "services": {
+    "title": "Our Services",
+    "subtitle": "Professional services for all your needs",
+    "electrician": "Electrician",
+    "plumber": "Plumber",
+    "cleaner": "Cleaner",
+    "tutor": "Tutor",
+    "bookNow": "Book Now",
+    "viewDetails": "View Details",
+    "fromPrice": "From Rs {{price}}"
+  },
+  "footer": {
+    "description": "Reliable local services for every home in Nepal",
+    "quickLinks": "Quick Links",
+    "services": "Services",
+    "about": "About Us",
+    "contact": "Contact",
+    "support": "Support",
+    "copyright": "© 2024 SewaGo. All rights reserved."
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "tryAgain": "Try again",
+    "learnMore": "Learn More",
+    "getStarted": "Get Started",
+    "contactUs": "Contact Us",
+    "backToTop": "Back to Top"
+  }
+}

@@ -71,7 +71,7 @@ export default function ServiceGrid({ services }: ServiceGridProps) {
                 )}
               </div>
               <span className="text-lg font-semibold text-primary">
-                From ₹{service.basePrice}
+                                  From Rs {service.basePrice}
               </span>
             </div>
             

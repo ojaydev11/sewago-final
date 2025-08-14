@@ -47,83 +47,88 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full">
-        <Card>
-          <CardHeader className="text-center">
-            <div className="mx-auto w-12 h-12 bg-primary rounded-full flex items-center justify-center mb-4">
-              <span className="text-white font-bold text-xl">S</span>
+        <Card className="shadow-xl border-0">
+          <CardHeader className="text-center pb-6">
+            <div className="mx-auto w-16 h-16 bg-gradient-to-br from-primary to-primary/80 rounded-2xl flex items-center justify-center mb-6">
+              <span className="text-white font-bold text-2xl">S</span>
             </div>
-            <CardTitle className="text-2xl">Welcome back</CardTitle>
-            <CardDescription>
+            <CardTitle className="text-3xl font-bold text-gray-900">Welcome back</CardTitle>
+            <CardDescription className="text-lg text-gray-600 mt-2">
               Sign in to your SewaGo account
             </CardDescription>
           </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4">
+          <CardContent className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-5">
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email" className="text-sm font-semibold text-gray-700">Email</Label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                   <Input
                     id="email"
                     type="email"
                     placeholder="Enter your email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="pl-10"
+                    className="pl-10 h-12 text-base border-gray-300 focus:border-primary focus:ring-primary"
                     required
                   />
                 </div>
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password" className="text-sm font-semibold text-gray-700">Password</Label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                   <Input
                     id="password"
                     type={showPassword ? 'text' : 'password'}
                     placeholder="Enter your password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="pl-10 pr-10"
+                    className="pl-10 pr-10 h-12 text-base border-gray-300 focus:border-primary focus:ring-primary"
                     required
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
                   >
-                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                   </button>
                 </div>
               </div>
 
               {error && (
-                <div className="text-red-600 text-sm text-center bg-red-50 p-3 rounded-md">
+                <div className="text-red-600 text-sm text-center bg-red-50 p-4 rounded-lg border border-red-200">
                   {error}
                 </div>
               )}
 
-              <Button type="submit" className="w-full" disabled={isLoading}>
+              <Button type="submit" className="w-full h-12 text-base font-semibold" disabled={isLoading}>
                 {isLoading ? 'Signing in...' : 'Sign In'}
               </Button>
 
-              <div className="text-center text-sm text-gray-600">
+              <div className="text-center text-sm text-gray-600 pt-2">
                 <p>Don't have an account?{' '}
-                  <Link href="/auth/register" className="text-primary hover:underline font-medium">
+                  <Link href="/auth/register" className="text-primary hover:underline font-semibold transition-colors">
                     Sign up
                   </Link>
                 </p>
               </div>
 
-              <div className="text-center text-xs text-gray-500 bg-gray-50 p-3 rounded-md">
-                <p className="font-medium mb-2">Demo Accounts:</p>
-                <p>Admin: admin@sewago.com / admin123</p>
-                <p>Provider: ram@example.com / provider123</p>
-                <p>Customer: sita@example.com / customer123</p>
-              </div>
+              {/* Demo credentials - only show in non-production environments */}
+              {process.env.NODE_ENV !== 'production' && (
+                <div className="text-center text-xs text-gray-500 bg-gray-50 p-4 rounded-lg border border-gray-200">
+                  <p className="font-semibold mb-3 text-gray-700">Demo Accounts:</p>
+                  <div className="space-y-1 text-gray-600">
+                    <p>Admin: admin@sewago.com / admin123</p>
+                    <p>Provider: ram@example.com / provider123</p>
+                    <p>Customer: sita@example.com / customer123</p>
+                  </div>
+                </div>
+              )}
             </form>
           </CardContent>
         </Card>
