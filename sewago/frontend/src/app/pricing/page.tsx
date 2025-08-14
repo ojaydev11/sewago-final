@@ -102,7 +102,7 @@ export default async function PricingPage() {
                 </CardDescription>
                 <div className="pt-4">
                   <span className="text-3xl font-bold text-primary">
-                    From ₹{service.basePrice}
+                    From Rs {service.basePrice}
                   </span>
                   <p className="text-sm text-gray-500">Starting price</p>
                 </div>

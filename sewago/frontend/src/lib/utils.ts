@@ -36,6 +36,13 @@ export function formatCurrency(amount: number, currency: string = 'NPR'): string
 }
 
 /**
+ * Format price for display (Nepalese Rupee)
+ */
+export function formatPrice(amount: number): string {
+  return `Rs ${new Intl.NumberFormat('en-IN').format(amount)}`;
+}
+
+/**
  * Format date for display
  */
 export function formatDate(date: Date | string): string {

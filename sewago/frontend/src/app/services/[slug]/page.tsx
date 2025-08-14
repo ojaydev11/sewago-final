@@ -82,7 +82,7 @@ export default async function ServiceDetailPage({ params }: ServiceDetailPagePro
                 </div>
                 <div className="text-right">
                   <div className="text-3xl font-bold text-primary mb-1">
-                    From ₹{service.basePrice}
+                    From Rs {service.basePrice}
                   </div>
                   <div className="text-sm text-gray-500">Starting price</div>
                 </div>
@@ -184,7 +184,7 @@ export default async function ServiceDetailPage({ params }: ServiceDetailPagePro
               <CardContent className="space-y-4">
                 <div className="text-center">
                   <div className="text-3xl font-bold text-primary mb-1">
-                    From ₹{service.basePrice}
+                    From Rs {service.basePrice}
                   </div>
                   <div className="text-sm text-gray-500">Starting price</div>
                 </div>

@@ -1,316 +1,181 @@
-"use client";
+'use client';
 
 import { useEffect } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 
-interface AnalyticsConfig {
-  enabled: boolean;
-  provider: 'vercel' | 'posthog' | 'google' | 'custom';
-  trackingId?: string;
-  endpoint?: string;
-}
-
-// Analytics configuration based on environment
-const analyticsConfig: AnalyticsConfig = {
-  enabled: process.env.NEXT_PUBLIC_ANALYTICS_ENABLED === 'true',
-  provider: (process.env.NEXT_PUBLIC_ANALYTICS_PROVIDER as any) || 'vercel',
-  trackingId: process.env.NEXT_PUBLIC_ANALYTICS_ID,
-  endpoint: process.env.NEXT_PUBLIC_ANALYTICS_ENDPOINT,
-};
-
-// Analytics event interface
-interface AnalyticsEvent {
-  name: string;
-  properties?: Record<string, any>;
-  timestamp?: number;
-}
-
-// Analytics class
-class Analytics {
-  private config: AnalyticsConfig;
-  private queue: AnalyticsEvent[] = [];
-  private isInitialized = false;
-
-  constructor(config: AnalyticsConfig) {
-    this.config = config;
-  }
-
-  // Initialize analytics based on provider
-  async initialize(): Promise<void> {
-    if (!this.config.enabled || this.isInitialized) return;
-
-    try {
-      switch (this.config.provider) {
-        case 'vercel':
-          await this.initializeVercel();
-          break;
-        case 'posthog':
-          await this.initializePostHog();
-          break;
-        case 'google':
-          await this.initializeGoogleAnalytics();
-          break;
-        case 'custom':
-          await this.initializeCustom();
-          break;
-      }
-      this.isInitialized = true;
-    } catch (error) {
-      console.warn('Analytics initialization failed:', error);
-    }
-  }
-
-  // Track page view
-  trackPageView(path: string, properties?: Record<string, any>): void {
-    if (!this.config.enabled) return;
-
-    const event: AnalyticsEvent = {
-      name: 'page_view',
-      properties: {
-        path,
-        url: window.location.href,
-        title: document.title,
-        referrer: document.referrer,
-        ...properties,
-      },
-      timestamp: Date.now(),
-    };
-
-    this.trackEvent(event);
-  }
-
-  // Track custom event
-  trackEvent(event: AnalyticsEvent): void {
-    if (!this.config.enabled) return;
-
-    // Add timestamp if not provided
-    if (!event.timestamp) {
-      event.timestamp = Date.now();
-    }
-
-    // Queue event if not initialized
-    if (!this.isInitialized) {
-      this.queue.push(event);
-      return;
-    }
-
-    // Send event based on provider
-    this.sendEvent(event);
-  }
-
-  // Track user action
-  trackUserAction(action: string, resource: string, properties?: Record<string, any>): void {
-    this.trackEvent({
-      name: 'user_action',
-      properties: {
-        action,
-        resource,
-        ...properties,
-      },
-    });
-  }
-
-  // Track booking flow
-  trackBookingStep(step: string, properties?: Record<string, any>): void {
-    this.trackEvent({
-      name: 'booking_step',
-      properties: {
-        step,
-        ...properties,
-      },
-    });
-  }
-
-  // Track service interaction
-  trackServiceInteraction(serviceId: string, action: string, properties?: Record<string, any>): void {
-    this.trackEvent({
-      name: 'service_interaction',
-      properties: {
-        serviceId,
-        action,
-        ...properties,
-      },
-    });
-  }
-
-  // Send event to analytics provider
-  private async sendEvent(event: AnalyticsEvent): Promise<void> {
-    try {
-      switch (this.config.provider) {
-        case 'vercel':
-          await this.sendToVercel(event);
-          break;
-        case 'posthog':
-          await this.sendToPostHog(event);
-          break;
-        case 'google':
-          await this.sendToGoogleAnalytics(event);
-          break;
-        case 'custom':
-          await this.sendToCustom(event);
-          break;
-      }
-    } catch (error) {
-      console.warn('Failed to send analytics event:', error);
-    }
-  }
-
-  // Vercel Analytics
-  private async initializeVercel(): Promise<void> {
-    // Vercel Analytics is automatically initialized
-    console.log('Vercel Analytics initialized');
-  }
-
-  private async sendToVercel(event: AnalyticsEvent): Promise<void> {
-    // Vercel Analytics tracks automatically
-    if (window.va) {
-      window.va.track(event.name, event.properties);
-    }
-  }
-
-  // PostHog Analytics
-  private async initializePostHog(): Promise<void> {
-    if (!this.config.trackingId) return;
-
-    try {
-      const { PostHog } = await import('posthog-js');
-      PostHog.init(this.config.trackingId, {
-        api_host: 'https://app.posthog.com',
-        loaded: (posthog) => {
-          console.log('PostHog Analytics initialized');
-        },
-      });
-    } catch (error) {
-      console.warn('PostHog initialization failed:', error);
-    }
-  }
-
-  private async sendToPostHog(event: AnalyticsEvent): Promise<void> {
-    if (window.posthog) {
-      window.posthog.capture(event.name, event.properties);
-    }
-  }
-
-  // Google Analytics
-  private async initializeGoogleAnalytics(): Promise<void> {
-    if (!this.config.trackingId) return;
-
-    // Load Google Analytics script
-    const script = document.createElement('script');
-    script.src = `https://www.googletagmanager.com/gtag/js?id=${this.config.trackingId}`;
-    script.async = true;
-    document.head.appendChild(script);
-
-    // Initialize gtag
-    window.dataLayer = window.dataLayer || [];
-    window.gtag = function(...args: any[]) {
-      window.dataLayer.push(args);
-    };
-    window.gtag('js', new Date());
-    window.gtag('config', this.config.trackingId);
-
-    console.log('Google Analytics initialized');
-  }
-
-  private async sendToGoogleAnalytics(event: AnalyticsEvent): Promise<void> {
-    if (window.gtag) {
-      window.gtag('event', event.name, event.properties);
-    }
-  }
-
-  // Custom Analytics
-  private async initializeCustom(): Promise<void> {
-    if (!this.config.endpoint) return;
-    console.log('Custom Analytics initialized');
-  }
-
-  private async sendToCustom(event: AnalyticsEvent): Promise<void> {
-    if (!this.config.endpoint) return;
-
-    try {
-      await fetch(this.config.endpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(event),
-      });
-    } catch (error) {
-      console.warn('Custom analytics endpoint failed:', error);
-    }
-  }
-
-  // Process queued events
-  async processQueue(): Promise<void> {
-    if (!this.isInitialized || this.queue.length === 0) return;
-
-    const events = [...this.queue];
-    this.queue = [];
-
-    for (const event of events) {
-      await this.sendEvent(event);
-    }
+declare global {
+  interface Window {
+    gtag: (...args: any[]) => void;
   }
 }
 
-// Create analytics instance
-const analytics = new Analytics(analyticsConfig);
+interface AnalyticsProps {
+  measurementId: string;
+}
 
-// Analytics component
-export default function AnalyticsComponent(): null {
+export default function Analytics({ measurementId }: AnalyticsProps) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    // Initialize analytics
-    analytics.initialize().then(() => {
-      // Process any queued events
-      analytics.processQueue();
+    // Only run in production
+    if (process.env.NODE_ENV !== 'production') {
+      return;
+    }
+
+    // Load Google Analytics script
+    const script = document.createElement('script');
+    script.async = true;
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${measurementId}`;
+    document.head.appendChild(script);
+
+    // Initialize gtag
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function() {
+      window.dataLayer.push(arguments);
+    };
+
+    window.gtag('js', new Date());
+    window.gtag('config', measurementId, {
+      page_title: document.title,
+      page_location: window.location.href,
+      custom_map: {
+        custom_parameter_1: 'service_type',
+        custom_parameter_2: 'location',
+        custom_parameter_3: 'user_type'
+      }
     });
-  }, []);
+
+    return () => {
+      document.head.removeChild(script);
+    };
+  }, [measurementId]);
 
   useEffect(() => {
-    // Track page views
-    if (pathname) {
-      analytics.trackPageView(pathname, {
-        search: searchParams?.toString(),
+    // Track page views on route changes
+    if (process.env.NODE_ENV === 'production' && window.gtag) {
+      const url = pathname + (searchParams?.toString() ? `?${searchParams.toString()}` : '');
+      
+      window.gtag('config', measurementId, {
+        page_path: url,
+        page_title: document.title,
+        page_location: window.location.origin + url
+      });
+
+      // Track custom events for better insights
+      window.gtag('event', 'page_view', {
+        page_title: document.title,
+        page_location: url,
+        page_referrer: document.referrer,
+        custom_parameter_1: getServiceTypeFromPath(pathname),
+        custom_parameter_2: getLocationFromPath(pathname),
+        custom_parameter_3: getUserType()
       });
     }
-  }, [pathname, searchParams]);
+  }, [pathname, searchParams, measurementId]);
 
-  return null;
-}
+  // Helper functions for custom parameters
+  const getServiceTypeFromPath = (path: string) => {
+    if (path.includes('/services')) {
+      if (path.includes('/electrician')) return 'electrical';
+      if (path.includes('/plumber')) return 'plumbing';
+      if (path.includes('/cleaner')) return 'cleaning';
+      if (path.includes('/tutor')) return 'tutoring';
+      return 'general_services';
+    }
+    return 'other';
+  };
 
-// Export analytics instance and utility functions
-export { analytics };
+  const getLocationFromPath = (path: string) => {
+    if (path.includes('kathmandu')) return 'kathmandu';
+    if (path.includes('pokhara')) return 'pokhara';
+    if (path.includes('lalitpur')) return 'lalitpur';
+    if (path.includes('bhaktapur')) return 'bhaktapur';
+    return 'nepal';
+  };
 
-// Utility functions for tracking
-export function trackEvent(name: string, properties?: Record<string, any>): void {
-  analytics.trackEvent({ name, properties });
-}
+  const getUserType = () => {
+    // This could be enhanced with actual user authentication logic
+    const userType = localStorage.getItem('user_type') || 'guest';
+    return userType;
+  };
 
-export function trackUserAction(action: string, resource: string, properties?: Record<string, any>): void {
-  analytics.trackUserAction(action, resource, properties);
-}
+  // Track custom events
+  const trackEvent = (eventName: string, parameters: Record<string, any> = {}) => {
+    if (process.env.NODE_ENV === 'production' && window.gtag) {
+      window.gtag('event', eventName, {
+        ...parameters,
+        custom_parameter_1: getServiceTypeFromPath(pathname),
+        custom_parameter_2: getLocationFromPath(pathname),
+        custom_parameter_3: getUserType()
+      });
+    }
+  };
 
-export function trackBookingStep(step: string, properties?: Record<string, any>): void {
-  analytics.trackBookingStep(step, properties);
-}
+  // Expose tracking function globally for other components
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      (window as any).trackSewaGoEvent = trackEvent;
+    }
+  }, [pathname]);
 
-export function trackServiceInteraction(serviceId: string, action: string, properties?: Record<string, any>): void {
-  analytics.trackServiceInteraction(serviceId, action, properties);
-}
+  // Track important user interactions
+  useEffect(() => {
+    const trackUserInteractions = () => {
+      // Track form submissions
+      document.addEventListener('submit', (e) => {
+        const form = e.target as HTMLFormElement;
+        if (form.id === 'contact-form') {
+          trackEvent('form_submit', {
+            form_name: 'contact_form',
+            form_location: pathname
+          });
+        }
+      });
 
-// Type declarations for global objects
-declare global {
-  interface Window {
-    va?: {
-      track: (eventName: string, properties?: Record<string, any>) => void;
+      // Track button clicks
+      document.addEventListener('click', (e) => {
+        const target = e.target as HTMLElement;
+        if (target.tagName === 'BUTTON' || target.closest('button')) {
+          const button = target.tagName === 'BUTTON' ? target : target.closest('button');
+          const buttonText = button?.textContent?.trim();
+          const buttonClass = button?.className;
+          
+          if (buttonText && buttonClass) {
+            trackEvent('button_click', {
+              button_text: buttonText,
+              button_class: buttonClass,
+              page_location: pathname
+            });
+          }
+        }
+      });
+
+      // Track external links
+      document.addEventListener('click', (e) => {
+        const target = e.target as HTMLElement;
+        const link = target.closest('a');
+        if (link && link.hostname !== window.location.hostname) {
+          trackEvent('external_link_click', {
+            link_url: link.href,
+            link_text: link.textContent?.trim(),
+            page_location: pathname
+          });
+        }
+      });
     };
-    posthog?: {
-      capture: (eventName: string, properties?: Record<string, any>) => void;
-    };
-    gtag?: (...args: any[]) => void;
-    dataLayer?: any[];
+
+    if (process.env.NODE_ENV === 'production') {
+      trackUserInteractions();
+    }
+  }, [pathname]);
+
+  return null; // This component doesn't render anything
+}
+
+// Utility function for other components to use
+export const trackSewaGoEvent = (eventName: string, parameters: Record<string, any> = {}) => {
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag('event', eventName, parameters);
   }
-}
+};

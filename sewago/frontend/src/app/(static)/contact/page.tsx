@@ -1,234 +1,292 @@
+import { Metadata } from 'next';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Mail, Phone, MapPin, Clock, Send, MessageCircle } from 'lucide-react';
 import { designUtils, componentStyles } from '@/lib/design-system';
+import Location from '@/components/Location';
+
+export const metadata: Metadata = {
+  title: 'Contact Us - SewaGo | Get in Touch for Local Services in Nepal',
+  description: 'Contact SewaGo for local services in Nepal. Reach out to our team for support, questions, or to book services. Available in Kathmandu, Pokhara, and across Nepal.',
+  keywords: 'contact SewaGo, local services Nepal, support, customer service, Kathmandu services, Nepal contact',
+};
 
 export default function ContactPage() {
   return (
-    <main className='min-h-screen bg-sg-primary relative overflow-hidden'>
+    <main className='min-h-screen relative overflow-hidden'>
       {/* Background gradient elements */}
       <div className='fixed inset-0 pointer-events-none'>
-        <div className='absolute top-1/4 right-10 w-96 h-96 bg-sg-accent2/5 rounded-full blur-3xl animate-float'></div>
-        <div className='absolute bottom-1/4 left-20 w-80 h-80 bg-sg-accent1/5 rounded-full blur-3xl animate-float' style={{animationDelay: '1s'}}></div>
+        <div className='absolute top-1/4 right-10 w-96 h-96 bg-white/5 rounded-full blur-3xl animate-float'></div>
+        <div className='absolute bottom-1/4 left-20 w-80 h-80 bg-white/5 rounded-full blur-3xl animate-float' style={{animationDelay: '1s'}}></div>
       </div>
       
       {/* Hero Section */}
       <section className='relative bg-gradient-hero py-20 lg:py-32'>
         <div className={designUtils.getContainerClasses('lg')}>
-          <div className='text-center space-y-8 animate-fade-in'>
+          <div className='text-center space-y-8 animate-fade-up'>
             <h1 className={designUtils.getHeadingClasses('h1')}>
               Get in Touch
             </h1>
-            <p className={designUtils.getTextClasses('large')}>
-              We'd love to hear from you. Let's start a conversation about how we can help.
+            <p className='text-2xl sm:text-3xl text-white/90 font-light leading-relaxed animate-slide-up' style={{animationDelay: '0.2s'}}>
+              We're here to help with all your local service needs
             </p>
             
-            {/* Futuristic accent line */}
+            {/* Modern accent line */}
             <div className='flex justify-center'>
-              <div className='w-24 h-1 bg-gradient-accent rounded-full'></div>
+              <div className='w-24 h-1 bg-gradient-to-r from-accent to-primary rounded-full'></div>
             </div>
           </div>
         </div>
       </section>
       
-      {/* Contact Form Section */}
+      {/* Contact Information */}
       <section className={designUtils.getContainerClasses('lg')}>
-        <div className='grid lg:grid-cols-2 gap-16 py-20'>
-          {/* Contact Information */}
-          <div className='space-y-8 animate-slide-up'>
+        <div className='py-20'>
+          <div className='grid lg:grid-cols-2 gap-12'>
+            {/* Contact Form */}
             <div className='space-y-6'>
-              <h2 className={designUtils.getHeadingClasses('h2')}>
-                Let's Connect
-              </h2>
-              <p className={designUtils.getTextClasses('medium')}>
-                Have questions about our services? Need support? 
-                We're here to help you every step of the way.
-              </p>
-            </div>
-            
-            {/* Contact Methods */}
-            <div className='space-y-6'>
-              {[
-                {
-                  icon: '📧',
-                  title: 'Email Us',
-                  detail: 'hello@sewago.com',
-                  description: 'We typically respond within 24 hours'
-                },
-                {
-                  icon: '📱',
-                  title: 'Call Us',
-                  detail: '+977-9800000000',
-                  description: 'Available 7 AM - 10 PM, 7 days a week'
-                },
-                {
-                  icon: '📍',
-                  title: 'Visit Us',
-                  detail: 'Kathmandu, Nepal',
-                  description: 'Headquarters in the heart of the city'
-                }
-              ].map((method, index) => (
-                <div 
-                  key={index}
-                  className={componentStyles.card.base + ' p-6 animate-fade-in'}
-                  style={{animationDelay: `${0.2 * index}s`}}
-                >
-                  <div className='flex items-start gap-4'>
-                    <div className='w-12 h-12 bg-gradient-accent rounded-xl flex items-center justify-center flex-shrink-0'>
-                      <span className='text-xl'>{method.icon}</span>
+              <div className='space-y-4'>
+                <h2 className='text-3xl font-bold text-white mb-6'>
+                  Send us a Message
+                </h2>
+                <p className='text-white/80 text-lg'>
+                  Have a question or need assistance? Fill out the form below and we'll get back to you within 24 hours.
+                </p>
+              </div>
+              
+              <Card className={componentStyles.card.base + ' p-8'}>
+                <form className='space-y-6'>
+                  <div className='grid md:grid-cols-2 gap-4'>
+                    <div className='space-y-2'>
+                      <Label htmlFor='firstName' className='text-white font-medium'>First Name</Label>
+                      <Input 
+                        id='firstName' 
+                        placeholder='Enter your first name'
+                        className='bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:border-accent focus:ring-accent'
+                      />
                     </div>
                     <div className='space-y-2'>
-                      <h3 className='text-lg font-semibold text-sg-secondary'>{method.title}</h3>
-                      <p className='text-sg-accent1 font-medium'>{method.detail}</p>
-                      <p className={designUtils.getTextClasses('small')}>{method.description}</p>
+                      <Label htmlFor='lastName' className='text-white font-medium'>Last Name</Label>
+                      <Input 
+                        id='lastName' 
+                        placeholder='Enter your last name'
+                        className='bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:border-accent focus:ring-accent'
+                      />
                     </div>
                   </div>
-                </div>
-              ))}
+                  
+                  <div className='space-y-2'>
+                    <Label htmlFor='email' className='text-white font-medium'>Email</Label>
+                    <Input 
+                      id='email' 
+                      type='email'
+                      placeholder='Enter your email address'
+                      className='bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:border-accent focus:ring-accent'
+                    />
+                  </div>
+                  
+                  <div className='space-y-2'>
+                    <Label htmlFor='phone' className='text-white font-medium'>Phone Number</Label>
+                    <Input 
+                      id='phone' 
+                      type='tel'
+                      placeholder='Enter your phone number'
+                      className='bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:border-accent focus:ring-accent'
+                    />
+                  </div>
+                  
+                  <div className='space-y-2'>
+                    <Label htmlFor='subject' className='text-white font-medium'>Subject</Label>
+                    <Input 
+                      id='subject' 
+                      placeholder='What is this about?'
+                      className='bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:border-accent focus:ring-accent'
+                    />
+                  </div>
+                  
+                  <div className='space-y-2'>
+                    <Label htmlFor='message' className='text-white font-medium'>Message</Label>
+                    <Textarea 
+                      id='message' 
+                      placeholder='Tell us more about your inquiry...'
+                      rows={5}
+                      className='bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:border-accent focus:ring-accent resize-none'
+                    />
+                  </div>
+                  
+                  <Button 
+                    type='submit' 
+                    className='w-full bg-gradient-to-r from-primary to-accent text-white hover:from-primary-light hover:to-accent-light py-3 text-lg'
+                  >
+                    <Send className='w-5 h-5 mr-2' />
+                    Send Message
+                  </Button>
+                </form>
+              </Card>
             </div>
+            
+            {/* Contact Details */}
+            <div className='space-y-6'>
+              <div className='space-y-4'>
+                <h2 className='text-3xl font-bold text-white mb-6'>
+                  Contact Information
+                </h2>
+                <p className='text-white/80 text-lg'>
+                  Reach out to us through any of these channels. We're here to help 24/7.
+                </p>
+              </div>
+              
+              <div className='space-y-4'>
+                <div className='flex items-start gap-4 p-4 bg-white/10 backdrop-blur-md border border-white/20 rounded-lg'>
+                  <div className='w-12 h-12 bg-accent/20 rounded-full flex items-center justify-center flex-shrink-0'>
+                    <Phone className='w-6 h-6 text-accent' />
+                  </div>
+                  <div>
+                    <h3 className='font-semibold text-white mb-1'>Phone</h3>
+                    <p className='text-white/80'>
+                      <a href='tel:+9779800000000' className='hover:text-accent transition-colors'>
+                        +977-9800000000
+                      </a>
+                    </p>
+                    <p className='text-white/60 text-sm'>Available 24/7 for emergencies</p>
+                  </div>
+                </div>
+                
+                <div className='flex items-start gap-4 p-4 bg-white/10 backdrop-blur-md border border-white/20 rounded-lg'>
+                  <div className='w-12 h-12 bg-accent/20 rounded-full flex items-center justify-center flex-shrink-0'>
+                    <Mail className='w-6 h-6 text-accent' />
+                  </div>
+                  <div>
+                    <h3 className='font-semibold text-white mb-1'>Email</h3>
+                    <p className='text-white/80'>
+                      <a href='mailto:hello@sewago.com' className='hover:text-accent transition-colors'>
+                        hello@sewago.com
+                      </a>
+                    </p>
+                    <p className='text-white/60 text-sm'>Response within 24 hours</p>
+                  </div>
+                </div>
+                
+                <div className='flex items-start gap-4 p-4 bg-white/10 backdrop-blur-md border border-white/20 rounded-lg'>
+                  <div className='w-12 h-12 bg-accent/20 rounded-full flex items-center justify-center flex-shrink-0'>
+                    <Clock className='w-6 h-6 text-accent' />
+                  </div>
+                  <div>
+                    <h3 className='font-semibold text-white mb-1'>Business Hours</h3>
+                    <p className='text-white/80'>
+                      Monday - Friday: 7:00 AM - 10:00 PM<br />
+                      Saturday - Sunday: 7:00 AM - 10:00 PM
+                    </p>
+                    <p className='text-accent font-medium text-sm'>24/7 Emergency Support Available</p>
+                  </div>
+                </div>
+                
+                <div className='flex items-start gap-4 p-4 bg-white/10 backdrop-blur-md border border-white/20 rounded-lg'>
+                  <div className='w-12 h-12 bg-accent/20 rounded-full flex items-center justify-center flex-shrink-0'>
+                    <MessageCircle className='w-6 h-6 text-accent' />
+                  </div>
+                  <div>
+                    <h3 className='font-semibold text-white mb-1'>Live Chat</h3>
+                    <p className='text-white/80'>Available during business hours</p>
+                    <Button variant="outline" className='mt-2 border-white/30 text-white hover:bg-white/20'>
+                      Start Chat
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      {/* Location Section */}
+      <section className={designUtils.getContainerClasses('lg')}>
+        <div className='py-20'>
+          <div className='text-center mb-16'>
+            <h2 className='text-3xl font-bold text-white mb-4'>
+              Find Us
+            </h2>
+            <p className='text-lg text-white/80 max-w-2xl mx-auto'>
+              Visit our office in Kathmandu or explore our service areas across Nepal
+            </p>
           </div>
           
-          {/* Contact Form */}
-          <div className='animate-fade-in' style={{animationDelay: '0.4s'}}>
-            <div className={componentStyles.card.elevated + ' p-8'}>
-              <h3 className='text-2xl font-bold text-sg-secondary mb-6'>Send us a Message</h3>
-              
-              <form className='space-y-6'>
-                <div className='grid md:grid-cols-2 gap-4'>
-                  <div>
-                    <label className='block text-sm font-medium text-sg-secondary mb-2'>
-                      First Name
-                    </label>
-                    <input 
-                      type='text' 
-                      className='w-full px-4 py-3 bg-sg-primary/50 border border-sg-accent1/20 rounded-2xl text-sg-secondary placeholder:text-sg-secondary/50 focus:outline-none focus:border-sg-accent1/40 transition-colors'
-                      placeholder='Enter your first name'
-                    />
-                  </div>
-                  <div>
-                    <label className='block text-sm font-medium text-sg-secondary mb-2'>
-                      Last Name
-                    </label>
-                    <input 
-                      type='text' 
-                      className='w-full px-4 py-3 bg-sg-primary/50 border border-sg-accent1/20 rounded-2xl text-sg-secondary placeholder:text-sg-secondary/50 focus:outline-none focus:border-sg-accent1/40 transition-colors'
-                      placeholder='Enter your last name'
-                    />
-                  </div>
-                </div>
-                
-                <div>
-                  <label className='block text-sm font-medium text-sg-secondary mb-2'>
-                    Email Address
-                  </label>
-                  <input 
-                    type='email' 
-                    className='w-full px-4 py-3 bg-sg-primary/50 border border-sg-accent1/20 rounded-2xl text-sg-secondary placeholder:text-sg-secondary/50 focus:outline-none focus:border-sg-accent1/40 transition-colors'
-                    placeholder='Enter your email address'
-                  />
-                </div>
-                
-                <div>
-                  <label className='block text-sm font-medium text-sg-secondary mb-2'>
-                    Subject
-                  </label>
-                  <select className='w-full px-4 py-3 bg-sg-primary/50 border border-sg-accent1/20 rounded-2xl text-sg-secondary focus:outline-none focus:border-sg-accent1/40 transition-colors'>
-                    <option value=''>Select a subject</option>
-                    <option value='general'>General Inquiry</option>
-                    <option value='support'>Technical Support</option>
-                    <option value='partnership'>Partnership</option>
-                    <option value='feedback'>Feedback</option>
-                  </select>
-                </div>
-                
-                <div>
-                  <label className='block text-sm font-medium text-sg-secondary mb-2'>
-                    Message
-                  </label>
-                  <textarea 
-                    rows={5}
-                    className='w-full px-4 py-3 bg-sg-primary/50 border border-sg-accent1/20 rounded-2xl text-sg-secondary placeholder:text-sg-secondary/50 focus:outline-none focus:border-sg-accent1/40 transition-colors resize-none'
-                    placeholder='Tell us how we can help you...'
-                  ></textarea>
-                </div>
-                
-                <button 
-                  type='submit'
-                  className={designUtils.getButtonClasses('primary') + ' w-full'}
-                >
-                  Send Message
-                </button>
-              </form>
-            </div>
-          </div>
+          <Location />
         </div>
       </section>
       
       {/* FAQ Section */}
       <section className={designUtils.getContainerClasses('lg')}>
-        <div className='text-center space-y-16 py-20'>
-          <div className='space-y-6 animate-fade-in'>
-            <h2 className={designUtils.getHeadingClasses('h2')}>
+        <div className='py-20'>
+          <div className='text-center mb-16'>
+            <h2 className='text-3xl font-bold text-white mb-4'>
               Frequently Asked Questions
             </h2>
-            <p className={designUtils.getTextClasses('large')}>
-              Quick answers to common questions
+            <p className='text-lg text-white/80 max-w-2xl mx-auto'>
+              Quick answers to common questions about our services
             </p>
           </div>
           
-          <div className='grid md:grid-cols-2 gap-8'>
+          <div className='grid md:grid-cols-2 gap-6 max-w-4xl mx-auto'>
             {[
               {
-                question: 'How quickly do you respond to inquiries?',
-                answer: 'We typically respond to all inquiries within 24 hours during business days.'
+                question: 'How quickly can I get a response?',
+                answer: 'We typically respond to all inquiries within 24 hours. For urgent matters, you can call our 24/7 support line.'
+              },
+              {
+                question: 'Do you provide services outside Kathmandu?',
+                answer: 'Yes! We provide services across Nepal including Pokhara, Lalitpur, Bhaktapur, and many other cities.'
               },
               {
                 question: 'What payment methods do you accept?',
-                answer: 'We currently support cash on delivery for all our services.'
+                answer: 'We accept cash, eSewa, Khalti, and credit cards. Payment is made after service completion.'
               },
               {
-                question: 'Do you offer emergency services?',
-                answer: 'Yes, we provide emergency service support for urgent situations.'
-              },
-              {
-                question: 'How do I become a service provider?',
-                answer: 'You can apply through our provider registration portal on the website.'
+                question: 'How do I report an issue with a service?',
+                answer: 'Contact us immediately through phone, email, or our support channels. We have a 30-day satisfaction guarantee.'
               }
             ].map((faq, index) => (
               <div 
                 key={index}
-                className={componentStyles.card.base + ' p-6 text-left animate-slide-up'}
+                className={componentStyles.card.base + ' p-6 animate-fade-up'}
                 style={{animationDelay: `${0.1 * index}s`}}
               >
-                <h3 className='text-lg font-semibold text-sg-secondary mb-3'>{faq.question}</h3>
-                <p className={designUtils.getTextClasses('small')}>{faq.answer}</p>
+                <h3 className='text-xl font-bold text-white mb-3'>{faq.question}</h3>
+                <p className='text-white/80'>{faq.answer}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
       
-      {/* Support Hours */}
+      {/* CTA Section */}
       <section className={designUtils.getContainerClasses('md')}>
         <div className='text-center space-y-8 py-20'>
           <div className={componentStyles.card.base + ' p-8 max-w-2xl mx-auto'}>
-            <h3 className='text-2xl font-bold text-sg-secondary mb-4'>Support Hours</h3>
-            <div className='grid md:grid-cols-2 gap-6'>
-              <div>
-                <h4 className='font-semibold text-sg-accent1 mb-2'>Weekdays</h4>
-                <p className={designUtils.getTextClasses('small')}>7:00 AM - 10:00 PM</p>
-              </div>
-              <div>
-                <h4 className='font-semibold text-sg-accent1 mb-2'>Weekends</h4>
-                <p className={designUtils.getTextClasses('small')}>7:00 AM - 10:00 PM</p>
-              </div>
-            </div>
-            <p className={designUtils.getTextClasses('small') + ' mt-4 text-sg-secondary/70'}>
-              We're here to help you every day of the week!
+            <h3 className='text-2xl font-bold text-white mb-4'>
+              Ready to Get Started?
+            </h3>
+            <p className='text-white/80 mb-6'>
+              Don't wait! Contact us today and experience the SewaGo difference. 
+              Our team is ready to help you with all your local service needs.
             </p>
+            <div className='flex flex-col sm:flex-row gap-4 justify-center'>
+              <a href='/services' className={designUtils.getButtonClasses('primary')}>
+                Browse Services
+              </a>
+              <a href='/faq' className={designUtils.getButtonClasses('outline')}>
+                View FAQ
+              </a>
+            </div>
           </div>
         </div>
       </section>
       
       {/* Bottom accent line */}
-      <div className='fixed bottom-0 left-0 right-0 h-1 bg-gradient-accent opacity-40'></div>
+      <div className='fixed bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-accent to-primary opacity-40'></div>
     </main>
   );
 }

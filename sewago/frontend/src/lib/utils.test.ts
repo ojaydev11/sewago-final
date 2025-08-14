@@ -19,15 +19,15 @@ describe('Utility Functions', () => {
 
   describe('formatPrice', () => {
     it('should format price correctly', () => {
-      expect(formatPrice(1000)).toBe('₹1,000');
-      expect(formatPrice(1500)).toBe('₹1,500');
-      expect(formatPrice(0)).toBe('₹0');
-      expect(formatPrice(999999)).toBe('₹9,99,999');
+      expect(formatPrice(1000)).toBe('Rs 1,000');
+expect(formatPrice(1500)).toBe('Rs 1,500');
+expect(formatPrice(0)).toBe('Rs 0');
+expect(formatPrice(999999)).toBe('Rs 9,99,999');
     });
 
     it('should handle decimal prices', () => {
-      expect(formatPrice(1000.50)).toBe('₹1,000.50');
-      expect(formatPrice(1500.99)).toBe('₹1,500.99');
+      expect(formatPrice(1000.50)).toBe('Rs 1,000.50');
+expect(formatPrice(1500.99)).toBe('Rs 1,500.99');
     });
   });
 

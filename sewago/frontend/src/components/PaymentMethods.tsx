@@ -159,16 +159,16 @@ export default function PaymentMethods({
         <CardContent>
           <div className="flex justify-between items-center py-2">
             <span className="text-gray-600">Service Amount:</span>
-            <span className="font-semibold">₹{amount}</span>
+                            <span className="font-semibold">Rs {amount}</span>
           </div>
           <div className="flex justify-between items-center py-2">
             <span className="text-gray-600">Platform Fee:</span>
-            <span className="font-semibold">₹0</span>
+                            <span className="font-semibold">Rs 0</span>
           </div>
           <div className="border-t pt-2 mt-2">
             <div className="flex justify-between items-center">
               <span className="text-lg font-semibold">Total Amount:</span>
-              <span className="text-xl font-bold text-primary">₹{amount}</span>
+                              <span className="text-xl font-bold text-primary">Rs {amount}</span>
             </div>
           </div>
         </CardContent>
@@ -294,7 +294,7 @@ export default function PaymentMethods({
             Payment Successful!
           </>
         ) : (
-          `Pay ₹${amount} with ${selectedMethod ? availableMethods.find(m => m.id === selectedMethod)?.name : 'Selected Method'}`
+          `Pay Rs ${amount} with ${selectedMethod ? availableMethods.find(m => m.id === selectedMethod)?.name : 'Selected Method'}`
         )}
       </Button>
 

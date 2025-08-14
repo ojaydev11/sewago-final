@@ -1,337 +1,161 @@
 'use client';
 
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger
-} from "@/components/ui/dropdown-menu";
-import {
-  Menu,
-  X,
-  MapPin,
-  Phone,
-  User,
-  Settings,
-  LogOut,
-  Globe,
-  Shield,
-  Briefcase
-} from "lucide-react";
-import { useState, useEffect } from "react";
-import { useSession, signOut } from "next-auth/react";
-import { useLanguage } from "@/providers/language";
+import Link from 'next/link';
+import { useSession, signOut } from 'next-auth/react';
+import { Button } from '@/components/ui/button';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Menu, User, LogOut, Settings, Package } from 'lucide-react';
+import { useState } from 'react';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
+import { useTranslation } from 'next-i18next';
 
-// Prevent SSR issues by only rendering on client
 export default function Header() {
+  const { data: session } = useSession();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isClient, setIsClient] = useState(false);
-  const { data: session, status } = useSession();
-  const { lang, setLang } = useLanguage();
-  
-  // Prevent hydration mismatch
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  // Show loading state during SSR
-  if (!isClient || status === 'loading') {
-    return (
-      <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
-        <div className="container mx-auto px-4">
-          <div className="flex h-16 items-center justify-between">
-            <div className="flex items-center">
-              <div className="h-8 w-8 bg-gray-200 rounded animate-pulse"></div>
-              <div className="h-6 w-24 bg-gray-200 rounded animate-pulse ml-2"></div>
-            </div>
-            <div className="hidden md:flex items-center space-x-4">
-              <div className="h-8 w-8 bg-gray-200 rounded animate-pulse"></div>
-              <div className="h-8 w-8 bg-gray-200 rounded animate-pulse"></div>
-              <div className="h-8 w-8 bg-gray-200 rounded animate-pulse"></div>
-            </div>
-          </div>
-        </div>
-      </header>
-    );
-  }
-
-  const navigation = [
-    { name: "Services", href: "/services" },
-    { name: "Pricing", href: "/pricing" },
-    { name: "About", href: "/about" },
-    { name: "Contact", href: "/contact" },
-  ];
+  const { t } = useTranslation('common');
 
   const handleSignOut = () => {
-    signOut({ callbackUrl: "/" });
-  };
-
-  const getRoleBasedRedirect = () => {
-    if (!session?.user) return "/dashboard";
-    
-    switch (session.user.role) {
-      case "customer":
-        return "/dashboard";
-      case "provider":
-        return "/provider";
-      case "admin":
-        return "/admin";
-      default:
-        return "/dashboard";
-    }
-  };
-
-  const getRoleLabel = (role: string) => {
-    switch (role) {
-      case "customer":
-        return "Customer";
-      case "provider":
-        return "Provider";
-      case "admin":
-        return "Admin";
-      default:
-        return "User";
-    }
-  };
-
-  const getRoleIcon = (role: string) => {
-    switch (role) {
-      case "customer":
-        return <User className="h-4 w-4" />;
-      case "provider":
-        return <Briefcase className="h-4 w-4" />;
-      case "admin":
-        return <Shield className="h-4 w-4" />;
-      default:
-        return <User className="h-4 w-4" />;
-    }
+    signOut({ callbackUrl: '/' });
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
-      <div className="container mx-auto px-4">
-        <div className="flex h-16 items-center justify-between">
-          {/* Logo */}
-          <div className="flex items-center">
-            <Link href="/" className="flex items-center space-x-2">
-              <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center">
-                <span className="text-white font-bold text-lg">S</span>
-              </div>
-              <span className="text-xl font-bold text-gray-900">SewaGo</span>
-            </Link>
-          </div>
-
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
-            {navigation.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className="text-sm font-medium text-gray-700 hover:text-primary transition-colors"
-              >
-                {item.name}
-              </Link>
-            ))}
-          </nav>
-
-          {/* Desktop Right Section */}
-          <div className="hidden md:flex items-center space-x-4">
-            {/* Language Toggle */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                                       <Button variant="ghost" size="sm">
-                         <Globe className="h-4 w-4 mr-2" />
-                         {lang === 'en' ? 'EN' : 'NE'}
-                       </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                                       <DropdownMenuItem onClick={() => setLang('en')}>
-                         English
-                       </DropdownMenuItem>
-                       <DropdownMenuItem onClick={() => setLang('ne')}>
-                         नेपाली
-                       </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            {/* Auth Section */}
-            {session?.user ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="flex items-center space-x-2">
-                    <Avatar className="h-8 w-8">
-                      <AvatarImage src={session.user.image || ""} />
-                      <AvatarFallback>
-                        {session.user.name?.charAt(0).toUpperCase()}
-                      </AvatarFallback>
-                    </Avatar>
-                    <span className="hidden sm:block">{session.user.name}</span>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56" align="end">
-                  <DropdownMenuLabel>
-                    <div className="flex items-center space-x-2">
-                      {getRoleIcon(session.user.role)}
-                      <span>{getRoleLabel(session.user.role)}</span>
-                    </div>
-                  </DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem asChild>
-                    <Link href={getRoleBasedRedirect()}>
-                      <User className="h-4 w-4 mr-2" />
-                      Dashboard
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link href="/account">
-                      <Settings className="h-4 w-4 mr-2" />
-                      Account Settings
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={handleSignOut}>
-                    <LogOut className="h-4 w-4 mr-2" />
-                    Sign Out
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            ) : (
-              <>
-                <Link href="/auth/login">
-                  <Button variant="ghost" size="sm">
-                    Login
-                  </Button>
-                </Link>
-                <Link href="/auth/register">
-                  <Button variant="ghost" size="sm">
-                    Sign Up
-                  </Button>
-                </Link>
-                <Link href="/services">
-                  <Button size="sm" className="bg-primary hover:bg-primary/90">
-                    Book Now
-                  </Button>
-                </Link>
-              </>
-            )}
-          </div>
-
-          {/* Mobile menu button */}
-          <div className="md:hidden">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            >
-              {isMobileMenuOpen ? (
-                <X className="h-5 w-5" />
-              ) : (
-                <Menu className="h-5 w-5" />
-              )}
-            </Button>
-          </div>
-        </div>
-
-        {/* Mobile Navigation */}
-        {isMobileMenuOpen && (
-          <div className="md:hidden">
-            <div className="space-y-1 pb-3 pt-2">
-              {navigation.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  {item.name}
-                </Link>
-              ))}
-              
-              {/* Language Toggle Mobile */}
-              <div className="px-3 py-2">
-                <div className="flex space-x-2">
-                                           <Button
-                           variant={lang === 'en' ? 'default' : 'outline'}
-                           size="sm"
-                           onClick={() => setLang('en')}
-                         >
-                           EN
-                         </Button>
-                         <Button
-                           variant={lang === 'ne' ? 'default' : 'outline'}
-                           size="sm"
-                           onClick={() => setLang('ne')}
-                         >
-                           NE
-                         </Button>
-                </div>
-              </div>
-
-              <div className="pt-4 space-y-2">
-                {session?.user ? (
-                  <>
-                    <div className="px-3 py-2 border-t">
-                      <div className="flex items-center space-x-2 mb-2">
-                        <Avatar className="h-8 w-8">
-                          <AvatarImage src={session.user.image || ""} />
-                          <AvatarFallback>
-                            {session.user.name?.charAt(0).toUpperCase()}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <p className="text-sm font-medium">{session.user.name}</p>
-                          <p className="text-xs text-gray-500">{getRoleLabel(session.user.role)}</p>
-                        </div>
-                      </div>
-                    </div>
-                    <Link href={getRoleBasedRedirect()}>
-                      <Button variant="ghost" className="w-full justify-start">
-                        Dashboard
-                      </Button>
-                    </Link>
-                    <Link href="/account">
-                      <Button variant="ghost" className="w-full justify-start">
-                        Account Settings
-                      </Button>
-                    </Link>
-                    <Button 
-                      variant="ghost" 
-                      className="w-full justify-start text-red-600 hover:text-red-700"
-                      onClick={handleSignOut}
-                    >
-                      Sign Out
-                    </Button>
-                  </>
-                ) : (
-                  <>
-                    <Link href="/auth/login">
-                      <Button variant="ghost" className="w-full justify-start">
-                        Login
-                      </Button>
-                    </Link>
-                    <Link href="/auth/register">
-                      <Button variant="ghost" className="w-full justify-start">
-                        Sign Up
-                      </Button>
-                    </Link>
-                    <Link href="/services">
-                      <Button className="w-full bg-primary hover:bg-primary/90">
-                        Book Now
-                      </Button>
-                    </Link>
-                  </>
-                )}
+    <header className='w-full relative z-50'>
+      {/* Background with glassmorphism */}
+      <div className='absolute inset-0 glass-card border-b border-white/20'></div>
+      
+      <nav className='relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 flex items-center justify-between'>
+        {/* Logo with enhanced styling */}
+        <Link href='/' className='flex items-center gap-4 group'>
+          <div className='relative'>
+            <div className='h-12 w-12 rounded-2xl bg-gradient-to-r from-primary to-accent p-0.5 group-hover:scale-110 transition-transform duration-300'>
+              <div className='h-full w-full rounded-2xl bg-white flex items-center justify-center'>
+                <span className='text-gray-900 font-black text-xl'>S</span>
               </div>
             </div>
           </div>
-        )}
-      </div>
+          <span className='text-xl font-bold text-white group-hover:text-accent transition-colors duration-300'>
+            SewaGo
+          </span>
+        </Link>
+
+        {/* Desktop Navigation */}
+        <div className='hidden lg:flex items-center gap-8'>
+          <Link href='/' className='text-white hover:text-accent transition-colors duration-200 font-medium'>
+            {t('nav.home')}
+          </Link>
+          <Link href='/services' className='text-white hover:text-accent transition-colors duration-200 font-medium'>
+            {t('nav.services')}
+          </Link>
+          <Link href='/about' className='text-white hover:text-accent transition-colors duration-200 font-medium'>
+            {t('nav.about')}
+          </Link>
+          <Link href='/contact' className='text-white hover:text-accent transition-colors duration-200 font-medium'>
+            {t('nav.contact')}
+          </Link>
+          <Link href='/faq' className='text-white hover:text-accent transition-colors duration-200 font-medium'>
+            {t('nav.faq')}
+          </Link>
+          <Link href='/pricing' className='text-white hover:text-accent transition-colors duration-200 font-medium'>
+            {t('nav.pricing')}
+          </Link>
+        </div>
+
+        {/* Right side - Language Switcher and Auth */}
+        <div className='flex items-center gap-4'>
+          <LanguageSwitcher />
+          
+          {session ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="relative h-10 w-10 rounded-full bg-white/10 backdrop-blur-md border border-white/20">
+                  <Avatar className="h-10 w-10">
+                    <AvatarImage src={session.user?.image || ''} alt={session.user?.name || ''} />
+                    <AvatarFallback className="bg-white/20 text-white">
+                      {session.user?.name?.charAt(0) || 'U'}
+                    </AvatarFallback>
+                  </Avatar>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56 bg-white/10 backdrop-blur-md border border-white/20" align="end" forceMount>
+                <DropdownMenuLabel className="font-normal">
+                  <div className="flex flex-col space-y-1">
+                    <p className="text-sm font-medium leading-none text-white">{session.user?.name}</p>
+                    <p className="text-xs leading-none text-white/70">{session.user?.email}</p>
+                  </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator className="bg-white/20" />
+                <DropdownMenuItem className="text-white hover:bg-white/20">
+                  <User className="mr-2 h-4 w-4" />
+                  <span>Profile</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem className="text-white hover:bg-white/20">
+                  <Package className="mr-2 h-4 w-4" />
+                  <span>My Bookings</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem className="text-white hover:bg-white/20">
+                  <Settings className="mr-2 h-4 w-4" />
+                  <span>Settings</span>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator className="bg-white/20" />
+                <DropdownMenuItem onClick={handleSignOut} className="text-white hover:bg-white/20">
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Sign out</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <div className='flex items-center gap-3'>
+              <Link href='/auth/login'>
+                <Button variant="ghost" className="text-white hover:bg-white/20 border border-white/20">
+                  {t('nav.login')}
+                </Button>
+              </Link>
+              <Link href='/auth/register'>
+                <Button className="bg-gradient-to-r from-primary to-accent text-white hover:from-primary-light hover:to-accent-light">
+                  {t('nav.register')}
+                </Button>
+              </Link>
+            </div>
+          )}
+
+          {/* Mobile menu button */}
+          <Button
+            variant="ghost"
+            size="sm"
+            className="lg:hidden text-white hover:bg-white/20"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          >
+            <Menu className="h-6 w-6" />
+          </Button>
+        </div>
+      </nav>
+
+      {/* Mobile Navigation Menu */}
+      {isMobileMenuOpen && (
+        <div className='lg:hidden absolute top-full left-0 right-0 bg-white/10 backdrop-blur-md border-b border-white/20'>
+          <div className='px-4 py-6 space-y-4'>
+            <Link href='/' className='block text-white hover:text-accent transition-colors duration-200 font-medium py-2'>
+              {t('nav.home')}
+            </Link>
+            <Link href='/services' className='block text-white hover:text-accent transition-colors duration-200 font-medium py-2'>
+              {t('nav.services')}
+            </Link>
+            <Link href='/about' className='block text-white hover:text-accent transition-colors duration-200 font-medium py-2'>
+              {t('nav.about')}
+            </Link>
+            <Link href='/contact' className='block text-white hover:text-accent transition-colors duration-200 font-medium py-2'>
+              {t('nav.contact')}
+            </Link>
+            <Link href='/faq' className='block text-white hover:text-accent transition-colors duration-200 font-medium py-2'>
+              {t('nav.faq')}
+            </Link>
+            <Link href='/pricing' className='block text-white hover:text-accent transition-colors duration-200 font-medium py-2'>
+              {t('nav.pricing')}
+            </Link>
+          </div>
+        </div>
+      )}
     </header>
   );
 }
