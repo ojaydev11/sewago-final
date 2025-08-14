@@ -22,7 +22,13 @@ export default {
         'sg-text': '#0F2B46',
         'sg-sky1': '#E9F2FF',
         'sg-sky2': '#CFE3FF',
-        'sg-gold': '#F3C54E'
+        'sg-gold': '#F3C54E',
+        
+        // Additional colors for CSS compatibility
+        'primary': '#DC143C',         // Crimson Red
+        'accent': '#FF9933',          // Saffron Yellow
+        'dark': '#003366',            // Deep Himalayan Blue
+        'secondary': '#8B4513'        // Saddle Brown
       },
       backgroundImage: {
         'gradient-futuristic': 'linear-gradient(135deg, #1C1C2A 0%, #3C339A 50%, #FF5C93 100%)',

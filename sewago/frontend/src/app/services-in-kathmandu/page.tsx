@@ -254,7 +254,7 @@ export default function ServicesInKathmanduPage() {
                   </div>
                 </div>
                 
-                <div className={componentStyles.card.base + ' p-8 text-center'>
+                <div className={componentStyles.card.base + ' p-8 text-center'}>
                   <h3 className='text-2xl font-bold text-white mb-6'>
                     Kathmandu Valley Coverage
                   </h3>
@@ -280,7 +280,7 @@ export default function ServicesInKathmanduPage() {
         {/* CTA Section */}
         <section className={designUtils.getContainerClasses('md')}>
           <div className='text-center space-y-8 py-20'>
-            <div className={componentStyles.card.base + ' p-8 max-w-2xl mx-auto'>
+            <div className={componentStyles.card.base + ' p-8 max-w-2xl mx-auto'}>
               <h3 className='text-2xl font-bold text-white mb-4'>
                 Ready to Book a Service in Kathmandu?
               </h3>

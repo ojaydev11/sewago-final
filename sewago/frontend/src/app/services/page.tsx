@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import Link from 'next/link';
 import { getServices } from '@/lib/services';
 import ServiceGrid from '@/components/services/ServiceGrid';
 import { designUtils, componentStyles } from '@/lib/design-system';
@@ -203,12 +204,12 @@ export default async function ServicesPage() {
               Join thousands of Nepali families who trust SewaGo for their daily service needs. Book a service today and experience the difference that local expertise makes.
             </p>
             <div className='flex flex-col sm:flex-row gap-4 justify-center'>
-              <a href='/services' className={designUtils.getButtonClasses('primary')}>
+              <Link href='/services' className={designUtils.getButtonClasses('primary')}>
                 Browse All Services
-              </a>
-              <a href='/contact' className={designUtils.getButtonClasses('outline')}>
+              </Link>
+              <Link href='/contact' className={designUtils.getButtonClasses('outline')}>
                 Contact Support
-              </a>
+              </Link>
             </div>
           </div>
         </div>

@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -274,12 +275,12 @@ export default function ContactPage() {
               Our team is ready to help you with all your local service needs.
             </p>
             <div className='flex flex-col sm:flex-row gap-4 justify-center'>
-              <a href='/services' className={designUtils.getButtonClasses('primary')}>
+              <Link href='/services' className={designUtils.getButtonClasses('primary')}>
                 Browse Services
-              </a>
-              <a href='/faq' className={designUtils.getButtonClasses('outline')}>
+              </Link>
+              <Link href='/faq' className={designUtils.getButtonClasses('outline')}>
                 View FAQ
-              </a>
+              </Link>
             </div>
           </div>
         </div>

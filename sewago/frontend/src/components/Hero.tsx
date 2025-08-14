@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import ServiceHubIllustration from './ui/ServiceHubIllustration';
 
 export default function Hero() {
   return (
@@ -38,14 +39,7 @@ export default function Hero() {
           {/* Right illustration with enhanced styling */}
           <div className='hidden lg:block relative animate-fade-up' style={{animationDelay: '0.6s'}}>
             <div className='relative'>
-              <Image 
-                src='/hero-nepal.svg' 
-                alt='Nepal skyline with stupa' 
-                width={600} 
-                height={280} 
-                priority 
-                className='drop-shadow-2xl'
-              />
+              <ServiceHubIllustration />
               {/* Futuristic overlay elements */}
               <div className='absolute -top-4 -right-4 w-8 h-8 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full animate-pulse-glow'></div>
               <div className='absolute -bottom-4 -left-4 w-6 h-6 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full animate-pulse-glow' style={{animationDelay: '1s'}}></div>

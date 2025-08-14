@@ -1,0 +1,142 @@
+/* Service Hub Container */
+.service-hub-container {
+  position: relative;
+  width: 100%;
+  height: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Base Map */
+.base-map {
+  width: 100%;
+  height: auto;
+  opacity: 0.9;
+}
+
+/* Service Icons */
+.service-icon {
+  position: absolute;
+  width: 48px;
+  height: 48px;
+  background-color: rgba(255, 255, 255, 0.95);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border: 2px solid rgba(255, 92, 147, 0.3);
+  animation: pulse 2s infinite;
+}
+
+/* Pulse Animation */
+@keyframes pulse {
+  0% { 
+    transform: scale(1); 
+    box-shadow: 0 0 0 0 rgba(255, 92, 147, 0.4); 
+  }
+  70% { 
+    transform: scale(1.1); 
+    box-shadow: 0 0 0 10px rgba(255, 92, 147, 0); 
+  }
+  100% { 
+    transform: scale(1); 
+    box-shadow: 0 0 0 0 rgba(255, 92, 147, 0); 
+  }
+}
+
+/* Icon positioning */
+.plumbing-icon {
+  top: 25%;
+  left: 20%;
+}
+
+.cleaning-icon {
+  top: 35%;
+  right: 25%;
+}
+
+.electrical-icon {
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.delivery-icon {
+  bottom: 30%;
+  left: 35%;
+}
+
+/* Tooltips */
+.tooltip {
+  position: absolute;
+  bottom: 110%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 8px 12px;
+  background-color: #1C1C2A;
+  color: white;
+  border-radius: 6px;
+  white-space: nowrap;
+  font-size: 12px;
+  font-weight: 500;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  z-index: 10;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: #1C1C2A;
+}
+
+/* Hover effects */
+.service-icon:hover .tooltip {
+  opacity: 1;
+  visibility: visible;
+}
+
+.service-icon:hover {
+  animation-play-state: paused;
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(255, 92, 147, 0.3);
+  border-color: rgba(255, 92, 147, 0.8);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .service-hub-container {
+    transform: scale(0.8);
+  }
+  
+  .service-icon {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .tooltip {
+    font-size: 11px;
+    padding: 6px 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .service-hub-container {
+    transform: scale(0.7);
+  }
+  
+  .service-icon {
+    width: 36px;
+    height: 36px;
+  }
+}
