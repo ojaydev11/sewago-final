@@ -2,19 +2,21 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://your-domain.vercel.app/sitemap.xml
+Sitemap: https://sewago.com/sitemap.xml
 
 # Disallow admin and private areas
 Disallow: /api/
 Disallow: /account/
 Disallow: /provider/
 Disallow: /admin/
+Disallow: /dashboard/
 
 # Allow important pages
 Allow: /services/
-Allow: /book/
 Allow: /about/
 Allow: /contact/
+Allow: /faq/
+Allow: /pricing/
 
 # Crawl delay (optional)
 Crawl-delay: 1

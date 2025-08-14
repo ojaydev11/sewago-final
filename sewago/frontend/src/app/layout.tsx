@@ -11,6 +11,8 @@ import { getMessages } from 'next-intl/server';
 
 const inter = Inter({ subsets: ['latin'] });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://sewago.com';
+
 export const metadata: Metadata = {
   title: 'SewaGo - Local Services in Nepal',
   description: 'Connect with verified local service providers in Nepal. Professional electricians, plumbers, cleaners, and tutors available in Kathmandu, Pokhara, and across Nepal.',
@@ -23,7 +25,7 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL('https://sewago.com'),
+  metadataBase: new URL(siteUrl),
   alternates: {
     canonical: '/',
     languages: {
@@ -34,11 +36,11 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'SewaGo - Local Services in Nepal',
     description: 'Connect with verified local service providers in Nepal. Professional services for every home.',
-    url: 'https://sewago.com',
+    url: siteUrl,
     siteName: 'SewaGo',
     images: [
       {
-        url: '/og-image.jpg',
+        url: `${siteUrl}/og-image.jpg`,
         width: 1200,
         height: 630,
         alt: 'SewaGo - Local Services in Nepal',
@@ -51,7 +53,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'SewaGo - Local Services in Nepal',
     description: 'Connect with verified local service providers in Nepal. Professional services for every home.',
-    images: ['/og-image.jpg'],
+    images: [`${siteUrl}/og-image.jpg`],
   },
   robots: {
     index: true,
@@ -119,8 +121,8 @@ export default async function RootLayout({
               "@type": "Organization",
               "name": "SewaGo",
               "alternateName": "सेवागो",
-              "url": "https://sewago.com",
-              "logo": "https://sewago.com/branding/sewago-logo.svg",
+              "url": siteUrl,
+              "logo": `${siteUrl}/branding/sewago-logo.svg`,
               "sameAs": [
                 "https://facebook.com/sewago",
                 "https://twitter.com/sewago",
