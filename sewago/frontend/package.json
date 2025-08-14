@@ -13,7 +13,8 @@
     "test:coverage": "vitest run --coverage",
     "test:ui": "vitest --ui",
     "seed": "tsx scripts/seed.ts",
-    "vercel-build": "npm run build"
+    "vercel-build": "npm run build",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@auth/mongodb-adapter": "^3.10.0",
