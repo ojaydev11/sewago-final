@@ -1,0 +1,46 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 560'>
+  <defs>
+    <linearGradient id='g' x1='0' x2='0' y1='0' y2='1'>
+      <stop offset='0%' stop-color='#E9F2FF'/>
+      <stop offset='100%' stop-color='#FFFFFF'/>
+    </linearGradient>
+  </defs>
+  <rect width='1200' height='560' fill='url(#g)'/>
+  <!-- distant mountains -->
+  <path d='M0 350 C140 300 260 360 380 310 C520 250 640 330 780 280 C900 240 1020 300 1200 260 L1200 560 L0 560 Z' fill='#CFE3FF'/>
+  <!-- near hills -->
+  <path d='M0 420 C170 360 310 450 470 390 C620 340 770 410 920 370 C1040 340 1120 370 1200 350 L1200 560 L0 560 Z' fill='#BBD4FF'/>
+  <!-- left pagoda -->
+  <g transform='translate(120,310)'>
+    <rect x='30' y='90' width='140' height='80' rx='10' fill='#FFFFFF' stroke='#AFC8F7' stroke-width='4'/>
+    <rect x='10' y='170' width='180' height='14' fill='#AFC8F7'/>
+    <polygon points='100,0 30,90 170,90' fill='#8EB5F8'/>
+    <rect x='85' y='120' width='30' height='50' fill='#CFE3FF'/>
+  </g>
+  <!-- middle pagoda -->
+  <g transform='translate(360,310)'>
+    <rect x='30' y='90' width='140' height='80' rx='10' fill='#FFFFFF' stroke='#AFC8F7' stroke-width='4'/>
+    <rect x='10' y='170' width='180' height='14' fill='#AFC8F7'/>
+    <polygon points='100,0 30,90 170,90' fill='#8EB5F8'/>
+    <rect x='85' y='120' width='30' height='50' fill='#CFE3FF'/>
+  </g>
+  <!-- stupa + base -->
+  <g transform='translate(760,230)'>
+    <ellipse cx='140' cy='200' rx='200' ry='85' fill='#F8E6A5'/>
+    <ellipse cx='140' cy='180' rx='165' ry='65' fill='#F3C54E'/>
+    <rect x='130' y='60' width='20' height='70' fill='#0B63C5' rx='4'/>
+    <circle cx='110' cy='150' r='10' fill='#0F2B46'/>
+    <circle cx='170' cy='150' r='10' fill='#0F2B46'/>
+    <!-- prayer flags -->
+    <path d='M-180 60 Q -40 110 140 100' stroke='#0B63C5' stroke-width='6' fill='none'/>
+    <path d='M140 100 Q 280 110 420 70' stroke='#0B63C5' stroke-width='6' fill='none'/>
+  </g>
+  <!-- bus -->
+  <g transform='translate(850,360)'>
+    <rect x='0' y='0' width='160' height='44' rx='10' fill='#FFFFFF' stroke='#8EB5F8' stroke-width='4'/>
+    <rect x='12' y='8' width='70' height='18' rx='2' fill='#CFE3FF'/>
+    <rect x='88' y='8' width='60' height='18' rx='2' fill='#CFE3FF'/>
+    <circle cx='36' cy='46' r='14' fill='#0F2B46'/>
+    <circle cx='124' cy='46' r='14' fill='#0F2B46'/>
+  </g>
+</svg>

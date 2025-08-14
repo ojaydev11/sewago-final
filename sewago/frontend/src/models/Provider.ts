@@ -143,3 +143,4 @@ ProviderSchema.index({ districts: 1 });
 
 // Hot-reload guard
 export const Provider = mongoose.models.Provider || mongoose.model<IProvider>('Provider', ProviderSchema);
+
