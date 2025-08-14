@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { StarIcon, PhoneIcon, CalendarIcon } from '@heroicons/react/24/solid';
 
 interface ServiceDetailClientProps {
@@ -84,10 +85,13 @@ export default function ServiceDetailClient({ service, reviews, averageRating }:
 
           <div className="relative">
             {service.imageUrl ? (
-              <img
+              <Image
                 src={service.imageUrl}
                 alt={service.title}
+                width={640}
+                height={256}
                 className="w-full h-64 object-cover rounded-lg"
+                priority={false}
               />
             ) : (
               <div className="w-full h-64 bg-gray-200 rounded-lg flex items-center justify-center">
