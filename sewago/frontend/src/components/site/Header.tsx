@@ -41,6 +41,9 @@ export default function Header() {
           <Link href='/services' className='text-white hover:text-accent transition-colors duration-200 font-medium'>
             {t('nav.services')}
           </Link>
+          <Link href='/service-bundles' className='text-white hover:text-accent transition-colors duration-200 font-medium'>
+            Service Bundles
+          </Link>
           <Link href='/about' className='text-white hover:text-accent transition-colors duration-200 font-medium'>
             {t('nav.about')}
           </Link>

@@ -19,12 +19,23 @@ export default function AboutPage() {
             <h1 className={designUtils.getHeadingClasses('h1')}>
               About SewaGo
             </h1>
-            <p className={designUtils.getTextClasses('large')}>
+                          <p className={designUtils.getTextClasses('large')}>
               Revolutionizing local services in Nepal through technology and trust
             </p>
             
-            {/* Modern accent line */}
+            {/* Performance Dashboard Link */}
             <div className='flex justify-center'>
+              <a 
+                href='/performance' 
+                className='inline-flex items-center gap-2 px-6 py-3 bg-white/10 backdrop-blur-sm text-white rounded-full hover:bg-white/20 transition-all duration-200 border border-white/20'
+              >
+                <span>📊</span>
+                <span>View Live Performance Dashboard</span>
+              </a>
+            </div>
+            
+            {/* Modern accent line */}
+            <div className='flex justify-center mt-6'>
               <div className='w-24 h-1 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full'></div>
             </div>
           </div>

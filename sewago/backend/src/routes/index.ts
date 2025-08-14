@@ -8,6 +8,7 @@ import * as Messages from "../controllers/messages.controller.js";
 import * as AI from "../controllers/ai.controller.js";
 import * as Payments from "../controllers/payments.controller.js";
 import * as Meta from "../controllers/meta.controller.js";
+import * as Tracking from "../controllers/tracking.controller.js";
 
 export const api = Router();
 
@@ -107,5 +108,11 @@ api.post("/admin/make-provider", async (req, res) => {
 // Meta
 api.get("/meta/categories", Meta.listCategories);
 api.get("/categories", Meta.listCategories);
+
+// Tracking
+api.post("/tracking/location", requireAuth(["provider"]), Tracking.updateProviderLocation);
+api.post("/tracking/status", requireAuth(["provider"]), Tracking.updateProviderStatus);
+api.get("/tracking/:bookingId", requireAuth(["user", "provider"]), Tracking.getTrackingInfo);
+api.get("/tracking/:bookingId/eta", requireAuth(["user", "provider"]), Tracking.getETA);
 
 
