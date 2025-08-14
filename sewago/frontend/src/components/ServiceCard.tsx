@@ -1,12 +1,44 @@
 import { type ReactNode } from 'react'
 
-export default function ServiceCard({icon, label}: {icon: ReactNode, label: string}) {
+interface ServiceCardProps {
+  icon: React.ReactNode;
+  label: string;
+  gradientClass?: string;
+}
+
+export default function ServiceCard({ icon, label, gradientClass = 'from-sg-accent1 to-sg-accent2' }: ServiceCardProps) {
   return (
-    <button className="w-full bg-white rounded-2xl shadow-card p-6 text-left hover:shadow-lg transition">
-      <div className="h-10 w-10 rounded-xl bg-sg-sky1 grid place-items-center mb-4 text-sg-primary">
-        {icon}
+    <div className='group relative'>
+      {/* Background glow effect */}
+      <div className={`absolute inset-0 bg-gradient-to-br ${gradientClass} rounded-3xl blur-xl opacity-20 group-hover:opacity-40 transition-opacity duration-500`}></div>
+      
+      {/* Main card container */}
+      <div className='relative bg-sg-primary/95 backdrop-blur-xl border border-sg-accent1/20 rounded-3xl p-8 text-center transition-all duration-500 hover:scale-105 hover:shadow-glow group-hover:border-sg-accent1/40'>
+        {/* Icon container with gradient background */}
+        <div className={`inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br ${gradientClass} rounded-2xl mb-6 group-hover:scale-110 transition-transform duration-300`}>
+          <div className='text-sg-secondary text-3xl'>
+            {icon}
+          </div>
+        </div>
+        
+        {/* Label with enhanced typography */}
+        <h3 className='text-xl font-bold text-sg-secondary mb-3 group-hover:text-sg-accent1 transition-colors duration-300'>
+          {label}
+        </h3>
+        
+        {/* Subtle description */}
+        <p className='text-sg-secondary/60 text-sm font-medium'>
+          Professional {label.toLowerCase()} services
+        </p>
+        
+        {/* Hover indicator */}
+        <div className='absolute bottom-4 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300'>
+          <div className='w-8 h-1 bg-gradient-accent rounded-full'></div>
+        </div>
+        
+        {/* Corner accent */}
+        <div className='absolute top-4 right-4 w-3 h-3 bg-sg-accent2 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:scale-150'></div>
       </div>
-      <div className="font-semibold text-sg-text">{label}</div>
-    </button>
-  )
+    </div>
+  );
 }
