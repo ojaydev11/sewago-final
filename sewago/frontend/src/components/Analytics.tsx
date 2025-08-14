@@ -217,7 +217,7 @@ export default function Analytics({ measurementId }: AnalyticsProps) {
   useEffect(() => {
     if (typeof window !== 'undefined' && window.gtag) {
       let maxScrollDepth = 0;
-      let scrollDepthTracked = new Set();
+      const scrollDepthTracked = new Set();
 
       const trackScrollDepth = () => {
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
@@ -249,9 +249,9 @@ export default function Analytics({ measurementId }: AnalyticsProps) {
   }, [pathname]);
 
   // Utility function to throttle scroll events
-  function throttle(func: Function, limit: number) {
+  function throttle<T extends (...args: any[]) => void>(func: T, limit: number): (...args: Parameters<T>) => void {
     let inThrottle: boolean;
-    return function(this: any, ...args: any[]) {
+    return function(this: any, ...args: Parameters<T>) {
       if (!inThrottle) {
         func.apply(this, args);
         inThrottle = true;
