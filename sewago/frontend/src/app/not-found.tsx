@@ -1,3 +1,6 @@
+// Force dynamic rendering to prevent build-time prerendering
+export const dynamic = 'force-dynamic';
+
 import Link from 'next/link'
 
 export default function NotFound() {

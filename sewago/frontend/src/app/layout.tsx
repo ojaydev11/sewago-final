@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+import { Suspense } from 'react';
 import './globals.css';
 import Header from '@/components/site/Header';
 import Analytics from '@/components/Analytics';
@@ -131,7 +132,9 @@ export default function RootLayout({
       <body className={inter.className}>
         {/* Google Analytics - only in production */}
         {process.env.NODE_ENV === 'production' && (
-          <Analytics measurementId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || 'G-XXXXXXXXXX'} />
+          <Suspense fallback={null}>
+            <Analytics measurementId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || 'G-XXXXXXXXXX'} />
+          </Suspense>
         )}
         
         <Header />

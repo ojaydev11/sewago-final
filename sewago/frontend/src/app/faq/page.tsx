@@ -1,3 +1,6 @@
+// Force dynamic rendering to prevent build-time prerendering
+export const dynamic = 'force-dynamic';
+
 import { Metadata } from 'next';
 import SchemaMarkup from '@/components/SchemaMarkup';
 import { designUtils, componentStyles } from '@/lib/design-system';

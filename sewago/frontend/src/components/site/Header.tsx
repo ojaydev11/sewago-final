@@ -6,14 +6,29 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Menu, User, LogOut, Settings, Package } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import { useTranslation } from 'next-i18next';
 
 export default function Header() {
-  const { data: session } = useSession();
+  // Ensure this component only runs on the client side
+  const [isClient, setIsClient] = useState(false);
+  
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+  
+  const { data: session, status } = useSession();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { t } = useTranslation('common');
+  
+  // Handle loading state
+  const isLoading = status === 'loading';
+  
+  // Don't render anything until we're on the client side
+  if (!isClient) {
+    return null;
+  }
 
   const handleSignOut = () => {
     signOut({ callbackUrl: '/' });
@@ -65,7 +80,9 @@ export default function Header() {
         <div className='flex items-center gap-4'>
           <LanguageSwitcher />
           
-          {session ? (
+          {isLoading ? (
+            <div className='h-10 w-10 rounded-full bg-white/10 backdrop-blur-md border border-white/20 animate-pulse'></div>
+          ) : session ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="relative h-10 w-10 rounded-full bg-white/10 backdrop-blur-md border border-white/20">
