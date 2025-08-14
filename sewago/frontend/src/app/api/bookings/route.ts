@@ -14,12 +14,19 @@ const BookingSchema = z.object({
   total: z.coerce.number().int().min(0).default(0) 
 })
 
+// Extend global type to include our hits map
+declare global {
+  var __hits: Map<string, { count: number; ts: number }> | undefined
+}
+
 function rateLimit(ip: string, windowMs = 300000, limit = 60) {
   const now = Date.now()
-  // @ts-ignore
-  global.__hits = global.__hits || new Map()
-  // @ts-ignore
-  const hits: Map<string, { count: number; ts: number }> = global.__hits
+  
+  if (!global.__hits) {
+    global.__hits = new Map()
+  }
+  
+  const hits = global.__hits
   const rec = hits.get(ip) ?? { count: 0, ts: now }
   
   if (now - rec.ts > windowMs) {
