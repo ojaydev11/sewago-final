@@ -1,0 +1,102 @@
+{
+  "nav": {
+    "home": "Home",
+    "services": "Services",
+    "about": "About",
+    "contact": "Contact",
+    "faq": "FAQ",
+    "pricing": "Pricing"
+  },
+  "hero": {
+    "title": "Local Services in Nepal",
+    "subtitle": "Connect with verified service providers for all your home and business needs",
+    "cta": "Get Started",
+    "learnMore": "Learn More"
+  },
+  "services": {
+    "title": "Our Services",
+    "subtitle": "Professional services delivered to your doorstep",
+    "categories": {
+      "cleaning": "House Cleaning",
+      "electrical": "Electrical Work",
+      "plumbing": "Plumbing",
+      "delivery": "Delivery",
+      "tutoring": "Tutoring",
+      "gardening": "Gardening"
+    },
+    "features": {
+      "verified": "Verified Providers",
+      "insured": "Fully Insured",
+      "guaranteed": "Satisfaction Guaranteed",
+      "support": "24/7 Support"
+    }
+  },
+  "auth": {
+    "login": "Login",
+    "logout": "Logout",
+    "register": "Register",
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "email": "Email",
+    "password": "Password",
+    "forgotPassword": "Forgot Password?",
+    "dontHaveAccount": "Don't have an account?",
+    "alreadyHaveAccount": "Already have an account?"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "save": "Save",
+    "edit": "Edit",
+    "delete": "Delete",
+    "view": "View",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "price": "Price",
+    "rating": "Rating",
+    "reviews": "Reviews",
+    "bookNow": "Book Now",
+    "contactUs": "Contact Us",
+    "learnMore": "Learn More",
+    "readMore": "Read More"
+  },
+  "footer": {
+    "company": "Company",
+    "services": "Services",
+    "support": "Support",
+    "legal": "Legal",
+    "social": "Follow Us",
+    "newsletter": "Stay Updated",
+    "subscribe": "Subscribe"
+  },
+  "contact": {
+    "title": "Get in Touch",
+    "subtitle": "We're here to help with all your local service needs",
+    "form": {
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "email": "Email",
+      "phone": "Phone Number",
+      "message": "Message",
+      "sendMessage": "Send Message"
+    },
+    "info": {
+      "email": "Email Support",
+      "phone": "Phone Support",
+      "liveChat": "Live Chat",
+      "office": "Our Office"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome back",
+    "overview": "Overview",
+    "bookings": "Bookings",
+    "services": "Services",
+    "profile": "Profile",
+    "settings": "Settings"
+  }
+}

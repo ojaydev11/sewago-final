@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Menu } from 'lucide-react';
-import { useTranslation } from 'next-i18next';
+import { useTranslations } from 'next-intl';
 import dynamic from 'next/dynamic';
 
 // Load the session UI only on the client so hooks never run on the server
@@ -11,7 +11,7 @@ const AuthControls = dynamic(() => import('./AuthControls'), { ssr: false });
 const LanguageSwitcher = dynamic(() => import('@/components/LanguageSwitcher'), { ssr: false });
 
 export default function Header() {
-  const { t } = useTranslation('common');
+  const t = useTranslations();
 
   return (
     <header className='w-full relative z-50'>
@@ -61,7 +61,7 @@ export default function Header() {
           
           {/* Client-only auth UI */}
           <AuthControls />
-
+          
           {/* Mobile menu button */}
           <Button
             variant="ghost"
