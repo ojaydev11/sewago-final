@@ -3,6 +3,7 @@
 
 import Link from 'next/link';
 import { Menu } from 'lucide-react';
+import Image from 'next/image';
 
 export default function Navbar() {
   return (
@@ -14,22 +15,15 @@ export default function Navbar() {
         {/* Logo with enhanced styling */}
         <Link href='/' className='flex items-center gap-4 group'>
           <div className='relative'>
-            <div className='h-12 w-12 rounded-2xl bg-gradient-to-r from-blue-600 to-purple-600 p-0.5 group-hover:scale-110 transition-transform duration-300'>
-              <div className='h-full w-full rounded-2xl bg-white flex items-center justify-center'>
-                <span className='text-gray-900 font-black text-xl'>S</span>
-              </div>
-            </div>
+            <Image 
+              src="/branding/sewago-logo.svg" 
+              alt="sewaGo" 
+              width={120} 
+              height={36}
+              className='group-hover:scale-105 transition-transform duration-300'
+            />
             {/* Glow effect */}
-            <div className='absolute inset-0 h-12 w-12 rounded-2xl bg-gradient-to-r from-blue-600 to-purple-600 blur-md opacity-0 group-hover:opacity-30 transition-opacity duration-300'></div>
-          </div>
-          
-          <div className='flex flex-col'>
-            <span className='text-2xl font-black text-white tracking-wider group-hover:text-blue-200 transition-colors duration-300'>
-              SEWAGO
-            </span>
-            <span className='text-xs text-white/60 font-mono tracking-widest'>
-              FUTURE OF SERVICES
-            </span>
+            <div className='absolute inset-0 h-12 w-12 rounded-2xl bg-gradient-to-r from-orange-400 to-orange-600 blur-md opacity-0 group-hover:opacity-30 transition-opacity duration-300'></div>
           </div>
         </Link>
         

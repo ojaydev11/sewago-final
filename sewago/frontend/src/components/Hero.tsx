@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import ServiceHubIllustration from './ui/ServiceHubIllustration';
 
 export default function Hero() {

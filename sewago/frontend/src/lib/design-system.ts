@@ -143,6 +143,38 @@ const designSystem = {
       return `mx-auto px-4 sm:px-6 lg:px-8 ${maxWidths[size]}`;
     },
 
+    // Button classes
+    getButtonClasses: (variant: 'primary' | 'secondary' | 'outline' = 'primary') => {
+      const buttonStyles = {
+        primary: 'bg-gradient-to-r from-primary to-accent text-white hover:from-primary-light hover:to-accent-light hover:scale-105 active:scale-95 px-6 md:px-8 py-3 md:py-4 text-base md:text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 min-h-[44px] min-w-[44px]',
+        secondary: 'bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white/20 hover:border-white/40 px-6 md:px-8 py-3 md:py-4 text-base md:text-lg font-semibold rounded-xl transition-all duration-300 min-h-[44px] min-w-[44px]',
+        outline: 'border-2 border-white/30 text-white hover:bg-white/10 hover:border-white/50 px-6 md:px-8 py-3 md:py-4 text-base md:text-lg font-semibold rounded-xl transition-all duration-300 min-h-[44px] min-w-[44px]'
+      };
+      return buttonStyles[variant];
+    },
+
+    // Heading classes
+    getHeadingClasses: (level: 'h1' | 'h2' | 'h3' | 'h4' = 'h1') => {
+      const headingStyles = {
+        h1: 'font-black tracking-tight text-white text-4xl md:text-5xl lg:text-6xl',
+        h2: 'font-bold tracking-tight text-white text-3xl md:text-4xl lg:text-5xl',
+        h3: 'font-semibold tracking-tight text-white text-2xl md:text-3xl lg:text-4xl',
+        h4: 'font-medium tracking-tight text-white text-xl md:text-2xl lg:text-3xl'
+      };
+      return headingStyles[level];
+    },
+
+    // Text classes
+    getTextClasses: (size: 'small' | 'medium' | 'large' | 'xl' = 'medium') => {
+      const textStyles = {
+        small: 'text-sm md:text-base text-white/70 leading-relaxed',
+        medium: 'text-base md:text-lg text-white/80 leading-relaxed',
+        large: 'text-lg md:text-xl text-white/90 leading-relaxed',
+        xl: 'text-xl md:text-2xl text-white/90 leading-relaxed'
+      };
+      return textStyles[size];
+    },
+
     // Responsive grid classes
     getGridClasses: (cols: { sm?: number; md?: number; lg?: number; xl?: number } = {}) => {
       const defaultCols = { sm: 1, md: 2, lg: 3, xl: 4 };
