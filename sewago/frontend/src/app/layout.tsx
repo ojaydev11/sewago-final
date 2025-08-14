@@ -74,13 +74,23 @@ export const metadata: Metadata = {
   },
 };
 
+// Generate static params for locales
+export async function generateStaticParams() {
+  return [
+    { locale: 'en' },
+    { locale: 'ne' }
+  ];
+}
+
 export default async function RootLayout({
   children,
-  params: { locale }
+  params
 }: {
   children: React.ReactNode;
-  params: { locale: string };
+  params: { locale?: string };
 }) {
+  // Handle missing locale gracefully
+  const locale = params?.locale || 'en';
   const messages = await getMessages();
 
   return (
