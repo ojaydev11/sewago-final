@@ -14,8 +14,13 @@ import mongoose from "mongoose";
 import { v4 as uuidv4 } from "uuid";
 import client from "prom-client";
 
-export function createApp() {
+export function createApp(io?: any) {
   const app = express();
+  
+  // Store Socket.IO instance for use in controllers
+  if (io) {
+    app.set('io', io);
+  }
   app.set("trust proxy", true);
   app.use(cors({ origin: env.clientOrigin, credentials: true }));
   // Global gzip compression for payloads
