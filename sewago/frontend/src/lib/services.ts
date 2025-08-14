@@ -1,15 +1,10 @@
-import { dbConnect } from './mongodb';
-import { Service } from '@/models/Service';
+import servicesData from '@/data/services.json';
 
 export async function getServices() {
   try {
-    await dbConnect();
-    
-    const services = await Service.find({ active: true })
-      .sort({ createdAt: -1 })
-      .lean();
-    
-    return services;
+    // For now, return static data instead of MongoDB
+    // TODO: Re-enable MongoDB when database is properly configured
+    return servicesData;
   } catch (error) {
     console.error('Error fetching services:', error);
     return [];
@@ -18,14 +13,9 @@ export async function getServices() {
 
 export async function getServiceBySlug(slug: string) {
   try {
-    await dbConnect();
-    
-    const service = await Service.findOne({ 
-      slug, 
-      active: true 
-    }).lean();
-    
-    return service;
+    // For now, return static data instead of MongoDB
+    const service = servicesData.find(s => s.slug === slug);
+    return service || null;
   } catch (error) {
     console.error('Error fetching service:', error);
     return null;
@@ -34,15 +24,8 @@ export async function getServiceBySlug(slug: string) {
 
 export async function getServicesByCategory(category: string) {
   try {
-    await dbConnect();
-    
-    const services = await Service.find({ 
-      category, 
-      active: true 
-    })
-      .sort({ createdAt: -1 })
-      .lean();
-    
+    // For now, return static data instead of MongoDB
+    const services = servicesData.filter(s => s.category === category);
     return services;
   } catch (error) {
     console.error('Error fetching services by category:', error);
@@ -52,24 +35,12 @@ export async function getServicesByCategory(category: string) {
 
 export async function searchServices(query: string) {
   try {
-    await dbConnect();
-    
-    const services = await Service.find({
-      $and: [
-        { active: true },
-        {
-          $or: [
-            { name: { $regex: query, $options: 'i' } },
-            { shortDesc: { $regex: query, $options: 'i' } },
-            { category: { $regex: query, $options: 'i' } },
-            { longDesc: { $regex: query, $options: 'i' } }
-          ]
-        }
-      ]
-    })
-      .sort({ createdAt: -1 })
-      .lean();
-    
+    // For now, return static data instead of MongoDB
+    const services = servicesData.filter(service => 
+      service.name.toLowerCase().includes(query.toLowerCase()) ||
+      service.description.toLowerCase().includes(query.toLowerCase()) ||
+      service.category.toLowerCase().includes(query.toLowerCase())
+    );
     return services;
   } catch (error) {
     console.error('Error searching services:', error);
@@ -79,13 +50,10 @@ export async function searchServices(query: string) {
 
 export async function getPopularServices(limit: number = 6) {
   try {
-    await dbConnect();
-    
-    const services = await Service.find({ active: true })
-      .sort({ 'reviewStats.totalReviews': -1, 'reviewStats.averageRating': -1 })
-      .limit(limit)
-      .lean();
-    
+    // For now, return static data instead of MongoDB
+    const services = servicesData
+      .sort((a, b) => b.rating - a.rating)
+      .slice(0, limit);
     return services;
   } catch (error) {
     console.error('Error fetching popular services:', error);

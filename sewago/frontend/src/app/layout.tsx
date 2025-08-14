@@ -6,6 +6,8 @@ import Header from '@/components/site/Header';
 import Analytics from '@/components/Analytics';
 import { AuthProvider } from '@/providers/auth';
 import { ReactQueryProvider } from '@/providers/react-query';
+import { NextIntlClientProvider } from 'next-intl';
+import { getMessages } from 'next-intl/server';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -69,13 +71,17 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
+  params: { locale }
 }: {
   children: React.ReactNode;
+  params: { locale: string };
 }) {
+  const messages = await getMessages();
+
   return (
-    <html lang="en">
+    <html lang={locale}>
       <head>
         {/* Preconnect to external domains for performance */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -140,14 +146,16 @@ export default function RootLayout({
           </Suspense>
         )}
         
-        <AuthProvider>
-          <ReactQueryProvider>
-            <Header />
-            <main className="min-h-screen">
-              {children}
-            </main>
-          </ReactQueryProvider>
-        </AuthProvider>
+        <NextIntlClientProvider messages={messages}>
+          <AuthProvider>
+            <ReactQueryProvider>
+              <Header />
+              <main className="min-h-screen">
+                {children}
+              </main>
+            </ReactQueryProvider>
+          </AuthProvider>
+        </NextIntlClientProvider>
       </body>
     </html>
   );

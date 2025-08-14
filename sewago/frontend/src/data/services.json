@@ -1,0 +1,74 @@
+[
+  {
+    "id": "1",
+    "slug": "house-cleaning",
+    "name": "House Cleaning",
+    "description": "Professional house cleaning services including regular cleaning, deep cleaning, and move-in/move-out cleaning.",
+    "category": "cleaning",
+    "basePrice": 1500,
+    "image": "/assets/services/cleaning.jpg",
+    "features": ["Eco-friendly products", "Trained professionals", "Satisfaction guaranteed"],
+    "rating": 4.8,
+    "reviewCount": 127
+  },
+  {
+    "id": "2",
+    "slug": "electrical-work",
+    "name": "Electrical Work",
+    "description": "Licensed electricians for installation, repair, and maintenance of electrical systems and appliances.",
+    "category": "electrical",
+    "basePrice": 2500,
+    "image": "/assets/services/electrical.jpg",
+    "features": ["Licensed professionals", "24/7 emergency service", "Warranty included"],
+    "rating": 4.9,
+    "reviewCount": 89
+  },
+  {
+    "id": "3",
+    "slug": "plumbing-services",
+    "name": "Plumbing Services",
+    "description": "Expert plumbers for all types of plumbing work including repairs, installations, and maintenance.",
+    "category": "plumbing",
+    "basePrice": 2000,
+    "image": "/assets/services/plumbing.jpg",
+    "features": ["Emergency service", "Modern equipment", "Transparent pricing"],
+    "rating": 4.7,
+    "reviewCount": 156
+  },
+  {
+    "id": "4",
+    "slug": "home-tutoring",
+    "name": "Home Tutoring",
+    "description": "Qualified tutors for all subjects and grade levels, available for home visits or online sessions.",
+    "category": "tutoring",
+    "basePrice": 1200,
+    "image": "/assets/services/tutoring.jpg",
+    "features": ["Qualified teachers", "Flexible scheduling", "Progress tracking"],
+    "rating": 4.6,
+    "reviewCount": 203
+  },
+  {
+    "id": "5",
+    "slug": "gardening-landscaping",
+    "name": "Gardening & Landscaping",
+    "description": "Professional gardening services including lawn care, landscaping, and seasonal maintenance.",
+    "category": "gardening",
+    "basePrice": 1800,
+    "image": "/assets/services/gardening.jpg",
+    "features": ["Seasonal care", "Organic methods", "Design consultation"],
+    "rating": 4.5,
+    "reviewCount": 94
+  },
+  {
+    "id": "6",
+    "slug": "delivery-services",
+    "name": "Delivery Services",
+    "description": "Fast and reliable delivery services for packages, groceries, and other items across the city.",
+    "category": "delivery",
+    "basePrice": 500,
+    "image": "/assets/services/delivery.jpg",
+    "features": ["Same-day delivery", "Real-time tracking", "Secure handling"],
+    "rating": 4.4,
+    "reviewCount": 312
+  }
+]
