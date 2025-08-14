@@ -1,7 +1,6 @@
 'use client';
 
-// Force dynamic rendering to prevent build-time prerendering
-export const dynamic = 'force-dynamic';
+
 
 import { designUtils, componentStyles } from '@/lib/design-system';
 

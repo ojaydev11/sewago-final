@@ -8,8 +8,7 @@ import {
 
 import { Metadata } from 'next';
 
-// Force dynamic rendering to prevent build-time prerendering
-export const dynamic = 'force-dynamic';
+
 
 export const metadata = { title: "Privacy Policy | SewaGo" };
 
