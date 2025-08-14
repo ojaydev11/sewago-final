@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/router';
+import { usePathname, useRouter } from 'next/navigation';
 import { Globe, ChevronDown } from 'lucide-react';
 
 const languages = [
@@ -11,13 +11,15 @@ const languages = [
 
 export default function LanguageSwitcher() {
   const router = useRouter();
+  const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
-  const currentLocale = router.locale || 'en';
+  const [currentLocale, setCurrentLocale] = useState('en');
   
   const currentLanguage = languages.find(lang => lang.code === currentLocale) || languages[0];
 
   const handleLanguageChange = (locale: string) => {
-    router.push(router.pathname, router.asPath, { locale });
+    setCurrentLocale(locale);
+    // For now, just change the local state since we don't have full i18n setup
     setIsOpen(false);
   };
 
