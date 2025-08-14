@@ -1,200 +1,185 @@
 
-import { Metadata } from 'next';
-
-// Force dynamic rendering to prevent build-time prerendering
-export const dynamic = 'force-dynamic';
-
-import { 
-  ShieldCheckIcon, 
-  UserGroupIcon, 
-  MapPinIcon,
-  PhoneIcon,
-  ClockIcon,
-  CheckBadgeIcon
-} from '@heroicons/react/24/outline';
-
-export const metadata: Metadata = {
-  title: 'About SewaGo - Professional Home Services in Nepal',
-  description: 'Learn about SewaGo, Nepal\'s trusted platform for professional home services. Our mission, vetting process, and commitment to quality.',
-  keywords: 'about sewago, home services nepal, professional services, trusted platform',
-};
+import { designUtils, componentStyles } from '@/lib/design-system';
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Hero Section */}
-        <div className="text-center mb-16">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            About SewaGo
-          </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Nepal's most trusted platform for professional home services. 
-            Connecting homeowners with verified, skilled professionals across major cities.
-          </p>
-        </div>
-
-        {/* Mission Section */}
-        <div className="bg-white rounded-lg p-8 mb-12">
-          <div className="grid lg:grid-cols-2 gap-8 items-center">
-            <div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">Our Mission</h2>
-              <p className="text-gray-600 mb-6">
-                To revolutionize home services in Nepal by providing a reliable, transparent, 
-                and convenient platform that connects homeowners with skilled professionals. 
-                We believe every home deserves quality service at fair prices.
-              </p>
-              <div className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <CheckBadgeIcon className="w-6 h-6 text-green-600" />
-                  <span>Quality guaranteed services</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <ShieldCheckIcon className="w-6 h-6 text-blue-600" />
-                  <span>30-day workmanship warranty</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <UserGroupIcon className="w-6 h-6 text-purple-600" />
-                  <span>Thoroughly vetted professionals</span>
-                </div>
-              </div>
-            </div>
-            <div className="bg-blue-50 rounded-lg p-6">
-              <h3 className="text-xl font-semibold mb-4">Why Choose SewaGo?</h3>
-              <div className="space-y-3 text-sm">
-                <p><strong>Verified Professionals:</strong> All service providers undergo background checks and skill verification</p>
-                <p><strong>Transparent Pricing:</strong> Clear, upfront pricing with no hidden fees</p>
-                <p><strong>Quality Guarantee:</strong> 30-day warranty on all services</p>
-                <p><strong>Easy Booking:</strong> Simple online booking with cash on delivery</p>
-                <p><strong>Local Expertise:</strong> Professionals familiar with local requirements</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Vetting Process */}
-        <div className="bg-white rounded-lg p-8 mb-12">
-          <h2 className="text-3xl font-bold text-gray-900 text-center mb-8">
-            Our Professional Vetting Process
-          </h2>
-          <div className="grid md:grid-cols-4 gap-6">
-            {[
-              {
-                step: '1',
-                title: 'Application Review',
-                description: 'Detailed application with work history and references'
-              },
-              {
-                step: '2',
-                title: 'Background Check',
-                description: 'Comprehensive background verification and identity checks'
-              },
-              {
-                step: '3',
-                title: 'Skill Assessment',
-                description: 'Practical skills test and certification verification'
-              },
-              {
-                step: '4',
-                title: 'Ongoing Monitoring',
-                description: 'Continuous performance monitoring and customer feedback'
-              }
-            ].map((item, index) => (
-              <div key={index} className="text-center">
-                <div className="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center text-lg font-bold mx-auto mb-4">
-                  {item.step}
-                </div>
-                <h3 className="font-semibold mb-2">{item.title}</h3>
-                <p className="text-sm text-gray-600">{item.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Service Areas */}
-        <div className="bg-white rounded-lg p-8 mb-12">
-          <h2 className="text-3xl font-bold text-gray-900 text-center mb-8">
-            Cities We Serve
-          </h2>
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                city: 'Kathmandu',
-                description: 'Nepal\'s capital and largest metropolitan area',
-                areas: ['Thamel', 'Baluwatar', 'New Baneshwor', 'Kalanki', 'Koteshwor', 'Durbarmarg'],
-                professionals: '200+'
-              },
-              {
-                city: 'Lalitpur',
-                description: 'Historic city known for arts and culture',
-                areas: ['Patan', 'Jawalakhel', 'Sanepa', 'Kupondole', 'Pulchowk', 'Lagankhel'],
-                professionals: '150+'
-              },
-              {
-                city: 'Bhaktapur',
-                description: 'Ancient city with rich cultural heritage',
-                areas: ['Durbar Square', 'Thimi', 'Madhyapur', 'Suryabinayak', 'Changunarayan'],
-                professionals: '100+'
-              }
-            ].map((location, index) => (
-              <div key={index} className="border border-gray-200 rounded-lg p-6">
-                <div className="flex items-center gap-2 mb-3">
-                  <MapPinIcon className="w-5 h-5 text-blue-600" />
-                  <h3 className="text-xl font-semibold">{location.city}</h3>
-                </div>
-                <p className="text-gray-600 mb-4">{location.description}</p>
-                <div className="mb-4">
-                  <p className="text-sm font-medium text-gray-900 mb-2">Service Areas:</p>
-                  <div className="text-sm text-gray-600">
-                    {location.areas.join(', ')}
-                  </div>
-                </div>
-                <div className="flex items-center gap-2 text-sm">
-                  <UserGroupIcon className="w-4 h-4 text-green-600" />
-                  <span className="text-green-600 font-medium">{location.professionals} Active Professionals</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Support Information */}
-        <div className="bg-white rounded-lg p-8">
-          <h2 className="text-3xl font-bold text-gray-900 text-center mb-8">
-            Customer Support
-          </h2>
-          <div className="grid md:grid-cols-2 gap-8">
-            <div>
-              <h3 className="text-xl font-semibold mb-4">Get Help When You Need It</h3>
-              <div className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <PhoneIcon className="w-5 h-5 text-blue-600" />
-                  <div>
-                    <p className="font-medium">Phone Support</p>
-                    <p className="text-sm text-gray-600">+977-9800000000</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3">
-                  <ClockIcon className="w-5 h-5 text-green-600" />
-                  <div>
-                    <p className="font-medium">Available Hours</p>
-                    <p className="text-sm text-gray-600">7 AM - 10 PM, 7 days a week</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="bg-gray-50 rounded-lg p-6">
-              <h4 className="font-semibold mb-3">Payment Policy</h4>
-              <div className="space-y-2 text-sm">
-                <p><strong>Cash on Service Delivery:</strong> Pay only after the service is completed to your satisfaction</p>
-                <p><strong>No Advance Payment:</strong> We don't require any upfront payment for bookings</p>
-                <p><strong>Transparent Pricing:</strong> All costs are clearly communicated before service begins</p>
-                <p><strong>Warranty:</strong> 30-day guarantee on all completed work</p>
-              </div>
-            </div>
-          </div>
-        </div>
+    <main className='min-h-screen bg-sg-primary relative overflow-hidden'>
+      {/* Background gradient elements */}
+      <div className='fixed inset-0 pointer-events-none'>
+        <div className='absolute top-1/4 left-10 w-96 h-96 bg-sg-accent1/5 rounded-full blur-3xl animate-float'></div>
+        <div className='absolute bottom-1/4 right-20 w-80 h-80 bg-sg-accent2/5 rounded-full blur-3xl animate-float' style={{animationDelay: '1s'}}></div>
       </div>
-    </div>
+      
+      {/* Hero Section */}
+      <section className='relative bg-gradient-hero py-20 lg:py-32'>
+        <div className={designUtils.getContainerClasses('lg')}>
+          <div className='text-center space-y-8 animate-fade-in'>
+            <h1 className={designUtils.getHeadingClasses('h1')}>
+              About SewaGo
+            </h1>
+            <p className={designUtils.getTextClasses('large')}>
+              Revolutionizing local services with cutting-edge technology and human-centered design
+            </p>
+            
+            {/* Futuristic accent line */}
+            <div className='flex justify-center'>
+              <div className='w-24 h-1 bg-gradient-accent rounded-full'></div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      {/* Mission Section */}
+      <section className={designUtils.getContainerClasses('lg')}>
+        <div className='grid lg:grid-cols-2 gap-16 items-center py-20'>
+          <div className='space-y-6 animate-slide-up'>
+            <h2 className={designUtils.getHeadingClasses('h2')}>
+              Our Mission
+            </h2>
+            <p className={designUtils.getTextClasses('medium')}>
+              To connect local service providers with customers through an intuitive, 
+              AI-powered platform that makes finding and booking services effortless.
+            </p>
+            <p className={designUtils.getTextClasses('medium')}>
+              We believe in empowering local businesses while providing customers 
+              with reliable, professional services at their fingertips.
+            </p>
+          </div>
+          
+          <div className='relative animate-fade-in' style={{animationDelay: '0.3s'}}>
+            <div className={componentStyles.card.elevated + ' p-8 text-center'}>
+              <div className='w-20 h-20 bg-gradient-accent rounded-2xl mx-auto mb-6 flex items-center justify-center'>
+                <span className='text-3xl'>🎯</span>
+              </div>
+              <h3 className='text-2xl font-bold text-sg-secondary mb-4'>Vision</h3>
+              <p className={designUtils.getTextClasses('small')}>
+                To become the leading platform for local services in Nepal, 
+                setting new standards for quality and convenience.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      {/* Values Section */}
+      <section className={designUtils.getContainerClasses('lg')}>
+        <div className='text-center space-y-16 py-20'>
+          <div className='space-y-6 animate-fade-in'>
+            <h2 className={designUtils.getHeadingClasses('h2')}>
+              Our Values
+            </h2>
+            <p className={designUtils.getTextClasses('large')}>
+              The principles that guide everything we do
+            </p>
+          </div>
+          
+          <div className='grid md:grid-cols-3 gap-8'>
+            {[
+              {
+                icon: '🤝',
+                title: 'Trust & Reliability',
+                description: 'Building lasting relationships through transparency and consistent service delivery.'
+              },
+              {
+                icon: '💡',
+                title: 'Innovation',
+                description: 'Continuously improving our platform with cutting-edge technology and user feedback.'
+              },
+              {
+                icon: '🌱',
+                title: 'Community Growth',
+                description: 'Supporting local businesses and fostering economic development in our communities.'
+              }
+            ].map((value, index) => (
+              <div 
+                key={index}
+                className={componentStyles.card.base + ' p-8 text-center animate-slide-up'}
+                style={{animationDelay: `${0.2 * index}s`}}
+              >
+                <div className='w-16 h-16 bg-gradient-accent rounded-2xl mx-auto mb-6 flex items-center justify-center'>
+                  <span className='text-2xl'>{value.icon}</span>
+                </div>
+                <h3 className='text-xl font-bold text-sg-secondary mb-4'>{value.title}</h3>
+                <p className={designUtils.getTextClasses('small')}>{value.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+      
+      {/* Team Section */}
+      <section className={designUtils.getContainerClasses('lg')}>
+        <div className='text-center space-y-16 py-20'>
+          <div className='space-y-6 animate-fade-in'>
+            <h2 className={designUtils.getHeadingClasses('h2')}>
+              Meet Our Team
+            </h2>
+            <p className={designUtils.getTextClasses('large')}>
+              Passionate professionals dedicated to transforming local services
+            </p>
+          </div>
+          
+          <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-8'>
+            {[
+              {
+                name: 'Development Team',
+                role: 'Engineering Excellence',
+                description: 'Building robust, scalable solutions that power our platform.'
+              },
+              {
+                name: 'Design Team',
+                role: 'User Experience',
+                description: 'Creating intuitive interfaces that delight our users.'
+              },
+              {
+                name: 'Business Team',
+                role: 'Strategic Growth',
+                description: 'Expanding our reach and building partnerships.'
+              }
+            ].map((member, index) => (
+              <div 
+                key={index}
+                className={componentStyles.card.base + ' p-6 text-center animate-slide-up'}
+                style={{animationDelay: `${0.3 * index}s`}}
+              >
+                <div className='w-16 h-16 bg-gradient-accent rounded-full mx-auto mb-4 flex items-center justify-center'>
+                  <span className='text-xl font-bold text-sg-secondary'>👥</span>
+                </div>
+                <h3 className='text-lg font-bold text-sg-secondary mb-2'>{member.name}</h3>
+                <p className='text-sm text-sg-accent1 font-medium mb-3'>{member.role}</p>
+                <p className={designUtils.getTextClasses('small')}>{member.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+      
+      {/* CTA Section */}
+      <section className={designUtils.getContainerClasses('md')}>
+        <div className='text-center space-y-8 py-20'>
+          <div className='space-y-6 animate-fade-in'>
+            <h2 className={designUtils.getHeadingClasses('h3')}>
+              Join Us on This Journey
+            </h2>
+            <p className={designUtils.getTextClasses('medium')}>
+              Whether you're a service provider or customer, we'd love to have you 
+              be part of the SewaGo community.
+            </p>
+          </div>
+          
+          <div className='flex flex-col sm:flex-row gap-4 justify-center'>
+            <button className={designUtils.getButtonClasses('primary')}>
+              Get Started Today
+            </button>
+            <button className={designUtils.getButtonClasses('outline')}>
+              Learn More
+            </button>
+          </div>
+        </div>
+      </section>
+      
+      {/* Bottom accent line */}
+      <div className='fixed bottom-0 left-0 right-0 h-1 bg-gradient-accent opacity-40'></div>
+    </main>
   );
 }
