@@ -4,6 +4,7 @@ import { Suspense } from 'react';
 import './globals.css';
 import Header from '@/components/site/Header';
 import Analytics from '@/components/Analytics';
+import CookieConsent from '@/components/CookieConsent';
 import { AuthProvider } from '@/providers/auth';
 import { ReactQueryProvider } from '@/providers/react-query';
 import { NextIntlClientProvider } from 'next-intl';
@@ -155,6 +156,9 @@ export default async function RootLayout({
               <main className="min-h-screen">
                 {children}
               </main>
+              
+              {/* Cookie Consent for GDPR compliance */}
+              <CookieConsent />
             </ReactQueryProvider>
           </AuthProvider>
         </NextIntlClientProvider>

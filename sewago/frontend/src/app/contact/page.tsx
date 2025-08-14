@@ -2,12 +2,9 @@
 
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
 import { designUtils, componentStyles } from '@/lib/design-system';
 import Location from '@/components/Location';
+import ContactForm from '@/components/ContactForm';
 import { Mail, Phone, MessageCircle } from 'lucide-react';
 
 export const metadata: Metadata = {
@@ -60,63 +57,7 @@ export default function ContactPage() {
               </div>
               
               <div className={componentStyles.card.base + ' p-8'}>
-                <form className='space-y-6'>
-                  <div className='grid md:grid-cols-2 gap-4'>
-                    <div className='space-y-2'>
-                      <Label htmlFor='firstName' className='text-white font-medium'>First Name</Label>
-                      <Input 
-                        id='firstName' 
-                        placeholder='Enter your first name'
-                        className='bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:border-accent focus:ring-accent'
-                      />
-                    </div>
-                    <div className='space-y-2'>
-                      <Label htmlFor='lastName' className='text-white font-medium'>Last Name</Label>
-                      <Input 
-                        id='lastName' 
-                        placeholder='Enter your last name'
-                        className='bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:border-accent focus:ring-accent'
-                      />
-                    </div>
-                  </div>
-                  
-                  <div className='space-y-2'>
-                    <Label htmlFor='email' className='text-white font-medium'>Email</Label>
-                    <Input 
-                      id='email' 
-                      type='email'
-                      placeholder='Enter your email address'
-                      className='bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:border-accent focus:ring-accent'
-                    />
-                  </div>
-                  
-                  <div className='space-y-2'>
-                    <Label htmlFor='phone' className='text-white font-medium'>Phone Number</Label>
-                    <Input 
-                      id='phone' 
-                      type='tel'
-                      placeholder='Enter your phone number'
-                      className='bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:border-accent focus:ring-accent'
-                    />
-                  </div>
-                  
-                  <div className='space-y-2'>
-                    <Label htmlFor='message' className='text-white font-medium'>Message</Label>
-                    <Textarea 
-                      id='message' 
-                      rows={4}
-                      placeholder='Tell us how we can help you'
-                      className='bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:border-accent focus:ring-accent resize-none'
-                    />
-                  </div>
-                  
-                  <Button 
-                    type='submit' 
-                    className={designUtils.getButtonClasses('primary') + ' w-full'}
-                  >
-                    Send Message
-                  </Button>
-                </form>
+                <ContactForm />
               </div>
             </div>
             
