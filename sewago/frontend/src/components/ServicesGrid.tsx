@@ -1,11 +1,11 @@
 import Link from 'next/link'
 import ServiceCard from './ServiceCard'
-import { Wrench, ShowerHead, Broom, GraduationCap } from 'lucide-react'
+import { Wrench, ShowerHead, Sparkles, GraduationCap } from 'lucide-react'
 
 const items = [
   { label: 'Electrician', slug: 'electrician', icon: <Wrench size={20}/> },
   { label: 'Plumber', slug: 'plumber', icon: <ShowerHead size={20}/> },
-  { label: 'Cleaner', slug: 'cleaner', icon: <Broom size={20}/> },
+  { label: 'Cleaner', slug: 'cleaner', icon: <Sparkles size={20}/> },
   { label: 'Tutor', slug: 'tutor', icon: <GraduationCap size={20}/> }
 ]
 
