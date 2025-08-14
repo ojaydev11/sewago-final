@@ -16,7 +16,7 @@ export default function SearchBar() {
       }}
     >
       <label className="sr-only" htmlFor="q">Search for services</label>
-      <div className="flex items-center gap-3 bg-white shadow-card rounded-2xl px-5 py-4">
+      <div className="flex items-center gap-3 bg-white shadow-[0_6px_24px_rgba(15,43,70,0.08)] rounded-2xl px-5 py-4">
         <Search className="text-sg-primary" size={20}/>
         <input 
           id="q" 
