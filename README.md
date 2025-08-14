@@ -1,282 +1,387 @@
 
-# 🏠 SewaGo - Professional Home Services Platform
+# SewaGo - Local Services Platform MVP
 
-**SewaGo** is Nepal's premier platform for booking professional home services. Connect with verified service providers for house cleaning, electrical work, plumbing, and more across Kathmandu, Lalitpur, and Bhaktapur.
+A production-ready MVP for connecting local service providers with customers in Nepal. Built with Next.js App Router, MongoDB/Mongoose, and modern web technologies.
 
-## ✨ **Latest Features (Batch 3)**
+## 🚀 Features
 
-### 🔒 **Cash on Delivery Payment System**
-- **Primary Payment**: Cash on Service Delivery (COD) - pay after service completion
-- **Future Ready**: eSewa integration built-in but disabled (feature flagged)
-- **No Advance Payment**: Book services without upfront costs
-- **Transparent Pricing**: Clear cost breakdown before booking
+### ✅ Implemented MVP Features
 
-### 🌟 **Trust & Quality Features**
-- **30-Day Workmanship Warranty** on applicable services
-- **Verified Provider Badges** with KYC verification
-- **Customer Reviews System** with star ratings and testimonials
-- **Quality Guarantee** on all services
+1. **Authentication & Roles**
+   - Credentials-based authentication with bcrypt
+   - Role-based access: Customer, Provider, Admin
+   - Protected routes and role-based redirects
+   - User avatar and dropdown menu in header
 
-### 📍 **Programmatic SEO**
-- **Service × City Pages**: Dedicated landing pages for each service in each city
-- **Local SEO Optimization**: City-specific content and targeting
-- **Structured Data**: JSON-LD schema for better search visibility
-- **Internal Linking**: Strategic cross-linking between services and cities
+2. **Services Management**
+   - `/services` - Server-side rendered service grid with ISR
+   - `/services/[slug]` - Detailed service pages with booking CTAs
+   - 10+ pre-seeded services with realistic data
+   - Service categories, pricing, and verification badges
 
-### 🎛️ **Feature Flag System**
-- `PAYMENTS_ESEWA_ENABLED`: Toggle eSewa payment method
-- `REVIEWS_ENABLED`: Enable/disable reviews functionality  
-- `WARRANTY_BADGE_ENABLED`: Show/hide warranty badges
-- Easy feature management through environment variables
+3. **Booking System**
+   - Multi-step booking flow (Date/Time → Address/Notes)
+   - `/services/[slug]/book` - Complete booking process
+   - API endpoints for creating and managing bookings
+   - Role-based booking views
 
-## 🚀 **Quick Start**
+4. **User Dashboards**
+   - `/dashboard` - Customer dashboard with upcoming/past bookings
+   - `/provider` - Provider dashboard (job queue, today's jobs)
+   - `/admin` - Admin dashboard for service and provider management
 
-### **Prerequisites**
-- Node.js 18+
-- npm 8+
-- MongoDB (local or Atlas)
+5. **Provider Onboarding**
+   - `/provider/onboarding` - Complete provider profile setup
+   - Skills, districts, bio, availability, and certifications
+   - Admin verification workflow
 
-### **Installation**
+6. **Contact & Support**
+   - `/contact` - Contact form with support ticket creation
+   - `/api/contact` - API endpoint for support requests
+   - SupportTicket model for tracking inquiries
+
+7. **Pricing & Information**
+   - `/pricing` - Dynamic pricing page reading from service basePrice
+   - Service cards with "Book" buttons linking to correct slugs
+   - Transparent pricing display
+
+8. **Internationalization (i18n)**
+   - English (EN) and Nepali (NE) language support
+   - Header language toggle
+   - Localized navigation and content
+
+9. **Security & Performance**
+   - Edge middleware with rate limiting
+   - Secure authentication with JWT
+   - Input validation and sanitization
+   - Responsive design with skeleton loading states
+
+## 🛠️ Tech Stack
+
+- **Frontend**: Next.js 15 (App Router), React 19, TypeScript
+- **Styling**: Tailwind CSS, shadcn/ui components
+- **Database**: MongoDB with Mongoose ODM
+- **Authentication**: NextAuth.js with credentials provider
+- **State Management**: Zustand, React Query
+- **Forms**: React Hook Form with Zod validation
+- **Icons**: Lucide React, Heroicons
+- **Notifications**: Sonner toast notifications
+- **Date Handling**: date-fns
+- **Internationalization**: next-intl
+
+## 📋 Prerequisites
+
+- Node.js 18+ 
+- MongoDB database
+- npm or yarn package manager
+
+## 🚀 Quick Start
+
+### 1. Clone and Install
 
 ```bash
-# Clone the repository
 git clone <repository-url>
-cd sewago/frontend
-
-# Install dependencies
+cd sewago-final
 npm install
-
-# Set up environment variables
-cp env.example .env.local
-# Edit .env.local with your configuration
-
-# Run development server
-npm run dev
 ```
 
-### **Environment Configuration**
+### 2. Environment Setup
+
+Create `.env.local` in the frontend directory:
 
 ```env
-# Feature Flags
-NEXT_PUBLIC_PAYMENTS_ESEWA_ENABLED=false
-NEXT_PUBLIC_REVIEWS_ENABLED=true
-NEXT_PUBLIC_WARRANTY_BADGE_ENABLED=true
-
 # Database
 MONGODB_URI=mongodb://localhost:27017/sewago
 
 # Authentication
-AUTH_SECRET=your-super-secure-32-character-secret-key
+AUTH_SECRET=your-super-secret-auth-key-here
 NEXTAUTH_URL=http://localhost:5000
-NEXTAUTH_SECRET=your-super-secure-32-character-secret-key
+NEXTAUTH_SECRET=your-nextauth-secret-here
 
-# Feature toggles
-NEXT_PUBLIC_BOOKING_ENABLED=true
-NEXT_PUBLIC_AUTH_ENABLED=true
+# Optional: Email (for contact form)
+RESEND_API_KEY=your-resend-api-key
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=your-email@gmail.com
+SMTP_PASS=your-app-password
 ```
 
-## 💰 **Payment System**
+### 3. Database Setup
 
-### **Current: Cash on Delivery (COD)**
-- **Default Payment Method**: Cash payment after service completion
-- **No Risk**: Customers pay only after satisfactory service delivery
-- **Booking Process**: Select COD → Schedule service → Pay provider directly
+```bash
+# Start MongoDB (if running locally)
+mongod
 
-### **Future: eSewa Integration**
-The eSewa payment system is built-in but disabled by default. To enable:
+# Seed the database with initial data
+cd sewago/frontend
+npm run seed
+```
 
-1. Set environment variable: `NEXT_PUBLIC_PAYMENTS_ESEWA_ENABLED=true`
-2. Add eSewa credentials to environment:
-   ```env
-   ESEWA_MERCHANT_CODE=your-merchant-code
-   ESEWA_SECRET_KEY=your-secret-key
-   ```
-3. The eSewa option will automatically appear in the payment selection
+### 4. Start Development
 
-## 🛠️ **Adding New Services**
+```bash
+# Start both frontend and backend
+npm run dev
 
-### **1. Add Service Content**
-Create a new service file in `content/services/`:
+# Or start individually
+npm run dev --prefix frontend
+npm run dev --prefix backend
+```
 
-```json
+The app will be available at:
+- Frontend: http://localhost:5000
+- Backend: http://localhost:3001
+
+## 🧪 How to Test MVP
+
+### 1. **Initial Setup & Database**
+```bash
+# Ensure MongoDB is running
+npm run seed  # Creates test users and services
+```
+
+### 2. **Test User Credentials**
+```
+Admin User:
+- Email: admin@sewago.com
+- Password: admin123
+- Access: /admin (full system access)
+
+Customer User:
+- Email: john@example.com  
+- Password: customer123
+- Access: /dashboard (booking management)
+
+Provider User:
+- Email: ram@example.com
+- Password: provider123
+- Access: /provider (job management)
+```
+
+### 3. **Core User Flows**
+
+#### **Customer Journey**
+1. **Browse Services**
+   - Visit `/services` - See all available services
+   - Click on service cards to view details
+   - Verify pricing displays correctly
+
+2. **Book a Service**
+   - Click "Book Now" on any service
+   - Complete 2-step booking process:
+     - Step 1: Select date & time
+     - Step 2: Enter address & notes
+   - Submit booking
+
+3. **Manage Bookings**
+   - Visit `/dashboard` (customer role)
+   - View upcoming and past bookings
+   - Cancel pending bookings
+   - Rebook completed services
+
+#### **Provider Journey**
+1. **Complete Onboarding**
+   - Login as provider user
+   - Visit `/provider/onboarding`
+   - Fill out skills, districts, bio, availability
+   - Submit for admin verification
+
+2. **Provider Dashboard**
+   - View job queue and today's jobs
+   - Accept/decline service requests
+   - Manage availability and rates
+
+#### **Admin Journey**
+1. **Service Management**
+   - Login as admin user
+   - Access `/admin` dashboard
+   - View all services and providers
+   - Verify provider applications
+
+2. **System Overview**
+   - Monitor user registrations
+   - Track service performance
+   - Manage support tickets
+
+### 4. **Key Features Testing**
+
+#### **Authentication & Authorization**
+- [ ] Login/logout functionality
+- [ ] Role-based route protection
+- [ ] Session persistence
+- [ ] Unauthorized access prevention
+
+#### **Service Discovery**
+- [ ] Service grid loads correctly
+- [ ] Service details display properly
+- [ ] Pricing information accurate
+- [ ] Booking CTAs work correctly
+
+#### **Booking System**
+- [ ] Multi-step form validation
+- [ ] Date/time selection works
+- [ ] Address and notes submission
+- [ ] Booking confirmation
+
+#### **Responsive Design**
+- [ ] Mobile-first layout
+- [ ] Tablet and desktop views
+- [ ] Touch-friendly interactions
+- [ ] Loading states and skeletons
+
+#### **Internationalization**
+- [ ] Language toggle functionality
+- [ ] EN/NE content switching
+- [ ] Localized navigation
+- [ ] RTL support considerations
+
+### 5. **API Endpoints Testing**
+
+#### **Bookings API**
+```bash
+# Create booking
+POST /api/bookings
 {
-  "name": "New Service",
-  "slug": "new-service",
-  "description": "Service description",
-  "category": "Category",
-  "price": {
-    "min": 1000,
-    "max": 5000,
-    "unit": "per service"
-  },
-  "features": ["Feature 1", "Feature 2"],
-  "hasWarranty": true,
-  "warrantyDays": 30
+  "serviceSlug": "house-cleaning",
+  "date": "2024-12-25",
+  "timeSlot": "09:00 AM",
+  "address": "123 Main St, Kathmandu",
+  "notes": "Please bring cleaning supplies"
+}
+
+# Get user bookings
+GET /api/bookings?status=pending
+```
+
+#### **Contact API**
+```bash
+# Submit support ticket
+POST /api/contact
+{
+  "name": "Test User",
+  "email": "test@example.com",
+  "subject": "Test Inquiry",
+  "message": "This is a test message"
 }
 ```
 
-### **2. Update Constants**
-Add the service slug to relevant arrays in:
-- `src/app/services/[slug]/[city]/page.tsx` (SERVICES array)
-- `src/app/sitemap.ts` (SERVICES array)
+### 6. **Performance & Security Testing**
 
-### **3. Add City Pages**
-City-specific pages are automatically generated for each service in:
-- `/services/[service-slug]/kathmandu`
-- `/services/[service-slug]/lalitpur`
-- `/services/[service-slug]/bhaktapur`
+#### **Performance**
+- [ ] Lighthouse score 90+ on all pages
+- [ ] Fast page load times (<3s)
+- [ ] Smooth animations and transitions
+- [ ] Efficient database queries
 
-## 🏙️ **Supported Cities**
+#### **Security**
+- [ ] Input validation and sanitization
+- [ ] Rate limiting on API endpoints
+- [ ] Secure authentication tokens
+- [ ] XSS and CSRF protection
 
-- **Kathmandu**: Nepal's capital and largest metropolitan area
-- **Lalitpur**: Historic city known for arts and culture  
-- **Bhaktapur**: Ancient city with rich cultural heritage
+### 7. **Edge Cases & Error Handling**
 
-Each city has dedicated service pages with local SEO optimization.
+#### **Error Scenarios**
+- [ ] Invalid form submissions
+- [ ] Network failures
+- [ ] Database connection issues
+- [ ] Authentication failures
 
-## 🧪 **Development**
+#### **User Experience**
+- [ ] Clear error messages
+- [ ] Loading states
+- [ ] Form validation feedback
+- [ ] Responsive error handling
 
-### **Available Scripts**
+## 🔧 Development Commands
+
 ```bash
-npm run dev          # Start development server
-npm run build        # Build for production
-npm run start        # Start production server
-npm run lint         # Run ESLint
-npm run test         # Run tests
-```
+# Install dependencies
+npm install
 
-### **Testing**
-```bash
-# Run all tests
+# Development mode
+npm run dev
+
+# Build for production
+npm run build
+
+# Start production server
+npm start
+
+# Run tests
 npm test
 
-# Run tests in watch mode
-npm run test:watch
+# Lint code
+npm run lint
 
-# Run with coverage
-npm run test:coverage
+# Type checking
+npm run type-check
+
+# Seed database
+npm run seed
+
+# E2E testing
+npm run e2e
 ```
 
-## 📈 **Performance & SEO**
+## 📁 Project Structure
 
-### **Lighthouse Targets**
-- Performance: ≥ 90 (mobile)
-- Best Practices: ≥ 95
-- Accessibility: ≥ 95  
-- SEO: ≥ 95
-
-### **SEO Features**
-- Dynamic meta tags for all pages
-- JSON-LD structured data
-- Automatic sitemap generation
-- Service × city landing pages
-- Internal linking optimization
-
-## 🔧 **Deployment**
-
-### **Vercel (Recommended)**
-1. Connect GitHub repository to Vercel
-2. Set environment variables in Vercel dashboard
-3. Deploy automatically on push to main
-
-### **Environment Variables for Production**
-```env
-NEXT_PUBLIC_PAYMENTS_ESEWA_ENABLED=false
-NEXT_PUBLIC_REVIEWS_ENABLED=true
-NEXT_PUBLIC_WARRANTY_BADGE_ENABLED=true
-MONGODB_URI=your-production-mongodb-uri
-AUTH_SECRET=your-production-secret
-NEXTAUTH_URL=https://your-domain.vercel.app
+```
+sewago/
+├── frontend/                 # Next.js frontend application
+│   ├── src/
+│   │   ├── app/             # App Router pages
+│   │   ├── components/      # Reusable UI components
+│   │   ├── lib/             # Utility functions and libraries
+│   │   ├── models/          # Mongoose data models
+│   │   └── providers/       # React context providers
+│   ├── public/              # Static assets
+│   └── scripts/             # Database seeding and utilities
+├── backend/                  # Express.js backend API
+│   ├── src/
+│   │   ├── controllers/     # API route handlers
+│   │   ├── middleware/      # Express middleware
+│   │   ├── models/          # Data models
+│   │   └── routes/          # API route definitions
+└── scripts/                  # Development and deployment scripts
 ```
 
-### **Clear Build Cache**
-If you encounter build issues, clear Vercel's build cache:
+## 🚀 Deployment
+
+### Vercel (Frontend)
 ```bash
-# In Vercel dashboard: Settings > Functions > Clear Build Cache
+# Deploy to Vercel
+vercel --prod
 ```
 
-## 🚀 **Batch 8: Scale & Monetization Features**
-
-### **Dynamic Pricing & Surge System**
-- Smart pricing modifiers based on demand, time, and location
-- Express slot surcharges and off-peak discounts
-- Transparent pricing breakdown for customers
-
-### **Promotions & Loyalty**
-- Promo code system with usage limits and expiration
-- First booking and win-back campaigns
-- Stackable promotions with business rule validation
-
-### **SewaGo Wallet**
-- Unified credit system for loyalty, referrals, and resolutions
-- Automatic credit application at checkout
-- Comprehensive transaction history and export
-
-### **Partner API & Webhooks**
-- RESTful API for partners with token authentication
-- Real-time webhooks for booking lifecycle events
-- HMAC signature verification and replay protection
-
-### **Advanced Search & Discovery**
-- Multi-filter search with autocomplete
-- Personalized suggestions based on search history
-- Search analytics and conversion tracking
-
-### **Data Analytics & Export**
-- Comprehensive KPI dashboard for admins
-- Data export capabilities for external BI tools
-- Event tracking and warehouse preparation
-
-### **Feature Flags for Batch 8**
-```env
-NEXT_PUBLIC_SURGE_ENABLED=false
-NEXT_PUBLIC_PROMOS_ENABLED=false
-NEXT_PUBLIC_WALLET_ENABLED=false
-NEXT_PUBLIC_PARTNER_API_ENABLED=false
-NEXT_PUBLIC_WEBHOOKS_ENABLED=false
-NEXT_PUBLIC_SEARCH_ENABLED=true
+### Railway (Backend)
+```bash
+# Deploy to Railway
+railway up
 ```
 
-## 📝 **Changelog - Batch 3**
+### Environment Variables
+Ensure all required environment variables are set in your deployment platform.
 
-### **Added**
-- ✅ Cash on Delivery (COD) payment system
-- ✅ 30-day workmanship warranty program
-- ✅ Customer reviews and ratings system
-- ✅ Verified provider badges
-- ✅ Programmatic SEO with service × city pages
-- ✅ Feature flag system for easy configuration
-- ✅ Enhanced booking wizard with location and payment selection
-- ✅ Trust elements and quality guarantees
-- ✅ Local SEO optimization for all major cities
+## 🤝 Contributing
 
-### **Enhanced**
-- ✅ Service detail pages with reviews and warranty information
-- ✅ Homepage with cities section and trust indicators
-- ✅ About page with vetting process and company information
-- ✅ Sitemap with all service and city combinations
-- ✅ JSON-LD structured data for better search visibility
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
 
-### **Technical**
-- ✅ Next.js App Router with TypeScript
-- ✅ Feature flag configuration system
-- ✅ Enhanced booking model with payment status tracking
-- ✅ Review system with verification status
-- ✅ Programmatic page generation for SEO
+## 📄 License
 
-## 🎯 **Business Model**
+This project is licensed under the MIT License.
 
-- **Cash on Delivery**: Primary payment method, no advance required
-- **Service Warranty**: 30-day guarantee on workmanship
-- **Provider Verification**: Thorough vetting process for quality assurance
-- **Local Focus**: City-specific services with local professional networks
+## 🆘 Support
 
-## 📞 **Support**
-
-- **Phone**: +977-9800000000
-- **Hours**: 7 AM - 10 PM, 7 days a week
-- **Coverage**: Kathmandu, Lalitpur, Bhaktapur
+For support and questions:
+- Create an issue in the repository
+- Contact: support@sewago.com
+- Documentation: [Wiki Link]
 
 ---
 
-**SewaGo** - Professional services at your doorstep 🏠✨
+**SewaGo MVP** - Ready for production deployment and user testing! 🎉
