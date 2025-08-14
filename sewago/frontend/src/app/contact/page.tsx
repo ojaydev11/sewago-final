@@ -1,5 +1,4 @@
-// Force dynamic rendering to prevent build-time prerendering
-export const dynamic = 'force-dynamic';
+
 
 import { Metadata } from 'next';
 import Link from 'next/link';

@@ -4,6 +4,8 @@ import { Suspense } from 'react';
 import './globals.css';
 import Header from '@/components/site/Header';
 import Analytics from '@/components/Analytics';
+import { AuthProvider } from '@/providers/auth';
+import { ReactQueryProvider } from '@/providers/react-query';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -85,6 +87,7 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="//www.googletagmanager.com" />
         
         {/* Favicon and app icons */}
+        <link rel="icon" type="image/svg+xml" href="/branding/sewago-favicon.svg" />
         <link rel="icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
@@ -111,7 +114,7 @@ export default function RootLayout({
               "name": "SewaGo",
               "alternateName": "सेवागो",
               "url": "https://sewago.com",
-              "logo": "https://sewago.com/logo.png",
+              "logo": "https://sewago.com/branding/sewago-logo.svg",
               "sameAs": [
                 "https://facebook.com/sewago",
                 "https://twitter.com/sewago",
@@ -137,10 +140,14 @@ export default function RootLayout({
           </Suspense>
         )}
         
-        <Header />
-        <main className="min-h-screen">
-          {children}
-        </main>
+        <AuthProvider>
+          <ReactQueryProvider>
+            <Header />
+            <main className="min-h-screen">
+              {children}
+            </main>
+          </ReactQueryProvider>
+        </AuthProvider>
       </body>
     </html>
   );

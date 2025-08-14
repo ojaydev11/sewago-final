@@ -1,5 +1,4 @@
-// Force dynamic rendering to prevent build-time prerendering
-export const dynamic = 'force-dynamic';
+
 
 import { 
   DocumentTextIcon,
