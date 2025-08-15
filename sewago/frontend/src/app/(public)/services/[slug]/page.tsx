@@ -46,8 +46,39 @@ export async function generateMetadata({ params }: ServiceDetailPageProps): Prom
   };
 }
 
+// Revalidate every hour
+export const revalidate = 3600;
+
 export default async function ServiceDetailPage({ params }: ServiceDetailPageProps) {
-  const service = await getServiceBySlug(params.slug);
+  let service;
+  
+  try {
+    service = await getServiceBySlug(params.slug);
+  } catch (error) {
+    console.error('Error loading service:', error);
+    // Render minimal above-the-fold summary on error
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <div className="container mx-auto px-4 py-8">
+          <div className="bg-white rounded-lg shadow-sm p-6">
+            <h1 className="text-2xl font-bold text-gray-900 mb-4">
+              Service Temporarily Unavailable
+            </h1>
+            <p className="text-gray-600 mb-4">
+              We're experiencing technical difficulties. Please try again later.
+            </p>
+            <Link 
+              href="/services" 
+              className="inline-flex items-center text-primary hover:text-primary/80 transition-colors"
+            >
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Browse Other Services
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (!service) {
     notFound();

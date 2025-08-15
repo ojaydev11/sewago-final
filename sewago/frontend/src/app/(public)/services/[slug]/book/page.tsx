@@ -32,27 +32,75 @@ export default function BookingPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [quoteData, setQuoteData] = useState<QuoteData | null>(null);
   const [serviceData, setServiceData] = useState<ServiceData | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   const slug = params.slug as string;
 
-  // Load service data
+  // Load service data with timeout and localStorage persistence
   useEffect(() => {
     const loadService = async () => {
       try {
-        const service = await getServiceBySlug(slug);
+        // Check localStorage first for instant render
+        const cached = localStorage.getItem(`service_${slug}`);
+        if (cached) {
+          const service = JSON.parse(cached);
+          setServiceData(service);
+          setIsLoading(false);
+        }
+
+        // Fetch fresh data with 5s timeout
+        const timeoutPromise = new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Request timeout')), 5000)
+        );
+        
+        const fetchPromise = getServiceBySlug(slug);
+        const service = await Promise.race([fetchPromise, timeoutPromise]);
+        
         if (service) {
-          setServiceData({
+          const serviceData = {
             name: service.name,
             basePrice: service.basePrice,
             category: service.category,
             shortDesc: service.shortDesc
-          });
+          };
+          setServiceData(serviceData);
+          localStorage.setItem(`service_${slug}`, JSON.stringify(serviceData));
+          setIsLoading(false);
         }
       } catch (error) {
         console.error('Error loading service:', error);
+        setLoadError(error instanceof Error ? error.message : 'Failed to load service');
+        setIsLoading(false);
       }
     };
     loadService();
+  }, [slug]);
+
+  // Persist step and quote data to localStorage
+  useEffect(() => {
+    if (currentStep > 1) {
+      localStorage.setItem(`booking_step_${slug}`, currentStep.toString());
+    }
+  }, [currentStep, slug]);
+
+  useEffect(() => {
+    if (quoteData) {
+      localStorage.setItem(`booking_quote_${slug}`, JSON.stringify(quoteData));
+    }
+  }, [quoteData, slug]);
+
+  // Restore from localStorage on mount
+  useEffect(() => {
+    const savedStep = localStorage.getItem(`booking_step_${slug}`);
+    const savedQuote = localStorage.getItem(`booking_quote_${slug}`);
+    
+    if (savedStep) {
+      setCurrentStep(parseInt(savedStep));
+    }
+    if (savedQuote) {
+      setQuoteData(JSON.parse(savedQuote));
+    }
   }, [slug]);
 
   const handleQuoteUpdate = useCallback(async (quote: QuoteData) => {
@@ -151,12 +199,88 @@ export default function BookingPage() {
     quoteData.area?.trim()
   );
 
-  if (!serviceData) {
+  if (isLoading && !serviceData) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading service details...</p>
+      <div className="min-h-screen bg-gray-50 py-8">
+        <div className="container mx-auto px-4 max-w-6xl">
+          {/* Header Skeleton */}
+          <div className="text-center mb-8">
+            <div className="h-12 w-96 bg-gray-200 rounded-lg mx-auto mb-4 animate-pulse"></div>
+            <div className="h-6 w-80 bg-gray-200 rounded mx-auto animate-pulse"></div>
+          </div>
+
+          {/* Progress Steps Skeleton */}
+          <div className="flex items-center justify-center mb-8">
+            <div className="flex items-center space-x-4">
+              {[1, 2, 3].map((step) => (
+                <div key={step} className="flex items-center text-gray-400">
+                  <div className="w-8 h-8 rounded-full border-2 border-gray-300 bg-gray-200 animate-pulse"></div>
+                  <span className="ml-2 font-medium w-20 h-4 bg-gray-200 rounded animate-pulse"></span>
+                  {step < 3 && <div className="w-16 h-0.5 bg-gray-300 ml-4"></div>}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Content Skeleton */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2">
+              <div className="space-y-6">
+                {[1, 2, 3, 4].map((i) => (
+                  <div key={i} className="space-y-4">
+                    <div className="h-4 w-24 bg-gray-200 rounded animate-pulse"></div>
+                    <div className="h-10 w-full bg-gray-200 rounded animate-pulse"></div>
+                  </div>
+                ))}
+                <div className="h-12 w-full bg-gray-200 rounded animate-pulse"></div>
+              </div>
+            </div>
+            
+            {/* Service Info Sidebar Skeleton */}
+            <div className="space-y-6">
+              <div className="bg-white rounded-lg shadow-md p-6">
+                <div className="h-6 w-32 bg-gray-200 rounded mb-4 animate-pulse"></div>
+                <div className="h-4 w-full bg-gray-200 rounded mb-4 animate-pulse"></div>
+                <div className="space-y-3">
+                  <div className="flex justify-between">
+                    <div className="h-4 w-20 bg-gray-200 rounded animate-pulse"></div>
+                    <div className="h-6 w-24 bg-gray-200 rounded animate-pulse"></div>
+                  </div>
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="flex items-center gap-2">
+                      <div className="w-4 h-4 bg-gray-200 rounded animate-pulse"></div>
+                      <div className="h-4 w-40 bg-gray-200 rounded animate-pulse"></div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="h-12 w-full bg-gray-200 rounded animate-pulse"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Error state - render minimal above-the-fold summary
+  if (loadError && !serviceData) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-8">
+        <div className="container mx-auto px-4 max-w-6xl">
+          <div className="text-center mb-8">
+            <h1 className="text-3xl font-bold text-gray-900 mb-4">
+              Service Unavailable
+            </h1>
+            <p className="text-gray-600 mb-6">
+              We're having trouble loading this service. Please try again later.
+            </p>
+            <button 
+              onClick={() => window.location.reload()}
+              className="bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary/90 transition-colors"
+            >
+              Retry
+            </button>
+          </div>
         </div>
       </div>
     );
