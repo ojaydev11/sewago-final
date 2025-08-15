@@ -34,11 +34,11 @@ export default function ContactForm({ className = '' }: ContactFormProps) {
   const {
     register,
     handleSubmit,
-    formState: { errors, isValid },
+    formState: { errors, isValid, isSubmitted },
     reset,
   } = useForm<ContactFormData>({
     resolver: zodResolver(contactFormSchema),
-    mode: 'onChange',
+    mode: 'onSubmit', // Only validate after submit
   });
 
   const onSubmit = async (data: ContactFormData) => {
@@ -107,8 +107,8 @@ export default function ContactForm({ className = '' }: ContactFormProps) {
             aria-invalid={errors.firstName ? 'true' : 'false'}
             aria-describedby={errors.firstName ? 'firstName-error' : undefined}
           />
-          {errors.firstName && (
-            <p id="firstName-error" className="text-red-400 text-sm" role="alert">
+          {isSubmitted && errors.firstName && (
+            <p id="firstName-error" className="text-red-400 text-sm" role="alert" aria-live="polite">
               {errors.firstName.message}
             </p>
           )}
@@ -129,8 +129,8 @@ export default function ContactForm({ className = '' }: ContactFormProps) {
             aria-invalid={errors.lastName ? 'true' : 'false'}
             aria-describedby={errors.lastName ? 'lastName-error' : undefined}
           />
-          {errors.lastName && (
-            <p id="lastName-error" className="text-red-400 text-sm" role="alert">
+          {isSubmitted && errors.lastName && (
+            <p id="lastName-error" className="text-red-400 text-sm" role="alert" aria-live="polite">
               {errors.lastName.message}
             </p>
           )}
@@ -154,8 +154,8 @@ export default function ContactForm({ className = '' }: ContactFormProps) {
           aria-invalid={errors.email ? 'true' : 'false'}
           aria-describedby={errors.email ? 'email-error' : undefined}
         />
-        {errors.email && (
-          <p id="email-error" className="text-red-400 text-sm" role="alert">
+        {isSubmitted && errors.email && (
+          <p id="email-error" className="text-red-400 text-sm" role="alert" aria-live="polite">
             {errors.email.message}
           </p>
         )}
@@ -178,8 +178,8 @@ export default function ContactForm({ className = '' }: ContactFormProps) {
           aria-invalid={errors.phone ? 'true' : 'false'}
           aria-describedby={errors.phone ? 'phone-error' : undefined}
         />
-        {errors.phone && (
-          <p id="phone-error" className="text-red-400 text-sm" role="alert">
+        {isSubmitted && errors.phone && (
+          <p id="phone-error" className="text-red-400 text-sm" role="alert" aria-live="polite">
             {errors.phone.message}
           </p>
         )}
@@ -202,8 +202,8 @@ export default function ContactForm({ className = '' }: ContactFormProps) {
           aria-invalid={errors.message ? 'true' : 'false'}
           aria-describedby={errors.message ? 'message-error' : undefined}
         />
-        {errors.message && (
-          <p id="message-error" className="text-red-400 text-sm" role="alert">
+        {isSubmitted && errors.message && (
+          <p id="message-error" className="text-red-400 text-sm" role="alert" aria-live="polite">
             {errors.message.message}
           </p>
         )}
