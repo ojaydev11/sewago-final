@@ -1,295 +1,304 @@
 #!/usr/bin/env tsx
 
-import { dbConnect } from '../src/lib/mongodb';
-import { User } from '../src/models/User';
-import { Service } from '../src/models/Service';
-import { Provider } from '../src/models/Provider';
-import bcrypt from 'bcryptjs';
+import { PrismaClient } from '@prisma/client';
 
-const services = [
-  {
-    slug: 'house-cleaning',
-    name: 'House Cleaning',
-    category: 'Cleaning',
-    shortDesc: 'Professional house cleaning services for your home',
-    longDesc: 'Get your home sparkling clean with our professional house cleaning service. Our experienced cleaners use eco-friendly products and follow a comprehensive cleaning checklist to ensure every corner of your home is spotless. Perfect for regular maintenance or deep cleaning needs.',
-    basePrice: 500,
-    image: '/icons/cleaning.svg',
-    active: true,
-    hasWarranty: false,
-    isVerified: true,
-    reviewStats: {
-      averageRating: 4.8,
-      totalReviews: 127
-    }
-  },
-  {
-    slug: 'electrical-work',
-    name: 'Electrical Work',
-    category: 'Electrical',
-    shortDesc: 'Certified electricians for all electrical needs',
-    longDesc: 'Professional electrical services by certified and licensed electricians. From simple repairs to complex installations, our team handles all electrical work safely and efficiently. We ensure compliance with local electrical codes and provide warranty on all work.',
-    basePrice: 800,
-    image: '/icons/electrical.svg',
-    active: true,
-    hasWarranty: true,
-    warrantyDays: 90,
-    isVerified: true,
-    reviewStats: {
-      averageRating: 4.9,
-      totalReviews: 89
-    }
-  },
-  {
-    slug: 'gardening',
-    name: 'Gardening & Landscaping',
-    category: 'Outdoor',
-    shortDesc: 'Expert gardeners and landscaping services',
-    longDesc: 'Transform your outdoor space with our professional gardening and landscaping services. Our expert gardeners provide regular maintenance, seasonal planting, tree trimming, and complete landscape design. We use quality plants and sustainable gardening practices.',
-    basePrice: 600,
-    image: '/icons/gardening.svg',
-    active: true,
-    hasWarranty: false,
-    isVerified: true,
-    reviewStats: {
-      averageRating: 4.7,
-      totalReviews: 156
-    }
-  },
-  {
-    slug: 'plumbing',
-    name: 'Plumbing Services',
-    category: 'Plumbing',
-    shortDesc: 'Professional plumbing and repair services',
-    longDesc: 'Reliable plumbing services for all your home and business needs. Our licensed plumbers handle repairs, installations, maintenance, and emergency services. We use quality materials and provide detailed workmanship with warranty coverage.',
-    basePrice: 700,
-    image: '/icons/plumbing.svg',
-    active: true,
-    hasWarranty: true,
-    warrantyDays: 60,
-    isVerified: true,
-    reviewStats: {
-      averageRating: 4.8,
-      totalReviews: 203
-    }
-  },
-  {
-    slug: 'painting',
-    name: 'Painting Services',
-    category: 'Painting',
-    shortDesc: 'Interior and exterior painting services',
-    longDesc: 'Professional painting services for interior and exterior surfaces. Our experienced painters use premium paints and follow industry best practices. We handle preparation, painting, and cleanup to deliver a flawless finish that enhances your space.',
-    basePrice: 1000,
-    image: '/icons/painting.svg',
-    active: true,
-    hasWarranty: true,
-    warrantyDays: 30,
-    isVerified: true,
-    reviewStats: {
-      averageRating: 4.6,
-      totalReviews: 94
-    }
-  },
-  {
-    slug: 'moving-packing',
-    name: 'Moving & Packing',
-    category: 'Relocation',
-    shortDesc: 'Reliable moving and packing services',
-    longDesc: 'Stress-free moving and packing services for homes and offices. Our professional movers handle everything from careful packing to safe transportation and unpacking. We provide packing materials, furniture protection, and insurance coverage.',
-    basePrice: 1500,
-    image: '/icons/moving.svg',
-    active: true,
-    hasWarranty: false,
-    isVerified: true,
-    reviewStats: {
-      averageRating: 4.7,
-      totalReviews: 67
-    }
-  },
-  {
-    slug: 'appliance-repair',
-    name: 'Appliance Repair',
-    category: 'Repair',
-    shortDesc: 'Expert appliance repair and maintenance',
-    longDesc: 'Professional repair services for all major home appliances. Our certified technicians diagnose and fix issues with refrigerators, washing machines, dishwashers, and more. We use genuine parts and provide warranty on repairs.',
-    basePrice: 900,
-    image: '/icons/appliance.svg',
-    active: true,
-    hasWarranty: true,
-    warrantyDays: 90,
-    isVerified: true,
-    reviewStats: {
-      averageRating: 4.8,
-      totalReviews: 112
-    }
-  },
-  {
-    slug: 'carpentry',
-    name: 'Carpentry & Woodwork',
-    category: 'Construction',
-    shortDesc: 'Custom carpentry and woodworking services',
-    longDesc: 'Custom carpentry and woodworking services for your home improvement needs. From furniture repair to custom installations, our skilled carpenters deliver quality craftsmanship. We work with various wood types and finishes.',
-    basePrice: 1200,
-    image: '/icons/carpentry.svg',
-    active: true,
-    hasWarranty: true,
-    warrantyDays: 60,
-    isVerified: true,
-    reviewStats: {
-      averageRating: 4.7,
-      totalReviews: 78
-    }
-  },
-  {
-    slug: 'hvac',
-    name: 'HVAC Services',
-    category: 'HVAC',
-    shortDesc: 'Heating, ventilation, and air conditioning services',
-    longDesc: 'Complete HVAC services including installation, repair, and maintenance. Our certified technicians ensure your heating and cooling systems operate efficiently. We offer 24/7 emergency services and maintenance contracts.',
-    basePrice: 1100,
-    image: '/icons/hvac.svg',
-    active: true,
-    hasWarranty: true,
-    warrantyDays: 120,
-    isVerified: true,
-    reviewStats: {
-      averageRating: 4.9,
-      totalReviews: 145
-    }
-  },
-  {
-    slug: 'security-installation',
-    name: 'Security Installation',
-    category: 'Security',
-    shortDesc: 'Home and business security system installation',
-    longDesc: 'Professional security system installation for homes and businesses. We install CCTV cameras, alarm systems, access control, and smart security solutions. Our systems are customizable and include remote monitoring capabilities.',
-    basePrice: 2000,
-    image: '/icons/security.svg',
-    active: true,
-    hasWarranty: true,
-    warrantyDays: 180,
-    isVerified: true,
-    reviewStats: {
-      averageRating: 4.8,
-      totalReviews: 56
-    }
-  }
-];
+const prisma = new PrismaClient();
 
-const users = [
-  {
-    name: 'Admin User',
-    email: 'admin@sewago.com',
-    password: 'admin123',
-    role: 'admin',
-    phone: '+977-1-4XXXXXX',
-    district: 'Kathmandu'
-  },
-  {
-    name: 'John Doe',
-    email: 'john@example.com',
-    password: 'customer123',
-    role: 'customer',
-    phone: '+977-98XXXXXXX',
-    district: 'Lalitpur'
-  },
-  {
-    name: 'Sarah Smith',
-    email: 'sarah@example.com',
-    password: 'customer123',
-    role: 'customer',
-    phone: '+977-97XXXXXXX',
-    district: 'Bhaktapur'
-  },
-  {
-    name: 'Ram Bahadur',
-    email: 'ram@example.com',
-    password: 'provider123',
-    role: 'provider',
-    phone: '+977-96XXXXXXX',
-    district: 'Kathmandu'
-  },
-  {
-    name: 'Sita Devi',
-    email: 'sita@example.com',
-    password: 'provider123',
-    role: 'provider',
-    phone: '+977-95XXXXXXX',
-    district: 'Lalitpur'
-  }
-];
+async function main() {
+  console.log('🌱 Starting database seeding...');
 
-async function seedDatabase() {
-  try {
-    console.log('Connecting to database...');
-    await dbConnect();
-    console.log('Connected to database successfully');
+  // Clear existing data
+  await prisma.review.deleteMany();
+  await prisma.booking.deleteMany();
+  await prisma.provider.deleteMany();
+  await prisma.service.deleteMany();
+  await prisma.user.deleteMany();
+  await prisma.referral.deleteMany();
+  await prisma.publicMetric.deleteMany();
 
-    // Clear existing data
-    console.log('Clearing existing data...');
-    await User.deleteMany({});
-    await Service.deleteMany({});
-    await Provider.deleteMany({});
-    console.log('Existing data cleared');
+  console.log('🗑️  Cleared existing data');
 
-    // Create users
-    console.log('Creating users...');
-    const createdUsers = [];
-    for (const userData of users) {
-      const hashedPassword = await bcrypt.hash(userData.password, 12);
-      const user = new User({
-        ...userData,
-        hash: hashedPassword,
-        isVerified: userData.role === 'admin' || userData.role === 'customer',
-        verificationStatus: userData.role === 'admin' ? 'approved' : 'pending'
-      });
-      await user.save();
-      createdUsers.push(user);
-      console.log(`Created user: ${userData.name} (${userData.role})`);
-    }
+  // Create sample users
+  const users = await Promise.all([
+    prisma.user.create({
+      data: {
+        email: 'ram.shrestha@example.com',
+        name: 'Ram Shrestha',
+        phone: '+977-9841234567',
+        coins: 150,
+        referralCode: 'RAM001'
+      }
+    }),
+    prisma.user.create({
+      data: {
+        email: 'sita.tamang@example.com',
+        name: 'Sita Tamang',
+        phone: '+977-9842345678',
+        coins: 75,
+        referralCode: 'SITA002'
+      }
+    }),
+    prisma.user.create({
+      data: {
+        email: 'gopal.rai@example.com',
+        name: 'Gopal Rai',
+        phone: '+977-9843456789',
+        coins: 200,
+        referralCode: 'GOPAL003'
+      }
+    })
+  ]);
 
-    // Create services
-    console.log('Creating services...');
-    for (const serviceData of services) {
-      const service = new Service(serviceData);
-      await service.save();
-      console.log(`Created service: ${serviceData.name}`);
-    }
+  console.log('👥 Created sample users');
 
-    // Create provider profiles for provider users
-    console.log('Creating provider profiles...');
-    const providerUsers = createdUsers.filter(user => user.role === 'provider');
-    for (const user of providerUsers) {
-      const provider = new Provider({
-        userId: user._id,
-        services: [], // Will be populated when they complete onboarding
-        hourlyRate: 800,
-        isActive: true
-      });
-      await provider.save();
-      console.log(`Created provider profile for: ${user.name}`);
-    }
+  // Create sample services
+  const services = await Promise.all([
+    prisma.service.create({
+      data: {
+        slug: 'plumbing',
+        name: 'Plumbing Services',
+        description: 'Expert plumbing services for homes and offices including repairs, installations, and maintenance',
+        basePrice: 599,
+        city: 'Kathmandu',
+        category: 'plumbing',
+        imageUrl: '/icons/plumbing.svg'
+      }
+    }),
+    prisma.service.create({
+      data: {
+        slug: 'electrical',
+        name: 'Electrical Services',
+        description: 'Professional electrical work and safety checks for residential and commercial properties',
+        basePrice: 599,
+        city: 'Kathmandu',
+        category: 'electrical',
+        imageUrl: '/icons/electrical.svg'
+      }
+    }),
+    prisma.service.create({
+      data: {
+        slug: 'house-cleaning',
+        name: 'House Cleaning',
+        description: 'Comprehensive house cleaning services including deep cleaning, window washing, and organization',
+        basePrice: 1999,
+        city: 'Kathmandu',
+        category: 'cleaning',
+        imageUrl: '/icons/cleaning.svg'
+      }
+    }),
+    prisma.service.create({
+      data: {
+        slug: 'ac-service',
+        name: 'AC Service & Repair',
+        description: 'Professional AC installation, repair, maintenance, and gas refilling services',
+        basePrice: 1499,
+        city: 'Kathmandu',
+        category: 'hvac',
+        imageUrl: '/icons/ac.svg'
+      }
+    })
+  ]);
 
-    console.log('\n✅ Database seeded successfully!');
-    console.log('\n📋 Test Credentials:');
-    console.log('Admin: admin@sewago.com / admin123');
-    console.log('Customer: john@example.com / customer123');
-    console.log('Provider: ram@example.com / provider123');
-    console.log('\n🔗 Access the app and test the features!');
+  console.log('🔧 Created sample services');
 
-  } catch (error) {
-    console.error('❌ Error seeding database:', error);
-    process.exit(1);
-  }
+  // Create sample providers
+  const providers = await Promise.all([
+    prisma.provider.create({
+      data: {
+        name: 'Bikash Thapa',
+        phone: '+977-9844567890',
+        verified: true,
+        onTimePct: 95,
+        completionPct: 98,
+        yearsActive: 5,
+        tier: 'VERIFIED',
+        skills: ['plumbing', 'electrical'],
+        zones: ['Kathmandu', 'Lalitpur'],
+        isOnline: true
+      }
+    }),
+    prisma.provider.create({
+      data: {
+        name: 'Mina Gurung',
+        phone: '+977-9845678901',
+        verified: true,
+        onTimePct: 92,
+        completionPct: 96,
+        yearsActive: 3,
+        tier: 'VERIFIED',
+        skills: ['cleaning', 'gardening'],
+        zones: ['Kathmandu', 'Bhaktapur'],
+        isOnline: true
+      }
+    }),
+    prisma.provider.create({
+      data: {
+        name: 'Rajesh Magar',
+        phone: '+977-9846789012',
+        verified: true,
+        onTimePct: 88,
+        completionPct: 94,
+        yearsActive: 7,
+        tier: 'VERIFIED',
+        skills: ['ac-service', 'electrical'],
+        zones: ['Kathmandu', 'Lalitpur', 'Bhaktapur'],
+        isOnline: false
+      }
+    })
+  ]);
+
+  console.log('👷 Created sample providers');
+
+  // Create sample bookings
+  const bookings = await Promise.all([
+    prisma.booking.create({
+      data: {
+        userId: users[0].id,
+        serviceId: services[0].id,
+        providerId: providers[0].id,
+        status: 'COMPLETED',
+        address: 'Baneshwor, Kathmandu',
+        notes: 'Leaky faucet in kitchen',
+        total: 750,
+        paid: true,
+        scheduledAt: new Date('2024-01-15T10:00:00Z'),
+        completedAt: new Date('2024-01-15T11:30:00Z')
+      }
+    }),
+    prisma.booking.create({
+      data: {
+        userId: users[1].id,
+        serviceId: services[2].id,
+        providerId: providers[1].id,
+        status: 'COMPLETED',
+        address: 'Patan, Lalitpur',
+        notes: 'Deep cleaning for 2BHK apartment',
+        total: 2499,
+        paid: true,
+        scheduledAt: new Date('2024-01-16T09:00:00Z'),
+        completedAt: new Date('2024-01-16T12:00:00Z')
+      }
+    }),
+    prisma.booking.create({
+      data: {
+        userId: users[2].id,
+        serviceId: services[1].id,
+        providerId: providers[0].id,
+        status: 'COMPLETED',
+        address: 'Thamel, Kathmandu',
+        notes: 'Electrical safety check',
+        total: 650,
+        paid: true,
+        scheduledAt: new Date('2024-01-17T14:00:00Z'),
+        completedAt: new Date('2024-01-17T15:15:00Z')
+      }
+    })
+  ]);
+
+  console.log('📅 Created sample bookings');
+
+  // Create sample reviews
+  const reviews = await Promise.all([
+    prisma.review.create({
+      data: {
+        rating: 5,
+        text: 'Excellent service! Bikash was very professional and fixed the plumbing issue quickly. Highly recommended!',
+        mediaUrls: ['/reviews/plumbing-1.jpg'],
+        verified: true,
+        bookingId: bookings[0].id,
+        userId: users[0].id,
+        serviceId: services[0].id
+      }
+    }),
+    prisma.review.create({
+      data: {
+        rating: 4,
+        text: 'Great cleaning service. Mina did a thorough job and the apartment looks spotless now.',
+        mediaUrls: ['/reviews/cleaning-1.jpg'],
+        verified: true,
+        bookingId: bookings[1].id,
+        userId: users[1].id,
+        serviceId: services[2].id
+      }
+    }),
+    prisma.review.create({
+      data: {
+        rating: 5,
+        text: 'Very professional electrical work. Rajesh was punctual and completed the safety check efficiently.',
+        mediaUrls: [],
+        verified: true,
+        bookingId: bookings[2].id,
+        userId: users[2].id,
+        serviceId: services[1].id
+      }
+    })
+  ]);
+
+  console.log('⭐ Created sample reviews');
+
+  // Create sample referrals
+  const referrals = await Promise.all([
+    prisma.referral.create({
+      data: {
+        code: 'WELCOME2024',
+        referrerId: users[0].id
+      }
+    }),
+    prisma.referral.create({
+      data: {
+        code: 'SAVINGS50',
+        referrerId: users[1].id
+      }
+    })
+  ]);
+
+  console.log('🎁 Created sample referrals');
+
+  // Create public metrics
+  const metrics = await Promise.all([
+    prisma.publicMetric.create({
+      data: {
+        key: 'jobs_completed',
+        value: '1247'
+      }
+    }),
+    prisma.publicMetric.create({
+      data: {
+        key: 'avg_response_time',
+        value: '28 min'
+      }
+    }),
+    prisma.publicMetric.create({
+      data: {
+        key: 'satisfaction_percentage',
+        value: '96'
+      }
+    }),
+    prisma.publicMetric.create({
+      data: {
+        key: 'active_providers',
+        value: '89'
+      }
+    }),
+    prisma.publicMetric.create({
+      data: {
+        key: 'cities_covered',
+        value: '12'
+      }
+    })
+  ]);
+
+  console.log('📊 Created public metrics');
+
+  console.log('✅ Database seeding completed successfully!');
+  console.log(`📈 Created ${users.length} users, ${services.length} services, ${providers.length} providers, ${bookings.length} bookings, ${reviews.length} reviews, ${referrals.length} referrals, and ${metrics.length} metrics`);
 }
 
-// Run the seed function
-seedDatabase()
-  .then(() => {
-    console.log('Seeding completed');
-    process.exit(0);
-  })
-  .catch((error) => {
-    console.error('Seeding failed:', error);
+main()
+  .catch((e) => {
+    console.error('❌ Error during seeding:', e);
     process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
   });
