@@ -12,22 +12,24 @@ interface CounterData {
 export function CounterBar() {
   const [counters, setCounters] = useState<CounterData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [lastSuccessfulFetch, setLastSuccessfulFetch] = useState<CounterData | null>(null);
 
-  const fetchCounters = async () => {
+    const fetchCounters = async () => {
     try {
-      setError(null);
       const response = await fetch('/api/counters');
-      
+
       if (!response.ok) {
         throw new Error('Failed to fetch counters');
       }
 
       const result = await response.json();
-      setCounters(result.data);
+      if (result.data) {
+        setCounters(result.data);
+        setLastSuccessfulFetch(result.data);
+      }
     } catch (err) {
-      console.error('Error fetching counters:', err);
-      setError(err instanceof Error ? err.message : 'Failed to fetch counters');
+      // Silently handle errors to prevent console spam
+      // Keep last known good values
     } finally {
       setLoading(false);
     }
@@ -61,18 +63,15 @@ export function CounterBar() {
     );
   }
 
-  if (error || !counters) {
+  // Use last known good values if current fetch failed
+  const displayCounters = counters || lastSuccessfulFetch;
+  
+  if (!displayCounters) {
     return (
       <div className="bg-gradient-to-r from-blue-50 to-indigo-50 py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center text-gray-500">
-            <p>Unable to load trust metrics</p>
-            <button
-              onClick={fetchCounters}
-              className="mt-2 text-blue-600 hover:text-blue-800 text-sm"
-            >
-              Try again
-            </button>
+            <p>Loading trust metrics...</p>
           </div>
         </div>
       </div>
@@ -90,7 +89,7 @@ export function CounterBar() {
               <span className="text-sm font-medium text-gray-600">Jobs Completed</span>
             </div>
             <div className="text-3xl font-bold text-gray-900">
-              {counters.jobsCompleted.toLocaleString()}
+              {displayCounters.jobsCompleted.toLocaleString()}
             </div>
             <p className="text-sm text-gray-500 mt-1">Successfully delivered</p>
           </div>
@@ -102,7 +101,7 @@ export function CounterBar() {
               <span className="text-sm font-medium text-gray-600">Avg Response</span>
             </div>
             <div className="text-3xl font-bold text-gray-900">
-              {counters.avgResponseM}m
+              {displayCounters.avgResponseM}m
             </div>
             <p className="text-sm text-gray-500 mt-1">Quick service delivery</p>
           </div>
@@ -114,7 +113,7 @@ export function CounterBar() {
               <span className="text-sm font-medium text-gray-600">Satisfaction</span>
             </div>
             <div className="text-3xl font-bold text-gray-900">
-              {counters.satisfaction}%
+              {displayCounters.satisfaction}%
             </div>
             <p className="text-sm text-gray-500 mt-1">Customer happiness</p>
           </div>
@@ -125,7 +124,7 @@ export function CounterBar() {
           <div className="inline-flex items-center px-4 py-2 bg-white rounded-full shadow-sm border border-gray-200">
             <CheckCircleIcon className="h-5 w-5 text-green-600 mr-2" />
             <span className="text-sm font-medium text-gray-700">
-              Trusted by {Math.floor(counters.jobsCompleted / 100)}+ customers
+              Trusted by {Math.floor(displayCounters.jobsCompleted / 100)}+ customers
             </span>
           </div>
         </div>

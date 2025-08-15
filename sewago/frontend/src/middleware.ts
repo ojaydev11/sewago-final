@@ -136,7 +136,8 @@ export const config = {
      * - favicon.ico (favicon file)
      * - public (public files)
      * - API routes
+     * - site.webmanifest (PWA manifest)
      */
-    '/((?!_next/static|_next/image|_next/data|_rsc|_flight|favicon.ico|public|api|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    '/((?!_next/static|_next/image|_next/data|_rsc|_flight|favicon.ico|public|api|site.webmanifest|.*\\.(?:svg|png|jpg|jpeg|gif|webp|json|webmanifest)$).*)',
   ],
 };

@@ -165,7 +165,6 @@ export default async function RootLayout({
         <NextIntlClientProvider messages={messages}>
           <AuthProvider>
             <ReactQueryProvider>
-              <Header />
               <main className="min-h-screen">
                 {children}
               </main>

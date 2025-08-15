@@ -1,3 +1,5 @@
+import Header from '@/components/site/Header';
+
 export default function PublicLayout({
   children,
 }: {
@@ -5,7 +7,8 @@ export default function PublicLayout({
 }) {
   return (
     <>
-      {/* Public routes use the global header from root layout */}
+      {/* Public routes use the global header */}
+      <Header />
       {children}
     </>
   );
