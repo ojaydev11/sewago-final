@@ -1,105 +1,25 @@
 import http from "http";
-import { Server as SocketIOServer } from "socket.io";
 import { env } from "./config/env.js";
 import { connectToDatabase } from "./config/db.js";
 import { createApp } from "./app.js";
+import { createSocketServer } from "./socket-server.js";
 import { pathToFileURL } from "url";
 
 export async function bootstrap() {
   await connectToDatabase();
 
   const server = http.createServer();
-  const io = new SocketIOServer(server, {
-    cors: { origin: env.clientOrigin, credentials: true },
-    path: "/ws/socket.io",
-  }).of("/ws");
   
+  // Create Socket.IO server
+  const io = createSocketServer(server);
+  
+  // Create Express app with Socket.IO instance
   const app = createApp(io);
   server.on('request', app);
   
-  // Redis adapter can be enabled by providing pub/sub clients; omitted for now
-
-  // Socket.io basic events for chat, live booking updates, and notifications
-  io.on("connection", (socket) => {
-    const { bookingId, providerId, userId } = socket.handshake.query;
-    
-    // Join booking room for real-time updates
-    if (bookingId) {
-      socket.join(`booking:${bookingId}`);
-    }
-    
-    // Join provider room for location updates
-    if (providerId) {
-      socket.join(`provider:${providerId}`);
-    }
-
-    // Join user room for notifications
-    if (userId) {
-      socket.join(`user:${userId}`);
-      console.log(`User ${userId} joined notification room`);
-    }
-
-    socket.on("join:booking", (bookingId: string) => {
-      socket.join(`booking:${bookingId}`);
-    });
-
-    socket.on("join:user", (userId: string) => {
-      socket.join(`user:${userId}`);
-      console.log(`User ${userId} joined notification room`);
-    });
-    
-    socket.on("message:send", (payload: { bookingId: string; message: any }) => {
-      io.to(`booking:${payload.bookingId}`).emit("message:new", payload.message);
-    });
-    
-    socket.on("booking:update", (payload: { bookingId: string; status: string }) => {
-      io.to(`booking:${payload.bookingId}`).emit("booking:status", payload.status);
-    });
-
-    // Real-time tracking events
-    socket.on("provider:location", (payload: { 
-      providerId: string; 
-      bookingId: string; 
-      location: { lat: number; lng: number; timestamp: Date } 
-    }) => {
-      // Broadcast location update to all clients tracking this booking
-      io.to(`booking:${payload.bookingId}`).emit("providerLocationUpdate", payload.location);
-    });
-
-    socket.on("provider:status", (payload: { 
-      providerId: string; 
-      bookingId: string; 
-      status: string; 
-      message: string 
-    }) => {
-      const statusUpdate = {
-        status: payload.status,
-        timestamp: new Date(),
-        message: payload.message
-      };
-      
-      // Broadcast status update to all clients tracking this booking
-      io.to(`booking:${payload.bookingId}`).emit("statusUpdate", statusUpdate);
-    });
-
-    // Notification events
-    socket.on("notification:subscribe", (userId: string) => {
-      socket.join(`user:${userId}`);
-      console.log(`User ${userId} subscribed to notifications`);
-    });
-
-    socket.on("notification:unsubscribe", (userId: string) => {
-      socket.leave(`user:${userId}`);
-      console.log(`User ${userId} unsubscribed from notifications`);
-    });
-
-    socket.on("disconnect", () => {
-      console.log(`Client disconnected: ${socket.id}`);
-    });
-  });
-
   server.listen(env.port, () => {
     console.log(`API on http://localhost:${env.port}/api`);
+    console.log(`WebSocket server ready on port ${env.port}`);
   });
 }
 

@@ -1,32 +1,20 @@
 import http from "http";
-import { Server as SocketIOServer } from "socket.io";
 import { env } from "./config/env.js";
 import { connectToDatabase } from "./config/db.js";
 import { createApp } from "./app.js";
+import { createSocketServer } from "./socket-server.js";
 import { pathToFileURL } from "url";
 export async function bootstrap() {
     await connectToDatabase();
-    const app = createApp();
-    const server = http.createServer(app);
-    const io = new SocketIOServer(server, {
-        cors: { origin: env.clientOrigin, credentials: true },
-        path: "/ws/socket.io",
-    }).of("/ws");
-    // Redis adapter can be enabled by providing pub/sub clients; omitted for now
-    // Socket.io basic events for chat and live booking updates
-    io.on("connection", (socket) => {
-        socket.on("join:booking", (bookingId) => {
-            socket.join(`booking:${bookingId}`);
-        });
-        socket.on("message:send", (payload) => {
-            io.to(`booking:${payload.bookingId}`).emit("message:new", payload.message);
-        });
-        socket.on("booking:update", (payload) => {
-            io.to(`booking:${payload.bookingId}`).emit("booking:status", payload.status);
-        });
-    });
+    const server = http.createServer();
+    // Create Socket.IO server
+    const io = createSocketServer(server);
+    // Create Express app with Socket.IO instance
+    const app = createApp(io);
+    server.on('request', app);
     server.listen(env.port, () => {
         console.log(`API on http://localhost:${env.port}/api`);
+        console.log(`WebSocket server ready on port ${env.port}`);
     });
 }
 const isDirectRun = (() => {

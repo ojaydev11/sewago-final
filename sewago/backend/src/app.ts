@@ -13,6 +13,7 @@ import { api } from "./routes/index.js";
 import mongoose from "mongoose";
 import { v4 as uuidv4 } from "uuid";
 import client from "prom-client";
+import NotificationService from "./lib/services/NotificationService.js";
 
 export function createApp(io?: any) {
   const app = express();
@@ -20,6 +21,10 @@ export function createApp(io?: any) {
   // Store Socket.IO instance for use in controllers
   if (io) {
     app.set('io', io);
+    
+    // Initialize NotificationService with Socket.IO instance
+    const notificationService = NotificationService.getInstance();
+    notificationService.setSocketIO(io);
   }
   app.set("trust proxy", true);
   app.use(cors({ origin: env.clientOrigin, credentials: true }));
@@ -138,14 +143,14 @@ export function createApp(io?: any) {
   app.use("/api", api);
   // Generic 404 for unknown API routes (after routers)
   app.use("/api", (_req, res, _next) => {
-    res.status(404).json({ message: "not_found", requestId: (res as any).locals?.requestId });
+    res.status(404).json({ message: "not_found", requestId: (res as any)?.locals?.requestId });
   });
   // Basic error handler for tests and development
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   app.use((err: unknown, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
     // eslint-disable-next-line no-console
-    console.error("Express error:", err, "reqId=", (res as any).locals?.requestId);
-    res.status(500).json({ message: "internal_error", requestId: (res as any).locals?.requestId });
+    console.error("Express error:", err, "reqId=", (res as any)?.locals?.requestId);
+    res.status(500).json({ message: "internal_error", requestId: (res as any)?.locals?.requestId });
   });
   return app;
 }

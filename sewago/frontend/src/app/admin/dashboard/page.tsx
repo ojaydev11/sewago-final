@@ -14,6 +14,8 @@ import {
   ChartBarIcon
 } from '@heroicons/react/24/outline';
 import { Button } from '@/components/ui/button';
+import BookingQueue from '@/components/admin/BookingQueue';
+import LiveProviderMap from '@/components/admin/LiveProviderMap';
 
 interface DashboardStats {
   totalBookings: number;
@@ -153,6 +155,12 @@ export default function AdminDashboard() {
             />
           </div>
         )}
+
+        {/* Live Operations Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          <BookingQueue maxBookings={5} />
+          <LiveProviderMap />
+        </div>
 
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">

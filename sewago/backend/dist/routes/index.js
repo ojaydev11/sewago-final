@@ -8,6 +8,9 @@ import * as Messages from "../controllers/messages.controller.js";
 import * as AI from "../controllers/ai.controller.js";
 import * as Payments from "../controllers/payments.controller.js";
 import * as Meta from "../controllers/meta.controller.js";
+import * as Tracking from "../controllers/tracking.controller.js";
+import * as Admin from "./admin.js";
+import uploadRouter from "./upload.js";
 export const api = Router();
 // Health
 api.get("/health", (_req, res) => res.json({ ok: true, service: "sewago-backend", env: process.env.NODE_ENV ?? "development" }));
@@ -39,6 +42,11 @@ api.get("/ai/suggest", AI.suggest);
 // Payments
 api.post("/payments/esewa/initiate", requireAuth(["user"]), Payments.esewaInitiate);
 api.post("/payments/khalti/initiate", requireAuth(["user"]), Payments.khaltiInitiate);
+// Provider Location API
+api.post("/provider/location", requireAuth(["provider"]), Tracking.updateProviderLocation);
+api.post("/provider/status", requireAuth(["provider"]), Tracking.updateProviderStatus);
+// Admin routes
+api.use("/admin", Admin.adminRouter);
 // Admin test-only endpoints (protected by header X-Seed-Key)
 api.post("/admin/seed", async (req, res) => {
     if (process.env.NODE_ENV === "production" && process.env.ALLOW_SEEDING !== "true") {
@@ -73,7 +81,6 @@ api.post("/admin/seed", async (req, res) => {
     const existingService = await ServiceModel.findOne({ providerId: provider._id });
     const service = existingService ?? (await ServiceModel.create({
         title: "Basic Plumbing",
-        category: "plumbing",
         description: "Fix leaks and clogs",
         basePrice: 1500,
         images: [],
@@ -99,3 +106,10 @@ api.post("/admin/make-provider", async (req, res) => {
 // Meta
 api.get("/meta/categories", Meta.listCategories);
 api.get("/categories", Meta.listCategories);
+// Tracking
+api.post("/tracking/location", requireAuth(["provider"]), Tracking.updateProviderLocation);
+api.post("/tracking/status", requireAuth(["provider"]), Tracking.updateProviderStatus);
+api.get("/tracking/:bookingId", requireAuth(["user", "provider"]), Tracking.getTrackingInfo);
+api.get("/tracking/:bookingId/eta", requireAuth(["user", "provider"]), Tracking.getETA);
+// File Upload
+api.use("/upload", uploadRouter);
