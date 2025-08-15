@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { Suspense } from 'react';
 import './globals.css';
-import Header from '@/components/site/Header';
+
 import Analytics from '@/components/Analytics';
 import CookieConsent from '@/components/CookieConsent';
 import EmergencyServiceButton from '@/components/EmergencyServiceButton';
@@ -165,8 +165,7 @@ export default async function RootLayout({
         <NextIntlClientProvider messages={messages}>
           <AuthProvider>
             <ReactQueryProvider>
-              <Header />
-              <main className="min-h-screen">
+              <main className="min-h-screen bg-gray-50">
                 {children}
               </main>
               

@@ -36,7 +36,7 @@ export function middleware(req: NextRequest) {
 export const config = { 
   matcher: [
     // Enable internationalization for all locales
-    '/((?!api|_next|_vercel|.*\\..*).*)',
+    '/((?!api|_next|_vercel|site.webmanifest|.*\\..*).*)',
     // Also match API routes that need authentication
     '/services/:path*/book',
     '/bookings'

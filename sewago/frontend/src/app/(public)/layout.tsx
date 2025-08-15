@@ -1,3 +1,6 @@
+import GlobalHeader from '@/components/site/Header';
+import Footer from '@/components/site/Footer';
+
 export default function PublicLayout({
   children,
 }: {
@@ -5,8 +8,9 @@ export default function PublicLayout({
 }) {
   return (
     <>
-      {/* Public routes use the global header from root layout */}
+      <GlobalHeader />
       {children}
+      <Footer />
     </>
   );
 }
