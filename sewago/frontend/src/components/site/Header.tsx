@@ -24,8 +24,8 @@ export default function Header() {
 
   return (
     <header className='w-full relative z-50'>
-      {/* Background with glassmorphism */}
-      <div className='absolute inset-0 glass-card border-b border-white/20'></div>
+      {/* Background with better contrast */}
+      <div className='absolute inset-0 bg-black/80 backdrop-blur-md border-b border-white/20'></div>
       
       <nav className='relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 flex items-center justify-between'>
         {/* Logo with enhanced styling */}
@@ -44,25 +44,25 @@ export default function Header() {
 
         {/* Desktop Navigation */}
         <div className='hidden lg:flex items-center gap-8'>
-          <Link href={createLocalizedLink('/')} className='text-white hover:text-accent transition-colors duration-200 font-medium'>
+          <Link href={createLocalizedLink('/')} className='text-white hover:text-accent transition-colors duration-200 font-medium text-shadow-sm'>
             {t('nav.home')}
           </Link>
-          <Link href={createLocalizedLink('/services')} className='text-white hover:text-accent transition-colors duration-200 font-medium'>
+          <Link href={createLocalizedLink('/services')} className='text-white hover:text-accent transition-colors duration-200 font-medium text-shadow-sm'>
             {t('nav.services')}
           </Link>
-          <Link href={createLocalizedLink('/service-bundles')} className='text-white hover:text-accent transition-colors duration-200 font-medium'>
+          <Link href={createLocalizedLink('/service-bundles')} className='text-white hover:text-accent transition-colors duration-200 font-medium text-shadow-sm'>
             Service Bundles
           </Link>
-          <Link href={createLocalizedLink('/about')} className='text-white hover:text-accent transition-colors duration-200 font-medium'>
+          <Link href={createLocalizedLink('/about')} className='text-white hover:text-accent transition-colors duration-200 font-medium text-shadow-sm'>
             {t('nav.about')}
           </Link>
-          <Link href={createLocalizedLink('/contact')} className='text-white hover:text-accent transition-colors duration-200 font-medium'>
+          <Link href={createLocalizedLink('/contact')} className='text-white hover:text-accent transition-colors duration-200 font-medium text-shadow-sm'>
             {t('nav.contact')}
           </Link>
-          <Link href={createLocalizedLink('/faqs')} className='text-white hover:text-accent transition-colors duration-200 font-medium'>
+          <Link href={createLocalizedLink('/faqs')} className='text-white hover:text-accent transition-colors duration-200 font-medium text-shadow-sm'>
             {t('nav.faq')}
           </Link>
-          <Link href={createLocalizedLink('/pricing')} className='text-white hover:text-accent transition-colors duration-200 font-medium'>
+          <Link href={createLocalizedLink('/pricing')} className='text-white hover:text-accent transition-colors duration-200 font-medium text-shadow-sm'>
             {t('nav.pricing')}
           </Link>
         </div>
