@@ -28,4 +28,5 @@ export function requireAuth(
   };
 }
 
-
+// Export authMiddleware for compatibility with existing imports
+export const authMiddleware = requireAuth();
