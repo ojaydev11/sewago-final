@@ -19,9 +19,9 @@ export async function bootstrap() {
   
   // Redis adapter can be enabled by providing pub/sub clients; omitted for now
 
-  // Socket.io basic events for chat and live booking updates
+  // Socket.io basic events for chat, live booking updates, and notifications
   io.on("connection", (socket) => {
-    const { bookingId, providerId } = socket.handshake.query;
+    const { bookingId, providerId, userId } = socket.handshake.query;
     
     // Join booking room for real-time updates
     if (bookingId) {
@@ -33,8 +33,19 @@ export async function bootstrap() {
       socket.join(`provider:${providerId}`);
     }
 
+    // Join user room for notifications
+    if (userId) {
+      socket.join(`user:${userId}`);
+      console.log(`User ${userId} joined notification room`);
+    }
+
     socket.on("join:booking", (bookingId: string) => {
       socket.join(`booking:${bookingId}`);
+    });
+
+    socket.on("join:user", (userId: string) => {
+      socket.join(`user:${userId}`);
+      console.log(`User ${userId} joined notification room`);
     });
     
     socket.on("message:send", (payload: { bookingId: string; message: any }) => {
@@ -69,6 +80,17 @@ export async function bootstrap() {
       
       // Broadcast status update to all clients tracking this booking
       io.to(`booking:${payload.bookingId}`).emit("statusUpdate", statusUpdate);
+    });
+
+    // Notification events
+    socket.on("notification:subscribe", (userId: string) => {
+      socket.join(`user:${userId}`);
+      console.log(`User ${userId} subscribed to notifications`);
+    });
+
+    socket.on("notification:unsubscribe", (userId: string) => {
+      socket.leave(`user:${userId}`);
+      console.log(`User ${userId} unsubscribed from notifications`);
     });
 
     socket.on("disconnect", () => {
