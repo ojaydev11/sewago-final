@@ -133,3 +133,5 @@ export function CounterBar() {
     </div>
   );
 }
+
+export default CounterBar;
