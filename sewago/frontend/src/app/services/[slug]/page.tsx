@@ -7,6 +7,9 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { MapPin, Star, Clock, Shield, CheckCircle, ArrowLeft } from 'lucide-react';
 import { getServiceBySlug } from '@/lib/services';
+import { formatNPR } from '@/lib/currency';
+import ServicePromises from '@/components/ServicePromises';
+import LateCreditCalculator from '@/components/LateCreditCalculator';
 
 interface ServiceDetailPageProps {
   params: {
@@ -95,7 +98,7 @@ export default async function ServiceDetailPage({ params }: ServiceDetailPagePro
                 </div>
                 <div className="text-right">
                   <div className="text-3xl font-bold text-primary mb-1">
-                    From Rs {service.basePrice}
+                    {formatNPR(service.basePrice)}
                   </div>
                   <div className="text-sm text-gray-500">Starting price</div>
                 </div>
@@ -184,6 +187,11 @@ export default async function ServiceDetailPage({ params }: ServiceDetailPagePro
             </div>
           </div>
 
+          {/* Service Promises & Guarantees */}
+          <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
+            <ServicePromises serviceSlug={slug} />
+          </div>
+
           {/* Sidebar */}
           <div className="lg:col-span-1">
             {/* Booking Card */}
@@ -229,6 +237,14 @@ export default async function ServiceDetailPage({ params }: ServiceDetailPagePro
                   </p>
                 </div>
               </CardContent>
+            </Card>
+
+            {/* Late Credit Calculator */}
+            <Card className="mt-6">
+              <LateCreditCalculator 
+                serviceSlug={slug} 
+                basePrice={service.basePrice} 
+              />
             </Card>
 
             {/* Contact Support */}

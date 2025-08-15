@@ -2,7 +2,12 @@ import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
 import SearchBar from '@/components/SearchBar';
 import ServicesGrid from '@/components/ServicesGrid';
+import LiveCounters from '@/components/LiveCounters';
+import CustomerReviews from '@/components/CustomerReviews';
+import TrustIndicators from '@/components/TrustIndicators';
 import SchemaMarkup from '@/components/SchemaMarkup';
+import VerifiedReviewsCarousel from '@/components/VerifiedReviewsCarousel';
+import CategoriesGrid from '@/components/CategoriesGrid';
 import { homepageSchema } from '@/lib/schema';
 
 export default function Home() {
@@ -30,6 +35,31 @@ export default function Home() {
           {/* Services section with improved spacing */}
           <div className='relative z-10 bg-transparent'>
             <ServicesGrid />
+          </div>
+          
+          {/* Trust Layer - Live Counters */}
+          <div className='relative z-10 bg-white'>
+            <LiveCounters />
+          </div>
+          
+          {/* Trust Layer - Verified Reviews Carousel */}
+          <div className='relative z-10 bg-transparent'>
+            <VerifiedReviewsCarousel />
+          </div>
+          
+          {/* Service Categories Grid */}
+          <div className='relative z-10 bg-transparent'>
+            <CategoriesGrid />
+          </div>
+          
+          {/* Trust Layer - Customer Reviews */}
+          <div className='relative z-10 bg-transparent'>
+            <CustomerReviews />
+          </div>
+          
+          {/* Trust Layer - Trust Indicators */}
+          <div className='relative z-10 bg-white'>
+            <TrustIndicators variant="default" />
           </div>
         </div>
         

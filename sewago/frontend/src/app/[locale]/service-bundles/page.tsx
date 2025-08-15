@@ -1,36 +1,83 @@
 'use client';
 
 import React, { useState } from 'react';
-import { ServiceBundle, BundleService } from '@/models/ServiceBundle';
-import { sampleServiceBundles } from '@/models/ServiceBundle';
+import { ServiceBundle } from '@/models/ServiceBundle';
 import ServiceBundleCard from '@/components/ServiceBundleCard';
+import { formatNPR } from '@/lib/currency';
 import { useRouter } from 'next/navigation';
 import { 
-  MagnifyingGlassIcon, 
-  FunnelIcon, 
-  SparklesIcon,
-  TagIcon,
-  ClockIcon,
-  CurrencyRupeeIcon
-} from '@heroicons/react/24/outline';
+  Search, 
+  Filter, 
+  Sparkles,
+  Tag,
+  Clock,
+  IndianRupee
+} from 'lucide-react';
+
+// Force dynamic rendering to avoid build-time issues
+export const dynamic = 'force-dynamic';
+
+// Mock data for build-time safety using the correct interface
+const mockBundles: ServiceBundle[] = [
+  {
+    id: 'spring-cleaning-bundle',
+    name: 'Spring Cleaning Bundle',
+    description: 'Complete home cleaning package including deep cleaning, window washing, and organization',
+    services: [
+      { serviceId: 'house-cleaning', serviceName: 'House Cleaning', serviceCategory: 'cleaning', estimatedDuration: 120, individualPrice: 1500, isRequired: true },
+      { serviceId: 'window-cleaning', serviceName: 'Window Cleaning', serviceCategory: 'cleaning', estimatedDuration: 90, individualPrice: 800, isRequired: true },
+      { serviceId: 'organization', serviceName: 'Home Organization', serviceCategory: 'cleaning', estimatedDuration: 180, individualPrice: 1200, isRequired: true }
+    ],
+    originalPrice: 3500,
+    discountedPrice: 2800,
+    discountPercentage: 20,
+    category: 'cleaning',
+    tags: ['cleaning', 'spring', 'bundle', 'popular'],
+    isActive: true,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  },
+  {
+    id: 'electrical-maintenance-bundle',
+    name: 'Electrical Maintenance Bundle',
+    description: 'Comprehensive electrical safety check and maintenance package',
+    services: [
+      { serviceId: 'electrical-inspection', serviceName: 'Electrical Inspection', serviceCategory: 'electrical', estimatedDuration: 120, individualPrice: 2000, isRequired: true },
+      { serviceId: 'wiring-repair', serviceName: 'Wiring Repair', serviceCategory: 'electrical', estimatedDuration: 90, individualPrice: 1500, isRequired: true },
+      { serviceId: 'safety-upgrade', serviceName: 'Safety Upgrades', serviceCategory: 'electrical', estimatedDuration: 180, individualPrice: 2500, isRequired: true }
+    ],
+    originalPrice: 6000,
+    discountedPrice: 4800,
+    discountPercentage: 20,
+    category: 'electrical',
+    tags: ['electrical', 'maintenance', 'safety', 'limited'],
+    isActive: true,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  }
+];
 
 export default function ServiceBundlesPage() {
   const [selectedBundle, setSelectedBundle] = useState<ServiceBundle | null>(null);
-  const [selectedServices, setSelectedServices] = useState<BundleService[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [sortBy, setSortBy] = useState<'price' | 'discount' | 'name'>('price');
   const router = useRouter();
-
+  
+  // Use mock data for build-time safety
+  const bundles = mockBundles;
   const categories = [
-    { id: 'all', name: 'All Categories', count: sampleServiceBundles.length },
-    { id: 'home_setup', name: 'Home Setup', count: sampleServiceBundles.filter(b => b.category === 'home_setup').length },
-    { id: 'office_maintenance', name: 'Office Maintenance', count: sampleServiceBundles.filter(b => b.category === 'office_maintenance').length },
-    { id: 'emergency', name: 'Emergency Services', count: sampleServiceBundles.filter(b => b.category === 'emergency').length }
+    { id: 'all', name: 'All Categories', count: bundles.length },
+    { id: 'cleaning', name: 'Cleaning', count: bundles.filter(b => b.category === 'cleaning').length },
+    { id: 'electrical', name: 'Electrical', count: bundles.filter(b => b.category === 'electrical').length },
+    { id: 'home_setup', name: 'Home Setup', count: bundles.filter(b => b.category === 'home_setup').length },
+    { id: 'office_maintenance', name: 'Office Maintenance', count: bundles.filter(b => b.category === 'office_maintenance').length }
   ];
 
-  const filteredBundles = sampleServiceBundles
+  const filteredBundles = (bundles || [])
     .filter(bundle => {
+      if (!bundle || !bundle.name || !bundle.description || !bundle.tags) return false;
+      
       const matchesSearch = bundle.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                            bundle.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
                            bundle.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
@@ -52,9 +99,8 @@ export default function ServiceBundlesPage() {
       }
     });
 
-  const handleBundleSelect = (bundle: ServiceBundle, services: BundleService[]) => {
+  const handleBundleSelect = (bundle: ServiceBundle, services: any[]) => {
     setSelectedBundle(bundle);
-    setSelectedServices(services);
   };
 
   const handleBookBundle = () => {
@@ -62,12 +108,12 @@ export default function ServiceBundlesPage() {
     
     // Store selected bundle data in localStorage or state management
     const bundleOrder = {
-      bundleId: selectedBundle.id,
-      bundleName: selectedBundle.name,
-      services: selectedServices,
-      totalAmount: selectedServices.reduce((sum, service) => sum + service.individualPrice, 0),
-      finalAmount: selectedServices.reduce((sum, service) => sum + service.individualPrice, 0) - 
-                  (selectedServices.reduce((sum, service) => sum + service.individualPrice, 0) * selectedBundle.discountPercentage / 100)
+      bundleId: selectedBundle.id || '',
+      bundleName: selectedBundle.name || '',
+      services: selectedBundle.services || [],
+      totalAmount: selectedBundle.originalPrice || 0,
+      finalAmount: selectedBundle.discountedPrice || 0,
+      savings: (selectedBundle.originalPrice || 0) - (selectedBundle.discountedPrice || 0)
     };
     
     localStorage.setItem('selectedBundleOrder', JSON.stringify(bundleOrder));
@@ -76,8 +122,8 @@ export default function ServiceBundlesPage() {
     router.push('/book?type=bundle');
   };
 
-  const totalSavings = sampleServiceBundles.reduce((sum, bundle) => {
-    return sum + (bundle.originalPrice - bundle.discountedPrice);
+  const totalSavings = (bundles || []).reduce((sum, bundle) => {
+    return sum + ((bundle?.originalPrice || 0) - (bundle?.discountedPrice || 0));
   }, 0);
 
   return (
@@ -87,7 +133,7 @@ export default function ServiceBundlesPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="text-center">
             <div className="flex items-center justify-center mb-4">
-              <SparklesIcon className="w-8 h-8 mr-3" />
+              <Sparkles className="w-8 h-8 mr-3" />
               <h1 className="text-4xl font-bold">Service Bundles</h1>
             </div>
             <p className="text-xl text-blue-100 max-w-3xl mx-auto">
@@ -97,16 +143,16 @@ export default function ServiceBundlesPage() {
             
             {/* Stats */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                <div className="text-2xl font-bold">{sampleServiceBundles.length}</div>
+              <div className="text-center">
+                <div className="text-3xl font-bold mb-2">{bundles.length}</div>
                 <div className="text-blue-100">Available Bundles</div>
               </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                <div className="text-2xl font-bold">₹{totalSavings.toLocaleString()}</div>
+              <div className="text-center">
+                <div className="text-3xl font-bold mb-2">{formatNPR(totalSavings)}</div>
                 <div className="text-blue-100">Total Savings</div>
               </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                <div className="text-2xl font-bold">20%</div>
+              <div className="text-center">
+                <div className="text-3xl font-bold mb-2">20%</div>
                 <div className="text-blue-100">Average Discount</div>
               </div>
             </div>
@@ -120,7 +166,7 @@ export default function ServiceBundlesPage() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             {/* Search */}
             <div className="relative">
-              <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
               <input
                 type="text"
                 placeholder="Search bundles..."
@@ -161,7 +207,7 @@ export default function ServiceBundlesPage() {
                 setSelectedCategory('all');
                 setSortBy('price');
               }}
-              className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+              className="px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
             >
               Clear Filters
             </button>
@@ -171,23 +217,23 @@ export default function ServiceBundlesPage() {
         {/* Selected Bundle Summary */}
         {selectedBundle && (
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between mb-4">
               <div>
                 <h3 className="text-lg font-semibold text-blue-900 mb-2">
                   Selected Bundle: {selectedBundle.name}
                 </h3>
                 <div className="flex items-center gap-4 text-sm text-blue-700">
                   <span className="flex items-center gap-1">
-                    <TagIcon className="w-4 h-4" />
-                    {selectedServices.length} services
+                    <Tag className="w-4 h-4" />
+                    {selectedBundle.services?.length || 0} services
                   </span>
                   <span className="flex items-center gap-1">
-                    <ClockIcon className="w-4 h-4" />
-                    {selectedServices.reduce((sum, service) => sum + service.estimatedDuration, 0)} min total
+                    <Clock className="w-4 h-4" />
+                    {selectedBundle.services?.reduce((sum, service) => sum + service.estimatedDuration, 0) || 0} min total
                   </span>
                   <span className="flex items-center gap-1">
-                    <CurrencyRupeeIcon className="w-4 h-4" />
-                    ₹{selectedServices.reduce((sum, service) => sum + service.individualPrice, 0).toLocaleString()} total
+                    <IndianRupee className="w-4 h-4" />
+                    Save {formatNPR((selectedBundle.originalPrice || 0) - (selectedBundle.discountedPrice || 0))} ({selectedBundle.discountPercentage || 0}%)
                   </span>
                 </div>
               </div>
@@ -195,9 +241,7 @@ export default function ServiceBundlesPage() {
                 <div className="text-right">
                   <div className="text-sm text-blue-600">Final Price</div>
                   <div className="text-2xl font-bold text-blue-900">
-                    ₹{selectedServices.reduce((sum, service) => sum + service.individualPrice, 0) - 
-                      (selectedServices.reduce((sum, service) => sum + service.individualPrice, 0) * selectedBundle.discountPercentage / 100)
-                    .toLocaleString()}
+                    {formatNPR(selectedBundle.discountedPrice || 0)}
                   </div>
                 </div>
                 <button
@@ -227,7 +271,7 @@ export default function ServiceBundlesPage() {
         {filteredBundles.length === 0 && (
           <div className="text-center py-12">
             <div className="text-gray-400 mb-4">
-              <FunnelIcon className="w-16 h-16 mx-auto" />
+              <Filter className="w-16 h-16 mx-auto" />
             </div>
             <h3 className="text-lg font-medium text-gray-900 mb-2">No bundles found</h3>
             <p className="text-gray-600">

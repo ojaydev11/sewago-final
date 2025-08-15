@@ -1,179 +1,182 @@
 'use client';
 
 import React, { useState } from 'react';
-import { ServiceBundle, BundleService } from '../models/ServiceBundle';
-import { CheckIcon, XMarkIcon, TagIcon, ClockIcon, MapPinIcon } from '@heroicons/react/24/outline';
-import { StarIcon } from '@heroicons/react/24/solid';
+import { ServiceBundle } from '@/models/ServiceBundle';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Clock, Users, Star, CheckCircle, Gift, Eye, EyeOff, AlertCircle } from 'lucide-react';
+import { formatNPR } from '@/lib/currency';
 
 interface ServiceBundleCardProps {
   bundle: ServiceBundle;
-  onSelect: (bundle: ServiceBundle, selectedServices: BundleService[]) => void;
+  onSelect?: (bundle: ServiceBundle, services: any[]) => void;
   isSelected?: boolean;
 }
 
-export default function ServiceBundleCard({ bundle, onSelect, isSelected = false }: ServiceBundleCardProps) {
-  const [selectedServices, setSelectedServices] = useState<BundleService[]>(
-    bundle.services.filter(service => service.isRequired)
-  );
+export default function ServiceBundleCard({ 
+  bundle, 
+  onSelect, 
+  isSelected = false
+}: ServiceBundleCardProps) {
+  const [showDetails, setShowDetails] = useState(false);
 
-  const handleServiceToggle = (service: BundleService) => {
-    if (service.isRequired) return; // Required services cannot be toggled
-    
-    setSelectedServices(prev => {
-      const isSelected = prev.some(s => s.serviceId === service.serviceId);
-      if (isSelected) {
-        return prev.filter(s => s.serviceId !== service.serviceId);
-      } else {
-        return [...prev, service];
-      }
-    });
-  };
-
-  const calculateSelectedPrice = () => {
-    const selectedTotal = selectedServices.reduce((sum, service) => sum + service.individualPrice, 0);
-    const originalTotal = bundle.services.reduce((sum, service) => sum + service.individualPrice, 0);
-    const discount = originalTotal - bundle.discountedPrice;
-    const discountRatio = discount / originalTotal;
-    return selectedTotal - (selectedTotal * discountRatio);
-  };
-
-  const selectedPrice = calculateSelectedPrice();
-  const savings = selectedServices.reduce((sum, service) => sum + service.individualPrice, 0) - selectedPrice;
+  // Calculate derived values
+  const savings = bundle.originalPrice - bundle.discountedPrice;
+  const savingsPercentage = bundle.discountPercentage;
+  const totalDuration = bundle.services.reduce((sum, service) => sum + service.estimatedDuration, 0);
 
   return (
-    <div className={`bg-white rounded-xl shadow-lg border-2 transition-all duration-200 hover:shadow-xl ${
-      isSelected ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300'
+    <Card className={`transition-all duration-200 hover:shadow-lg ${
+      isSelected ? 'ring-2 ring-blue-500 bg-blue-50' : ''
     }`}>
-      {/* Header */}
-      <div className="p-6 border-b border-gray-100">
-        <div className="flex items-start justify-between mb-3">
-          <div>
-            <h3 className="text-xl font-bold text-gray-900 mb-2">{bundle.name}</h3>
-            <p className="text-gray-600 text-sm leading-relaxed">{bundle.description}</p>
+      <CardHeader>
+        <div className="flex items-start justify-between">
+          <div className="flex-1">
+            <CardTitle className="text-xl mb-2">{bundle.name}</CardTitle>
+            <CardDescription className="text-sm leading-relaxed">
+              {bundle.description}
+            </CardDescription>
           </div>
-          {bundle.discountPercentage > 0 && (
-            <div className="bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm font-semibold">
-              {bundle.discountPercentage}% OFF
+          <div className="flex flex-col items-end gap-2">
+            <div className="text-right">
+              <div className="text-2xl font-bold text-gray-900">
+                {formatNPR(bundle.discountedPrice)}
+              </div>
+              <div className="text-sm text-gray-500 line-through">
+                {formatNPR(bundle.originalPrice)}
+              </div>
+              <div className="text-sm font-semibold text-green-600">
+                Save {formatNPR(savings)} ({savingsPercentage}%)
+              </div>
             </div>
-          )}
+          </div>
         </div>
         
         {/* Tags */}
-        <div className="flex flex-wrap gap-2 mb-4">
+        <div className="flex flex-wrap gap-2">
           {bundle.tags.map((tag, index) => (
-            <span
-              key={index}
-              className="bg-gray-100 text-gray-700 px-2 py-1 rounded-md text-xs font-medium"
-            >
+            <Badge key={index} variant="outline" className="text-xs">
               {tag}
-            </span>
+            </Badge>
           ))}
         </div>
-
-        {/* Pricing */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-baseline gap-2">
-            <span className="text-3xl font-bold text-gray-900">
-              ₹{selectedPrice.toLocaleString()}
-            </span>
-            {savings > 0 && (
-              <span className="text-lg text-gray-500 line-through">
-                ₹{selectedServices.reduce((sum, service) => sum + service.individualPrice, 0).toLocaleString()}
-              </span>
-            )}
-          </div>
-          {savings > 0 && (
-            <div className="text-green-600 text-sm font-semibold">
-              Save ₹{savings.toLocaleString()}
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Services List */}
-      <div className="p-6">
-        <h4 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
-          <TagIcon className="w-5 h-5 text-blue-500" />
-          Services Included
-        </h4>
-        
-        <div className="space-y-3 mb-6">
-          {bundle.services.map((service) => {
-            const isServiceSelected = selectedServices.some(s => s.serviceId === service.serviceId);
-            const isRequired = service.isRequired;
-            
-            return (
-              <div
-                key={service.serviceId}
-                className={`flex items-center justify-between p-3 rounded-lg border transition-colors ${
-                  isServiceSelected 
-                    ? 'border-blue-200 bg-blue-50' 
-                    : 'border-gray-200 hover:border-gray-300'
-                }`}
-              >
-                <div className="flex items-center gap-3">
-                  <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                    isRequired 
-                      ? 'border-blue-500 bg-blue-500' 
-                      : isServiceSelected 
-                        ? 'border-blue-500 bg-blue-500' 
-                        : 'border-gray-300'
-                  }`}>
-                    {isRequired || isServiceSelected ? (
-                      <CheckIcon className="w-3 h-3 text-white" />
-                    ) : (
-                      <XMarkIcon className="w-3 h-3 text-gray-400" />
-                    )}
-                  </div>
-                  
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <span className="font-medium text-gray-900">{service.serviceName}</span>
-                      {isRequired && (
-                        <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
-                          Required
-                        </span>
-                      )}
-                    </div>
-                    <div className="flex items-center gap-4 text-sm text-gray-600 mt-1">
-                      <span className="flex items-center gap-1">
-                        <ClockIcon className="w-4 h-4" />
-                        {service.estimatedDuration} min
-                      </span>
-                      <span>₹{service.individualPrice.toLocaleString()}</span>
-                    </div>
-                  </div>
-                </div>
-                
-                {!isRequired && (
-                  <button
-                    onClick={() => handleServiceToggle(service)}
-                    className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
-                      isServiceSelected
-                        ? 'bg-blue-100 text-blue-800 hover:bg-blue-200'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                    }`}
-                  >
-                    {isServiceSelected ? 'Remove' : 'Add'}
-                  </button>
-                )}
+      </CardHeader>
+      
+      <CardContent>
+        {/* Services Included */}
+        <div className="mb-4">
+          <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+            <CheckCircle className="h-4 w-4 text-blue-500" />
+            Services Included ({bundle.services.length})
+          </h4>
+          <div className="space-y-2">
+            {bundle.services.map((service, index) => (
+              <div key={index} className="flex items-center justify-between text-sm">
+                <span className="text-gray-700">{service.serviceName}</span>
+                <span className="text-gray-500">
+                  {service.estimatedDuration} min
+                </span>
               </div>
-            );
-          })}
+            ))}
+          </div>
         </div>
 
-        {/* Action Button */}
-        <button
-          onClick={() => onSelect(bundle, selectedServices)}
-          className={`w-full py-3 px-6 rounded-lg font-semibold transition-all duration-200 ${
-            isSelected
-              ? 'bg-blue-600 text-white hover:bg-blue-700'
-              : 'bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:from-blue-600 hover:to-purple-700'
-          }`}
-        >
-          {isSelected ? 'Selected' : `Book Bundle for ₹${selectedPrice.toLocaleString()}`}
-        </button>
-      </div>
-    </div>
+        {/* Bundle Details */}
+        <div className="mb-4">
+          <div className="grid grid-cols-2 gap-4 text-sm">
+            <div className="flex items-center gap-2">
+              <Clock className="h-4 w-4 text-gray-500" />
+              <span className="text-gray-600">Total Duration:</span>
+              <span className="font-medium">{totalDuration} min</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Users className="h-4 w-4 text-gray-500" />
+              <span className="text-gray-600">Services:</span>
+              <span className="font-medium">{bundle.services.length}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Bundle Benefits */}
+        <div className="mb-6">
+          <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+            <Gift className="h-4 w-4 text-green-500" />
+            Bundle Benefits
+          </h4>
+          <div className="space-y-2 text-sm">
+            <div className="flex items-center gap-2 text-gray-600">
+              <CheckCircle className="h-3 w-3 text-green-500" />
+              <span>Save {savingsPercentage}% compared to individual services</span>
+            </div>
+            <div className="flex items-center gap-2 text-gray-600">
+              <CheckCircle className="h-3 w-3 text-green-500" />
+              <span>Convenient package booking</span>
+            </div>
+            <div className="flex items-center gap-2 text-gray-600">
+              <CheckCircle className="h-3 w-3 text-green-500" />
+              <span>Priority scheduling</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="flex gap-3">
+          <Button 
+            className="flex-1" 
+            onClick={() => onSelect?.(bundle, bundle.services)}
+            disabled={!bundle.isActive}
+          >
+            {isSelected ? 'Selected' : 'Book This Bundle'}
+          </Button>
+          <Button 
+            variant="outline" 
+            onClick={() => setShowDetails(!showDetails)}
+            className="px-3"
+          >
+            {showDetails ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+          </Button>
+        </div>
+
+        {/* Additional Details (Expandable) */}
+        {showDetails && (
+          <div className="mt-4 pt-4 border-t border-gray-200">
+            <div className="grid grid-cols-2 gap-4 text-sm">
+              <div>
+                <span className="text-gray-600">Category:</span>
+                <span className="ml-2 font-medium capitalize">{bundle.category}</span>
+              </div>
+              <div>
+                <span className="text-gray-600">Status:</span>
+                <span className="ml-2 font-medium">{bundle.isActive ? 'Active' : 'Inactive'}</span>
+              </div>
+            </div>
+            
+            <div className="mt-3 p-3 bg-blue-50 rounded-lg border border-blue-200">
+              <div className="flex items-center gap-2 text-blue-800">
+                <CheckCircle className="h-4 w-4" />
+                <span className="text-sm font-medium">Bundle Details</span>
+              </div>
+              <p className="text-xs text-blue-700 mt-1">
+                This bundle includes {bundle.services.length} services with a total value of ₹{bundle.originalPrice.toLocaleString()}.
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* Unavailable Notice */}
+        {!bundle.isActive && (
+          <div className="mt-4 p-3 bg-red-50 rounded-lg border border-red-200">
+            <div className="flex items-center gap-2 text-red-800">
+              <AlertCircle className="h-4 w-4" />
+              <span className="text-sm font-medium">Bundle Unavailable</span>
+            </div>
+            <p className="text-xs text-red-700 mt-1">
+              This bundle is currently not available for booking.
+            </p>
+          </div>
+        )}
+      </CardContent>
+    </Card>
   );
 }
