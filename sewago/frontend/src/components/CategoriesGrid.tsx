@@ -3,6 +3,7 @@
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { formatNPR } from '@/lib/currency';
 import { 
   Wrench, 
   Zap, 
@@ -142,7 +143,7 @@ export default function CategoriesGrid() {
                     <div className="flex items-center justify-center gap-2 text-sm">
                       <span className="text-gray-500">From</span>
                       <span className="font-semibold text-green-600">
-                        ₹{category.basePrice}
+                        {formatNPR(category.basePrice)}
                       </span>
                     </div>
                     <div className="flex items-center justify-center gap-2 text-sm text-gray-500">

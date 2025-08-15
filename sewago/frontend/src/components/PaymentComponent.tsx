@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { useTranslations } from 'next-intl';
 import { CreditCard, Wallet, Shield, CheckCircle, Loader2, AlertCircle } from 'lucide-react';
+import { formatNPR } from '@/lib/currency';
 
 interface PaymentComponentProps {
   amount: number;
@@ -111,16 +112,16 @@ export default function PaymentComponent({
           <div className="space-y-3">
             <div className="flex justify-between items-center">
               <span className="text-white/80">Service Amount:</span>
-              <span className="font-semibold">Rs. {amount.toLocaleString()}</span>
+              <span className="font-semibold">{formatNPR(amount)}</span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-white/80">Platform Fee:</span>
-              <span className="font-semibold">Rs. {(amount * 0.05).toFixed(0)}</span>
+              <span className="font-semibold">{formatNPR(amount * 0.05)}</span>
             </div>
             <div className="border-t border-white/20 pt-3">
               <div className="flex justify-between items-center text-lg font-bold">
                 <span>Total Amount:</span>
-                <span className="text-accent">Rs. {(amount * 1.05).toFixed(0)}</span>
+                <span className="text-accent">{formatNPR(amount * 1.05)}</span>
               </div>
             </div>
           </div>

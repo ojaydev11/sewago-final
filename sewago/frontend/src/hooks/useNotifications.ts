@@ -48,27 +48,12 @@ export function useNotifications() {
   const socketRef = useRef<Socket | null>(null);
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Early return if notifications are disabled
-  if (!isNotificationsEnabled()) {
-    return {
-      notifications: [],
-      stats: null,
-      loading: false,
-      error: null,
-      fetchNotifications: async () => {},
-      fetchStats: async () => {},
-      markAsRead: async () => {},
-      markAsClicked: async () => {},
-      markAllAsRead: async () => {},
-      deleteNotification: async () => {},
-      createNotification: async () => {},
-      isConnected: false,
-    };
-  }
+  // Check if notifications are enabled
+  const notificationsEnabled = isNotificationsEnabled();
 
   // Initialize Socket.IO connection
   useEffect(() => {
-    if (!session?.user?.id || !isNotificationsEnabled()) return;
+    if (!session?.user?.id || !notificationsEnabled) return;
 
     const connectSocket = () => {
       try {
@@ -140,7 +125,7 @@ export function useNotifications() {
 
   // Fetch notifications
   const fetchNotifications = useCallback(async (filters: NotificationFilters = {}) => {
-    if (!session?.user?.id || !isNotificationsEnabled()) return;
+    if (!session?.user?.id || !notificationsEnabled) return;
 
     try {
       setLoading(true);
@@ -177,7 +162,7 @@ export function useNotifications() {
 
   // Fetch notification stats
   const fetchStats = useCallback(async () => {
-    if (!session?.user?.id || !isNotificationsEnabled()) return;
+    if (!session?.user?.id || !notificationsEnabled) return;
 
     try {
       const response = await fetch('/api/notifications/stats');
@@ -195,7 +180,7 @@ export function useNotifications() {
 
   // Mark notification as read
   const markAsRead = useCallback(async (notificationId: string) => {
-    if (!session?.user?.id || !isNotificationsEnabled()) return;
+    if (!session?.user?.id || !notificationsEnabled) return;
 
     try {
       const response = await fetch(`/api/notifications/${notificationId}`, {
@@ -227,7 +212,7 @@ export function useNotifications() {
 
   // Mark notification as clicked
   const markAsClicked = useCallback(async (notificationId: string) => {
-    if (!session?.user?.id || !isNotificationsEnabled()) return;
+    if (!session?.user?.id || !notificationsEnabled) return;
 
     try {
       const response = await fetch(`/api/notifications/${notificationId}`, {
@@ -256,7 +241,7 @@ export function useNotifications() {
 
   // Mark all notifications as read
   const markAllAsRead = useCallback(async () => {
-    if (!session?.user?.id || !isNotificationsEnabled()) return;
+    if (!session?.user?.id || !notificationsEnabled) return;
 
     try {
       const response = await fetch('/api/notifications/mark-all-read', {
@@ -282,7 +267,7 @@ export function useNotifications() {
 
   // Delete notification
   const deleteNotification = useCallback(async (notificationId: string) => {
-    if (!session?.user?.id || !isNotificationsEnabled()) return;
+    if (!session?.user?.id || !notificationsEnabled) return;
 
     try {
       const response = await fetch(`/api/notifications/${notificationId}`, {
@@ -311,7 +296,7 @@ export function useNotifications() {
 
   // Create notification
   const createNotification = useCallback(async (data: Omit<Notification, 'id' | 'createdAt' | 'readAt' | 'clickedAt'>) => {
-    if (!session?.user?.id || !isNotificationsEnabled()) return;
+    if (!session?.user?.id || !notificationsEnabled) return;
 
     try {
       const response = await fetch('/api/notifications', {
@@ -334,11 +319,29 @@ export function useNotifications() {
 
   // Initial fetch
   useEffect(() => {
-    if (session?.user?.id && isNotificationsEnabled()) {
+    if (session?.user?.id && notificationsEnabled) {
       fetchNotifications();
       fetchStats();
     }
-  }, [session?.user?.id, fetchNotifications, fetchStats]);
+  }, [session?.user?.id, notificationsEnabled, fetchNotifications, fetchStats]);
+
+  // Return early if notifications are disabled
+  if (!notificationsEnabled) {
+    return {
+      notifications: [],
+      stats: null,
+      loading: false,
+      error: null,
+      fetchNotifications: async () => {},
+      fetchStats: async () => {},
+      markAsRead: async () => {},
+      markAsClicked: async () => {},
+      markAllAsRead: async () => {},
+      deleteNotification: async () => {},
+      createNotification: async () => {},
+      isConnected: false,
+    };
+  }
 
   return {
     notifications,

@@ -7,11 +7,6 @@ import { formatDistanceToNow } from 'date-fns';
 import { isNotificationsEnabled } from '@/lib/featureFlags';
 
 export function NotificationBell() {
-  // Early return if notifications are disabled
-  if (!isNotificationsEnabled()) {
-    return null;
-  }
-
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const { notifications, stats, markAsRead, markAllAsRead, deleteNotification, isConnected } = useNotifications();
@@ -27,6 +22,11 @@ export function NotificationBell() {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  // Early return if notifications are disabled
+  if (!isNotificationsEnabled()) {
+    return null;
+  }
 
   const handleNotificationClick = async (notification: any) => {
     if (!notification.readAt) {

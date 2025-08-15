@@ -1,6 +1,8 @@
 // Internationalization for SewaGo
 // Supports English (en) and Nepali (ne)
 
+import { formatNPR } from './currency';
+
 export type Locale = 'en' | 'ne';
 
 // i18n Configuration
@@ -72,7 +74,7 @@ const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     
     // AI Responses
     'ai_booking_success': 'Booked: {service} for {date} at {time} in {district}',
-    'ai_quote_response': 'Estimated cost: Rs. {amount} for {service} in {district}',
+    'ai_quote_response': 'Estimated cost: {amount} for {service} in {district}',
     'ai_availability_response': 'Available slots: {slots}',
     'ai_cancellation_success': 'Booking {bookingId} cancelled successfully',
     'ai_no_info': "I don't have this information yet",
@@ -252,11 +254,8 @@ export function setLocaleCookie(locale: Locale): void {
 
 // Format currency based on locale
 export function formatCurrency(amount: number, locale: Locale = 'en'): string {
-  if (locale === 'ne') {
-    return `रु. ${amount.toLocaleString('ne-NP')}`;
-  }
-  
-  return `Rs. ${amount.toLocaleString('en-IN')}`;
+  // Use formatNPR for consistent NPR formatting across the platform
+  return formatNPR(amount);
 }
 
 // Format date based on locale

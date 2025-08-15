@@ -5,6 +5,7 @@ export const dynamic = 'force-dynamic';
 
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { api } from "@/lib/api";
+import { formatNPR } from "@/lib/currency";
 
 type Booking = { _id: string; status: string; price: number; createdAt: string };
 
@@ -17,7 +18,7 @@ export default function ProviderDashboard() {
         {data?.map((b) => (
           <div key={b._id} className="border rounded p-3 flex items-center justify-between">
             <span>{b.status}</span>
-            <span>Rs. {b.price}</span>
+            <span>{formatNPR(b.price)}</span>
             <button className="px-3 py-1 rounded bg-green-600 text-white" onClick={async () => { await api.patch(`/bookings/${b._id}/status`, { status: "completed" }); }}>Mark Completed</button>
           </div>
         ))}
