@@ -2,7 +2,7 @@ import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
 import SearchBar from '@/components/SearchBar';
 import ServicesGrid from '@/components/ServicesGrid';
-import LiveCounters from '@/components/LiveCounters';
+import CounterBar from '@/components/CounterBar';
 import CustomerReviews from '@/components/CustomerReviews';
 import TrustIndicators from '@/components/TrustIndicators';
 import SchemaMarkup from '@/components/SchemaMarkup';
@@ -37,9 +37,9 @@ export default function Home() {
             <ServicesGrid />
           </div>
           
-          {/* Trust Layer - Live Counters */}
-          <div className='relative z-10 bg-white'>
-            <LiveCounters />
+          {/* Trust Layer - CounterBar (replaces LiveCounters) */}
+          <div className='relative z-10'>
+            <CounterBar />
           </div>
           
           {/* Trust Layer - Verified Reviews Carousel */}
