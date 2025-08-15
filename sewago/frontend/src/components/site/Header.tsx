@@ -50,9 +50,6 @@ export default function Header() {
           <Link href={createLocalizedLink('/services')} className='text-white hover:text-accent transition-colors duration-200 font-medium text-shadow-sm'>
             {t('nav.services')}
           </Link>
-          <Link href={createLocalizedLink('/service-bundles')} className='text-white hover:text-accent transition-colors duration-200 font-medium text-shadow-sm'>
-            Service Bundles
-          </Link>
           <Link href={createLocalizedLink('/about')} className='text-white hover:text-accent transition-colors duration-200 font-medium text-shadow-sm'>
             {t('nav.about')}
           </Link>
@@ -62,8 +59,8 @@ export default function Header() {
           <Link href={createLocalizedLink('/faqs')} className='text-white hover:text-accent transition-colors duration-200 font-medium text-shadow-sm'>
             {t('nav.faq')}
           </Link>
-          <Link href={createLocalizedLink('/pricing')} className='text-white hover:text-accent transition-colors duration-200 font-medium text-shadow-sm'>
-            {t('nav.pricing')}
+          <Link href={createLocalizedLink('/performance')} className='text-white hover:text-accent transition-colors duration-200 font-medium text-shadow-sm'>
+            Performance
           </Link>
         </div>
 
