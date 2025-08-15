@@ -158,7 +158,7 @@ export default function ServiceBundleCard({
                 <span className="text-sm font-medium">Bundle Details</span>
               </div>
               <p className="text-xs text-blue-700 mt-1">
-                This bundle includes {bundle.services.length} services with a total value of ₹{bundle.originalPrice.toLocaleString()}.
+                This bundle includes {bundle.services.length} services with a total value of {formatNPR(bundle.originalPrice)}.
               </p>
             </div>
           </div>

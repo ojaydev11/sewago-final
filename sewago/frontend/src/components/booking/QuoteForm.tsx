@@ -10,6 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { Clock, MapPin, Shield, Zap, Calculator, User, Phone } from 'lucide-react';
 import { pricingEngine } from '@/lib/pricing';
+import { pricing as pricingConfig } from '@/config/pricing';
 import { formatNPR } from '@/lib/currency';
 import { getServicePromises } from '@/lib/service-promises';
 
@@ -35,6 +36,8 @@ export interface QuoteData {
 
 interface PriceBreakdown {
   basePrice: number;
+  extraBlocks: number;
+  extraBlockPrice: number;
   expressSurcharge: number;
   warrantyFee: number;
   bookingFee: number;
@@ -65,40 +68,55 @@ export default function QuoteForm({ serviceSlug, serviceName, basePrice, onQuote
     hasWarranty: false
   });
 
+  const [extraBlocks, setExtraBlocks] = useState<number>(0);
+
   const [priceBreakdown, setPriceBreakdown] = useState<PriceBreakdown>({
     basePrice: basePrice,
+    extraBlocks: 0,
+    extraBlockPrice: 0,
     expressSurcharge: 0,
     warrantyFee: 0,
-    bookingFee: 39,
+    bookingFee: pricingConfig.bookingFee,
     coinsCap: 0,
-    total: basePrice + 39
+    total: basePrice + pricingConfig.bookingFee
   });
 
   // Calculate pricing when options change
   useEffect(() => {
-    const expressSurcharge = options.isExpress ? 500 : 0;
-    const warrantyFee = options.hasWarranty ? Math.round(basePrice * 0.15) : 0;
-    const coinsCap = Math.round((basePrice + expressSurcharge + warrantyFee) * 0.1);
-    
+    // Determine extra-15 min price per service if available, else default 150
+    const servicePricing = pricingConfig.services as any;
+    const extraBlockPrice = servicePricing?.[serviceSlug]?.extra15 ?? 150;
+    const extras = extraBlocks * extraBlockPrice;
+
+    const expressSurcharge = options.isExpress ? pricingConfig.expressAddon.price : 0;
+    const warrantyFee = options.hasWarranty
+      ? (pricingConfig.warrantyAddon?.price ?? Math.round(basePrice * 0.15))
+      : 0;
+    const bookingFee = pricingConfig.bookingFee;
+    const coinsCap = Math.round((basePrice + extras + expressSurcharge + warrantyFee) * (pricingConfig.coins.maxRedeemPctOnLabour ?? 0.1));
+
+    const total = basePrice + extras + expressSurcharge + warrantyFee + bookingFee;
+
     const newBreakdown: PriceBreakdown = {
       basePrice: basePrice,
+      extraBlocks,
+      extraBlockPrice,
       expressSurcharge,
       warrantyFee,
-      bookingFee: 39, // Rs 39 unless member
+      bookingFee,
       coinsCap,
-      total: basePrice + expressSurcharge + warrantyFee + 39
+      total
     };
 
     setPriceBreakdown(newBreakdown);
 
-    // Notify parent component
     onQuoteUpdate({
       ...formData,
       ...options,
       totalPrice: newBreakdown.total,
       breakdown: newBreakdown
     });
-  }, [options, basePrice, formData, onQuoteUpdate]);
+  }, [options, basePrice, extraBlocks, formData, onQuoteUpdate, serviceSlug]);
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -203,6 +221,21 @@ export default function QuoteForm({ serviceSlug, serviceName, basePrice, onQuote
 
         {/* Service Options */}
         <div className="space-y-4">
+          <div>
+            <Label className="font-medium">Estimated Duration</Label>
+            <p className="text-sm text-gray-600 mb-2">Base includes 30 minutes. Add extra 15-minute blocks if needed.</p>
+            <div className="flex items-center gap-3">
+              <Button type="button" variant="outline" onClick={() => setExtraBlocks(Math.max(0, extraBlocks - 1))}>
+                -15m
+              </Button>
+              <span className="min-w-[120px] text-center text-sm">
+                Extra: {extraBlocks} x 15m ({formatNPR(priceBreakdown.extraBlockPrice)} each)
+              </span>
+              <Button type="button" variant="outline" onClick={() => setExtraBlocks(extraBlocks + 1)}>
+                +15m
+              </Button>
+            </div>
+          </div>
           <h4 className="font-medium text-gray-900">Service Options</h4>
           
           <div className="flex items-center justify-between p-4 border rounded-lg">
@@ -253,41 +286,42 @@ export default function QuoteForm({ serviceSlug, serviceName, basePrice, onQuote
           <h4 className="font-medium text-gray-900">Price Breakdown</h4>
           
           <div className="space-y-2 text-sm">
-                         <div className="flex justify-between">
-               <span>Base Price (30 min):</span>
-               <span>{formatNPR(priceBreakdown.basePrice)}</span>
-             </div>
-             
-             {options.isExpress && (
-               <div className="flex justify-between text-orange-600">
-                 <span>Express Surcharge:</span>
-                 <span>+{formatNPR(priceBreakdown.expressSurcharge)}</span>
-               </div>
-             )}
-             
-             {options.hasWarranty && (
-               <div className="flex justify-between text-blue-600">
-                 <span>Warranty Fee:</span>
-                 <span>+{formatNPR(priceBreakdown.warrantyFee)}</span>
-               </div>
-             )}
-             
-             <div className="flex justify-between text-gray-600">
-               <span>Booking Fee:</span>
-               <span>{formatNPR(priceBreakdown.bookingFee)}</span>
-             </div>
-             
-             <div className="flex justify-between text-green-600">
-               <span>Coins Cap (≤10%):</span>
-               <span>-{formatNPR(priceBreakdown.coinsCap)}</span>
-             </div>
-             
-             <div className="border-t pt-2">
-               <div className="flex justify-between font-semibold text-lg">
-                 <span>Total:</span>
-                 <span className="text-primary">{formatNPR(priceBreakdown.total)}</span>
-               </div>
-             </div>
+            <div className="flex justify-between">
+              <span>Base Price (30 min):</span>
+              <span>{formatNPR(priceBreakdown.basePrice)}</span>
+            </div>
+            {priceBreakdown.extraBlocks > 0 && (
+              <div className="flex justify-between text-gray-700">
+                <span>Extra {priceBreakdown.extraBlocks} x 15 min:</span>
+                <span>+{formatNPR(priceBreakdown.extraBlocks * priceBreakdown.extraBlockPrice)}</span>
+              </div>
+            )}
+            {options.isExpress && (
+              <div className="flex justify-between text-orange-600">
+                <span>Express Surcharge:</span>
+                <span>+{formatNPR(priceBreakdown.expressSurcharge)}</span>
+              </div>
+            )}
+            {options.hasWarranty && (
+              <div className="flex justify-between text-blue-600">
+                <span>Warranty Fee:</span>
+                <span>+{formatNPR(priceBreakdown.warrantyFee)}</span>
+              </div>
+            )}
+            <div className="flex justify-between text-gray-600">
+              <span>Booking Fee:</span>
+              <span>{formatNPR(priceBreakdown.bookingFee)}</span>
+            </div>
+            <div className="flex justify-between text-green-600">
+              <span>Coins Cap (≤10%):</span>
+              <span>-{formatNPR(priceBreakdown.coinsCap)}</span>
+            </div>
+            <div className="border-t pt-2">
+              <div className="flex justify-between font-semibold text-lg">
+                <span>Total:</span>
+                <span className="text-primary">{formatNPR(priceBreakdown.total)}</span>
+              </div>
+            </div>
           </div>
         </div>
 

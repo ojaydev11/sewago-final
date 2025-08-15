@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
@@ -12,6 +12,7 @@ import QuoteForm, { QuoteData } from '@/components/booking/QuoteForm';
 import { getServiceBySlug } from '@/lib/services';
 import { Label } from '@/components/ui/label';
 import { formatNPR } from '@/lib/currency';
+import { useCallback } from 'react';
 
 // Force dynamic rendering to prevent build-time pre-rendering
 export const dynamic = 'force-dynamic';
@@ -54,15 +55,50 @@ export default function BookingPage() {
     loadService();
   }, [slug]);
 
+  const handleQuoteUpdate = useCallback(async (quote: QuoteData) => {
+    try {
+      // Call server to get authoritative quote
+      const res = await fetch('/api/quote', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          serviceSlug: slug,
+          serviceName: serviceData?.name ?? '',
+          basePrice: serviceData?.basePrice ?? 0,
+          isExpress: quote.isExpress,
+          hasWarranty: quote.hasWarranty,
+          city: 'Kathmandu',
+          extraBlocks: quote.breakdown?.extraBlocks ?? 0
+        })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        const server = data.quote;
+        setQuoteData({
+          ...quote,
+          totalPrice: server.total,
+          breakdown: {
+            ...quote.breakdown,
+            expressSurcharge: server.expressSurcharge,
+            warrantyFee: server.warrantyFee,
+            bookingFee: server.bookingFee,
+            coinsCap: server.coinsCap,
+            total: server.total
+          }
+        });
+      } else {
+        setQuoteData(quote);
+      }
+    } catch {
+      setQuoteData(quote);
+    }
+  }, [slug, serviceData]);
+
   // Redirect if not authenticated
   if (!session?.user) {
     router.push(`/auth/login?callbackUrl=/services/${slug}/book`);
     return null;
   }
-
-  const handleQuoteUpdate = (quote: QuoteData) => {
-    setQuoteData(quote);
-  };
 
   const handleSubmit = async () => {
     if (!quoteData || !serviceData) return;
@@ -107,11 +143,13 @@ export default function BookingPage() {
     }
   };
 
-  const canSubmit = quoteData && 
-    quoteData.customerName.trim() && 
-    quoteData.phone.trim() && 
-    quoteData.address.trim() && 
-    quoteData.area.trim();
+  const canSubmit = !!(
+    quoteData &&
+    quoteData.customerName?.trim() &&
+    quoteData.phone?.trim() &&
+    quoteData.address?.trim() &&
+    quoteData.area?.trim()
+  );
 
   if (!serviceData) {
     return (
