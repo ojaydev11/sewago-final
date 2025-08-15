@@ -2,13 +2,14 @@
 export const dynamic = 'force-dynamic';
 
 import { Metadata } from 'next';
+import Link from 'next/link';
 import SchemaMarkup from '@/components/SchemaMarkup';
 import { designUtils, componentStyles } from '@/lib/design-system';
 
 export const metadata: Metadata = {
-  title: 'Frequently Asked Questions - SewaGo',
-  description: 'Get answers to common questions about SewaGo services. Learn about pricing, booking, and how our platform works.',
-  keywords: 'FAQ, questions, SewaGo, local services, Nepal, help, support',
+  title: 'FAQ - SewaGo | Frequently Asked Questions',
+  description: 'Find answers to common questions about SewaGo services, booking, payments, and more. Get help with your local service needs.',
+  keywords: 'FAQ, frequently asked questions, SewaGo help, service questions, booking help, support',
 };
 
 const faqData = [
@@ -116,12 +117,12 @@ export default function FAQPage() {
                 Can't find the answer you're looking for? Our support team is here to help!
               </p>
               <div className='flex flex-col sm:flex-row gap-4 justify-center'>
-                <a href="/contact" className={designUtils.getButtonClasses('primary')}>
+                <Link href="/contact" className={designUtils.getButtonClasses('primary')}>
                   Contact Support
-                </a>
-                <a href="/contact" className={designUtils.getButtonClasses('outline')}>
+                </Link>
+                <Link href="/contact" className={designUtils.getButtonClasses('outline')}>
                   Live Chat
-                </a>
+                </Link>
               </div>
             </div>
           </div>
