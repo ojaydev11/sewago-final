@@ -216,3 +216,5 @@ export function VerifiedReviewsCarousel() {
     </div>
   );
 }
+
+export default VerifiedReviewsCarousel;
