@@ -7,10 +7,13 @@ import {
 } from '@heroicons/react/24/outline';
 
 import { Metadata } from 'next';
+import Link from 'next/link';
 
-
-
-export const metadata = { title: "Privacy Policy | SewaGo" };
+export const metadata: Metadata = {
+  title: 'Privacy Policy - SewaGo | Data Protection & Privacy',
+  description: 'Learn about how SewaGo protects your personal information and maintains your privacy. Read our comprehensive privacy policy and data protection practices.',
+  keywords: 'privacy policy, data protection, personal information, GDPR, privacy rights, SewaGo privacy',
+};
 
 export default function PrivacyPage() {
   return (
@@ -372,9 +375,9 @@ export default function PrivacyPage() {
             <a href="mailto:privacy@sewago.com" className="bg-white text-red-600 hover:bg-gray-100 px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105">
               Contact Privacy Team
             </a>
-            <a href="/contact" className="border-2 border-white text-white hover:bg-white hover:text-red-600 px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300">
+            <Link href="/contact" className="border-2 border-white text-white hover:bg-white hover:text-red-600 px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300">
               General Support
-            </a>
+            </Link>
           </div>
         </div>
       </section>
