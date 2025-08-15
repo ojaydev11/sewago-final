@@ -1,0 +1,36 @@
+import React from 'react';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
+import { redirect } from 'next/navigation';
+import ProviderVerificationForm from '@/components/ProviderVerificationForm';
+import VerificationStatus from '@/components/VerificationStatus';
+
+export default async function VerificationPage() {
+  const session = await getServerSession(authOptions);
+  
+  if (!session) {
+    redirect('/auth/signin');
+  }
+  
+  if (session.user.role !== 'provider') {
+    redirect('/dashboard');
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            Provider Verification
+          </h1>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            Complete your verification to start accepting bookings and building trust with customers
+          </p>
+        </div>
+        
+        <VerificationStatus />
+        <ProviderVerificationForm />
+      </div>
+    </div>
+  );
+}

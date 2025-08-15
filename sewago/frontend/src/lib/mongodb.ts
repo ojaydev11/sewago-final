@@ -56,3 +56,6 @@ export function getMongoClient() {
   }
   return mongoose.connection.getClient();
 }
+
+// Alias for backward compatibility
+export const connectToDatabase = dbConnect;

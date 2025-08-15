@@ -96,6 +96,105 @@ async function main() {
         category: 'hvac',
         imageUrl: '/icons/ac.svg'
       }
+    }),
+    prisma.service.create({
+      data: {
+        slug: 'water_tank_clean',
+        name: 'Water Tank Cleaning',
+        description: 'Deep cleaning and sanitization of water tanks',
+        basePrice: 1499,
+        city: 'Kathmandu',
+        category: 'cleaning',
+        imageUrl: '/icons/cleaning.svg'
+      }
+    }),
+    prisma.service.create({
+      data: {
+        slug: 'ro_service',
+        name: 'RO/Filter Service',
+        description: 'Regular service and filter replacement for RO systems',
+        basePrice: 899,
+        city: 'Kathmandu',
+        category: 'appliance',
+        imageUrl: '/icons/electrical.svg'
+      }
+    }),
+    prisma.service.create({
+      data: {
+        slug: 'chimney_clean',
+        name: 'Chimney Deep Clean',
+        description: 'Deep cleaning of kitchen chimney filters and ducts',
+        basePrice: 1299,
+        city: 'Kathmandu',
+        category: 'cleaning',
+        imageUrl: '/icons/cleaning.svg'
+      }
+    }),
+    prisma.service.create({
+      data: {
+        slug: 'waterproofing',
+        name: 'Waterproofing & Leak Fix',
+        description: 'Leak detection and waterproofing solutions',
+        basePrice: 999,
+        city: 'Kathmandu',
+        category: 'handyman',
+        imageUrl: '/icons/repair.svg'
+      }
+    }),
+    prisma.service.create({
+      data: {
+        slug: 'painting_room',
+        name: 'Room Painting (Std)',
+        description: 'Standard room painting service with quality finish',
+        basePrice: 4999,
+        city: 'Kathmandu',
+        category: 'painting',
+        imageUrl: '/icons/repair.svg'
+      }
+    }),
+    prisma.service.create({
+      data: {
+        slug: 'wifi_optimize',
+        name: 'Wi-Fi Optimization',
+        description: 'Improve Wi-Fi coverage and performance at home',
+        basePrice: 649,
+        city: 'Kathmandu',
+        category: 'it',
+        imageUrl: '/icons/electrical.svg'
+      }
+    }),
+    prisma.service.create({
+      data: {
+        slug: 'cctv_install',
+        name: 'CCTV/Smart Lock Install',
+        description: 'Installation of CCTV and smart locks',
+        basePrice: 799,
+        city: 'Kathmandu',
+        category: 'security',
+        imageUrl: '/icons/electrical.svg'
+      }
+    }),
+    prisma.service.create({
+      data: {
+        slug: 'move_in_pack',
+        name: 'Move-in Pack',
+        description: 'Comprehensive move-in services package',
+        basePrice: 3499,
+        city: 'Kathmandu',
+        category: 'moving',
+        imageUrl: '/icons/cleaning.svg'
+      }
+    }),
+    prisma.service.create({
+      data: {
+        slug: 'emergency_lock',
+        name: 'Emergency Locksmith',
+        description: '24/7 emergency locksmith service',
+        basePrice: 799,
+        city: 'Kathmandu',
+        category: 'security',
+        imageUrl: '/icons/electrical.svg'
+      }
     })
   ]);
 

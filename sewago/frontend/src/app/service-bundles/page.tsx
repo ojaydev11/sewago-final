@@ -5,6 +5,7 @@ import { ServiceBundle, BundleService } from '../../models/ServiceBundle';
 import { sampleServiceBundles } from '../../models/ServiceBundle';
 import ServiceBundleCard from '../../components/ServiceBundleCard';
 import { useRouter } from 'next/navigation';
+import { formatNPR } from '@/lib/currency';
 import { 
   MagnifyingGlassIcon, 
   FunnelIcon, 
@@ -102,7 +103,7 @@ export default function ServiceBundlesPage() {
                 <div className="text-blue-100">Available Bundles</div>
               </div>
               <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                <div className="text-2xl font-bold">₹{totalSavings.toLocaleString()}</div>
+                <div className="text-2xl font-bold">{formatNPR(totalSavings)}</div>
                 <div className="text-blue-100">Total Savings</div>
               </div>
               <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
@@ -187,7 +188,7 @@ export default function ServiceBundlesPage() {
                   </span>
                   <span className="flex items-center gap-1">
                     <CurrencyRupeeIcon className="w-4 h-4" />
-                    ₹{selectedServices.reduce((sum, service) => sum + service.individualPrice, 0).toLocaleString()} total
+                    {formatNPR(selectedServices.reduce((sum, service) => sum + service.individualPrice, 0))} total
                   </span>
                 </div>
               </div>
@@ -195,9 +196,9 @@ export default function ServiceBundlesPage() {
                 <div className="text-right">
                   <div className="text-sm text-blue-600">Final Price</div>
                   <div className="text-2xl font-bold text-blue-900">
-                    ₹{selectedServices.reduce((sum, service) => sum + service.individualPrice, 0) - 
+                    {formatNPR(selectedServices.reduce((sum, service) => sum + service.individualPrice, 0) - 
                       (selectedServices.reduce((sum, service) => sum + service.individualPrice, 0) * selectedBundle.discountPercentage / 100)
-                    .toLocaleString()}
+                    )}
                   </div>
                 </div>
                 <button
