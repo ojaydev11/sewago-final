@@ -8,7 +8,7 @@ import {
   MapPinIcon,
   UsersIcon,
   CheckCircleIcon,
-  TrendingUpIcon,
+  ArrowTrendingUpIcon,
   BoltIcon
 } from '@heroicons/react/24/outline';
 import { 
@@ -200,7 +200,7 @@ export default function PerformanceDashboard() {
               <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
                 <CheckCircleIcon className="w-6 h-6 text-blue-600" />
               </div>
-              <TrendingUpIcon className="w-5 h-5 text-green-500" />
+              <ArrowTrendingUpIcon className="w-5 h-5 text-green-500" />
             </div>
             <div className="mb-2">
               <div className="text-2xl font-bold text-gray-900">
@@ -219,7 +219,7 @@ export default function PerformanceDashboard() {
               <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
                 <BoltIcon className="w-6 h-6 text-green-600" />
               </div>
-              <TrendingUpIcon className="w-5 h-5 text-green-500" />
+              <ArrowTrendingUpIcon className="w-5 h-5 text-green-500" />
             </div>
             <div className="mb-2">
               <div className="text-2xl font-bold text-gray-900">
@@ -238,7 +238,7 @@ export default function PerformanceDashboard() {
               <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
                 <ClockIcon className="w-6 h-6 text-yellow-600" />
               </div>
-              <TrendingUpIcon className="w-5 h-5 text-green-500" />
+              <ArrowTrendingUpIcon className="w-5 h-5 text-green-500" />
             </div>
             <div className="mb-2">
               <div className="text-2xl font-bold text-gray-900">
@@ -257,7 +257,7 @@ export default function PerformanceDashboard() {
               <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
                 <StarIcon className="w-6 h-6 text-purple-600" />
               </div>
-              <TrendingUpIcon className="w-5 h-5 text-green-500" />
+              <ArrowTrendingUpIcon className="w-5 h-5 text-green-500" />
             </div>
             <div className="mb-2">
               <div className="text-2xl font-bold text-gray-900">

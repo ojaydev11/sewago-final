@@ -1,7 +1,14 @@
 
 
-
+import { Metadata } from 'next';
+import Link from 'next/link';
 import { designUtils, componentStyles } from '@/lib/design-system';
+
+export const metadata: Metadata = {
+  title: 'About SewaGo - Local Services in Nepal | Our Story & Mission',
+  description: 'Learn about SewaGo, Nepal\'s leading local service platform. Discover our mission to connect households with verified professionals and build stronger communities.',
+  keywords: 'about SewaGo, local services Nepal, our mission, company story, verified providers, community building, SewaGo team',
+};
 
 export default function AboutPage() {
   return (
@@ -25,13 +32,13 @@ export default function AboutPage() {
             
             {/* Performance Dashboard Link */}
             <div className='flex justify-center'>
-              <a 
+              <Link 
                 href='/performance' 
                 className='inline-flex items-center gap-2 px-6 py-3 bg-white/10 backdrop-blur-sm text-white rounded-full hover:bg-white/20 transition-all duration-200 border border-white/20'
               >
                 <span>📊</span>
                 <span>View Live Performance Dashboard</span>
-              </a>
+              </Link>
             </div>
             
             {/* Modern accent line */}

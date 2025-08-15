@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import { ServiceBundle, BundleService } from '../../models/ServiceBundle';
-import { sampleServiceBundles } from '../../models/ServiceBundle';
-import ServiceBundleCard from '../../components/ServiceBundleCard';
+import { ServiceBundle, BundleService } from '@/models/ServiceBundle';
+import { sampleServiceBundles } from '@/models/ServiceBundle';
+import ServiceBundleCard from '@/components/ServiceBundleCard';
 import { useRouter } from 'next/navigation';
 import { 
   MagnifyingGlassIcon, 

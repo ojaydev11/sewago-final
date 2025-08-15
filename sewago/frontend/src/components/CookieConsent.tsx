@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -281,13 +282,13 @@ export default function CookieConsent() {
           {/* Privacy Policy Link */}
           <div className="text-center text-sm text-gray-600">
             By continuing to use this site, you agree to our{' '}
-            <a href="/privacy" className="text-accent hover:underline">
+            <Link href="/privacy" className="text-accent hover:underline">
               Privacy Policy
-            </a>{' '}
+            </Link>{' '}
             and{' '}
-            <a href="/terms" className="text-accent hover:underline">
+            <Link href="/terms" className="text-accent hover:underline">
               Terms of Service
-            </a>
+            </Link>
             .
           </div>
         </CardContent>

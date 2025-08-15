@@ -1,15 +1,21 @@
 
 
+import { Metadata } from 'next';
+import Link from 'next/link';
 import { 
+  SparklesIcon,
   DocumentTextIcon,
   ScaleIcon,
   UserGroupIcon,
   ShieldCheckIcon,
-  SparklesIcon,
   ExclamationTriangleIcon
 } from '@heroicons/react/24/outline';
 
-export const metadata = { title: "Terms of Service | SewaGo" };
+export const metadata: Metadata = {
+  title: 'Terms of Service - SewaGo | Service Agreement & Conditions',
+  description: 'Read SewaGo\'s terms of service and user agreement. Understand your rights and responsibilities when using our local service platform.',
+  keywords: 'terms of service, user agreement, service conditions, SewaGo terms, legal agreement',
+};
 
 export default function TermsPage() {
   return (
@@ -455,9 +461,9 @@ export default function TermsPage() {
             <a href="mailto:legal@sewago.com" className="bg-white text-red-600 hover:bg-gray-100 px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105">
               Contact Legal Team
             </a>
-            <a href="/contact" className="border-2 border-white text-white hover:bg-white hover:text-red-600 px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300">
+            <Link href="/contact" className="border-2 border-white text-white hover:bg-white hover:text-red-600 px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300">
               General Support
-            </a>
+            </Link>
           </div>
         </div>
       </section>
