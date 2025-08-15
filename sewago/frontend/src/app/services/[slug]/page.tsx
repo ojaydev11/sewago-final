@@ -16,17 +16,30 @@ interface ServiceDetailPageProps {
 
 export async function generateMetadata({ params }: ServiceDetailPageProps): Promise<Metadata> {
   const service = await getServiceBySlug(params.slug);
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://sewago-final.vercel.app';
   
   if (!service) {
     return {
       title: 'Service Not Found - SewaGo',
+      alternates: {
+        canonical: `${siteUrl}/services/${params.slug}`,
+      },
     };
   }
 
   return {
-    title: `${service.name} - SewaGo`,
-    description: service.shortDesc,
-    keywords: `${service.name}, ${service.category}, local services, ${service.category.toLowerCase()}`,
+    title: `${service.name} Services in Nepal | SewaGo`,
+    description: `${service.shortDesc} - Professional ${service.name.toLowerCase()} services available in Kathmandu, Pokhara, and across Nepal. Book verified providers with SewaGo.`,
+    keywords: `${service.name}, ${service.category}, local services, ${service.category.toLowerCase()}, Nepal, Kathmandu, Pokhara`,
+    alternates: {
+      canonical: `${siteUrl}/services/${params.slug}`,
+    },
+    openGraph: {
+      title: `${service.name} Services in Nepal | SewaGo`,
+      description: service.shortDesc,
+      url: `${siteUrl}/services/${params.slug}`,
+      type: 'website',
+    },
   };
 }
 
