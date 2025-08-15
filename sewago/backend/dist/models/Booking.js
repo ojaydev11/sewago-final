@@ -1,24 +1,30 @@
 import mongoose, { Schema } from "mongoose";
 const bookingSchema = new Schema({
     userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
-    providerId: { type: Schema.Types.ObjectId, ref: "User", required: true },
     serviceId: { type: Schema.Types.ObjectId, ref: "Service", required: true },
-    date: { type: Date, required: true },
-    timeSlot: { type: String, required: true },
+    providerId: { type: Schema.Types.ObjectId, ref: "Provider" },
     status: {
         type: String,
-        enum: ["pending", "accepted", "in-progress", "completed", "cancelled"],
-        default: "pending",
+        enum: [
+            "PENDING_CONFIRMATION",
+            "CONFIRMED",
+            "PROVIDER_ASSIGNED",
+            "EN_ROUTE",
+            "IN_PROGRESS",
+            "COMPLETED",
+            "CANCELED",
+            "DISPUTED"
+        ],
+        default: "PENDING_CONFIRMATION",
     },
-    price: { type: Number, required: true },
     address: { type: String, required: true },
-    payment: {
-        method: { type: String, enum: ["esewa", "khalti", "cash"], default: "cash" },
-        referenceId: { type: String },
-        status: { type: String, enum: ["pending", "paid", "failed"], default: "pending" },
-    },
+    notes: { type: String },
+    total: { type: Number, required: true },
+    paid: { type: Boolean, default: false },
+    scheduledAt: { type: Date },
+    completedAt: { type: Date },
 }, { timestamps: true });
 bookingSchema.index({ userId: 1 });
 bookingSchema.index({ providerId: 1 });
-bookingSchema.index({ status: 1, date: 1 });
+bookingSchema.index({ status: 1, createdAt: 1 });
 export const BookingModel = mongoose.model("Booking", bookingSchema);

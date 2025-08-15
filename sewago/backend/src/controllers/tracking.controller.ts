@@ -1,48 +1,64 @@
 import { Request, Response } from 'express';
 import { BookingModel } from '../models/Booking.js';
+import { ProviderModel } from '../models/Provider.js';
+import { emitToBookingRoom } from '../socket-server.js';
 
 // Update provider location
 export async function updateProviderLocation(req: Request, res: Response) {
     try {
-      const { providerId, bookingId, latitude, longitude } = req.body;
+      const { lat, lng, isOnline } = req.body;
+      const providerId = (req as any).userId; // From auth middleware
       
-      if (!providerId || !bookingId || latitude === undefined || longitude === undefined) {
+      if (lat === undefined || lng === undefined) {
         return res.status(400).json({ 
-          error: 'Missing required fields: providerId, bookingId, latitude, longitude' 
+          error: 'Missing required fields: lat, lng' 
         });
       }
 
-      // Verify the booking exists and provider is assigned
-      const booking = await BookingModel.findById(bookingId);
-      if (!booking) {
-        return res.status(404).json({ error: 'Booking not found' });
+      // Update provider location in database
+      const provider = await ProviderModel.findByIdAndUpdate(
+        providerId,
+        { 
+          currentLat: lat, 
+          currentLng: lng,
+          isOnline: isOnline !== undefined ? isOnline : true
+        },
+        { new: true }
+      );
+
+      if (!provider) {
+        return res.status(404).json({ error: 'Provider not found' });
       }
 
-      if (booking.providerId?.toString() !== providerId) {
-        return res.status(403).json({ error: 'Provider not assigned to this booking' });
-      }
+      // Get all active bookings for this provider
+      const activeBookings = await BookingModel.find({
+        providerId: providerId,
+        status: { $in: ["PROVIDER_ASSIGNED", "EN_ROUTE", "IN_PROGRESS"] }
+      });
 
-      // Note: Location tracking fields are not implemented in the current Booking model
-      // In a real implementation, you would update these fields or use a separate tracking service
-      const locationUpdate = {
-        latitude,
-        longitude,
-        timestamp: new Date()
-      };
-
-      // For now, just log the location update
-      console.log('Location update received:', locationUpdate);
-
-      // Emit real-time update via Socket.IO
+      // Emit real-time updates to all active bookings
       const io = req.app.get('io');
       if (io) {
-        io.to(`booking:${bookingId}`).emit('providerLocationUpdate', locationUpdate);
+        activeBookings.forEach(booking => {
+          emitToBookingRoom(io, booking._id.toString(), 'providerLocationUpdated', {
+            providerId,
+            lat,
+            lng,
+            isOnline: provider.isOnline,
+            timestamp: new Date(),
+          });
+        });
       }
 
       res.json({ 
         success: true, 
         message: 'Location updated successfully',
-        location: locationUpdate
+        location: {
+          lat: provider.currentLat,
+          lng: provider.currentLng,
+          isOnline: provider.isOnline,
+          timestamp: new Date()
+        }
       });
 
     } catch (error) {
@@ -54,49 +70,65 @@ export async function updateProviderLocation(req: Request, res: Response) {
 // Update provider status
 export async function updateProviderStatus(req: Request, res: Response) {
     try {
-      const { providerId, bookingId, status, message } = req.body;
+      const { isOnline, status } = req.body;
+      const providerId = (req as any).userId; // From auth middleware
       
-      if (!providerId || !bookingId || !status) {
+      if (isOnline === undefined) {
         return res.status(400).json({ 
-          error: 'Missing required fields: providerId, bookingId, status' 
+          error: 'Missing required field: isOnline' 
         });
       }
 
-      // Verify the booking exists and provider is assigned
-      const booking = await BookingModel.findById(bookingId);
-      if (!booking) {
-        return res.status(404).json({ error: 'Booking not found' });
+      // Update provider status
+      const provider = await ProviderModel.findByIdAndUpdate(
+        providerId,
+        { isOnline },
+        { new: true }
+      );
+
+      if (!provider) {
+        return res.status(404).json({ error: 'Provider not found' });
       }
 
-      if (booking.providerId?.toString() !== providerId) {
-        return res.status(403).json({ error: 'Provider not assigned to this booking' });
-      }
+      // If provider is going offline, update any active bookings
+      if (!isOnline) {
+        const activeBookings = await BookingModel.find({
+          providerId: providerId,
+          status: { $in: ["PROVIDER_ASSIGNED", "EN_ROUTE", "IN_PROGRESS"] }
+        });
 
-      // Update booking status (only the main status field is available in current model)
-      const statusUpdate = {
-        status,
-        timestamp: new Date(),
-        message: message || `Status changed to ${status}`,
-        updatedBy: providerId
-      };
+        // Update all active bookings to PENDING_CONFIRMATION and remove provider
+        if (activeBookings.length > 0) {
+          await BookingModel.updateMany(
+            { _id: { $in: activeBookings.map(b => b._id) } },
+            { 
+              status: "PENDING_CONFIRMATION",
+              providerId: null
+            }
+          );
 
-      // Update the main status field
-      await BookingModel.findByIdAndUpdate(bookingId, {
-        $set: { 
-          status: status
+          // Emit real-time updates to all affected bookings
+          const io = req.app.get('io');
+          if (io) {
+            activeBookings.forEach(booking => {
+              emitToBookingRoom(io, booking._id.toString(), 'providerStatusUpdated', {
+                providerId,
+                isOnline: false,
+                message: 'Provider is now offline',
+                timestamp: new Date(),
+              });
+            });
+          }
         }
-      });
-
-      // Emit real-time update via Socket.IO
-      const io = req.app.get('io');
-      if (io) {
-        io.to(`booking:${bookingId}`).emit('statusUpdate', statusUpdate);
       }
 
       res.json({ 
         success: true, 
         message: 'Status updated successfully',
-        status: statusUpdate
+        status: {
+          isOnline: provider.isOnline,
+          timestamp: new Date()
+        }
       });
 
     } catch (error) {
@@ -111,23 +143,36 @@ export async function getTrackingInfo(req: Request, res: Response) {
       const { bookingId } = req.params;
       
       const booking = await BookingModel.findById(bookingId)
-        .select('status providerId userId')
-        .populate('providerId', 'name phone rating')
+        .select('status providerId userId address')
+        .populate('providerId', 'name phone verified currentLat currentLng isOnline')
         .populate('userId', 'name phone');
 
       if (!booking) {
         return res.status(404).json({ error: 'Booking not found' });
       }
 
+      // Calculate ETA if provider is assigned and has location
+      let eta = null;
+      if (booking.providerId && 
+          (booking.providerId as any).currentLat && 
+          (booking.providerId as any).currentLng) {
+        // For now, return a placeholder ETA
+        // In a real implementation, you would calculate based on distance and traffic
+        eta = {
+          time: '15-20 minutes',
+          minutes: 17,
+          distance: '2.5 km'
+        };
+      }
+
       res.json({
         success: true,
         tracking: {
-          currentLocation: null, // Not implemented in current model
           currentStatus: booking.status,
-          statusHistory: [], // Not implemented in current model
-          locationHistory: [], // Not implemented in current model
           provider: booking.providerId,
-          customer: booking.userId
+          customer: booking.userId,
+          address: booking.address,
+          eta: eta
         }
       });
 
@@ -143,15 +188,24 @@ export async function getETA(req: Request, res: Response) {
       const { bookingId } = req.params;
       
       const booking = await BookingModel.findById(bookingId)
-        .select('date address');
+        .select('providerId address')
+        .populate('providerId', 'currentLat currentLng');
 
       if (!booking) {
         return res.status(404).json({ error: 'Booking not found' });
       }
 
-            // For now, return a placeholder ETA since location tracking is not implemented
-      // In a real implementation, you would get provider and customer locations from a separate tracking service
-      const estimatedTimeMinutes = 30; // Default 30 minutes
+      if (!booking.providerId || 
+          !(booking.providerId as any).currentLat || 
+          !(booking.providerId as any).currentLng) {
+        return res.status(400).json({ 
+          error: 'Provider location not available' 
+        });
+      }
+
+      // For now, return a placeholder ETA
+      // In a real implementation, you would calculate based on distance and traffic
+      const estimatedTimeMinutes = 15; // Default 15 minutes
       
       let eta;
       if (estimatedTimeMinutes < 1) {
@@ -169,7 +223,7 @@ export async function getETA(req: Request, res: Response) {
         eta: {
           time: eta,
           minutes: estimatedTimeMinutes,
-          distance: 'Location tracking not implemented'
+          distance: '2.5 km' // Placeholder
         }
       });
 

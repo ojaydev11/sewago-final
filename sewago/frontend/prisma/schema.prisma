@@ -25,6 +25,7 @@ model User {
   reviews       Review[]
   referralsMade Referral[] @relation("Referrer")
   referralsReceived Referral[] @relation("Referred")
+  notifications Notification[]
 }
 
 model Provider {
@@ -39,12 +40,14 @@ model Provider {
   skills         String[]
   zones          String[]
   isOnline       Boolean  @default(false)
-  currentLocation Json?   // {lat: number, lng: number}
+  currentLat     Float?
+  currentLng     Float?
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
   
   // Relations
   bookings       Booking[]
+  notifications  Notification[]
 }
 
 model Service {
@@ -66,24 +69,36 @@ model Service {
 }
 
 model Booking {
-  id           String    @id @default(auto()) @map("_id") @db.ObjectId
-  status       String    @default("PENDING")
-  userId       String    @db.ObjectId
-  serviceId    String    @db.ObjectId
-  providerId   String?   @db.ObjectId
+  id           String         @id @default(auto()) @map("_id") @db.ObjectId
+  status       BookingStatus  @default(PENDING_CONFIRMATION)
+  userId       String         @db.ObjectId
+  serviceId    String         @db.ObjectId
+  providerId   String?        @db.ObjectId
   address      String
   notes        String?
-  total        Int       @default(0)
-  paid         Boolean   @default(false)
+  total        Int            @default(0)
+  paid         Boolean        @default(false)
   scheduledAt  DateTime?
-  createdAt    DateTime  @default(now())
+  createdAt    DateTime       @default(now())
   completedAt  DateTime?
   
   // Relations
-  user         User      @relation(fields: [userId], references: [id])
-  service      Service   @relation(fields: [serviceId], references: [id])
-  provider     Provider? @relation(fields: [providerId], references: [id])
+  user         User           @relation(fields: [userId], references: [id])
+  service      Service        @relation(fields: [serviceId], references: [id])
+  provider     Provider?      @relation(fields: [providerId], references: [id])
   review       Review?
+  notifications Notification[]
+}
+
+enum BookingStatus {
+  PENDING_CONFIRMATION
+  CONFIRMED
+  PROVIDER_ASSIGNED
+  EN_ROUTE
+  IN_PROGRESS
+  COMPLETED
+  CANCELED
+  DISPUTED
 }
 
 model Review {
@@ -101,6 +116,23 @@ model Review {
   booking    Booking  @relation(fields: [bookingId], references: [id])
   user       User     @relation(fields: [userId], references: [id])
   service    Service  @relation(fields: [serviceId], references: [id])
+}
+
+model Notification {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId     String?  @db.ObjectId
+  providerId String?  @db.ObjectId
+  bookingId  String?  @db.ObjectId
+  message    String
+  type       String
+  channel    String
+  sentAt     DateTime @default(now())
+  readAt     DateTime?
+  
+  // Relations
+  user       User?     @relation(fields: [userId], references: [id])
+  provider   Provider? @relation(fields: [providerId], references: [id])
+  booking    Booking?  @relation(fields: [bookingId], references: [id])
 }
 
 model Referral {
