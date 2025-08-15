@@ -1,5 +1,9 @@
 {
   "buildCommand": "prisma generate && next build",
+  "env": {
+    "MOCK_MODE": "true",
+    "NEXT_PUBLIC_SITE_URL": "https://sewago-final.vercel.app"
+  },
   "headers": [
     {
       "source": "/(.*)",
