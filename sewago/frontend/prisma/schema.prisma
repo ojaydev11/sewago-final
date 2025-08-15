@@ -11,40 +11,45 @@ datasource db {
 }
 
 model User {
-  id            String     @id @default(auto()) @map("_id") @db.ObjectId
-  email         String     @unique
-  name          String?
-  phone         String     @unique
-  coins         Int        @default(0)
-  referralCode  String     @unique
-  createdAt     DateTime   @default(now())
-  updatedAt     DateTime   @updatedAt
+  id                String     @id @default(auto()) @map("_id") @db.ObjectId
+  email             String     @unique
+  name              String?
+  phone             String     @unique
+  coins             Int        @default(0)
+  referralCode      String     @unique
+  shadowBanned      Boolean    @default(false)
+  lastSeen          DateTime?
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
   
   // Relations
-  bookings      Booking[]
-  reviews       Review[]
-  referralsMade Referral[] @relation("Referrer")
+  bookings          Booking[]
+  reviews           Review[]
+  referralsMade     Referral[] @relation("Referrer")
   referralsReceived Referral[] @relation("Referred")
 }
 
 model Provider {
-  id             String   @id @default(auto()) @map("_id") @db.ObjectId
-  name           String
-  phone          String   @unique
-  verified       Boolean  @default(false)
-  onTimePct      Float    @default(100)
-  completionPct  Float    @default(100)
-  yearsActive    Int      @default(1)
-  tier           String   @default("PROVISIONAL")
-  skills         String[]
-  zones          String[]
-  isOnline       Boolean  @default(false)
-  currentLocation Json?   // {lat: number, lng: number}
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  id                  String    @id @default(auto()) @map("_id") @db.ObjectId
+  name                String
+  phone               String    @unique
+  verified            Boolean   @default(false)
+  onTimePct           Float     @default(100)
+  completionPct       Float     @default(100)
+  yearsActive         Int       @default(1)
+  tier                String    @default("PROVISIONAL")
+  skills              String[]
+  zones               String[]
+  isOnline            Boolean   @default(false)
+  currentLocation     Json?     // {lat: number, lng: number}
+  status              String    @default("ACTIVE") // ACTIVE, PAUSED, BANNED
+  lastLocationUpdate  DateTime?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
   
   // Relations
-  bookings       Booking[]
+  bookings            Booking[]
+  warnings            ProviderWarning[]
 }
 
 model Service {
@@ -121,4 +126,74 @@ model PublicMetric {
   key       String   @unique
   value     String
   updatedAt DateTime @updatedAt
+}
+
+// AI System Models
+model SystemAlert {
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId
+  level      String    // INFO, WARNING, CRITICAL
+  title      String
+  message    String
+  details    Json?
+  status     String    @default("UNREAD") // UNREAD, READ, ARCHIVED
+  resolvedAt DateTime?
+  createdAt  DateTime  @default(now())
+}
+
+model AutomatedActionLog {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  module      String   // ServiceFlow, SmartReferrals, SecurityShield, ProviderScout, EmpireWatchdog
+  trigger     String   // Description of what triggered the action
+  actionTaken String   // What action was performed
+  details     Json     // Additional context and data
+  success     Boolean  // Whether the action succeeded
+  createdAt   DateTime @default(now())
+}
+
+model ProviderWarning {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  providerId String   @db.ObjectId
+  reason     String   // Low ratings, fake location, etc.
+  details    Json     // Additional context
+  issuedAt   DateTime @default(now())
+  
+  // Relations
+  provider   Provider @relation(fields: [providerId], references: [id])
+}
+
+model ActivePromotion {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String   @unique
+  type      String   // REFERRAL_BOOSTER, WELCOME_BONUS, etc.
+  details   Json     // Promotion parameters and rules
+  city      String?  // If city-specific
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+model SecurityFlag {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId     String?  @db.ObjectId
+  providerId String?  @db.ObjectId
+  type       String   // POTENTIAL_ABUSE, FAKE_LOCATION, etc.
+  details    Json     // Evidence and context
+  status     String   @default("PENDING_REVIEW") // PENDING_REVIEW, INVESTIGATED, DISMISSED
+  createdAt  DateTime @default(now())
+}
+
+model ServiceRequestLog {
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  searchTerm     String
+  city           String
+  count          Int      @default(1)
+  lastSearchedAt DateTime @default(now())
+  
+  @@unique([searchTerm, city])
+}
+
+model WeeklyReport {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  weekEnding  DateTime @unique
+  summaryData Json     // All weekly metrics and insights
+  createdAt   DateTime @default(now())
 }
