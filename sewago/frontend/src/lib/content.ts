@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import { formatNPR } from './currency';
 
 // Content types
 export interface Service {
@@ -125,7 +126,7 @@ export function generateServiceSchema(service: Service) {
       '@type': 'Offer',
       price: service.startingPrice,
       priceCurrency: 'NPR',
-      description: `Starting from NPR ${service.startingPrice}`
+      description: `Starting from ${formatNPR(service.startingPrice)}`
     }
   };
 }

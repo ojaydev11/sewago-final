@@ -1,5 +1,6 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
+import { formatNPR } from "@/lib/currency";
 
 // Force dynamic rendering to prevent build-time pre-rendering
 export const dynamic = 'force-dynamic';
@@ -16,7 +17,7 @@ export default function UserDashboard() {
         {data?.map((b) => (
           <div key={b._id} className="border rounded p-3 flex items-center justify-between">
             <span>{b.status}</span>
-            <span>Rs. {b.price}</span>
+            <span>{formatNPR(b.price)}</span>
           </div>
         ))}
       </div>
