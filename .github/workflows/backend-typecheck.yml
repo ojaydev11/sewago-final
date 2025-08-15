@@ -1,0 +1,50 @@
+name: Backend TypeScript Type Check
+
+on:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'sewago/backend/**'
+  push:
+    branches: [ main ]
+    paths:
+      - 'sewago/backend/**'
+
+jobs:
+  typecheck:
+    runs-on: ubuntu-latest
+    
+    defaults:
+      run:
+        working-directory: ./sewago/backend
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+        cache-dependency-path: './sewago/backend/package-lock.json'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Run TypeScript type check
+      run: npm run build
+
+    - name: Verify build output
+      run: |
+        if [ ! -d "dist" ]; then
+          echo "❌ Build output directory 'dist' not found"
+          exit 1
+        fi
+        
+        if [ ! -f "dist/server.js" ]; then
+          echo "❌ Main server file 'dist/server.js' not found"
+          exit 1
+        fi
+        
+        echo "✅ Build output verified successfully"
