@@ -1,62 +1,48 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { Star, ChevronLeft, ChevronRight, CheckCircle } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
+import { useState, useEffect } from 'react';
+import { StarIcon, ChevronLeftIcon, ChevronRightIcon, CheckBadgeIcon } from '@heroicons/react/24/solid';
+import { formatDistanceToNow } from 'date-fns';
 
 interface Review {
   id: string;
+  name: string;
   rating: number;
   text: string;
-  mediaUrls: string[];
+  photo?: string;
   verified: boolean;
-  createdAt: string;
-  user: {
-    name: string;
-  };
-  service: {
-    name: string;
-  };
+  service: string;
+  date: string;
 }
 
-interface VerifiedReviewsCarouselProps {
-  serviceId?: string;
-  limit?: number;
-}
-
-export default function VerifiedReviewsCarousel({ 
-  serviceId, 
-  limit = 5 
-}: VerifiedReviewsCarouselProps) {
+export function VerifiedReviewsCarousel() {
   const [reviews, setReviews] = useState<Review[]>([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    fetchReviews();
-  }, [serviceId]);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   const fetchReviews = async () => {
     try {
-      setLoading(true);
-      const url = serviceId 
-        ? `/api/reviews?serviceId=${serviceId}&limit=${limit}`
-        : `/api/reviews?limit=${limit}`;
+      setError(null);
+      const response = await fetch('/api/reviews?limit=10&verified=true');
       
-      const response = await fetch(url);
       if (!response.ok) {
         throw new Error('Failed to fetch reviews');
       }
-      
-      const data = await response.json();
-      setReviews(data.reviews || []);
+
+      const result = await response.json();
+      setReviews(result.data.reviews);
     } catch (err) {
+      console.error('Error fetching reviews:', err);
       setError(err instanceof Error ? err.message : 'Failed to fetch reviews');
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchReviews();
+  }, []);
 
   const nextReview = () => {
     setCurrentIndex((prev) => (prev + 1) % reviews.length);
@@ -66,44 +52,40 @@ export default function VerifiedReviewsCarousel({
     setCurrentIndex((prev) => (prev - 1 + reviews.length) % reviews.length);
   };
 
-  const renderStars = (rating: number) => {
-    return Array.from({ length: 5 }, (_, i) => (
-      <Star
-        key={i}
-        className={`w-4 h-4 ${
-          i < rating ? 'text-yellow-400 fill-current' : 'text-gray-300'
-        }`}
-      />
-    ));
+  const goToReview = (index: number) => {
+    setCurrentIndex(index);
   };
 
   if (loading) {
     return (
-      <div className="py-12 text-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-        <p className="mt-2 text-gray-600">Loading reviews...</p>
+      <div className="bg-white py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <div className="animate-pulse">
+              <div className="h-8 bg-gray-200 rounded w-64 mx-auto mb-4"></div>
+              <div className="h-4 bg-gray-200 rounded w-96 mx-auto mb-8"></div>
+              <div className="h-32 bg-gray-200 rounded-lg w-full max-w-2xl mx-auto"></div>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
 
-  if (error) {
+  if (error || reviews.length === 0) {
     return (
-      <div className="py-12 text-center">
-        <p className="text-red-600">Error: {error}</p>
-        <button 
-          onClick={fetchReviews}
-          className="mt-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-        >
-          Retry
-        </button>
-      </div>
-    );
-  }
-
-  if (reviews.length === 0) {
-    return (
-      <div className="py-12 text-center">
-        <p className="text-gray-600">No reviews available yet.</p>
+      <div className="bg-white py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center text-gray-500">
+            <p>Unable to load reviews</p>
+            <button
+              onClick={fetchReviews}
+              className="mt-2 text-blue-600 hover:text-blue-800 text-sm"
+            >
+              Try again
+            </button>
+          </div>
+        </div>
       </div>
     );
   }
@@ -111,122 +93,126 @@ export default function VerifiedReviewsCarousel({
   const currentReview = reviews[currentIndex];
 
   return (
-    <section className="py-16 bg-gradient-to-br from-blue-50 to-indigo-100">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="bg-white py-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header */}
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-gray-900 mb-4">
             What Our Customers Say
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Real reviews from verified customers who have used our services
+            Verified reviews from real customers who have used our services
           </p>
         </div>
 
-        <div className="relative">
+        {/* Review Carousel */}
+        <div className="relative max-w-4xl mx-auto">
           {/* Navigation Arrows */}
-          {reviews.length > 1 && (
-            <>
-              <button
-                onClick={prevReview}
-                className="absolute left-4 top-1/2 transform -translate-y-1/2 z-10 bg-white/80 hover:bg-white p-2 rounded-full shadow-lg transition-all duration-200 hover:scale-110"
-                aria-label="Previous review"
-              >
-                <ChevronLeft className="w-6 h-6 text-gray-700" />
-              </button>
-              
-              <button
-                onClick={nextReview}
-                className="absolute right-4 top-1/2 transform -translate-y-1/2 z-10 bg-white/80 hover:bg-white p-2 rounded-full shadow-lg transition-all duration-200 hover:scale-110"
-                aria-label="Next review"
-              >
-                <ChevronRight className="w-6 h-6 text-gray-700" />
-              </button>
-            </>
-          )}
+          <button
+            onClick={prevReview}
+            className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 p-2 bg-white rounded-full shadow-lg border border-gray-200 hover:bg-gray-50 transition-colors"
+            aria-label="Previous review"
+          >
+            <ChevronLeftIcon className="h-6 w-6 text-gray-600" />
+          </button>
 
-          {/* Review Card */}
-          <Card className="max-w-4xl mx-auto bg-white/90 backdrop-blur-sm border-0 shadow-xl">
-            <CardContent className="p-8 text-center">
-              <div className="mb-6">
-                <div className="flex justify-center mb-4">
-                  {renderStars(currentReview.rating)}
-                </div>
-                <div className="flex items-center justify-center gap-2 text-sm text-gray-600">
-                  <CheckCircle className="w-4 h-4 text-green-500" />
-                  <span>Verified Customer</span>
-                </div>
+          <button
+            onClick={nextReview}
+            className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 p-2 bg-white rounded-full shadow-lg border border-gray-200 hover:bg-gray-50 transition-colors"
+            aria-label="Next review"
+          >
+            <ChevronRightIcon className="h-6 w-6 text-gray-600" />
+          </button>
+
+          {/* Review Content */}
+          <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-8 md:p-12 shadow-lg">
+            <div className="text-center">
+              {/* Rating Stars */}
+              <div className="flex justify-center mb-4">
+                {[...Array(5)].map((_, i) => (
+                  <StarIcon
+                    key={i}
+                    className={`h-6 w-6 ${
+                      i < currentReview.rating
+                        ? 'text-yellow-400'
+                        : 'text-gray-300'
+                    }`}
+                  />
+                ))}
               </div>
 
-              <blockquote className="text-xl text-gray-800 mb-6 italic">
+              {/* Review Text */}
+              <blockquote className="text-lg md:text-xl text-gray-700 mb-6 italic">
                 "{currentReview.text}"
               </blockquote>
 
-              <div className="mb-6">
-                <p className="font-semibold text-gray-900">
-                  {currentReview.user.name}
-                </p>
-                <p className="text-sm text-gray-600">
-                  {currentReview.service.name} • {new Date(currentReview.createdAt).toLocaleDateString()}
-                </p>
-              </div>
-
-              {/* Review Media */}
-              {currentReview.mediaUrls && currentReview.mediaUrls.length > 0 && (
-                <div className="flex justify-center gap-2 mt-4">
-                  {currentReview.mediaUrls.slice(0, 3).map((url, index) => (
-                    <img
-                      key={index}
-                      src={url}
-                      alt={`Review media ${index + 1}`}
-                      className="w-16 h-16 object-cover rounded-lg border border-gray-200"
-                    />
-                  ))}
+              {/* Customer Info */}
+              <div className="flex items-center justify-center space-x-3">
+                {/* Avatar */}
+                <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-semibold text-lg">
+                  {currentReview.name.charAt(0)}
                 </div>
-              )}
-            </CardContent>
-          </Card>
+
+                <div className="text-left">
+                  <div className="flex items-center space-x-2">
+                    <h4 className="font-semibold text-gray-900">
+                      {currentReview.name}
+                    </h4>
+                    {currentReview.verified && (
+                      <CheckBadgeIcon className="h-5 w-5 text-blue-600" />
+                    )}
+                  </div>
+                  <p className="text-sm text-gray-600">{currentReview.service}</p>
+                  <p className="text-xs text-gray-500">
+                    {formatDistanceToNow(new Date(currentReview.date), { addSuffix: true })}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
 
           {/* Dots Indicator */}
-          {reviews.length > 1 && (
-            <div className="flex justify-center mt-6 gap-2">
-              {reviews.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrentIndex(index)}
-                  className={`w-3 h-3 rounded-full transition-all duration-200 ${
-                    index === currentIndex 
-                      ? 'bg-blue-600 scale-125' 
-                      : 'bg-gray-300 hover:bg-gray-400'
-                  }`}
-                  aria-label={`Go to review ${index + 1}`}
-                />
-              ))}
-            </div>
-          )}
+          <div className="flex justify-center mt-8 space-x-2">
+            {reviews.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => goToReview(index)}
+                className={`w-3 h-3 rounded-full transition-colors ${
+                  index === currentIndex
+                    ? 'bg-blue-600'
+                    : 'bg-gray-300 hover:bg-gray-400'
+                }`}
+                aria-label={`Go to review ${index + 1}`}
+              />
+            ))}
+          </div>
+
+          {/* Review Counter */}
+          <div className="text-center mt-4 text-sm text-gray-500">
+            {currentIndex + 1} of {reviews.length} reviews
+          </div>
         </div>
 
-        {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
-          <div className="text-center">
-            <div className="text-2xl font-bold text-blue-600">
-              {reviews.length}+
+        {/* Trust Indicators */}
+        <div className="text-center mt-12">
+          <div className="inline-flex items-center space-x-6 bg-white rounded-full px-6 py-3 shadow-sm border border-gray-200">
+            <div className="flex items-center space-x-2">
+              <CheckBadgeIcon className="h-5 w-5 text-green-600" />
+              <span className="text-sm font-medium text-gray-700">Verified Reviews</span>
             </div>
-            <div className="text-gray-600">Verified Reviews</div>
-          </div>
-          <div className="text-center">
-            <div className="text-2xl font-bold text-green-600">
-              {reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length}
+            <div className="w-px h-6 bg-gray-300"></div>
+            <div className="flex items-center space-x-2">
+              <StarIcon className="h-5 w-5 text-yellow-500" />
+              <span className="text-sm font-medium text-gray-700">4.8+ Rating</span>
             </div>
-            <div className="text-gray-600">Average Rating</div>
-          </div>
-          <div className="text-center">
-            <div className="text-2xl font-bold text-purple-600">
-              100%
+            <div className="w-px h-6 bg-gray-300"></div>
+            <div className="flex items-center space-x-2">
+              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+              <span className="text-sm font-medium text-gray-700">Real Customers</span>
             </div>
-            <div className="text-gray-600">Verified Customers</div>
           </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 }
