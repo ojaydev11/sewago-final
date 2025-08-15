@@ -7,27 +7,90 @@ import { Badge } from '@/components/ui/badge';
 import { useTranslations } from 'next-intl';
 import { Cookie, Shield, Settings, X, CheckCircle } from 'lucide-react';
 
+interface CookiePreferences {
+  necessary: boolean;
+  analytics: boolean;
+  marketing: boolean;
+  functional: boolean;
+}
+
 export default function CookieConsent() {
   const t = useTranslations();
   const [isVisible, setIsVisible] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
-  const [preferences, setPreferences] = useState({
+  const [preferences, setPreferences] = useState<CookiePreferences>({
     necessary: true, // Always required
     analytics: false,
     marketing: false,
     functional: false,
   });
 
+  // Cookie utility functions
+  const setCookie = (name: string, value: string, days: number) => {
+    const expires = new Date();
+    expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
+    document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/;SameSite=Lax`;
+  };
+
+  const getCookie = (name: string): string | null => {
+    const nameEQ = name + "=";
+    const ca = document.cookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+      if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+    }
+    return null;
+  };
+
+  const deleteCookie = (name: string) => {
+    document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;`;
+  };
+
   useEffect(() => {
     // Check if user has already made a choice
-    const consent = localStorage.getItem('cookie-consent');
+    const consent = getCookie('sewago-cookie-consent');
     if (!consent) {
       setIsVisible(true);
+    } else {
+      // Load existing preferences
+      try {
+        const savedPreferences = JSON.parse(consent);
+        setPreferences(savedPreferences);
+        
+        // Apply analytics consent immediately
+        applyAnalyticsConsent(savedPreferences.analytics);
+      } catch (error) {
+        console.error('Error parsing cookie consent:', error);
+        // If cookie is corrupted, remove it and show consent again
+        deleteCookie('sewago-cookie-consent');
+        setIsVisible(true);
+      }
     }
   }, []);
 
+  const applyAnalyticsConsent = (analyticsEnabled: boolean) => {
+    if (typeof window !== 'undefined') {
+      if (analyticsEnabled) {
+        // Enable analytics
+        window.gtag?.('consent', 'update', {
+          analytics_storage: 'granted',
+          ad_storage: 'granted',
+          functionality_storage: 'granted'
+        });
+      } else {
+        // Disable analytics
+        window.gtag?.('consent', 'update', {
+          analytics_storage: 'denied',
+          ad_storage: 'denied',
+          functionality_storage: 'denied'
+        });
+      }
+    }
+  };
+
   const handleAcceptAll = () => {
-    const allPreferences = {
+    const allPreferences: CookiePreferences = {
       necessary: true,
       analytics: true,
       marketing: true,
@@ -45,7 +108,7 @@ export default function CookieConsent() {
   };
 
   const handleRejectAll = () => {
-    const minimalPreferences = {
+    const minimalPreferences: CookiePreferences = {
       necessary: true,
       analytics: false,
       marketing: false,
@@ -57,25 +120,28 @@ export default function CookieConsent() {
     setIsVisible(false);
   };
 
-  const saveConsent = (consent: typeof preferences) => {
-    localStorage.setItem('cookie-consent', JSON.stringify(consent));
-    localStorage.setItem('cookie-consent-date', new Date().toISOString());
+  const saveConsent = (consent: CookiePreferences) => {
+    // Save to cookie with 90-day expiry
+    setCookie('sewago-cookie-consent', JSON.stringify(consent), 90);
+    setCookie('sewago-cookie-consent-date', new Date().toISOString(), 90);
     
-    // Update analytics based on consent
-    if (consent.analytics && typeof window !== 'undefined') {
-      // Enable analytics
-      window.gtag?.('consent', 'update', {
-        analytics_storage: 'granted'
-      });
-    } else if (typeof window !== 'undefined') {
-      // Disable analytics
-      window.gtag?.('consent', 'update', {
-        analytics_storage: 'denied'
+    // Apply analytics consent immediately
+    applyAnalyticsConsent(consent.analytics);
+    
+    // Track consent event
+    if (typeof window !== 'undefined' && window.gtag) {
+      window.gtag('event', 'cookie_consent', {
+        event_category: 'Consent',
+        event_label: 'cookie_preferences_updated',
+        value: Object.values(consent).filter(Boolean).length,
+        consent_analytics: consent.analytics,
+        consent_marketing: consent.marketing,
+        consent_functional: consent.functional
       });
     }
   };
 
-  const updatePreference = (key: keyof typeof preferences, value: boolean) => {
+  const updatePreference = (key: keyof CookiePreferences, value: boolean) => {
     setPreferences(prev => ({
       ...prev,
       [key]: value

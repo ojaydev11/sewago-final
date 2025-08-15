@@ -13,73 +13,75 @@ import { getMessages } from 'next-intl/server';
 
 const inter = Inter({ subsets: ['latin'] });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://sewago.com';
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://sewago-final.vercel.app';
 
-export const metadata: Metadata = {
-  title: 'SewaGo - Local Services in Nepal',
-  description: 'Connect with verified local service providers in Nepal. Professional electricians, plumbers, cleaners, and tutors available in Kathmandu, Pokhara, and across Nepal.',
-  keywords: 'local services Nepal, electrician Kathmandu, plumber Pokhara, cleaner Lalitpur, tutor Nepal, home services, professional services, verified providers, SewaGo, सेवागो',
-  authors: [{ name: 'SewaGo Team' }],
-  creator: 'SewaGo',
-  publisher: 'SewaGo',
-  formatDetection: {
-    email: false,
-    address: false,
-    telephone: false,
-  },
-  metadataBase: new URL(siteUrl),
-  alternates: {
-    canonical: '/',
-    languages: {
-      'en': '/en',
-      'ne': '/ne',
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: 'SewaGo - Local Services in Nepal',
+    description: 'Connect with verified local service providers in Nepal. Professional electricians, plumbers, cleaners, and tutors available in Kathmandu, Pokhara, and across Nepal.',
+    keywords: 'local services Nepal, electrician Kathmandu, plumber Pokhara, cleaner Lalitpur, tutor Nepal, home services, professional services, verified providers, SewaGo, सेवागो',
+    authors: [{ name: 'SewaGo Team' }],
+    creator: 'SewaGo',
+    publisher: 'SewaGo',
+    formatDetection: {
+      email: false,
+      address: false,
+      telephone: false,
     },
-  },
-  openGraph: {
-    title: 'SewaGo - Local Services in Nepal',
-    description: 'Connect with verified local service providers in Nepal. Professional services for every home.',
-    url: siteUrl,
-    siteName: 'SewaGo',
-    images: [
-      {
-        url: `${siteUrl}/og-image.jpg`,
-        width: 1200,
-        height: 630,
-        alt: 'SewaGo - Local Services in Nepal',
+    metadataBase: new URL(siteUrl),
+    alternates: {
+      canonical: siteUrl,
+      languages: {
+        'en': `${siteUrl}/en`,
       },
-    ],
-    locale: 'en_US',
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'SewaGo - Local Services in Nepal',
-    description: 'Connect with verified local service providers in Nepal. Professional services for every home.',
-    images: [`${siteUrl}/og-image.jpg`],
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
+    },
+    openGraph: {
+      title: 'SewaGo - Local Services in Nepal',
+      description: 'Connect with verified local service providers in Nepal. Professional services for every home.',
+      url: siteUrl,
+      siteName: 'SewaGo',
+      images: [
+        {
+          url: `${siteUrl}/og-image.jpg`,
+          width: 1200,
+          height: 630,
+          alt: 'SewaGo - Local Services in Nepal',
+        },
+      ],
+      locale: 'en_US',
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: 'SewaGo - Local Services in Nepal',
+      description: 'Connect with verified local service providers in Nepal. Professional services for every home.',
+      images: [`${siteUrl}/og-image.jpg`],
+    },
+    robots: {
       index: true,
       follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
     },
-  },
-  verification: {
-    google: 'your-google-verification-code',
-    yandex: 'your-yandex-verification-code',
-    yahoo: 'your-yahoo-verification-code',
-  },
-};
+    verification: {
+      google: 'your-google-verification-code',
+      yandex: 'your-yandex-verification-code',
+      yahoo: 'your-yahoo-verification-code',
+    },
+  };
+}
 
 // Generate static params for locales
 export async function generateStaticParams() {
   return [
     { locale: 'en' },
-    { locale: 'ne' }
+    // Temporarily removed 'ne' locale until full Nepali translation is implemented
+    // { locale: 'ne' }
   ];
 }
 

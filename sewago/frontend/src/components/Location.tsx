@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
-import { MapPin, Phone, Mail, Clock } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { MapPin, Phone, Mail, Clock, AlertCircle } from 'lucide-react';
 
 interface LocationProps {
   showMap?: boolean;
@@ -10,19 +10,36 @@ interface LocationProps {
 
 export default function Location({ showMap = true, className = '' }: LocationProps) {
   const mapRef = useRef<HTMLDivElement>(null);
+  const [mapError, setMapError] = useState<string | null>(null);
+  const [isMapLoading, setIsMapLoading] = useState(true);
 
   useEffect(() => {
     if (showMap && mapRef.current && typeof window !== 'undefined') {
+      const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+      
+      // Check if API key is provided and not the placeholder
+      if (!apiKey || apiKey === 'your-google-maps-api-key-here') {
+        setMapError('Google Maps API key not configured');
+        setIsMapLoading(false);
+        return;
+      }
+
       // Load Google Maps API
       const script = document.createElement('script');
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=places`;
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`;
       script.async = true;
       script.defer = true;
       script.onload = initMap;
+      script.onerror = () => {
+        setMapError('Failed to load Google Maps');
+        setIsMapLoading(false);
+      };
       document.head.appendChild(script);
 
       return () => {
-        document.head.removeChild(script);
+        if (document.head.contains(script)) {
+          document.head.removeChild(script);
+        }
       };
     }
   }, [showMap]);
@@ -30,62 +47,134 @@ export default function Location({ showMap = true, className = '' }: LocationPro
   const initMap = () => {
     if (!mapRef.current) return;
 
-    const kathmandu = { lat: 27.7172, lng: 85.3240 };
-    
-    const map = new google.maps.Map(mapRef.current, {
-      zoom: 15,
-      center: kathmandu,
-      styles: [
-        {
-          featureType: 'all',
-          elementType: 'geometry',
-          stylers: [{ color: '#f5f5f5' }]
-        },
-        {
-          featureType: 'water',
-          elementType: 'geometry',
-          stylers: [{ color: '#c9c9c9' }]
-        },
-        {
-          featureType: 'landscape',
-          elementType: 'geometry',
-          stylers: [{ color: '#f5f5f5' }]
+    try {
+      const kathmandu = { lat: 27.7172, lng: 85.3240 };
+      
+      const map = new google.maps.Map(mapRef.current, {
+        zoom: 15,
+        center: kathmandu,
+        styles: [
+          {
+            featureType: 'all',
+            elementType: 'geometry',
+            stylers: [{ color: '#f5f5f5' }]
+          },
+          {
+            featureType: 'water',
+            elementType: 'geometry',
+            stylers: [{ color: '#c9c9c9' }]
+          },
+          {
+            featureType: 'landscape',
+            elementType: 'geometry',
+            stylers: [{ color: '#f5f5f5' }]
+          }
+        ]
+      });
+
+      // Add marker for SewaGo office
+      new google.maps.Marker({
+        position: kathmandu,
+        map: map,
+        title: 'SewaGo - Local Services in Nepal',
+        icon: {
+          url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(`
+            <svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="20" cy="20" r="18" fill="#DC143C" stroke="#FF9933" stroke-width="2"/>
+              <text x="20" y="25" font-family="Arial" font-size="16" font-weight="bold" text-anchor="middle" fill="white">S</text>
+            </svg>
+          `),
+          scaledSize: new google.maps.Size(40, 40)
         }
-      ]
-    });
+      });
 
-    // Add marker for SewaGo office
-    new google.maps.Marker({
-      position: kathmandu,
-      map: map,
-      title: 'SewaGo - Local Services in Nepal',
-      icon: {
-        url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(`
-          <svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="20" cy="20" r="18" fill="#DC143C" stroke="#FF9933" stroke-width="2"/>
-            <text x="20" y="25" font-family="Arial" font-size="16" font-weight="bold" text-anchor="middle" fill="white">S</text>
-          </svg>
-        `),
-        scaledSize: new google.maps.Size(40, 40)
-      }
-    });
+      // Add info window
+      const infoWindow = new google.maps.InfoWindow({
+        content: `
+          <div style="padding: 10px; max-width: 200px;">
+            <h3 style="margin: 0 0 5px 0; color: #DC143C; font-weight: bold;">SewaGo</h3>
+            <p style="margin: 0; color: #333; font-size: 14px;">Local Services in Nepal</p>
+            <p style="margin: 5px 0 0 0; color: #666; font-size: 12px;">Thamel, Kathmandu</p>
+          </div>
+        `
+      });
 
-    // Add info window
-    const infoWindow = new google.maps.InfoWindow({
-      content: `
-        <div style="padding: 10px; max-width: 200px;">
-          <h3 style="margin: 0 0 5px 0; color: #DC143C; font-weight: bold;">SewaGo</h3>
-          <p style="margin: 0; color: #333; font-size: 14px;">Local Services in Nepal</p>
-          <p style="margin: 5px 0 0 0; color: #666; font-size: 12px;">Thamel, Kathmandu</p>
-        </div>
-      `
-    });
+      // Show info window on marker click
+      map.addListener('click', () => {
+        infoWindow.open(map, map.getCenter());
+      });
 
-    // Show info window on marker click
-    map.addListener('click', () => {
-      infoWindow.open(map, map.getCenter());
-    });
+      setIsMapLoading(false);
+    } catch (error) {
+      console.error('Error initializing map:', error);
+      setMapError('Failed to initialize map');
+      setIsMapLoading(false);
+    }
   };
+
+  const renderMapFallback = () => (
+    <div className='w-full h-80 rounded-lg border border-white/20 overflow-hidden bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center'>
+      <div className='text-center text-gray-600 p-6'>
+        <MapPin className='w-16 h-16 mx-auto mb-4 text-gray-400' />
+        <h4 className='text-lg font-semibold mb-2'>Interactive Map Unavailable</h4>
+        <p className='text-sm mb-4'>We're experiencing technical difficulties with our map service.</p>
+        
+        {/* Static location information */}
+        <div className='bg-white/80 rounded-lg p-4 text-left max-w-xs mx-auto'>
+          <div className='flex items-center gap-2 mb-2'>
+            <MapPin className='w-4 h-4 text-red-500' />
+            <span className='font-medium text-gray-800'>SewaGo Office</span>
+          </div>
+          <p className='text-sm text-gray-700 mb-1'>Thamel, Kathmandu</p>
+          <p className='text-sm text-gray-700 mb-1'>Bagmati Province, Nepal</p>
+          <p className='text-sm text-gray-700'>Postal Code: 44600</p>
+          
+          {/* Link to Google Maps */}
+          <a 
+            href='https://maps.google.com/?q=Thamel,Kathmandu,Nepal' 
+            target='_blank' 
+            rel='noopener noreferrer'
+            className='inline-flex items-center gap-2 mt-3 px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors'
+          >
+            <MapPin className='w-4 h-4' />
+            View on Google Maps
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderMapError = () => (
+    <div className='w-full h-80 rounded-lg border border-white/20 overflow-hidden bg-gradient-to-br from-red-50 to-red-100 flex items-center justify-center'>
+      <div className='text-center text-red-700 p-6'>
+        <AlertCircle className='w-16 h-16 mx-auto mb-4 text-red-500' />
+        <h4 className='text-lg font-semibold mb-2'>Map Loading Error</h4>
+        <p className='text-sm mb-4'>{mapError}</p>
+        
+        {/* Static location information */}
+        <div className='bg-white/80 rounded-lg p-4 text-left max-w-xs mx-auto'>
+          <div className='flex items-center gap-2 mb-2'>
+            <MapPin className='w-4 h-4 text-red-500' />
+            <span className='font-medium text-gray-800'>SewaGo Office</span>
+          </div>
+          <p className='text-sm text-gray-700 mb-1'>Thamel, Kathmandu</p>
+          <p className='text-sm text-gray-700 mb-1'>Bagmati Province, Nepal</p>
+          <p className='text-sm text-gray-700 mb-1'>Postal Code: 44600</p>
+          
+          {/* Link to Google Maps */}
+          <a 
+            href='https://maps.google.com/?q=Thamel,Kathmandu,Nepal' 
+            target='_blank' 
+            rel='noopener noreferrer'
+            className='inline-flex items-center gap-2 mt-3 px-4 py-2 bg-red-600 text-white text-sm rounded-lg hover:bg-red-700 transition-colors'
+          >
+            <MapPin className='w-4 h-4' />
+            View on Google Maps
+          </a>
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <div className={`space-y-6 ${className}`}>
@@ -175,20 +264,41 @@ export default function Location({ showMap = true, className = '' }: LocationPro
               className='w-full h-80 rounded-lg border border-white/20 overflow-hidden'
               style={{ minHeight: '320px' }}
             >
-              {/* Fallback content if map fails to load */}
-              <div className='w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center'>
-                <div className='text-center text-gray-600'>
-                  <MapPin className='w-12 h-12 mx-auto mb-2' />
-                  <p>Map loading...</p>
-                  <p className='text-sm'>Thamel, Kathmandu, Nepal</p>
+              {/* Show appropriate content based on state */}
+              {isMapLoading && !mapError && (
+                <div className='w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center'>
+                  <div className='text-center text-gray-600'>
+                    <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-2'></div>
+                    <p>Loading map...</p>
+                    <p className='text-sm'>Thamel, Kathmandu, Nepal</p>
+                  </div>
                 </div>
-              </div>
+              )}
+              
+              {mapError && renderMapError()}
+              
+              {!isMapLoading && !mapError && (
+                <div className='w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center'>
+                  <div className='text-center text-gray-600'>
+                    <MapPin className='w-12 h-12 mx-auto mb-2' />
+                    <p>Map loaded successfully</p>
+                    <p className='text-sm'>Thamel, Kathmandu, Nepal</p>
+                  </div>
+                </div>
+              )}
             </div>
             
             {/* Map Controls */}
             <div className='flex items-center justify-between text-sm text-white/60'>
               <span>📍 Thamel, Kathmandu</span>
-              <span>🗺️ View on Google Maps</span>
+              <a 
+                href='https://maps.google.com/?q=Thamel,Kathmandu,Nepal' 
+                target='_blank' 
+                rel='noopener noreferrer'
+                className='hover:text-white transition-colors'
+              >
+                🗺️ View on Google Maps
+              </a>
             </div>
           </div>
         )}
