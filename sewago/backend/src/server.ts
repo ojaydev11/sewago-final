@@ -1,8 +1,8 @@
 import http from "http";
-import { env } from "./config/env.js";
-import { connectToDatabase } from "./config/db.js";
-import { createApp } from "./app.js";
-import { createSocketServer } from "./socket-server.js";
+import { env } from "./config/env";
+import { connectToDatabase } from "./config/db";
+import { createApp } from "./app";
+import { createSocketServer } from "./socket-server";
 import { pathToFileURL } from "url";
 
 export async function bootstrap() {
@@ -26,7 +26,8 @@ export async function bootstrap() {
 const isDirectRun = (() => {
   try {
     const argHref = pathToFileURL(process.argv[1] ?? "").href;
-    return import.meta.url === argHref;
+    const currentFileUrl = pathToFileURL(__filename).href;
+    return currentFileUrl === argHref;
   } catch {
     return false;
   }
