@@ -7,12 +7,13 @@
     "node": ">=20"
   },
   "scripts": {
-    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+    "dev": "tsx watch src/server.ts",
     "build": "tsc -p .",
     "start": "node dist/server.js",
     "dev:test": "cross-env NODE_ENV=test PORT=4000 tsx src/server.ts",
     "lint": "eslint . --ext .ts",
-    "test": "vitest run"
+    "test": "vitest run",
+    "health": "curl -sS http://localhost:${PORT:-8001}/api/health || true"
   },
   "keywords": [],
   "author": "",
@@ -56,7 +57,6 @@
     "@types/multer": "^2.0.0",
     "@types/node": "^24.2.1",
     "@types/supertest": "^6.0.3",
-    "@types/uuid": "^10.0.0",
     "concurrently": "^9.2.0",
     "cross-env": "^7.0.3",
     "eslint": "^9.33.0",
