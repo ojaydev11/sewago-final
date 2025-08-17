@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import createMiddleware from 'next-intl/middleware';
-import { locales, defaultLocale } from './i18n-config';
+import { locales, defaultLocale } from './src/i18n';
 
 // Create the internationalization middleware
 const intlMiddleware = createMiddleware({
@@ -35,9 +35,8 @@ export function middleware(req: NextRequest) {
 
 export const config = { 
   matcher: [
-    // Enable internationalization for all locales
-    '/((?!api|_next|_vercel|site.webmanifest|.*\\..*).*)',
-    // Also match API routes that need authentication
+    '/',
+    '/(en|ne)/:path*',
     '/services/:path*/book',
     '/bookings'
   ]
