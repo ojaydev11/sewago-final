@@ -3,6 +3,11 @@
 // Force dynamic rendering to prevent build-time prerendering
 export const dynamic = 'force-dynamic';
 
+// Prevent static generation
+export function generateStaticParams() {
+  return [];
+}
+
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';

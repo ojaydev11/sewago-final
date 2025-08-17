@@ -15,6 +15,9 @@ const inter = Inter({ subsets: ['latin'] });
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://sewago-final.vercel.app';
 
+// Force dynamic rendering to prevent build-time prerendering issues
+export const dynamic = 'force-dynamic';
+
 export async function generateMetadata(): Promise<Metadata> {
   return {
     title: 'SewaGo - Local Services in Nepal',
@@ -76,13 +79,9 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-// Generate static params for locales
+// Prevent static generation - return empty array to force dynamic rendering
 export async function generateStaticParams() {
-  return [
-    { locale: 'en' },
-    // Temporarily removed 'ne' locale until full Nepali translation is implemented
-    // { locale: 'ne' }
-  ];
+  return [];
 }
 
 export default async function RootLayout({
