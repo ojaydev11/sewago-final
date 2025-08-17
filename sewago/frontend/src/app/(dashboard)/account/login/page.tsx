@@ -2,6 +2,7 @@
 
 // Force dynamic rendering to prevent build-time prerendering
 export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 import React, { useState } from 'react';
 import { signIn, getSession } from 'next-auth/react';
