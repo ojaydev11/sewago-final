@@ -11,6 +11,9 @@ import { checkRateLimit } from '@/lib/rate-limit-adapters';
 import { ratePolicies } from '@/lib/rate-policies';
 import { getIdentifier } from '@/lib/request-identity';
 
+// Force dynamic rendering to prevent build-time issues
+export const dynamic = 'force-dynamic';
+
 export interface AIHandleRequest {
   text: string;
   threadId?: string;

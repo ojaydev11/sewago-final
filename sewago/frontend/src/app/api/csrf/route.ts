@@ -3,6 +3,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getToken } from 'next-auth/jwt';
 import { generateSecureId } from '@/lib/utils';
 
+// Force dynamic rendering to prevent build-time issues
+export const dynamic = 'force-dynamic';
+
 // In production, use Redis or database
 const csrfTokens = new Map<string, { token: string; expires: number }>();
 

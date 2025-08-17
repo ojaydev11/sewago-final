@@ -1,4 +1,8 @@
 import { Metadata } from 'next';
+
+// Force dynamic rendering to prevent build-time issues
+export const dynamic = "force-dynamic";
+
 import Link from 'next/link';
 import { getServices } from '@/lib/services';
 import ServiceGrid from '@/components/services/ServiceGrid';

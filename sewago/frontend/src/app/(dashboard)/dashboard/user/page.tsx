@@ -1,5 +1,9 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
+
+// Force dynamic rendering to prevent build-time issues
+export const dynamic = "force-dynamic";
+
 import { formatNPR } from "@/lib/currency";
 
 // Force dynamic rendering to prevent build-time pre-rendering

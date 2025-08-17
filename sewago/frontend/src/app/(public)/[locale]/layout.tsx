@@ -1,4 +1,8 @@
 import { NextIntlClientProvider } from 'next-intl';
+
+// Force dynamic rendering to prevent build-time issues
+export const dynamic = "force-dynamic";
+
 import { getMessages } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { locales } from '../../../../i18n-config';

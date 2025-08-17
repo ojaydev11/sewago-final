@@ -1,5 +1,9 @@
 "use client";
 import { socket } from "@/lib/socket";
+
+// Force dynamic rendering to prevent build-time issues
+export const dynamic = "force-dynamic";
+
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { useParams } from "next/navigation";

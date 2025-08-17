@@ -15,6 +15,8 @@
 - **Solution**: Removed standalone output configuration
 - **Problem**: Missing ESLint build-time configuration
 - **Solution**: Added `eslint: { ignoreDuringBuilds: true }`
+- **Problem**: `staticPageGenerationTimeout: 0` was too restrictive
+- **Solution**: Removed overly restrictive timeout setting
 
 ### 4. Root Layout Static Generation
 - **Problem**: Root layout was trying to generate static params for locales
@@ -24,12 +26,16 @@
 - **Problem**: Client components cannot use both `'use client'` and `generateStaticParams()`
 - **Solution**: Removed `generateStaticParams` from client components, kept only `dynamic = 'force-dynamic'`
 
+### 6. API Route Build Failures
+- **Problem**: API routes were failing during static generation phase
+- **Solution**: Added `export const dynamic = 'force-dynamic'` to all API routes
+
 ## Files Modified
 
 ### 1. `next.config.ts`
 - Removed `output: 'standalone'`
 - Added `eslint: { ignoreDuringBuilds: true }`
-- Added `staticPageGenerationTimeout: 0`
+- Removed `staticPageGenerationTimeout: 0`
 
 ### 2. `src/middleware.ts`
 - Wrapped `getToken` calls in try-catch blocks
@@ -47,7 +53,14 @@
 - `src/app/(dashboard)/dashboard/page.tsx` - Added `dynamic = 'force-dynamic'` only
 - `src/app/(dashboard)/provider/onboarding/page.tsx` - Added `dynamic = 'force-dynamic'` only
 
-### 6. `src/lib/static-generation.ts`
+### 6. API Routes
+- `src/app/api/contact/route.ts` - Added `dynamic = 'force-dynamic'`
+- `src/app/api/ai/handle/route.ts` - Added `dynamic = 'force-dynamic'`
+- `src/app/api/counters/route.ts` - Added `dynamic = 'force-dynamic'`
+- `src/app/api/csrf/route.ts` - Added `dynamic = 'force-dynamic'`
+- `src/app/api-frontend/health/route.ts` - Added `dynamic = 'force-dynamic'`
+
+### 7. `src/lib/static-generation.ts`
 - Created utility functions for preventing static generation
 - Comprehensive list of routes that should always be dynamic
 
@@ -73,6 +86,12 @@ export function generateStaticParams() {
 }
 ```
 
+### Dynamic Rendering Enforcement (API Routes)
+```typescript
+// Force dynamic rendering to prevent build-time issues
+export const dynamic = 'force-dynamic';
+```
+
 ### Middleware Error Handling
 ```typescript
 try {
@@ -91,8 +110,7 @@ eslint: {
   ignoreDuringBuilds: true,
 },
 
-// Disable static generation entirely
-staticPageGenerationTimeout: 0,
+// Note: Removed staticPageGenerationTimeout: 0 as it was too restrictive
 ```
 
 ## Build Process Improvements
@@ -102,6 +120,7 @@ staticPageGenerationTimeout: 0,
 3. **Configuration Optimization**: Next.js config prevents prerendering conflicts
 4. **ESLint Integration**: Build-time linting disabled to prevent blocking
 5. **Client Component Compliance**: All client components follow Next.js constraints
+6. **API Route Protection**: All API routes use dynamic rendering to prevent build failures
 
 ## Testing the Fixes
 
@@ -125,3 +144,5 @@ After implementing these changes:
 - Build process should now complete successfully without prerendering errors
 - Client components use only `dynamic = 'force-dynamic'` directive
 - Server components can use both `dynamic` and `generateStaticParams` if needed
+- API routes are protected from static generation failures
+- Configuration is optimized for build success rather than build-time performance

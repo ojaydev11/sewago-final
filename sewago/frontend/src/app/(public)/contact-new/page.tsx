@@ -2,6 +2,10 @@
 export const dynamic = 'force-dynamic';
 
 import { Metadata } from 'next';
+
+// Force dynamic rendering to prevent build-time issues
+export const dynamic = "force-dynamic";
+
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';

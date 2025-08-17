@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { dbConnect } from '@/lib/mongodb';
 import { SupportTicket } from '@/models/SupportTicket';
 
+// Force dynamic rendering to prevent build-time issues
+export const dynamic = 'force-dynamic';
+
 // POST /api/contact - Create a support ticket
 export async function POST(request: NextRequest) {
   try {
