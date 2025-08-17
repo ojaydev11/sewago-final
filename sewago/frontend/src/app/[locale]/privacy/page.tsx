@@ -6,11 +6,11 @@ import {
   SparklesIcon
 } from '@heroicons/react/24/outline';
 
-import { Metadata } from 'next';
-import Link from 'next/link';
-
 // Force dynamic rendering to prevent build-time issues
 export const dynamic = "force-dynamic";
+
+import { Metadata } from 'next';
+import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Privacy Policy - SewaGo | Data Protection & Privacy',

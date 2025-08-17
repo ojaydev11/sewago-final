@@ -1,8 +1,4 @@
 import { 
-
-// Force dynamic rendering to prevent build-time issues
-export const dynamic = "force-dynamic";
-
   ShieldCheckIcon,
   EyeIcon,
   LockClosedIcon,
@@ -12,6 +8,9 @@ export const dynamic = "force-dynamic";
 
 import { Metadata } from 'next';
 import Link from 'next/link';
+
+// Force dynamic rendering to prevent build-time issues
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: 'Privacy Policy - SewaGo | Data Protection & Privacy',
