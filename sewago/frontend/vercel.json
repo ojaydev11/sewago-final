@@ -1,5 +1,5 @@
 {
-  "buildCommand": "prisma generate && next build",
+  "buildCommand": "next build",
   "env": {
     "MOCK_MODE": "true",
     "NEXT_PUBLIC_NOTIFICATIONS_ENABLED": "false",
