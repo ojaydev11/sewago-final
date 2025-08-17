@@ -93,7 +93,6 @@ export function createApp(io) {
             max: 30,
             standardHeaders: true,
             legacyHeaders: false,
-            keyGenerator: (req) => req.userId ?? req.ip,
         }));
     }
     const sanitizeInPlace = (value) => {

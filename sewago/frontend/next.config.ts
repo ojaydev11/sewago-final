@@ -122,15 +122,14 @@ const nextConfig: NextConfig = {
         {
           source: '/api/_frontend/:path*',
           destination: '/api-frontend/:path*',
-        }
-      ],
-      afterFiles: [],
-      fallback: [
+        },
         {
           source: '/api/:path*',
           destination: `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8001'}/api/:path*`,
         }
       ],
+      afterFiles: [],
+      fallback: [],
     };
   },
 };
