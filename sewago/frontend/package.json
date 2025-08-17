@@ -17,8 +17,7 @@
     "prisma:migrate": "prisma migrate dev --name init_jules_batch",
     "prisma:seed": "tsx scripts/seed.ts",
     "e2e": "playwright test",
-    "vercel-build": "npm run build",
-    "postinstall": "prisma generate"
+    "vercel-build": "npm run build"
   },
   "dependencies": {
     "@auth/mongodb-adapter": "^3.10.0",
