@@ -5,9 +5,6 @@ export const dynamic = 'force-dynamic';
 
 import { useQuery, useMutation } from "@tanstack/react-query";
 
-// Force dynamic rendering to prevent build-time issues
-export const dynamic = "force-dynamic";
-
 import { api } from "@/lib/api";
 import { formatNPR } from "@/lib/currency";
 
