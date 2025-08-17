@@ -5,9 +5,6 @@ import { useQuery } from "@tanstack/react-query";
 export const dynamic = "force-dynamic";
 
 import { formatNPR } from "@/lib/currency";
-
-// Force dynamic rendering to prevent build-time pre-rendering
-export const dynamic = 'force-dynamic';
 import { api } from "@/lib/api";
 
 type Booking = { _id: string; status: string; price: number; createdAt: string };

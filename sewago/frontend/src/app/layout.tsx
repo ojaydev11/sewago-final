@@ -20,7 +20,6 @@ const inter = Inter({ subsets: ['latin'] });
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://sewago-final.vercel.app';
 
 // Force dynamic rendering to prevent build-time prerendering issues
-export const dynamic = 'force-dynamic';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
