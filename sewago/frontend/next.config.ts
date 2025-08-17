@@ -27,9 +27,6 @@ const nextConfig: NextConfig = {
     return 'build-' + Date.now();
   },
 
-  // Disable static generation entirely
-  staticPageGenerationTimeout: 0,
-
   // Image optimization
   images: {
     domains: [
