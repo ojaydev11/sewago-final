@@ -5,11 +5,6 @@ import { useState, useEffect } from 'react';
 // Force dynamic rendering to prevent build-time pre-rendering
 export const dynamic = 'force-dynamic';
 
-// Prevent static generation
-export function generateStaticParams() {
-  return [];
-}
-
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';

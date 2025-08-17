@@ -4,7 +4,7 @@
 
 ### 1. Static Generation Conflicts
 - **Problem**: Next.js was attempting to prerender pages that use client-side features (authentication, hooks, etc.)
-- **Solution**: Added `export const dynamic = 'force-dynamic'` and `generateStaticParams()` functions to problematic pages
+- **Solution**: Added `export const dynamic = 'force-dynamic'` to problematic pages (client components cannot use `generateStaticParams`)
 
 ### 2. Middleware Build-Time Errors
 - **Problem**: Middleware was trying to use `getToken` from `next-auth/jwt` during build time
@@ -19,6 +19,10 @@
 ### 4. Root Layout Static Generation
 - **Problem**: Root layout was trying to generate static params for locales
 - **Solution**: Modified `generateStaticParams()` to return empty array, forcing dynamic rendering
+
+### 5. Client Component Constraints
+- **Problem**: Client components cannot use both `'use client'` and `generateStaticParams()`
+- **Solution**: Removed `generateStaticParams` from client components, kept only `dynamic = 'force-dynamic'`
 
 ## Files Modified
 
@@ -35,15 +39,13 @@
 - Added `export const dynamic = 'force-dynamic'`
 - Modified `generateStaticParams()` to return empty array
 
-### 4. Authentication Pages
-- `src/app/auth/login/page.tsx`
-- `src/app/auth/register/page.tsx`
-- Added `generateStaticParams()` functions
+### 4. Authentication Pages (Client Components)
+- `src/app/auth/login/page.tsx` - Added `dynamic = 'force-dynamic'` only
+- `src/app/auth/register/page.tsx` - Added `dynamic = 'force-dynamic'` only
 
-### 5. Dashboard Pages
-- `src/app/(dashboard)/dashboard/page.tsx`
-- `src/app/(dashboard)/provider/onboarding/page.tsx`
-- Added `generateStaticParams()` functions
+### 5. Dashboard Pages (Client Components)
+- `src/app/(dashboard)/dashboard/page.tsx` - Added `dynamic = 'force-dynamic'` only
+- `src/app/(dashboard)/provider/onboarding/page.tsx` - Added `dynamic = 'force-dynamic'` only
 
 ### 6. `src/lib/static-generation.ts`
 - Created utility functions for preventing static generation
@@ -51,7 +53,16 @@
 
 ## Key Changes Made
 
-### Dynamic Rendering Enforcement
+### Dynamic Rendering Enforcement (Client Components)
+```typescript
+// Force dynamic rendering to prevent build-time prerendering
+export const dynamic = 'force-dynamic';
+
+// Note: Client components cannot use generateStaticParams()
+// The dynamic directive is sufficient for preventing static generation
+```
+
+### Dynamic Rendering Enforcement (Server Components)
 ```typescript
 // Force dynamic rendering to prevent build-time prerendering
 export const dynamic = 'force-dynamic';
@@ -90,6 +101,7 @@ staticPageGenerationTimeout: 0,
 2. **Error Handling**: Middleware gracefully handles build-time scenarios
 3. **Configuration Optimization**: Next.js config prevents prerendering conflicts
 4. **ESLint Integration**: Build-time linting disabled to prevent blocking
+5. **Client Component Compliance**: All client components follow Next.js constraints
 
 ## Testing the Fixes
 
@@ -111,3 +123,5 @@ After implementing these changes:
 - All client-side functionality remains intact
 - Authentication and dynamic features continue to work as expected
 - Build process should now complete successfully without prerendering errors
+- Client components use only `dynamic = 'force-dynamic'` directive
+- Server components can use both `dynamic` and `generateStaticParams` if needed
