@@ -1,4 +1,8 @@
 import Hero from '@/components/Hero';
+
+// Force dynamic rendering to prevent build-time issues
+export const dynamic = "force-dynamic";
+
 import SearchBar from '@/components/SearchBar';
 import ServicesGrid from '@/components/ServicesGrid';
 import CounterBar from '@/components/CounterBar';

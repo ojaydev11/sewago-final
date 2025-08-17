@@ -1,5 +1,9 @@
 
 import { Metadata } from 'next';
+
+// Force dynamic rendering to prevent build-time issues
+export const dynamic = "force-dynamic";
+
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { 

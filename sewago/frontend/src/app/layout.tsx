@@ -1,4 +1,8 @@
 import type { Metadata } from 'next';
+
+// Force dynamic rendering to prevent build-time issues
+export const dynamic = "force-dynamic";
+
 import { Inter } from 'next/font/google';
 import { Suspense } from 'react';
 import './globals.css';

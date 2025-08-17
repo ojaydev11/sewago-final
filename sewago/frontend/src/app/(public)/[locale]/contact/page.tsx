@@ -1,6 +1,10 @@
 
 
 import { Metadata } from 'next';
+
+// Force dynamic rendering to prevent build-time issues
+export const dynamic = "force-dynamic";
+
 import Link from 'next/link';
 import { designUtils, componentStyles } from '@/lib/design-system';
 import Location from '@/components/Location';

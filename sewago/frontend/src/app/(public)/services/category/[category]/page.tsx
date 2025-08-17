@@ -1,5 +1,9 @@
 "use client";
 import { useParams, useSearchParams, useRouter } from "next/navigation";
+
+// Force dynamic rendering to prevent build-time issues
+export const dynamic = "force-dynamic";
+
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 

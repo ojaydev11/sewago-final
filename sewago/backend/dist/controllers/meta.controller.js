@@ -1,3 +1,6 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.listCategories = listCategories;
 const categories = [
     "plumbing",
     "electrical",
@@ -10,6 +13,6 @@ const categories = [
     "it",
     "tutoring",
 ];
-export function listCategories(_req, res) {
+function listCategories(_req, res) {
     res.json(categories);
 }

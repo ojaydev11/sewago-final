@@ -2,6 +2,10 @@
 export const dynamic = 'force-dynamic';
 
 import { getCurrentUser } from '@/lib/auth';
+
+// Force dynamic rendering to prevent build-time issues
+export const dynamic = "force-dynamic";
+
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 

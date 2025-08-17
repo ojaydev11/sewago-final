@@ -1,8 +1,13 @@
-import { ReviewModel } from "../models/Review.js";
-import { BookingModel } from "../models/Booking.js";
-import { ServiceModel } from "../models/Service.js";
-import { NotificationService } from "../lib/services/NotificationService.js";
-export async function addReview(req, res) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.addReview = addReview;
+exports.listProviderReviews = listProviderReviews;
+exports.getReview = getReview;
+const Review_js_1 = require("../models/Review.js");
+const Booking_js_1 = require("../models/Booking.js");
+const Service_js_1 = require("../models/Service.js");
+const NotificationService_js_1 = require("../lib/services/NotificationService.js");
+async function addReview(req, res) {
     try {
         const userId = req.userId;
         const { bookingId, rating, text, mediaUrls = [] } = req.body;
@@ -37,7 +42,7 @@ export async function addReview(req, res) {
             });
         }
         // Verify the booking exists and is completed
-        const booking = await BookingModel.findOne({
+        const booking = await Booking_js_1.BookingModel.findOne({
             _id: bookingId,
             userId,
             status: "COMPLETED"
@@ -49,7 +54,7 @@ export async function addReview(req, res) {
             });
         }
         // Check if review already exists for this booking
-        const existingReview = await ReviewModel.findOne({ bookingId });
+        const existingReview = await Review_js_1.ReviewModel.findOne({ bookingId });
         if (existingReview) {
             return res.status(400).json({
                 success: false,
@@ -57,7 +62,7 @@ export async function addReview(req, res) {
             });
         }
         // Create the review
-        const review = await ReviewModel.create({
+        const review = await Review_js_1.ReviewModel.create({
             bookingId,
             userId,
             serviceId: booking.serviceId,
@@ -67,13 +72,13 @@ export async function addReview(req, res) {
             verified: true, // Reviews are verified by default
         });
         // Update service rating aggregates
-        await ServiceModel.findByIdAndUpdate(booking.serviceId, {
+        await Service_js_1.ServiceModel.findByIdAndUpdate(booking.serviceId, {
             $inc: { ratingCount: 1 },
             $set: {},
         });
         // Send notification to provider about the review
         if (booking.providerId) {
-            const notificationService = NotificationService.getInstance();
+            const notificationService = NotificationService_js_1.NotificationService.getInstance();
             await notificationService.sendToProvider(booking.providerId.toString(), `You received a ${rating}-star review for your recent service.`, "new_review", "push", booking._id.toString());
         }
         res.status(201).json({
@@ -90,13 +95,13 @@ export async function addReview(req, res) {
         });
     }
 }
-export async function listProviderReviews(req, res) {
+async function listProviderReviews(req, res) {
     try {
         const { providerId } = req.params;
         const { page = 1, limit = 20 } = req.query;
         const skip = (Number(page) - 1) * Number(limit);
         const [reviews, total] = await Promise.all([
-            ReviewModel.find({
+            Review_js_1.ReviewModel.find({
             // Note: We need to join with bookings to get providerId
             // This might need to be updated based on your actual data structure
             })
@@ -105,7 +110,7 @@ export async function listProviderReviews(req, res) {
                 .limit(Number(limit))
                 .populate("userId", "name")
                 .populate("serviceId", "name category"),
-            ReviewModel.countDocuments({
+            Review_js_1.ReviewModel.countDocuments({
             // Same filter as above
             })
         ]);
@@ -130,10 +135,10 @@ export async function listProviderReviews(req, res) {
         });
     }
 }
-export async function getReview(req, res) {
+async function getReview(req, res) {
     try {
         const { id } = req.params;
-        const review = await ReviewModel.findById(id)
+        const review = await Review_js_1.ReviewModel.findById(id)
             .populate("userId", "name")
             .populate("serviceId", "name category")
             .populate("bookingId", "status providerId");
