@@ -109,7 +109,6 @@ export function createApp(io?: any) {
         max: 30,
         standardHeaders: true,
         legacyHeaders: false,
-        keyGenerator: (req) => (req as any).userId ?? req.ip,
       })
     );
   }
