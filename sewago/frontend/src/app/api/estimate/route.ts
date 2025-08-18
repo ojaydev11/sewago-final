@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 
-export const runtime = "nodejs";
+export const runtime = "edge";
 
 type EstimateBody = {
   serviceType?: string;
@@ -33,5 +33,3 @@ export async function POST(req: NextRequest) {
   } catch {}
   return new Response(JSON.stringify({ min, max, currency: "NPR" }), { headers: { "content-type": "application/json" } });
 }
-
-

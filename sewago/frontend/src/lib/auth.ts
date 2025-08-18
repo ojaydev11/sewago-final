@@ -1,29 +1,18 @@
 import NextAuth from 'next-auth';
+import type { NextAuthOptions, Session, User as NextAuthUser } from 'next-auth';
+import { getServerSession } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import bcrypt from 'bcryptjs';
 import { db } from './db';
 
-// Extend the built-in session types
-declare module "next-auth" {
-  interface User {
-    id: string;
-    email: string;
-    name: string;
-    role: string;
-  }
-  
-  interface Session {
-    user: {
-      id: string;
-      email: string;
-      name: string;
-      role: string;
-    };
-  }
-}
+type SewagoUser = {
+  id: string;
+  email: string;
+  name: string | null;
+  role: string;
+};
 
-// Force Vercel to pick up latest changes - NextAuth TypeScript issues resolved
-export const { handlers, auth, signIn, signOut } = NextAuth({
+export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       name: 'credentials',
@@ -31,61 +20,55 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         email: { label: 'Email', type: 'email' },
         password: { label: 'Password', type: 'password' }
       },
-      async authorize(credentials) {
+      async authorize(credentials): Promise<NextAuthUser | null> {
         if (!credentials?.email || !credentials?.password) {
           return null;
         }
-
         try {
-          const user = await db.user.findUnique({
-            where: { email: credentials.email }
-          });
-
-          if (!user) {
-            return null;
-          }
-
+          const user = await db.user.findUnique({ where: { email: credentials.email } });
+          if (!user) return null;
           const isPasswordValid = await bcrypt.compare(credentials.password, user.passwordHash);
-
-          if (!isPasswordValid) {
-            return null;
-          }
-
-          return {
+          if (!isPasswordValid) return null;
+          const typed: SewagoUser = {
             id: user.id,
             email: user.email,
-            name: user.name,
-            role: user.role,
+            name: user.name ?? null,
+            role: (user as unknown as { role?: string }).role ?? 'user',
           };
+          return typed as unknown as NextAuthUser;
         } catch (error) {
+          // eslint-disable-next-line no-console
           console.error('Auth error:', error);
           return null;
         }
       }
     })
   ],
-  session: {
-    strategy: 'jwt',
-  },
+  session: { strategy: 'jwt' },
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.role = user.role;
+        const u = user as unknown as Partial<SewagoUser>;
+        if (u.role) {
+          (token as { role?: string }).role = u.role;
+        }
       }
       return token;
     },
     async session({ session, token }) {
-      if (token) {
-        session.user.id = token.sub!;
-        session.user.role = token.role as string;
+      if (token && session.user) {
+        const s = session as Session & { user: { id?: string; role?: string } };
+        s.user.id = (token.sub ?? '') as string;
+        s.user.role = (token as { role?: string }).role ?? 'user';
       }
       return session;
     }
   },
-  pages: {
-    signIn: '/account/login',
-  },
+  pages: { signIn: '/auth/login' },
   secret: process.env.AUTH_SECRET || 'fallback-secret-for-development',
-});
+};
+
+export const auth = () => getServerSession(authOptions);
+export const nextAuthHandler = NextAuth(authOptions);
 
 

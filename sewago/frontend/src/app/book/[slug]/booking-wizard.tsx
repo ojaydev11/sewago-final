@@ -11,7 +11,7 @@ import Link from 'next/link';
 interface Service {
   id: string;
   slug: string;
-  title: string;
+  name: string;
   description: string;
   category: string;
   priceRange?: { min: number; max: number };
@@ -154,9 +154,7 @@ export function BookingWizard({ service }: BookingWizardProps) {
         body: JSON.stringify({
           serviceId: formData.serviceDetails.serviceId,
           scheduledAt: new Date(`${formData.schedule.date}T${formData.schedule.time}`).toISOString(),
-          priceEstimateMin: estimate?.min || service.priceRange?.min || 500,
-          priceEstimateMax: estimate?.max || service.priceRange?.max || 1000,
-          addressId: 'temp-address', // Will be created in the API
+          address: `${formData.address.street}, ${formData.address.city}, ${formData.address.state} ${formData.address.postalCode}`,
           notes: formData.contact.notes,
         }),
       });
@@ -185,7 +183,7 @@ export function BookingWizard({ service }: BookingWizardProps) {
               <div className="space-y-3">
                 <div className="flex justify-between">
                   <span className="text-gray-600">Service:</span>
-                  <span className="font-medium">{service.title}</span>
+                  <span className="font-medium">{service.name}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">Category:</span>
@@ -296,7 +294,7 @@ export function BookingWizard({ service }: BookingWizardProps) {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Preferred Time</label>
+                  <label className="block text.sm font-medium text-gray-700 mb-2">Preferred Time</label>
                   <input
                     type="time"
                     value={formData.schedule.time}
@@ -388,7 +386,7 @@ export function BookingWizard({ service }: BookingWizardProps) {
                   )}
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">State</label>
+                  <label className="block text.sm font-medium text-gray-700 mb-2">State</label>
                   <input
                     {...addressForm.register('state')}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
@@ -517,7 +515,7 @@ export function BookingWizard({ service }: BookingWizardProps) {
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
                     <span className="text-gray-600">Service:</span>
-                    <span className="font-medium">{service.title}</span>
+                    <span className="font-medium">{service.name}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Duration:</span>
@@ -618,7 +616,7 @@ export function BookingWizard({ service }: BookingWizardProps) {
     <div className="space-y-8">
       {/* Header */}
       <div className="text-center">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Book {service.title}</h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">Book {service.name}</h1>
         <p className="text-gray-600">Complete the form below to schedule your service</p>
       </div>
 

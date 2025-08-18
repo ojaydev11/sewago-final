@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Search, Filter, MapPin, Star, Calendar, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { formatNPR } from '@/lib/currency';
 
 interface Service {
@@ -192,9 +193,12 @@ export function ServicesClient({ initialServices }: ServicesClientProps) {
             {/* Service Image */}
             <div className="h-48 bg-gradient-to-br from-red-50 to-red-100 flex items-center justify-center">
               {service.imageUrl ? (
-                <img
+                <Image
                   src={service.imageUrl}
                   alt={service.title}
+                  width={192}
+                  height={192}
+                  priority={false}
                   className="h-24 w-24 object-contain"
                 />
               ) : (

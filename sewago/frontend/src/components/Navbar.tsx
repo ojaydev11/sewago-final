@@ -17,6 +17,8 @@ export function Navbar() {
         </Link>
         <div className="flex items-center gap-4">
           <Link href="/services" className="text-sm">Services</Link>
+          <Link href="/privacy" className="text-sm text-slate-600">Privacy</Link>
+          <Link href="/terms" className="text-sm text-slate-600">Terms</Link>
           <Link href="/auth/login" className="text-sm">Login</Link>
           <Link href="/auth/register" className="text-sm">Register</Link>
           <button className={`px-2 py-1 rounded ${lite ? 'bg-amber-600 text-white' : 'bg-gray-100'}`} onClick={toggleLite}>Lite</button>

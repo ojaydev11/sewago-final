@@ -8,6 +8,9 @@ import { Navbar } from "@/components/Navbar";
 import { LiteModeProvider } from "@/providers/lite";
 import "@/lib/auth";
 import Script from "next/script";
+import { CookieConsent } from "@/components/CookieConsent";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,6 +34,7 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
+  manifest: "/manifest.webmanifest",
 };
 
 export default function RootLayout({
@@ -76,6 +80,9 @@ export default function RootLayout({
             <LiteModeProvider>
               <Navbar />
               {children}
+              <CookieConsent />
+              <Analytics />
+              <SpeedInsights />
             </LiteModeProvider>
           </LanguageProvider>
         </ReactQueryProvider>

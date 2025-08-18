@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 import { BookingModel } from "../models/Booking.js";
+import { UserModel } from "../models/User.js";
+import { sendBookingConfirmation } from "../services/email.js";
 import { Types } from "mongoose";
 
 export async function createBooking(req: Request, res: Response) {
@@ -23,6 +25,17 @@ export async function createBooking(req: Request, res: Response) {
     address,
     payment: { method: "cash", status: "pending", ...(payment ?? {}) },
   });
+  try {
+    const user = await UserModel.findById(userId).select("email");
+    if (user?.email) {
+      await sendBookingConfirmation({
+        to: user.email,
+        bookingId: String(booking._id),
+        serviceTitle: String(serviceId),
+        scheduledAt: new Date(date),
+      });
+    }
+  } catch {}
   res.status(201).json(booking);
 }
 

@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install root deps
+        run: npm ci --ignore-scripts
+        working-directory: sewago
+      - name: Install backend deps
+        run: npm ci
+        working-directory: sewago/backend
+      - name: Install frontend deps
+        run: npm ci
+        working-directory: sewago/frontend
+      - name: Lint
+        run: npm run lint
+        working-directory: sewago
+      - name: Typecheck (frontend)
+        run: npm run typecheck
+        working-directory: sewago/frontend
+      - name: Build backend
+        run: npm run build
+        working-directory: sewago/backend
+      - name: Build frontend
+        run: npm run build
+        working-directory: sewago/frontend
+      - name: Run tests
+        run: npm run test
+        working-directory: sewago

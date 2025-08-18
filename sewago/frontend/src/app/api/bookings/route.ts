@@ -2,13 +2,12 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { z } from 'zod';
+import type { $Enums as PrismaEnums } from '@prisma/client';
 
 const createBookingSchema = z.object({
   serviceId: z.string(),
   scheduledAt: z.string().datetime(),
-  priceEstimateMin: z.number().min(0),
-  priceEstimateMax: z.number().min(0),
-  addressId: z.string(),
+  address: z.string().min(3),
   notes: z.string().optional(),
 });
 
@@ -29,8 +28,10 @@ export async function POST(request: NextRequest) {
     const booking = await db.booking.create({
       data: {
         userId: session.user.id,
-        ...validatedData,
+        serviceId: validatedData.serviceId,
         scheduledAt: new Date(validatedData.scheduledAt),
+        address: validatedData.address,
+        notes: validatedData.notes,
       }
     });
 
@@ -64,13 +65,15 @@ export async function GET(request: NextRequest) {
 
     const { searchParams } = new URL(request.url);
     const status = searchParams.get('status');
-
-    const whereClause: { userId: string; status?: string } = { userId: session.user.id };
-    
+    const whereClause: { userId: string; status?: PrismaEnums.BookingStatus } = { userId: session.user.id };
     if (status && status !== 'all') {
-      whereClause.status = status;
+      const AllowedBookingStatuses: readonly PrismaEnums.BookingStatus[] = [
+        'PENDING_CONFIRMATION','CONFIRMED','PROVIDER_ASSIGNED','EN_ROUTE','IN_PROGRESS','COMPLETED','CANCELED','DISPUTED'
+      ];
+      if (AllowedBookingStatuses.includes(status as PrismaEnums.BookingStatus)) {
+        whereClause.status = status as PrismaEnums.BookingStatus;
+      }
     }
-
     const bookings = await db.booking.findMany({ where: whereClause });
 
     return NextResponse.json({ bookings });

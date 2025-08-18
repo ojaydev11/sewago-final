@@ -1,4 +1,5 @@
 import { Suspense } from 'react';
+import Image from 'next/image';
 import { Metadata } from 'next';
 import { db } from '@/lib/db';
 import { SeoJsonLd } from '@/app/components/SeoJsonLd';
@@ -75,6 +76,9 @@ export default async function ServicesPage() {
         <p className="text-xl text-gray-600 max-w-2xl mx-auto">
           Connect with trusted local professionals for all your home and business needs
         </p>
+        <div className="mt-6 flex justify-center">
+          <Image src="/hero-illustration.svg" alt="SewaGo" width={960} height={480} priority sizes="(max-width: 768px) 100vw, 960px" className="rounded-lg w-full h-auto max-w-4xl" />
+        </div>
       </div>
 
       <SeoJsonLd data={jsonLdData} />
@@ -93,5 +97,3 @@ export default async function ServicesPage() {
     </div>
   );
 }
-
-

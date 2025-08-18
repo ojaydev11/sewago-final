@@ -1,5 +1,6 @@
 import Link from "next/link";
 export const dynamic = "force-static";
+export const revalidate = 600;
 
 export default function Home() {
   return (

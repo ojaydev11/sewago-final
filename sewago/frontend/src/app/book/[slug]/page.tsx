@@ -23,14 +23,14 @@ export async function generateMetadata({ params }: ServiceDetailPageProps): Prom
     }
 
     return {
-      title: `Book ${service.title} | SewaGo`,
-      description: `Book ${service.title} - ${service.description}`,
+      title: `Book ${service.name} | SewaGo`,
+      description: `Book ${service.name} - ${service.description}`,
       alternates: {
         canonical: `/book/${service.slug}`,
       },
       openGraph: {
-        title: `Book ${service.title}`,
-        description: `Book ${service.title} - ${service.description}`,
+        title: `Book ${service.name}`,
+        description: `Book ${service.name} - ${service.description}`,
         url: `/book/${service.slug}`,
         type: 'website',
       },
@@ -57,15 +57,15 @@ export default async function BookingPage({ params }: ServiceDetailPageProps) {
     const jsonLdData = {
       '@context': 'https://schema.org',
       '@type': 'Order',
-      name: `Booking for ${service.title}`,
-      description: `Booking request for ${service.title}`,
+      name: `Booking for ${service.name}`,
+      description: `Booking request for ${service.name}`,
       provider: {
         '@type': 'Organization',
         name: 'SewaGo',
       },
       itemOffered: {
         '@type': 'Service',
-        name: service.title,
+        name: service.name,
         description: service.description,
         category: service.category,
       },
