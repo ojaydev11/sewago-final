@@ -2,6 +2,8 @@
 
 // Force dynamic rendering to prevent build-time prerendering
 export const dynamic = 'force-dynamic';
+export const fetchCache = 'force-no-store';
+export const preferredRegion = 'auto';
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';

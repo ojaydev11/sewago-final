@@ -1,7 +1,10 @@
 import type { Metadata } from 'next';
 
-// Force dynamic rendering to prevent build-time issues
-export const dynamic = "force-dynamic";
+// Force dynamic rendering to prevent build-time prerendering issues
+export const dynamic = 'force-dynamic';
+
+// Build-time guard to prevent server-only code from running during build
+const isBuild = process.env.NEXT_PHASE === 'phase-production-build';
 
 import { Inter } from 'next/font/google';
 import { Suspense } from 'react';
@@ -13,13 +16,10 @@ import EmergencyServiceButton from '@/components/EmergencyServiceButton';
 import { AuthProvider } from '@/providers/auth';
 import { ReactQueryProvider } from '@/providers/react-query';
 import { NextIntlClientProvider } from 'next-intl';
-import { getMessages } from 'next-intl/server';
 
 const inter = Inter({ subsets: ['latin'] });
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://sewago-final.vercel.app';
-
-// Force dynamic rendering to prevent build-time prerendering issues
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -82,11 +82,6 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-// Prevent static generation - return empty array to force dynamic rendering
-export async function generateStaticParams() {
-  return [];
-}
-
 export default async function RootLayout({
   children,
   params
@@ -96,7 +91,18 @@ export default async function RootLayout({
 }) {
   // Handle missing locale gracefully
   const locale = params?.locale || 'en';
-  const messages = await getMessages();
+  
+  // Lazy load messages only when not in build phase
+  let messages = {};
+  if (!isBuild) {
+    try {
+      const { getMessages } = await import('next-intl/server');
+      messages = await getMessages();
+    } catch (error) {
+      // Fallback to empty messages during build
+      console.warn('Could not load messages during build phase');
+    }
+  }
 
   return (
     <html lang={locale}>

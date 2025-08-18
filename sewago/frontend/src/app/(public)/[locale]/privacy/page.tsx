@@ -1,8 +1,7 @@
-import { 
-
 // Force dynamic rendering to prevent build-time issues
 export const dynamic = "force-dynamic";
 
+import { 
   ShieldCheckIcon,
   EyeIcon,
   LockClosedIcon,

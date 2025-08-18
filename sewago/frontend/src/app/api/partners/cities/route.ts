@@ -1,4 +1,7 @@
 
+// Force dynamic rendering to prevent build-time prerendering
+export const dynamic = 'force-dynamic';
+
 import { NextRequest, NextResponse } from 'next/server';
 import { FEATURE_FLAGS } from '@/lib/feature-flags';
 

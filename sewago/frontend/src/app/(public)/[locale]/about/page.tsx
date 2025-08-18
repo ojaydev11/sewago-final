@@ -2,8 +2,10 @@
 
 import { Metadata } from 'next';
 
-// Force dynamic rendering to prevent build-time issues
-export const dynamic = "force-dynamic";
+// Force dynamic rendering to prevent build-time prerendering
+export const dynamic = 'force-dynamic';
+export const fetchCache = 'force-no-store';
+export const preferredRegion = 'auto';
 
 import Link from 'next/link';
 import { designUtils, componentStyles } from '@/lib/design-system';

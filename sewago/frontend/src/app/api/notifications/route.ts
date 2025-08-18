@@ -1,11 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
-import { notificationService } from '@/lib/notificationService';
-import { connectToDatabase } from '@/lib/mongodb';
+
+// Force dynamic rendering to prevent build-time prerendering
+export const dynamic = 'force-dynamic';
+
+// Build-time guard to prevent server-only code from running during build
+const isBuild = process.env.NEXT_PHASE === 'phase-production-build';
 
 export async function GET(request: NextRequest) {
+  // Skip execution during build phase
+  if (isBuild) {
+    return new Response(null, { status: 204 });
+  }
+
   try {
+    // Lazy import server-only modules
+    const { getServerSession } = await import('next-auth');
+    const { authOptions } = await import('@/lib/auth');
+    const { notificationService } = await import('@/lib/notificationService');
+    const { connectToDatabase } = await import('@/lib/mongodb');
+
     const session = await getServerSession(authOptions);
     
     if (!session?.user?.id) {
@@ -48,7 +61,18 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  // Skip execution during build phase
+  if (isBuild) {
+    return new Response(null, { status: 204 });
+  }
+
   try {
+    // Lazy import server-only modules
+    const { getServerSession } = await import('next-auth');
+    const { authOptions } = await import('@/lib/auth');
+    const { notificationService } = await import('@/lib/notificationService');
+    const { connectToDatabase } = await import('@/lib/mongodb');
+
     const session = await getServerSession(authOptions);
     
     if (!session?.user?.id) {
@@ -99,24 +123,24 @@ export async function POST(request: NextRequest) {
       type,
       title,
       message,
-      priority,
-      category,
+      priority: priority || 'normal',
+      category: category || 'general',
       data,
       actionUrl,
       actionText,
-      deliveryMethods,
-      scheduledFor: scheduledFor ? new Date(scheduledFor) : undefined,
-      expiresAt: expiresAt ? new Date(expiresAt) : undefined,
+      deliveryMethods: deliveryMethods || ['in_app'],
+      scheduledFor,
+      expiresAt,
       relatedId,
       relatedType,
       source: source || 'user',
-      tags,
+      tags: tags || [],
     });
 
     return NextResponse.json({
       success: true,
       data: notification,
-    }, { status: 201 });
+    });
   } catch (error) {
     console.error('Error creating notification:', error);
     return NextResponse.json(
