@@ -16,7 +16,9 @@ api.interceptors.request.use((config) => {
     if (id) {
       (config.headers as Record<string, string>)["x-request-id"] = id;
     }
-  } catch {}
+  } catch {
+    // ignore unavailability of crypto
+  }
   return config;
 });
 

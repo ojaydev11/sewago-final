@@ -30,7 +30,9 @@ export async function POST(req: NextRequest) {
   try {
     // eslint-disable-next-line no-console
     console.log("estimate:event", { ...body, hours, min, max });
-  } catch {}
+  } catch {
+    // ignore
+  }
   return new Response(JSON.stringify({ min, max, currency: "NPR" }), { headers: { "content-type": "application/json" } });
 }
 
