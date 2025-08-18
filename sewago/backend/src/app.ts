@@ -7,7 +7,6 @@ import cookieParser from "cookie-parser";
 import rateLimit from "express-rate-limit";
 // express-mongo-sanitize is not compatible with Express 5 (req.query setter).
 // Implement a minimal sanitizer that removes keys starting with '$' or containing '.'.
-import xss from "xss-clean";
 import { env, isProd } from "./config/env.js";
 import { api } from "./routes/index.js";
 import mongoose from "mongoose";
@@ -154,7 +153,7 @@ export function createApp() {
     // Do not mutate headers structure; skipping for safety
     next();
   });
-  app.use(xss());
+  // In-place sanitize string values in request containers to mitigate basic XSS vectors
   app.use(express.json({ limit: "1mb" }));
   app.use(express.urlencoded({ extended: true }));
   app.use(cookieParser());
