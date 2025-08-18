@@ -7,6 +7,7 @@ declare global {
         id: string;
         role: "user" | "provider" | "admin";
       };
+      validatedQuery?: Record<string, unknown>;
     }
   }
 }

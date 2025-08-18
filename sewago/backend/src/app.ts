@@ -23,6 +23,11 @@ export function createApp() {
   const app = express();
   // Trust first proxy so real client IP is visible behind Railway/Proxies
   app.set("trust proxy", 1);
+  // Friendly root + favicon
+  app.get("/", (_req, res) => {
+    res.json({ name: "SewaGo API", status: "ok", health: "/api/health" });
+  });
+  app.get("/favicon.ico", (_req, res) => res.status(204).end());
   
   // Enhanced security headers
   app.use(securityHeaders);
