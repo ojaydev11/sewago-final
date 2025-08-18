@@ -5,15 +5,25 @@
 /**
  * Formats a number as NPR currency with the "Rs" symbol and whole numbers
  * @param amount - The amount to format
- * @returns Formatted string like "Rs 1,234"
+ * @param locale - Locale for formatting ('en' or 'ne')
+ * @returns Formatted string like "Rs 1,234" or "रु १,२३४"
  */
-export function formatNPR(amount: number): string {
+export function formatNPR(amount: number, locale: string = 'en'): string {
   if (typeof amount !== 'number' || isNaN(amount)) {
-    return 'Rs 0';
+    return locale === 'ne' ? 'रु ०' : 'Rs 0';
   }
   
   // Round to whole number and format with locale
   const roundedAmount = Math.round(amount);
+  
+  if (locale === 'ne') {
+    // Format with Nepali numerals
+    const nepaliNumerals = ['०', '१', '२', '३', '४', '५', '६', '७', '८', '९'];
+    const formattedAmount = roundedAmount.toLocaleString('en-NP')
+      .replace(/[0-9]/g, (digit) => nepaliNumerals[parseInt(digit)]);
+    return `रु ${formattedAmount}`;
+  }
+  
   return `Rs ${roundedAmount.toLocaleString('en-NP')}`;
 }
 
