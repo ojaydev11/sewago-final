@@ -7,14 +7,15 @@ import {
   PaymentVerificationResponse,
   KhaltiVerificationRequest,
 } from '../../types/payments.js';
+import { KHALTI_KEY, env } from '../../config/env.js';
 
 export class KhaltiGateway implements PaymentGateway {
   private secretKey: string;
   private baseUrl: string;
 
   constructor() {
-    this.secretKey = process.env.KHALTI_SECRET_KEY || '';
-    this.baseUrl = process.env.NODE_ENV === 'production' 
+    this.secretKey = KHALTI_KEY || '';
+    this.baseUrl = env.nodeEnv === 'production' 
       ? 'https://a.khalti.com/api/v2/epayment'
       : 'https://a.khalti.com/api/v2/epayment'; // Khalti uses same URL for test/prod
     
@@ -28,8 +29,8 @@ export class KhaltiGateway implements PaymentGateway {
       const referenceId = `KHALTI_${Date.now()}_${request.bookingId}`;
       
       const paymentData = {
-        return_url: request.returnUrl || `${process.env.CLIENT_ORIGIN}/payment/success`,
-        website_url: process.env.CLIENT_ORIGIN,
+        return_url: request.returnUrl || `${env.clientOrigin}/payment/success`,
+        website_url: env.clientOrigin,
         amount: request.amount * 100, // Khalti expects amount in paisa (1 NPR = 100 paisa)
         purchase_order_id: referenceId,
         purchase_order_name: `SewaGo Booking ${request.bookingId}`,
