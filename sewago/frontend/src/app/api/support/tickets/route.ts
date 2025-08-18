@@ -6,6 +6,9 @@ import { FEATURE_FLAGS } from '@/config/flags';
 import { dbConnect } from '@/lib/mongodb';
 import { generateTicketId } from '@/lib/utils';
 
+// Force dynamic rendering to prevent build-time prerendering
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: NextRequest) {
   if (!FEATURE_FLAGS.SUPPORT_CENTER_ENABLED) {
     return NextResponse.json({ error: 'Support center disabled' }, { status: 403 });

@@ -5,6 +5,9 @@ import { AuditLogger } from '@/lib/audit-logger';
 import { FEATURE_FLAGS } from '@/config/flags';
 import { dbConnect } from '@/lib/mongodb';
 
+// Force dynamic rendering to prevent build-time prerendering
+export const dynamic = 'force-dynamic';
+
 // Training course content
 const COURSES = {
   'basic-safety': {

@@ -2,6 +2,12 @@ import { NextResponse } from 'next/server';
 
 export const runtime = 'nodejs';
 
+// Force dynamic rendering to prevent build-time prerendering
+export const dynamic = 'force-dynamic';
+
+// Build-time guard to prevent server-only code from running during build
+const isBuild = process.env.NEXT_PHASE === 'phase-production-build';
+
 interface PaymentRequest {
   bookingId: string;
   amount: number;
@@ -19,7 +25,12 @@ interface PaymentResponse {
   error?: string;
 }
 
-export async function POST(req: Request): Promise<NextResponse<PaymentResponse>> {
+export async function POST(req: Request): Promise<Response | NextResponse<PaymentResponse>> {
+  // Skip execution during build phase
+  if (isBuild) {
+    return new Response(null, { status: 204 });
+  }
+
   try {
     const body: PaymentRequest = await req.json();
     
@@ -81,7 +92,12 @@ export async function POST(req: Request): Promise<NextResponse<PaymentResponse>>
 }
 
 // Handle payment verification
-export async function GET(req: Request): Promise<NextResponse<PaymentResponse>> {
+export async function GET(req: Request): Promise<Response | NextResponse<PaymentResponse>> {
+  // Skip execution during build phase
+  if (isBuild) {
+    return new Response(null, { status: 204 });
+  }
+
   try {
     const { searchParams } = new URL(req.url);
     const transactionId = searchParams.get('txn');
