@@ -74,6 +74,7 @@ export default async function ServiceDetailPage({ params }: ServiceDetailPagePro
       slug: string;
       imageUrl?: string;
       priceRange?: { min: number; max: number };
+      isActive?: boolean;
     } | undefined;
 
     if (!service) {
@@ -124,13 +125,14 @@ export default async function ServiceDetailPage({ params }: ServiceDetailPagePro
       <div className="max-w-6xl mx-auto px-4 py-6">
         <SeoJsonLd data={jsonLdData} />
         <ServiceDetailClient 
-          service={service} 
+          service={{ ...service, isActive: service.isActive ?? true }} 
           reviews={reviews}
           averageRating={averageRating}
         />
       </div>
     );
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error('Error fetching service:', error);
     notFound();
   }

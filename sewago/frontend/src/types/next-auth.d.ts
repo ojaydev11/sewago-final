@@ -1,4 +1,4 @@
-import NextAuth from "next-auth"
+// Type augmentation for NextAuth.js v4
 
 declare module "next-auth" {
   interface User {
