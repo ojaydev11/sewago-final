@@ -6,7 +6,8 @@ export const validateRequest = (schema: ZodType) => {
     try {
       const parsed = schema.parse(req) as any;
       if (parsed.body) req.body = parsed.body;
-      if (parsed.query) req.query = parsed.query;
+      // Do not assign to req.query in Express 5; use locals to carry parsed values
+      if (parsed.query) (req as any).validatedQuery = parsed.query;
       if (parsed.params) req.params = parsed.params;
       next();
     } catch (error) {
