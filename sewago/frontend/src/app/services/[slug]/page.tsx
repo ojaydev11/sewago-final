@@ -13,7 +13,14 @@ export async function generateMetadata({ params }: ServiceDetailPageProps): Prom
     const { slug } = await params;
     const serviceResp = await api.get('/services', { params: { q: slug } });
     const list: Array<Record<string, unknown>> = Array.isArray(serviceResp.data) ? serviceResp.data : (serviceResp.data?.services ?? []);
-    const service = list.find((s) => String((s['slug'] ?? s['_id']) as string) === slug) as any;
+    const service = list.find((s) => String((s['slug'] ?? s['_id']) as string) === slug) as {
+      title: string;
+      description: string;
+      category: string;
+      slug: string;
+      imageUrl?: string;
+      priceRange?: { min: number; max: number };
+    } | undefined;
 
     if (!service) {
       return {
@@ -59,7 +66,15 @@ export default async function ServiceDetailPage({ params }: ServiceDetailPagePro
     const { slug } = await params;
     const serviceResp = await api.get('/services', { params: { q: slug } });
     const list: Array<Record<string, unknown>> = Array.isArray(serviceResp.data) ? serviceResp.data : (serviceResp.data?.services ?? []);
-    const service = list.find((s) => String((s['slug'] ?? s['_id']) as string) === slug) as any;
+    const service = list.find((s) => String((s['slug'] ?? s['_id']) as string) === slug) as {
+      id?: string;
+      title: string;
+      description: string;
+      category: string;
+      slug: string;
+      imageUrl?: string;
+      priceRange?: { min: number; max: number };
+    } | undefined;
 
     if (!service) {
       notFound();

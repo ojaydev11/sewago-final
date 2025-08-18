@@ -73,7 +73,7 @@ export default async function ServicesPage() {
   let services: ServiceCardItem[] = [];
   try {
     const resp = await api.get('/services');
-    const raw = Array.isArray(resp.data) ? resp.data : (resp.data?.services ?? []);
+    const raw: Array<Record<string, unknown>> = Array.isArray(resp.data) ? resp.data : (resp.data?.services ?? []);
     services = raw.map(mapBackendServiceToCardItem);
   } catch (error) {
     // eslint-disable-next-line no-console
