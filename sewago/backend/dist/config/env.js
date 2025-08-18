@@ -11,5 +11,33 @@ export const env = {
     refreshTokenTtlDays: Number(process.env.REFRESH_TOKEN_TTL_DAYS ?? 30),
     esewaMerchantCode: process.env.ESewa_MERCHANT_CODE ?? "",
     khaltiSecretKey: process.env.Khalti_SECRET_KEY ?? "",
+    allowSeeding: process.env.ALLOW_SEEDING === "true",
+    seedKey: process.env.SEED_KEY ?? "",
+    rateLimitWindowMs: Number(process.env.RATE_LIMIT_WINDOW_MS ?? 60000),
+    rateLimitMaxRequests: Number(process.env.RATE_LIMIT_MAX_REQUESTS ?? 200),
+    loginRateLimitMax: Number(process.env.LOGIN_RATE_LIMIT_MAX ?? 5),
+    bookingRateLimitMax: Number(process.env.BOOKING_RATE_LIMIT_MAX ?? 30),
+    enableMetrics: process.env.ENABLE_METRICS !== "false",
+    enableHealthChecks: process.env.ENABLE_HEALTH_CHECKS !== "false",
 };
 export const isProd = env.nodeEnv === "production";
+// Validate required production environment variables
+if (isProd) {
+    const requiredVars = [
+        'MONGODB_URI',
+        'JWT_ACCESS_SECRET',
+        'JWT_REFRESH_SECRET',
+        'CLIENT_ORIGIN'
+    ];
+    const missingVars = requiredVars.filter(varName => !process.env[varName]);
+    if (missingVars.length > 0) {
+        throw new Error(`Missing required production environment variables: ${missingVars.join(', ')}`);
+    }
+    // Validate JWT secret lengths
+    if (env.accessTokenSecret.length < 32) {
+        throw new Error('JWT_ACCESS_SECRET must be at least 32 characters long in production');
+    }
+    if (env.refreshTokenSecret.length < 32) {
+        throw new Error('JWT_REFRESH_SECRET must be at least 32 characters long in production');
+    }
+}

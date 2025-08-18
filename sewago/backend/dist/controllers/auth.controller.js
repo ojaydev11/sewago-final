@@ -1,4 +1,4 @@
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { UserModel } from "../models/User.js";
 import { signAccessToken, signRefreshToken, verifyRefreshToken, } from "../utils/jwt.js";
 const REFRESH_COOKIE = "sewago_rt";

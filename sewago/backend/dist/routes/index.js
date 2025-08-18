@@ -1,5 +1,8 @@
 import { Router } from "express";
 import { requireAuth } from "../middleware/auth.js";
+import { validateRequest } from "../middleware/validation.js";
+import { authRateLimit, paymentRateLimit } from "../middleware/rateLimit.js";
+import { registerSchema, loginSchema, initiatePaymentSchema, verifyPaymentSchema } from "../schemas/validation.js";
 import * as Auth from "../controllers/auth.controller.js";
 import * as Services from "../controllers/services.controller.js";
 import * as Bookings from "../controllers/bookings.controller.js";
@@ -11,9 +14,9 @@ import * as Meta from "../controllers/meta.controller.js";
 export const api = Router();
 // Health
 api.get("/health", (_req, res) => res.json({ ok: true, service: "sewago-backend", env: process.env.NODE_ENV ?? "development" }));
-// Auth
-api.post("/auth/register", Auth.register);
-api.post("/auth/login", Auth.login);
+// Auth (with validation and rate limiting)
+api.post("/auth/register", validateRequest(registerSchema), Auth.register);
+api.post("/auth/login", authRateLimit, validateRequest(loginSchema), Auth.login);
 api.post("/auth/refresh", Auth.refresh);
 api.post("/auth/logout", Auth.logout);
 api.get("/auth/me", requireAuth(["user", "provider", "admin"]), Auth.me);
@@ -36,9 +39,12 @@ api.get("/messages/:bookingId", requireAuth(["user", "provider"]), Messages.list
 api.post("/messages/:bookingId", requireAuth(["user", "provider"]), Messages.sendMessage);
 // AI
 api.get("/ai/suggest", AI.suggest);
-// Payments
-api.post("/payments/esewa/initiate", requireAuth(["user"]), Payments.esewaInitiate);
-api.post("/payments/khalti/initiate", requireAuth(["user"]), Payments.khaltiInitiate);
+// Payments (with validation and rate limiting)
+api.post("/payments/initiate", requireAuth(["user"]), paymentRateLimit, validateRequest(initiatePaymentSchema), Payments.initiatePayment);
+api.post("/payments/verify", validateRequest(verifyPaymentSchema), Payments.verifyPayment);
+// Legacy endpoints for backward compatibility
+api.post("/payments/esewa/initiate", requireAuth(["user"]), paymentRateLimit, Payments.esewaInitiate);
+api.post("/payments/khalti/initiate", requireAuth(["user"]), paymentRateLimit, Payments.khaltiInitiate);
 // Admin test-only endpoints (protected by header X-Seed-Key)
 api.post("/admin/seed", async (req, res) => {
     if (process.env.NODE_ENV === "production" && process.env.ALLOW_SEEDING !== "true") {
@@ -49,7 +55,7 @@ api.post("/admin/seed", async (req, res) => {
         return res.status(403).json({ message: "forbidden" });
     const { UserModel } = await import("../models/User.js");
     const { ServiceModel } = await import("../models/Service.js");
-    const bcrypt = (await import("bcrypt")).default;
+    const bcrypt = (await import("bcryptjs")).default;
     const upsertUser = async (doc) => {
         const existing = await UserModel.findOne({ email: doc.email });
         if (existing)

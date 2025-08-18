@@ -1,11 +1,13 @@
-﻿[
-build]
+[build]
+builder = "nixpacks"
 root = "backend"
 
 [deploy]
-command = "npm start"
+start_command = "npm start"
+health_check_path = "/api/health"
+health_check_timeout = 300
 
 [env]
 NODE_ENV = "production"
-PORT = "4000"
-
+PORT = "8080"
+NIXPACKS_NODE_VERSION = "20"

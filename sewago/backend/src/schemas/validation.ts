@@ -92,8 +92,8 @@ export const sendMessageSchema = z.object({
 // Query parameter schemas
 export const paginationSchema = z.object({
   query: z.object({
-    page: z.string().regex(/^\d+$/).transform(Number).optional().default('1'),
-    limit: z.string().regex(/^\d+$/).transform(Number).optional().default('10'),
+    page: z.string().regex(/^\d+$/).transform(Number).optional().default(1),
+    limit: z.string().regex(/^\d+$/).transform(Number).optional().default(10),
   }),
 });
 

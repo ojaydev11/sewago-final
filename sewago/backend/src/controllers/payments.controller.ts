@@ -5,7 +5,7 @@ import { PaymentGatewayFactory } from '../services/payments/index.js';
 export async function initiatePayment(req: Request, res: Response) {
   try {
     const { bookingId, gateway, returnUrl, failureUrl } = req.body;
-    const userId = req.user?.id;
+    const userId = req.userId;
 
     if (!userId) {
       return res.status(401).json({ success: false, message: 'Authentication required' });
@@ -31,7 +31,7 @@ export async function initiatePayment(req: Request, res: Response) {
     }
 
     // Check if payment is already completed
-    if (booking.payment.status === 'paid') {
+    if (booking.payment?.status === 'paid') {
       return res.status(400).json({ success: false, message: 'Payment already completed' });
     }
 
@@ -46,7 +46,10 @@ export async function initiatePayment(req: Request, res: Response) {
     });
 
     // Update booking with payment reference
-    booking.payment.method = gateway;
+    if (!booking.payment) {
+      booking.payment = { method: 'cash', referenceId: '', status: 'pending' };
+    }
+    booking.payment.method = gateway as 'esewa' | 'khalti';
     booking.payment.referenceId = result.referenceId;
     booking.payment.status = 'pending';
     await booking.save();
@@ -78,7 +81,7 @@ export async function verifyPayment(req: Request, res: Response) {
     }
 
     // Check if payment is already verified
-    if (booking.payment.status === 'paid') {
+    if (booking.payment?.status === 'paid') {
       return res.json({ success: true, verified: true, message: 'Payment already verified' });
     }
 
@@ -92,6 +95,9 @@ export async function verifyPayment(req: Request, res: Response) {
 
     if (result.success && result.verified) {
       // Update booking payment status
+      if (!booking.payment) {
+        booking.payment = { method: 'cash', referenceId: '', status: 'pending' };
+      }
       booking.payment.status = 'paid';
       booking.status = 'accepted'; // Move booking to next stage
       await booking.save();
@@ -104,6 +110,9 @@ export async function verifyPayment(req: Request, res: Response) {
       });
     } else {
       // Payment verification failed
+      if (!booking.payment) {
+        booking.payment = { method: 'cash', referenceId: '', status: 'pending' };
+      }
       booking.payment.status = 'failed';
       await booking.save();
 

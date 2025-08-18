@@ -22,13 +22,14 @@ export async function POST(request: NextRequest) {
     });
 
     return NextResponse.json(response.data);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Booking initiation error:', error);
     
-    if (error.response) {
+    if (error && typeof error === 'object' && 'response' in error) {
+      const axiosError = error as { response: { data?: { message?: string }; status: number } };
       return NextResponse.json(
-        { success: false, message: error.response.data?.message || 'Booking failed' },
-        { status: error.response.status }
+        { success: false, message: axiosError.response.data?.message || 'Booking failed' },
+        { status: axiosError.response.status }
       );
     }
 
