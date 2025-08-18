@@ -45,13 +45,18 @@ type ServiceCardItem = {
   isActive: boolean;
 };
 
-function mapBackendServiceToCardItem(svc: any): ServiceCardItem {
-  const id: string = String(svc?.id ?? svc?._id ?? svc?.slug ?? crypto.randomUUID?.() ?? Math.random().toString(36).slice(2));
-  const title: string = String(svc?.title ?? svc?.name ?? 'Service');
-  const description: string = String(svc?.description ?? '');
-  const category: string = String(svc?.category ?? 'general');
-  const imageUrl: string | undefined = Array.isArray(svc?.images) ? svc.images[0] : svc?.imageUrl;
-  const basePrice: number | undefined = typeof svc?.basePrice === 'number' ? svc.basePrice : undefined;
+function mapBackendServiceToCardItem(svc: Record<string, unknown>): ServiceCardItem {
+  const idRaw = svc['id'] ?? svc['_id'] ?? svc['slug'];
+  const id: string = typeof idRaw === 'string' ? idRaw : (globalThis.crypto?.randomUUID?.() ?? Math.random().toString(36).slice(2));
+  const titleRaw = svc['title'] ?? svc['name'];
+  const title: string = typeof titleRaw === 'string' ? titleRaw : 'Service';
+  const descriptionRaw = svc['description'];
+  const description: string = typeof descriptionRaw === 'string' ? descriptionRaw : '';
+  const categoryRaw = svc['category'];
+  const category: string = typeof categoryRaw === 'string' ? categoryRaw : 'general';
+  const images = svc['images'];
+  const imageUrl: string | undefined = Array.isArray(images) && typeof images[0] === 'string' ? images[0] : (typeof svc['imageUrl'] === 'string' ? (svc['imageUrl'] as string) : undefined);
+  const basePrice: number | undefined = typeof svc['basePrice'] === 'number' ? (svc['basePrice'] as number) : undefined;
   return {
     id,
     slug: String(svc?.slug ?? id),
