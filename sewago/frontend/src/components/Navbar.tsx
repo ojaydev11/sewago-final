@@ -4,7 +4,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { useLanguage } from "@/providers/language";
 import { useLite } from "@/providers/lite";
-import { homeHref } from "@/lib/links";
 
 export function Navbar() {
   const { lang, setLang } = useLanguage();
@@ -12,7 +11,7 @@ export function Navbar() {
   return (
     <nav className="w-full border-b bg-white/80 backdrop-blur">
       <div className="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between">
-        <Link href={homeHref} className="flex items-center gap-2">
+        <Link href="/" className="flex items-center gap-2">
           <Image src="/logo.svg" alt="SewaGo" width={28} height={28} />
           <span className="text-lg font-semibold">SewaGo</span>
         </Link>
