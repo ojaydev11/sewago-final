@@ -1,12 +1,8 @@
 'use client';
 
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState, useCallback } from 'react';
 
-interface NavigatorConnection {
-  connection: {
-    effectiveType?: string;
-  };
-}
+// Using ambient Navigator typing from src/types/env.d.ts
 
 interface LiteModeContextType {
   isLiteMode: boolean;
@@ -33,22 +29,11 @@ export function LiteModeProvider({ children }: LiteModeProviderProps) {
   const [isLiteMode, setIsLiteMode] = useState(false);
   const [connectionSpeed, setConnectionSpeed] = useState<'fast' | 'slow' | 'unknown'>('unknown');
 
-  useEffect(() => {
-    // Load lite mode preference from localStorage
-    const savedLiteMode = localStorage.getItem('sewago-lite-mode');
-    if (savedLiteMode !== null) {
-      setIsLiteMode(JSON.parse(savedLiteMode));
-    }
-
-    // Detect network connection speed
-    detectConnectionSpeed();
-  }, []);
-
-  const detectConnectionSpeed = async () => {
+  const detectConnectionSpeed = useCallback(async () => {
     try {
       // Check Network Information API (if available)
       if ('connection' in navigator) {
-        const connection = (navigator as unknown as NavigatorConnection).connection;
+        const connection = navigator.connection;
         const effectiveType = connection?.effectiveType;
         
         if (effectiveType === '2g' || effectiveType === 'slow-2g') {
@@ -92,7 +77,18 @@ export function LiteModeProvider({ children }: LiteModeProviderProps) {
       console.warn('Could not detect connection speed:', error);
       setConnectionSpeed('unknown');
     }
-  };
+  }, [isLiteMode]);
+
+  useEffect(() => {
+    // Load lite mode preference from localStorage
+    const savedLiteMode = localStorage.getItem('sewago-lite-mode');
+    if (savedLiteMode !== null) {
+      setIsLiteMode(JSON.parse(savedLiteMode));
+    }
+
+    // Detect network connection speed
+    detectConnectionSpeed();
+  }, [detectConnectionSpeed]);
 
   const suggestLiteMode = () => {
     // Only suggest if user hasn't explicitly set a preference

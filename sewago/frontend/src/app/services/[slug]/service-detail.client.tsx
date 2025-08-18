@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Star, MapPin, Clock, DollarSign, CheckCircle, ArrowRight, Calendar, Phone, Mail } from 'lucide-react';
+import { Star, MapPin, Clock, DollarSign, CheckCircle, ArrowRight, Calendar, Phone } from 'lucide-react';
 import { formatNPR } from '@/lib/currency';
 
 interface Service {
@@ -13,7 +13,7 @@ interface Service {
   category: string;
   imageUrl?: string;
   priceRange?: { min: number; max: number };
-  isActive: boolean;
+  isActive?: boolean;
 }
 
 interface Review {
@@ -53,6 +53,7 @@ const faqs = [
 
 export function ServiceDetailClient({ service, reviews, averageRating }: ServiceDetailClientProps) {
   const [activeTab, setActiveTab] = useState('overview');
+  const isAvailable = service.isActive ?? true;
 
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }, (_, i) => (
@@ -108,7 +109,7 @@ export function ServiceDetailClient({ service, reviews, averageRating }: Service
               <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800">
                 {service.category}
               </span>
-              {service.isActive && (
+              {isAvailable && (
                 <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
                   <CheckCircle className="h-4 w-4 mr-1" />
                   Available

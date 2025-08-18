@@ -14,7 +14,7 @@ interface Service {
   category: string;
   imageUrl?: string;
   priceRange?: { min: number; max: number };
-  isActive: boolean;
+  isActive?: boolean;
 }
 
 interface ServicesClientProps {
@@ -52,7 +52,7 @@ export function ServicesClient({ initialServices }: ServicesClientProps) {
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
-  const services = servicesData?.services || [];
+  const services = (servicesData?.services || []).map((svc: Service) => ({ ...svc, isActive: svc.isActive ?? true }));
 
   const filteredAndSortedServices = useMemo(() => {
     let filtered = services;

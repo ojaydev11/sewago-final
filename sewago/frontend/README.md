@@ -1,3 +1,16 @@
+Environment variables
+----------------------
+
+Copy `.env.example` to `.env.local` and fill values:
+
+```
+NEXT_PUBLIC_API_URL=http://localhost:4000/api
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET=replace-me
+NEXT_PUBLIC_DEFAULT_LOCALE=en
+NEXT_PUBLIC_I18N_ENABLED=false
+```
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
