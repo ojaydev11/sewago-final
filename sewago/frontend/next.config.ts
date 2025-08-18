@@ -8,7 +8,7 @@ const securityHeaders = [
   { key: "X-Content-Type-Options", value: "nosniff" },
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
   { key: "Permissions-Policy", value: "geolocation=(self)" },
-  // Relaxed CSP to be compatible with Next.js App Router on Vercel
+  // CSP tuned for App Router on Vercel; avoid unsafe-inline where possible
   {
     key: "Content-Security-Policy",
     value: [
@@ -16,15 +16,22 @@ const securityHeaders = [
       "img-src 'self' data: blob: https:",
       "style-src 'self' 'unsafe-inline'",
       "font-src 'self' data:",
-      "connect-src 'self' https: wss:",
+      `connect-src 'self' ${process.env.NEXT_PUBLIC_API_URL ?? ''} https: wss:`,
       "worker-src 'self' blob:",
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval' blob:",
+      "script-src 'self' 'unsafe-eval' blob:",
       "frame-ancestors 'self'",
     ].join("; "),
   },
 ];
 
 const nextConfig: NextConfig = {
+  reactStrictMode: true,
+  images: {
+    remotePatterns: [
+      { protocol: 'https', hostname: '**' },
+      { protocol: 'http', hostname: 'localhost' },
+    ],
+  },
   async headers() {
     return [
       {

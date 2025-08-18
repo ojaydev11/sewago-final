@@ -68,6 +68,10 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       services,
       total: services.length,
+    }, {
+      headers: {
+        'Cache-Control': 'public, max-age=60, s-maxage=60, stale-while-revalidate=300'
+      }
     });
   } catch (error) {
     console.error('Error fetching services:', error);

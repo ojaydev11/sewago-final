@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    return NextResponse.json(response.data);
+    return NextResponse.json(response.data, { headers: { 'Cache-Control': 'no-store' } });
   } catch (error: unknown) {
     console.error('Booking initiation error:', error);
     
