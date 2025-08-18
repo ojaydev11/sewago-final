@@ -1,4 +1,5 @@
 import NextAuth from 'next-auth';
+import type { User as NextAuthUser } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { api } from '@/lib/api';
 
@@ -48,7 +49,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             name: data.user.name ?? credentials.email,
             role: data.user.role,
           };
-          return result as unknown as any;
+          return result as NextAuthUser;
         } catch (error) {
           // eslint-disable-next-line no-console
           console.error('Auth error:', error);
