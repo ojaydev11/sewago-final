@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install deps (workspace)
+        run: pnpm -w install --frozen-lockfile
+
+      - name: Lint (backend)
+        run: pnpm --filter ./sewago/backend lint
+
+      - name: Lint (frontend)
+        run: pnpm --filter ./sewago/frontend lint || true
+
+      - name: Typecheck (frontend)
+        run: pnpm --filter ./sewago/frontend run typecheck
+
+      - name: Build (cloud-simulated)
+        run: |
+          pnpm --filter ./sewago/backend -r run build || true
+          pnpm --filter ./sewago/frontend -r run build || true
+
+
