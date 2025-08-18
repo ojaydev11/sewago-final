@@ -34,13 +34,42 @@ export const metadata: Metadata = {
   },
 };
 
-type ServiceListItem = { title: string; description: string; category: string; id?: string; slug?: string };
+type ServiceCardItem = {
+  id: string;
+  slug: string;
+  title: string;
+  description: string;
+  category: string;
+  imageUrl?: string;
+  priceRange?: { min: number; max: number };
+  isActive: boolean;
+};
+
+function mapBackendServiceToCardItem(svc: any): ServiceCardItem {
+  const id: string = String(svc?.id ?? svc?._id ?? svc?.slug ?? crypto.randomUUID?.() ?? Math.random().toString(36).slice(2));
+  const title: string = String(svc?.title ?? svc?.name ?? 'Service');
+  const description: string = String(svc?.description ?? '');
+  const category: string = String(svc?.category ?? 'general');
+  const imageUrl: string | undefined = Array.isArray(svc?.images) ? svc.images[0] : svc?.imageUrl;
+  const basePrice: number | undefined = typeof svc?.basePrice === 'number' ? svc.basePrice : undefined;
+  return {
+    id,
+    slug: String(svc?.slug ?? id),
+    title,
+    description,
+    category,
+    imageUrl,
+    priceRange: basePrice ? { min: basePrice, max: basePrice } : undefined,
+    isActive: Boolean(svc?.isActive ?? true),
+  };
+}
 
 export default async function ServicesPage() {
-  let services: ServiceListItem[] = [];
+  let services: ServiceCardItem[] = [];
   try {
     const resp = await api.get('/services');
-    services = Array.isArray(resp.data) ? resp.data : (resp.data?.services ?? []);
+    const raw = Array.isArray(resp.data) ? resp.data : (resp.data?.services ?? []);
+    services = raw.map(mapBackendServiceToCardItem);
   } catch (error) {
     // eslint-disable-next-line no-console
     console.warn('Failed to fetch services from backend, using fallback:', error);
