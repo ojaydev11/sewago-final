@@ -23,6 +23,7 @@ declare module "next-auth" {
 }
 
 // Force Vercel to pick up latest changes - NextAuth TypeScript issues resolved
+// Build timestamp: 2025-08-18 11:45:00 UTC - Force fresh deployment
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
     CredentialsProvider({
