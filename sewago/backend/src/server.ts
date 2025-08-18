@@ -9,7 +9,18 @@ export async function bootstrap() {
   await connectToDatabase();
 
   const app = createApp();
-  const server = http.createServer(app);
+  
+  // Production server optimizations for high traffic
+  const server = http.createServer({
+    // Keep-alive timeout (Railway usually handles this, but good to set)
+    keepAliveTimeout: 65000, // Slightly higher than Railway's load balancer
+    headersTimeout: 66000,   // Higher than keepAliveTimeout
+  }, app);
+  
+  // Set server timeouts for production
+  server.timeout = 120000; // 2 minutes
+  server.keepAliveTimeout = 65000;
+  server.headersTimeout = 66000;
   const io = new SocketIOServer(server, {
     cors: { origin: env.clientOrigin, credentials: true },
     path: "/ws/socket.io",
@@ -30,8 +41,34 @@ export async function bootstrap() {
   });
 
   server.listen(env.port, () => {
-    console.log(`API on http://localhost:${env.port}/api`);
+    console.log(`✓ API server running on port ${env.port}`);
+    console.log(`✓ Health endpoint: http://localhost:${env.port}/api/health`);
+    console.log(`✓ Metrics endpoint: http://localhost:${env.port}/api/metrics`);
+    console.log(`✓ Environment: ${env.nodeEnv}`);
+    console.log(`✓ CORS origin: ${env.clientOrigin}`);
   });
+  
+  // Graceful shutdown handlers
+  const gracefulShutdown = async (signal: string) => {
+    console.log(`\n${signal} received, shutting down gracefully...`);
+    
+    server.close(() => {
+      console.log('✓ HTTP server closed');
+    });
+    
+    // Close socket.io connections
+    io.close(() => {
+      console.log('✓ Socket.IO connections closed');
+    });
+    
+    setTimeout(() => {
+      console.error('Could not close connections in time, forcefully shutting down');
+      process.exit(1);
+    }, 10000);
+  };
+  
+  process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+  process.on('SIGINT', () => gracefulShutdown('SIGINT'));
 }
 
 const isDirectRun = (() => {

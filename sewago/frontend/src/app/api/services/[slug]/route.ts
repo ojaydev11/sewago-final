@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/lib/db';
+import { api } from '@/lib/api';
 
 export async function GET(
   request: NextRequest,
@@ -7,36 +7,20 @@ export async function GET(
 ) {
   try {
     const { slug } = await params;
-    const service = await db.service.findUnique({
-      where: { slug }
-    });
-
-    if (!service) {
+    
+    const response = await api.get(`/services/${slug}`);
+    
+    return NextResponse.json(response.data);
+  } catch (error) {
+    // Handle axios errors
+    if (error && typeof error === 'object' && 'response' in error) {
+      const axiosError = error as { response: { status: number; data: Record<string, unknown> } };
       return NextResponse.json(
-        { error: 'Service not found' },
-        { status: 404 }
+        axiosError.response.data,
+        { status: axiosError.response.status }
       );
     }
 
-    // Get reviews for this service
-    const reviews = await db.review.findMany({
-      where: { serviceId: service.id }
-    });
-
-    // Calculate average rating
-    const averageRating = reviews.length > 0 
-      ? reviews.reduce((sum: number, review: { rating: number }) => sum + review.rating, 0) / reviews.length 
-      : 0;
-
-    return NextResponse.json({
-      service: {
-        ...service,
-        averageRating: Math.round(averageRating * 10) / 10,
-        reviewCount: reviews.length,
-      },
-      reviews,
-    });
-  } catch (error) {
     console.error('Error fetching service:', error);
     return NextResponse.json(
       { error: 'Failed to fetch service' },

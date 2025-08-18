@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import bcrypt from 'bcryptjs';
 import { z } from 'zod';
-import { db } from '@/lib/db';
+import { api } from '@/lib/api';
 
 const registerSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -15,58 +14,35 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const validatedData = registerSchema.parse(body);
 
-    // Check if user already exists
-    const existingUser = await db.user.findUnique({
-      where: { email: validatedData.email }
+    // Register user via backend API
+    const response = await api.post('/auth/register', {
+      name: validatedData.name,
+      email: validatedData.email,
+      password: validatedData.password,
+      role: validatedData.role
     });
-
-    if (existingUser) {
-      return NextResponse.json(
-        { error: 'User with this email already exists' },
-        { status: 409 }
-      );
-    }
-
-    // Hash password
-    const passwordHash = await bcrypt.hash(validatedData.password, 12);
-
-    // Create user
-    const user = await db.user.create({
-      data: {
-        name: validatedData.name,
-        email: validatedData.email,
-        passwordHash,
-        role: validatedData.role,
-      }
-    });
-
-    // If provider, create provider profile
-    if (validatedData.role === 'PROVIDER') {
-      await db.providerProfile.create({
-        data: {
-          userId: user.id,
-          specialties: [],
-          experience: 0,
-          rating: 0,
-          totalJobs: 0,
-          isVerified: false,
-        }
-      });
-    }
-
-    // Return user without password
-    const { passwordHash: _, ...userWithoutPassword } = user;
+    
+    const { user } = response.data;
     
     return NextResponse.json({
-      user: userWithoutPassword,
+      user,
       message: 'User registered successfully'
     }, { status: 201 });
 
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { error: 'Invalid request data' },
+        { error: 'Invalid request data', details: error.errors },
         { status: 400 }
+      );
+    }
+
+    // Handle axios errors
+    if (error && typeof error === 'object' && 'response' in error) {
+      const axiosError = error as { response: { status: number; data: Record<string, unknown> } };
+      return NextResponse.json(
+        axiosError.response.data,
+        { status: axiosError.response.status }
       );
     }
 

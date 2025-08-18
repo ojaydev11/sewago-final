@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
-import { db } from '@/lib/db';
+import { api } from '@/lib/api';
 import { z } from 'zod';
 
 const createBookingSchema = z.object({
@@ -26,20 +26,27 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const validatedData = createBookingSchema.parse(body);
 
-    const booking = await db.booking.create({
-      data: {
-        userId: session.user.id,
-        ...validatedData,
-        scheduledAt: new Date(validatedData.scheduledAt),
-      }
+    // Create booking via backend API
+    const response = await api.post('/bookings', {
+      userId: session.user.id,
+      ...validatedData,
     });
 
-    return NextResponse.json({ booking }, { status: 201 });
+    return NextResponse.json(response.data, { status: 201 });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { error: 'Invalid request data' },
+        { error: 'Invalid request data', details: error.errors },
         { status: 400 }
+      );
+    }
+
+    // Handle axios errors
+    if (error && typeof error === 'object' && 'response' in error) {
+      const axiosError = error as { response: { status: number; data: Record<string, unknown> } };
+      return NextResponse.json(
+        axiosError.response.data,
+        { status: axiosError.response.status }
       );
     }
 
@@ -65,16 +72,25 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const status = searchParams.get('status');
 
-    const whereClause: { userId: string; status?: string } = { userId: session.user.id };
-    
+    // Build query parameters for backend API
+    const params = new URLSearchParams({ userId: session.user.id });
     if (status && status !== 'all') {
-      whereClause.status = status;
+      params.set('status', status);
     }
 
-    const bookings = await db.booking.findMany({ where: whereClause });
+    const response = await api.get(`/bookings?${params.toString()}`);
 
-    return NextResponse.json({ bookings });
+    return NextResponse.json(response.data);
   } catch (error) {
+    // Handle axios errors
+    if (error && typeof error === 'object' && 'response' in error) {
+      const axiosError = error as { response: { status: number; data: Record<string, unknown> } };
+      return NextResponse.json(
+        axiosError.response.data,
+        { status: axiosError.response.status }
+      );
+    }
+
     console.error('Error fetching bookings:', error);
     return NextResponse.json(
       { error: 'Failed to fetch bookings' },

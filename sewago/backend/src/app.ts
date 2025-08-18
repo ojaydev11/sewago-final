@@ -21,14 +21,28 @@ import { generalRateLimit, authRateLimit, paymentRateLimit } from "./middleware/
 
 export function createApp() {
   const app = express();
+  
+  // Production optimizations for high traffic
   app.set("trust proxy", true);
+  app.set("x-powered-by", false); // Remove Express signature
+  app.set("etag", "strong"); // Enable strong ETags for better caching
+  app.set("json spaces", isProd ? 0 : 2); // Minimize JSON in production
   
   // Enhanced security headers
   app.use(securityHeaders);
   app.use(corsSecurityHeaders);
   
-  // Global gzip compression for payloads
-  app.use(compression());
+  // Enhanced compression for production with high traffic
+  app.use(compression({
+    filter: (req, res) => {
+      if (req.headers['x-no-compression']) return false;
+      return compression.filter(req, res);
+    },
+    level: isProd ? 6 : 1, // Higher compression in production
+    threshold: 1024, // Only compress responses > 1KB
+    windowBits: 15,
+    memLevel: 8,
+  }));
   
   // ---- Request ID + Metrics instrumentation ----
   // Request ID middleware
@@ -150,8 +164,19 @@ export function createApp() {
     next();
   });
   app.use(xss());
-  app.use(express.json({ limit: "1mb" }));
-  app.use(express.urlencoded({ extended: true }));
+  // Enhanced body parsing with production limits
+  app.use(express.json({ 
+    limit: isProd ? "2mb" : "10mb", // Stricter limits in production
+    verify: (req, res, buf) => {
+      // Store raw body for webhook verification if needed
+      (req as any).rawBody = buf;
+    }
+  }));
+  app.use(express.urlencoded({ 
+    extended: true, 
+    limit: isProd ? "2mb" : "10mb",
+    parameterLimit: 100 // Limit URL parameters
+  }));
   app.use(cookieParser());
   app.use(morgan(logFormat));
   app.use("/api", api);
