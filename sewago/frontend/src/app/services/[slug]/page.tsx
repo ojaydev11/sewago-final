@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { db } from '@/lib/db';
+import { api } from '@/lib/api';
 import { SeoJsonLd } from '@/app/components/SeoJsonLd';
 import { ServiceDetailClient } from './service-detail.client';
 
@@ -11,9 +11,9 @@ interface ServiceDetailPageProps {
 export async function generateMetadata({ params }: ServiceDetailPageProps): Promise<Metadata> {
   try {
     const { slug } = await params;
-    const service = await db.service.findUnique({
-      where: { slug }
-    });
+    const serviceResp = await api.get('/services', { params: { q: slug } });
+    const list = Array.isArray(serviceResp.data) ? serviceResp.data : (serviceResp.data?.services ?? []);
+    const service = list.find((s: any) => s.slug === slug);
 
     if (!service) {
       return {
@@ -57,18 +57,16 @@ export async function generateMetadata({ params }: ServiceDetailPageProps): Prom
 export default async function ServiceDetailPage({ params }: ServiceDetailPageProps) {
   try {
     const { slug } = await params;
-    const service = await db.service.findUnique({
-      where: { slug }
-    });
+    const serviceResp = await api.get('/services', { params: { q: slug } });
+    const list = Array.isArray(serviceResp.data) ? serviceResp.data : (serviceResp.data?.services ?? []);
+    const service = list.find((s: any) => s.slug === slug);
 
     if (!service) {
       notFound();
     }
 
     // Get reviews for this service
-    const reviews = await db.review.findMany({
-      where: { serviceId: service.id }
-    });
+    const reviews: Array<{ rating: number }> = [];
 
     // Calculate average rating
     const averageRating = reviews.length > 0 

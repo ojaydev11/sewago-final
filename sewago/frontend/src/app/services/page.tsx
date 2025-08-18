@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import { Metadata } from 'next';
-import { db } from '@/lib/db';
+import { api } from '@/lib/api';
 import { SeoJsonLd } from '@/app/components/SeoJsonLd';
 import { ServicesClient } from './services.client';
 import { QuoteEstimator } from './quote-estimator.client';
@@ -35,14 +35,13 @@ export const metadata: Metadata = {
 };
 
 export default async function ServicesPage() {
-  let services = [];
-  
+  let services = [] as any[];
   try {
-    const result = await db.service.findMany();
-    services = result || [];
+    const resp = await api.get('/services');
+    services = Array.isArray(resp.data) ? resp.data : (resp.data?.services ?? []);
   } catch (error) {
-    console.warn('Failed to fetch services from database, using fallback:', error);
-    // Fallback to empty array - UI will show empty state
+    // eslint-disable-next-line no-console
+    console.warn('Failed to fetch services from backend, using fallback:', error);
   }
 
   const jsonLdData = {

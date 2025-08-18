@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/lib/db';
+import { api } from '@/lib/api';
 
 export async function GET(
   request: NextRequest,
@@ -7,9 +7,9 @@ export async function GET(
 ) {
   try {
     const { slug } = await params;
-    const service = await db.service.findUnique({
-      where: { slug }
-    });
+    const resp = await api.get('/services', { params: { q: slug } });
+    const list = Array.isArray(resp.data) ? resp.data : (resp.data?.services ?? []);
+    const service = list.find((s: any) => s.slug === slug);
 
     if (!service) {
       return NextResponse.json(
@@ -19,9 +19,7 @@ export async function GET(
     }
 
     // Get reviews for this service
-    const reviews = await db.review.findMany({
-      where: { serviceId: service.id }
-    });
+    const reviews: Array<{ rating: number }> = [];
 
     // Calculate average rating
     const averageRating = reviews.length > 0 

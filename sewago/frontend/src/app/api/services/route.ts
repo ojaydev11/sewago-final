@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/lib/db';
+import { api } from '@/lib/api';
 
 export async function GET(request: NextRequest) {
   try {
@@ -7,7 +7,13 @@ export async function GET(request: NextRequest) {
     const category = searchParams.get('category');
     const search = searchParams.get('search');
 
-    let services = await db.service.findMany();
+    const backendResp = await api.get('/services', {
+      params: {
+        category: category ?? undefined,
+        q: search ?? undefined,
+      }
+    });
+    let services = Array.isArray(backendResp.data) ? backendResp.data : (backendResp.data?.services ?? []);
 
     // Filter by category if specified
     if (category && category !== 'all') {

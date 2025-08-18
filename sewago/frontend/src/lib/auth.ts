@@ -1,7 +1,6 @@
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import bcrypt from 'bcryptjs';
-import { db } from './db';
+import { api } from '@/lib/api';
 
 // Extend the built-in session types
 declare module "next-auth" {
@@ -36,29 +35,21 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         if (!credentials?.email || !credentials?.password) {
           return null;
         }
-
         try {
-          const user = await db.user.findUnique({
-            where: { email: credentials.email }
+          const resp = await api.post('/auth/login', {
+            emailOrPhone: credentials.email,
+            password: credentials.password,
           });
-
-          if (!user) {
-            return null;
-          }
-
-          const isPasswordValid = await bcrypt.compare(credentials.password, user.passwordHash);
-
-          if (!isPasswordValid) {
-            return null;
-          }
-
+          const data = resp.data as { accessToken?: string; user?: { id: string; name?: string; role: string } };
+          if (!data?.user?.id) return null;
           return {
-            id: user.id,
-            email: user.email,
-            name: user.name,
-            role: user.role,
-          };
+            id: data.user.id,
+            email: credentials.email,
+            name: data.user.name ?? credentials.email,
+            role: data.user.role,
+          } as any;
         } catch (error) {
+          // eslint-disable-next-line no-console
           console.error('Auth error:', error);
           return null;
         }

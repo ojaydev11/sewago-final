@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
-import { db } from '@/lib/db';
+import { api } from '@/lib/api';
 import { z } from 'zod';
 
 const createBookingSchema = z.object({
@@ -26,15 +26,18 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const validatedData = createBookingSchema.parse(body);
 
-    const booking = await db.booking.create({
-      data: {
-        userId: session.user.id,
-        ...validatedData,
-        scheduledAt: new Date(validatedData.scheduledAt),
+    const resp = await api.post('/bookings', {
+      serviceId: validatedData.serviceId,
+      date: new Date(validatedData.scheduledAt).toISOString(),
+      timeSlot: 'custom',
+      address: validatedData.addressId,
+      notes: validatedData.notes,
+    }, {
+      headers: {
+        Authorization: `Bearer ${session?.user?.id ?? ''}`,
       }
     });
-
-    return NextResponse.json({ booking }, { status: 201 });
+    return NextResponse.json(resp.data, { status: 201 });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -65,15 +68,13 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const status = searchParams.get('status');
 
-    const whereClause: { userId: string; status?: string } = { userId: session.user.id };
-    
-    if (status && status !== 'all') {
-      whereClause.status = status;
-    }
-
-    const bookings = await db.booking.findMany({ where: whereClause });
-
-    return NextResponse.json({ bookings });
+    const resp = await api.get('/bookings/me', {
+      headers: {
+        Authorization: `Bearer ${session?.user?.id ?? ''}`,
+      },
+      params: { status: status ?? undefined },
+    });
+    return NextResponse.json(resp.data);
   } catch (error) {
     console.error('Error fetching bookings:', error);
     return NextResponse.json(
