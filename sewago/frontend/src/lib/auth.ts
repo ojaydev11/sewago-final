@@ -22,6 +22,7 @@ declare module "next-auth" {
   }
 }
 
+// Force Vercel to pick up latest changes - NextAuth TypeScript issues resolved
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
     CredentialsProvider({
