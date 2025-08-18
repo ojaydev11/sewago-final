@@ -7,7 +7,6 @@ import { cn } from "@/lib/utils";
 import { Navbar } from "@/components/Navbar";
 import { LiteModeProvider } from "@/providers/lite";
 import "@/lib/auth";
-import Script from "next/script";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -41,32 +40,8 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <Script id="remove-massive-elements" strategy="afterInteractive">
-          {`
-            // Function to remove massive elements
-            function removeMassiveElements() {
-              const allElements = document.querySelectorAll('*');
-              allElements.forEach(element => {
-                const rect = element.getBoundingClientRect();
-                const maxSize = Math.max(window.innerWidth, window.innerHeight);
-                
-                // If element is larger than the viewport, remove it
-                if (rect.width > maxSize || rect.height > maxSize) {
-                  console.log('Removing massive element:', element);
-                  element.remove();
-                }
-              });
-            }
-            
-            // Run on load and periodically
-            removeMassiveElements();
-            setInterval(removeMassiveElements, 1000);
-            
-            // Also run on DOM changes
-            const observer = new MutationObserver(removeMassiveElements);
-            observer.observe(document.body, { childList: true, subtree: true });
-          `}
-        </Script>
+        <link rel="preconnect" href={process.env.NEXT_PUBLIC_API_URL ?? ''} />
+        <link rel="dns-prefetch" href={process.env.NEXT_PUBLIC_API_URL ?? ''} />
       </head>
       <body
         className={cn(`${geistSans.variable} ${geistMono.variable} antialiased`, "bg-white text-slate-900")}

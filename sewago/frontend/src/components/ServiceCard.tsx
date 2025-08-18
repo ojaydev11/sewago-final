@@ -27,7 +27,7 @@ export default function ServiceCard({ service }: ServiceCardProps) {
   const { formatCurrency } = useLocalizedCurrency();
   const { imageQuality, showThumbnails, reduceAnimations } = useLiteOptimizations();
 
-  const categoryKey = service.category.toLowerCase() as keyof typeof import('../messages/en.json')['services']['categories'];
+  const categoryKey = service.category.toLowerCase() as keyof Record<string, unknown>;
 
   return (
     <div className={`bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow ${
@@ -51,7 +51,7 @@ export default function ServiceCard({ service }: ServiceCardProps) {
         {/* Category Badge */}
         <div className="flex items-center justify-between mb-2">
           <span className="inline-block px-2 py-1 text-xs font-medium text-blue-800 bg-blue-100 rounded-full">
-            {t(`categories.${categoryKey}`, { fallback: service.category })}
+            {t(`categories.${String(categoryKey)}`, { fallback: service.category })}
           </span>
           
           {/* Rating */}

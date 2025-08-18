@@ -7,6 +7,7 @@ import { QuoteEstimator } from './quote-estimator.client';
 import { SewaAIWidget } from '@/app/components/SewaAIWidget';
 
 export const revalidate = 3600;
+export const fetchCache = 'force-cache';
 
 export const metadata: Metadata = {
   title: 'Services | SewaGo',

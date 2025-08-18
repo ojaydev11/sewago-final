@@ -67,7 +67,7 @@ export default async function ServiceDetailPage({ params }: ServiceDetailPagePro
     const serviceResp = await api.get('/services', { params: { q: slug } });
     const list: Array<Record<string, unknown>> = Array.isArray(serviceResp.data) ? serviceResp.data : (serviceResp.data?.services ?? []);
     const service = list.find((s) => String((s['slug'] ?? s['_id']) as string) === slug) as {
-      id?: string;
+      id: string;
       title: string;
       description: string;
       category: string;
