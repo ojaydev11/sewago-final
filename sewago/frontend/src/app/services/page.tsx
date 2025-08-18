@@ -1,12 +1,11 @@
 import { Suspense } from 'react';
 import { Metadata } from 'next';
-import { api } from '@/lib/api';
 import { SeoJsonLd } from '@/app/components/SeoJsonLd';
 import { ServicesClient } from './services.client';
 import { QuoteEstimator } from './quote-estimator.client';
 import { SewaAIWidget } from '@/app/components/SewaAIWidget';
 
-export const revalidate = 3600;
+export const revalidate = 60;
 export const fetchCache = 'force-cache';
 
 export const metadata: Metadata = {
@@ -72,13 +71,21 @@ function mapBackendServiceToCardItem(svc: Record<string, unknown>): ServiceCardI
 
 export default async function ServicesPage() {
   let services: ServiceCardItem[] = [];
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/services`, {
+    next: { revalidate: 60 },
+    cache: 'force-cache'
+  }).catch(() => null);
+
+  if (!res?.ok) {
+    return <EmptyState title="No services available right now" subtitle="Please try again shortly." />;
+  }
+
   try {
-    const resp = await api.get('/services');
-    const raw: Array<Record<string, unknown>> = Array.isArray(resp.data) ? resp.data : (resp.data?.services ?? []);
+    const data = await res.json().catch(() => ([]));
+    const raw: Array<Record<string, unknown>> = Array.isArray(data) ? data : (data?.services ?? []);
     services = raw.map(mapBackendServiceToCardItem);
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.warn('Failed to fetch services from backend, using fallback:', error);
+  } catch {
+    return <EmptyState title="No services available right now" subtitle="Please try again shortly." />;
   }
 
   const jsonLdData = {
@@ -126,6 +133,15 @@ export default async function ServicesPage() {
       {process.env.NEXT_PUBLIC_SEWAAI_ENABLED === 'true' && (
         <SewaAIWidget />
       )}
+    </div>
+  );
+}
+
+function EmptyState({ title, subtitle }: { title: string; subtitle?: string }) {
+  return (
+    <div className="max-w-3xl mx-auto px-4 py-16 text-center">
+      <h2 className="text-2xl font-semibold text-gray-900">{title}</h2>
+      {subtitle ? <p className="mt-2 text-gray-600">{subtitle}</p> : null}
     </div>
   );
 }

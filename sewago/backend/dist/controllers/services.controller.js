@@ -1,38 +1,52 @@
 import { ServiceModel } from "../models/Service.js";
+import { getServiceQuery } from "../utils/query.js";
 export async function listServices(req, res) {
-    const { q, category, location, city, min, max, rating, sort, page, limit } = req.query;
-    const filter = {};
-    if (q)
-        filter.$text = { $search: q };
-    if (category)
-        filter.category = category;
-    const loc = city ?? location;
-    if (loc)
-        filter.location = loc;
-    if (min || max)
-        filter.basePrice = {
-            ...(min ? { $gte: Number(min) } : {}),
-            ...(max ? { $lte: Number(max) } : {}),
+    try {
+        const { page, limit, category, q, sort } = getServiceQuery(req);
+        const raw = req.query;
+        const filter = {};
+        if (q)
+            filter.$text = { $search: q };
+        if (category)
+            filter.category = category;
+        const loc = (typeof raw.city === "string" ? raw.city : undefined) ?? (typeof raw.location === "string" ? raw.location : undefined);
+        if (loc)
+            filter.location = loc;
+        const min = typeof raw.min === "string" && /^\d+$/.test(raw.min) ? Number(raw.min) : undefined;
+        const max = typeof raw.max === "string" && /^\d+$/.test(raw.max) ? Number(raw.max) : undefined;
+        if (min !== undefined || max !== undefined) {
+            filter.basePrice = {
+                ...(min !== undefined ? { $gte: min } : {}),
+                ...(max !== undefined ? { $lte: max } : {}),
+            };
+        }
+        const rating = typeof raw.rating === "string" && /^\d+$/.test(raw.rating) ? Number(raw.rating) : undefined;
+        if (rating !== undefined)
+            filter.rating = { $gte: rating };
+        const sortMap = {
+            nearest: { createdAt: -1 },
+            highest: { rating: -1 },
+            lowest: { basePrice: 1 },
         };
-    if (rating)
-        filter.rating = { $gte: Number(rating) };
-    const sortMap = {
-        nearest: { createdAt: -1 },
-        highest: { rating: -1 },
-        lowest: { basePrice: 1 },
-    };
-    const sortSpec = sortMap[sort ?? "highest"] ?? { rating: -1 };
-    const pageNum = Math.max(1, Number(page ?? 1));
-    const perPage = Math.min(50, Math.max(1, Number(limit ?? 12)));
-    const total = await ServiceModel.countDocuments(filter);
-    const services = await ServiceModel.find(filter)
-        .sort(sortSpec)
-        .skip((pageNum - 1) * perPage)
-        .limit(perPage);
-    res.setHeader("X-Total-Count", String(total));
-    res.setHeader("X-Page", String(pageNum));
-    res.setHeader("X-Per-Page", String(perPage));
-    res.json(services);
+        const sortSpec = sortMap[sort ?? "highest"] ?? { rating: -1 };
+        const total = await ServiceModel.countDocuments(filter);
+        const services = await ServiceModel.find(filter)
+            .sort(sortSpec)
+            .skip((page - 1) * limit)
+            .limit(limit);
+        return res.json({
+            success: true,
+            data: services,
+            pagination: {
+                total,
+                page,
+                limit,
+            },
+        });
+    }
+    catch (err) {
+        return res.status(500).json({ success: false, message: "Internal error" });
+    }
 }
 export async function getService(req, res) {
     const service = await ServiceModel.findById(req.params.id);
