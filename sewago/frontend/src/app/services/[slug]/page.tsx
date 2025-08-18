@@ -65,8 +65,9 @@ export default async function ServiceDetailPage({ params }: ServiceDetailPagePro
       notFound();
     }
 
-    // Get reviews for this service
-    const reviews: Array<{ rating: number }> = [];
+    // Get reviews for this service (placeholder until backend reviews endpoint is wired)
+    type ReviewForClient = { id: string; rating: number; createdAt: string; user: { name: string }; comment?: string };
+    const reviews: ReviewForClient[] = [];
 
     // Calculate average rating
     const averageRating = reviews.length > 0 
