@@ -4,6 +4,11 @@ export const dynamic = "force-static";
 export default function Home() {
   return (
     <main className="min-h-screen bg-white text-gray-900 dark:bg-black dark:text-white">
+      {/* Debug info */}
+      <div className="fixed top-0 left-0 z-50 bg-red-500 text-white p-2 text-xs">
+        Debug: Page loaded successfully
+      </div>
+      
       <section className="mx-auto max-w-6xl px-6 py-20">
         <div className="grid gap-8 md:grid-cols-2 md:items-center">
           <div>

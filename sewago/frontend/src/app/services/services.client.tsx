@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Search, Filter, MapPin, Star, Calendar, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
+import { formatNPR } from '@/lib/currency';
 
 interface Service {
   id: string;
@@ -209,7 +210,7 @@ export function ServicesClient({ initialServices }: ServicesClientProps) {
                 </span>
                 {service.priceRange && (
                   <span className="text-sm text-gray-600">
-                    Rs. {service.priceRange.min.toLocaleString()} - {service.priceRange.max.toLocaleString()}
+                    {formatNPR(service.priceRange.min)} - {formatNPR(service.priceRange.max)}
                   </span>
                 )}
               </div>

@@ -57,25 +57,40 @@ export function createApp() {
   });
 
   // Health and readiness endpoints early, before potentially incompatible middlewares
-  app.get("/api/health", (_req, res) =>
-    res.json({ ok: true, service: "sewago-backend", env: process.env.NODE_ENV || "dev" })
-  );
-  app.get("/api/ready", (_req, res) => {
-    const ready = mongoose.connection.readyState === 1; // 1 = connected
-    res.status(ready ? 200 : 503).json({ ok: ready, dbState: mongoose.connection.readyState });
-  });
-  app.get("/api/metrics", async (_req, res) => {
-    res.setHeader("Content-Type", register.contentType);
-    res.end(await register.metrics());
-  });
+  if (env.enableHealthChecks) {
+    app.get("/api/health", (_req, res) =>
+      res.json({ 
+        ok: true, 
+        service: "sewago-backend", 
+        env: process.env.NODE_ENV || "dev",
+        timestamp: new Date().toISOString(),
+        uptime: process.uptime()
+      })
+    );
+    app.get("/api/ready", (_req, res) => {
+      const ready = mongoose.connection.readyState === 1; // 1 = connected
+      res.status(ready ? 200 : 503).json({ 
+        ok: ready, 
+        dbState: mongoose.connection.readyState,
+        timestamp: new Date().toISOString()
+      });
+    });
+  }
+  
+  if (env.enableMetrics) {
+    app.get("/api/metrics", async (_req, res) => {
+      res.setHeader("Content-Type", register.contentType);
+      res.end(await register.metrics());
+    });
+  }
   const isTest = env.nodeEnv === "test";
   if (!isTest) {
     app.use(helmet());
     // Global baseline rate limit
     app.use(
       rateLimit({
-        windowMs: 60 * 1000,
-        max: 200,
+        windowMs: env.rateLimitWindowMs,
+        max: env.rateLimitMaxRequests,
         standardHeaders: true,
         legacyHeaders: false,
       })
@@ -84,8 +99,8 @@ export function createApp() {
     app.use(
       "/api/auth/login",
       rateLimit({
-        windowMs: 60 * 1000,
-        max: 5,
+        windowMs: env.rateLimitWindowMs,
+        max: env.loginRateLimitMax,
         standardHeaders: true,
         legacyHeaders: false,
         message: { message: "too_many_login_attempts" },
@@ -95,8 +110,8 @@ export function createApp() {
     app.use(
       ["/api/bookings", "/api/messages"],
       rateLimit({
-        windowMs: 60 * 1000,
-        max: 30,
+        windowMs: env.rateLimitWindowMs,
+        max: env.bookingRateLimitMax,
         standardHeaders: true,
         legacyHeaders: false,
         keyGenerator: (req) => (req as any).userId ?? req.ip,

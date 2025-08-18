@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { Star, MapPin, Clock, DollarSign, CheckCircle, ArrowRight, Calendar, Phone, Mail } from 'lucide-react';
+import { formatNPR } from '@/lib/currency';
 
 interface Service {
   id: string;
@@ -133,7 +134,7 @@ export function ServiceDetailClient({ service, reviews, averageRating }: Service
               <div className="flex items-center gap-2 mb-6">
                 <DollarSign className="h-5 w-5 text-green-600" />
                 <span className="text-lg font-semibold text-gray-900">
-                  Rs. {service.priceRange.min.toLocaleString()} - {service.priceRange.max.toLocaleString()}
+                  {formatNPR(service.priceRange.min)} - {formatNPR(service.priceRange.max)}
                 </span>
                 <span className="text-gray-500">estimated</span>
               </div>

@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@import "tw-animate-css";
+/* @import "tw-animate-css"; */
 
 @custom-variant dark (&:is(.dark *));
 
@@ -120,4 +120,173 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Override any massive decorative elements */
+* {
+  max-width: 100vw !important;
+  max-height: 100vh !important;
+}
+
+/* Ensure no oversized blue shapes */
+.bg-blue-600,
+.bg-blue-700,
+.bg-blue-500,
+.bg-blue-400,
+.bg-blue-300,
+.bg-blue-200,
+.bg-blue-100 {
+  max-width: fit-content !important;
+  max-height: fit-content !important;
+}
+
+/* Override any tw-animate-css decorative elements */
+[class*="tw-animate"],
+[class*="animate-css"] {
+  max-width: 100% !important;
+  max-height: 100% !important;
+  overflow: hidden !important;
+}
+
+/* Ensure no massive rounded elements */
+.rounded-full,
+.rounded-lg,
+.rounded-md {
+  max-width: 100% !important;
+  max-height: 100% !important;
+}
+
+/* Override any pseudo-elements that might be causing issues */
+*::before,
+*::after {
+  max-width: 100% !important;
+  max-height: 100% !important;
+  content: none !important;
+}
+
+/* Additional overrides for any potential massive elements */
+div[class*="bg-"],
+span[class*="bg-"],
+button[class*="bg-"] {
+  max-width: 100% !important;
+  max-height: 100% !important;
+}
+
+/* Override any absolute positioned elements that might be massive */
+[class*="absolute"],
+[class*="fixed"] {
+  max-width: 100vw !important;
+  max-height: 100vh !important;
+}
+
+/* Ensure no massive gradients or backgrounds */
+[class*="bg-gradient"] {
+  max-width: 100% !important;
+  max-height: 100% !important;
+}
+
+/* Override any potential tw-animate-css issues */
+.tw-animate-css *,
+[class*="tw-animate-css"] * {
+  max-width: 100% !important;
+  max-height: 100% !important;
+  overflow: visible !important;
+}
+
+/* Nuclear option - override any element that might be massive */
+* {
+  max-width: 100vw !important;
+  max-height: 100vh !important;
+  box-sizing: border-box !important;
+}
+
+/* Ensure no massive decorative elements */
+div,
+span,
+button,
+a,
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  max-width: 100% !important;
+  max-height: 100% !important;
+  overflow: visible !important;
+}
+
+/* Override any potential tw-animate-css decorative elements */
+[class*="tw-animate"],
+[class*="animate-css"],
+[class*="animate"] {
+  max-width: 100% !important;
+  max-height: 100% !important;
+  overflow: hidden !important;
+  position: relative !important;
+}
+
+/* Ensure no massive backgrounds or gradients */
+[class*="bg-"],
+[class*="gradient"] {
+  max-width: 100% !important;
+  max-height: 100% !important;
+  background-size: contain !important;
+}
+
+/* Override any pseudo-elements */
+*::before,
+*::after {
+  max-width: 100% !important;
+  max-height: 100% !important;
+  content: none !important;
+  display: none !important;
+}
+
+/* Additional aggressive overrides */
+html, body {
+  max-width: 100vw !important;
+  max-height: 100vh !important;
+  overflow-x: hidden !important;
+}
+
+/* Override any potential massive elements from external libraries */
+[class*="library"],
+[class*="external"],
+[class*="plugin"] {
+  max-width: 100% !important;
+  max-height: 100% !important;
+}
+
+/* Ensure no massive decorative shapes */
+[class*="shape"],
+[class*="decoration"],
+[class*="ornament"] {
+  max-width: 100px !important;
+  max-height: 100px !important;
+  display: none !important;
+}
+
+/* Override any potential tw-animate-css issues */
+.tw-animate-css *,
+[class*="tw-animate-css"] * {
+  max-width: 100% !important;
+  max-height: 100% !important;
+  overflow: visible !important;
+}
+
+/* Force all elements to respect container bounds */
+.container *,
+[class*="container"] * {
+  max-width: 100% !important;
+  max-height: 100% !important;
+}
+
+/* Override any potential massive elements */
+main *,
+section *,
+article * {
+  max-width: 100% !important;
+  max-height: 100% !important;
 }
