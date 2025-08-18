@@ -1,0 +1,151 @@
+/* Lite Mode Performance Optimizations */
+
+/* Disable animations and transitions in lite mode */
+.lite-mode * {
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
+}
+
+/* Reduce visual complexity */
+.lite-mode {
+  --shadow-sm: none;
+  --shadow-md: none;
+  --shadow-lg: none;
+  --gradient-bg: none;
+}
+
+/* Simplify borders and backgrounds */
+.lite-mode .bg-gradient-to-r,
+.lite-mode .bg-gradient-to-l,
+.lite-mode .bg-gradient-to-t,
+.lite-mode .bg-gradient-to-b {
+  background: var(--fallback-bg, #f3f4f6) !important;
+}
+
+/* Hide non-essential visual elements */
+.lite-mode .shadow-sm,
+.lite-mode .shadow-md,
+.lite-mode .shadow-lg,
+.lite-mode .shadow-xl {
+  box-shadow: none !important;
+}
+
+/* Simplify hover effects */
+.lite-mode .hover\\:shadow-md:hover,
+.lite-mode .hover\\:shadow-lg:hover {
+  box-shadow: none !important;
+  background-color: var(--hover-bg, #e5e7eb) !important;
+}
+
+/* Optimize for Devanagari text rendering */
+.ne-locale {
+  font-family: 'Noto Sans Devanagari', 'Mukti', sans-serif;
+  line-height: 1.6;
+  /* Better spacing for Devanagari characters */
+  letter-spacing: 0.01em;
+}
+
+/* Nepali number formatting */
+.nepali-numerals {
+  font-feature-settings: "locl" 1;
+}
+
+/* Performance optimizations for slow connections */
+.lite-mode img {
+  /* Disable image filters for better performance */
+  filter: none !important;
+}
+
+/* Reduce GPU usage */
+.lite-mode .backdrop-blur,
+.lite-mode .backdrop-filter {
+  backdrop-filter: none !important;
+}
+
+/* Simplify complex layouts in lite mode */
+.lite-mode .grid-cols-4 {
+  grid-template-columns: repeat(2, 1fr) !important;
+}
+
+.lite-mode .grid-cols-3 {
+  grid-template-columns: repeat(2, 1fr) !important;
+}
+
+/* Hide decorative elements */
+.lite-mode .decoration-only {
+  display: none !important;
+}
+
+/* Optimize loading states */
+.lite-mode .animate-pulse {
+  animation: none !important;
+  background-color: #e5e7eb !important;
+}
+
+/* Connection indicator styles */
+.connection-indicator {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 9999;
+  padding: 8px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.connection-fast {
+  background-color: #d1fae5;
+  color: #065f46;
+  border: 1px solid #a7f3d0;
+}
+
+.connection-slow {
+  background-color: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fde68a;
+}
+
+.connection-unknown {
+  background-color: #e0e7ff;
+  color: #3730a3;
+  border: 1px solid #c7d2fe;
+}
+
+/* Responsive typography for Nepal */
+@media (max-width: 640px) {
+  .ne-locale {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+}
+
+/* Print styles for lite mode */
+@media print {
+  .lite-mode * {
+    background: white !important;
+    color: black !important;
+    box-shadow: none !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .lite-mode {
+    --text-primary: #000000;
+    --text-secondary: #333333;
+    --bg-primary: #ffffff;
+    --bg-secondary: #f5f5f5;
+    --border-color: #000000;
+  }
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
