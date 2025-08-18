@@ -46,6 +46,9 @@ api.post("/messages/:bookingId", requireAuth(["user", "provider"]), Messages.sen
 api.get("/ai/suggest", AI.suggest);
 
 // Payments
+api.post("/payments/initiate", requireAuth(["user"]), Payments.initiatePayment);
+api.post("/payments/verify", Payments.verifyPayment);
+// Legacy endpoints for backward compatibility
 api.post("/payments/esewa/initiate", requireAuth(["user"]), Payments.esewaInitiate);
 api.post("/payments/khalti/initiate", requireAuth(["user"]), Payments.khaltiInitiate);
 

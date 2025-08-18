@@ -1,25 +1,12 @@
-import { PrismaClient } from '@prisma/client';
+// Database operations are now handled by the backend API
+// This file maintains compatibility for any legacy imports
 
-// Production database client
-let db: PrismaClient;
+export const db = {
+  // Deprecated - use API calls instead
+  _deprecated: true,
+};
 
-try {
-  if (process.env.DATABASE_URL) {
-    db = new PrismaClient({
-      datasources: {
-        db: {
-          url: process.env.DATABASE_URL,
-        },
-      },
-      log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
-    });
-    console.log('✅ Using Prisma database client with MongoDB Atlas');
-  } else {
-    throw new Error('DATABASE_URL environment variable is required for production');
-  }
-} catch (error) {
-  console.error('❌ Failed to initialize Prisma database client:', error);
-  throw error;
+// Helper to remind developers to use API calls
+if (process.env.NODE_ENV === 'development') {
+  console.warn('⚠️ Direct database access deprecated - use API endpoints instead');
 }
-
-export { db };
