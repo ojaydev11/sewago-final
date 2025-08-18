@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import requestIp from 'request-ip';
 
 // Simple in-memory rate limiter (for production, use Redis-based solution)
 interface RateLimitStore {
@@ -23,7 +24,7 @@ export const createRateLimit = (options: RateLimitOptions) => {
     windowMs,
     max,
     message = 'Too many requests, please try again later',
-    keyGenerator = (req: Request) => req.ip || 'unknown',
+    keyGenerator = (req: Request) => requestIp.getClientIp(req) || 'unknown',
     skip = () => false,
   } = options;
 
@@ -81,7 +82,7 @@ export const authRateLimit = createRateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes  
   max: 5, // 5 login attempts per window
   message: 'Too many login attempts, please try again later',
-  keyGenerator: (req: Request) => `auth:${req.ip}:${req.body?.email || 'unknown'}`,
+  keyGenerator: (req: Request) => `auth:${requestIp.getClientIp(req) || 'unknown'}:${req.body?.email || 'unknown'}`,
 });
 
 export const paymentRateLimit = createRateLimit({

@@ -21,7 +21,8 @@ import { generalRateLimit, authRateLimit, paymentRateLimit } from "./middleware/
 
 export function createApp() {
   const app = express();
-  app.set("trust proxy", true);
+  // Trust first proxy so real client IP is visible behind Railway/Proxies
+  app.set("trust proxy", 1);
   
   // Enhanced security headers
   app.use(securityHeaders);
@@ -115,7 +116,7 @@ export function createApp() {
         message: { message: "too_many_login_attempts" },
       })
     );
-    // Moderate rate limit for bookings creation/updates
+    // Moderate rate limit for bookings creation/updates (use default keygen from library)
     app.use(
       ["/api/bookings", "/api/messages"],
       rateLimit({
@@ -123,7 +124,6 @@ export function createApp() {
         max: env.bookingRateLimitMax,
         standardHeaders: true,
         legacyHeaders: false,
-        keyGenerator: (req) => (req as any).userId ?? req.ip,
       })
     );
   }
