@@ -8,6 +8,7 @@ import {
   PaymentVerificationResponse,
   EsewaVerificationRequest,
 } from '../../types/payments.js';
+import { ESEWA_KEY, env } from '../../config/env.js';
 
 export class EsewaGateway implements PaymentGateway {
   private merchantCode: string;
@@ -16,8 +17,8 @@ export class EsewaGateway implements PaymentGateway {
 
   constructor() {
     this.merchantCode = process.env.ESEWA_MERCHANT_CODE || '';
-    this.secretKey = process.env.ESEWA_SECRET || '';
-    this.baseUrl = process.env.NODE_ENV === 'production' 
+    this.secretKey = ESEWA_KEY || '';
+    this.baseUrl = env.nodeEnv === 'production' 
       ? 'https://esewa.com.np/epay/transrec'
       : 'https://esewa.com.np/epay/transrec'; // eSewa doesn't have sandbox
     
@@ -39,8 +40,8 @@ export class EsewaGateway implements PaymentGateway {
         tAmt: request.amount, // total amount
         pid: referenceId,
         scd: this.merchantCode,
-        su: request.returnUrl || `${process.env.CLIENT_ORIGIN}/payment/success`,
-        fu: request.failureUrl || `${process.env.CLIENT_ORIGIN}/payment/failed`,
+        su: request.returnUrl || `${env.clientOrigin}/payment/success`,
+        fu: request.failureUrl || `${env.clientOrigin}/payment/failed`,
       };
 
       // Build payment URL
