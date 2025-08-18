@@ -1,5 +1,19 @@
 import { Router } from "express";
 import { requireAuth } from "../middleware/auth.js";
+import { validateRequest } from "../middleware/validation.js";
+import { authRateLimit, paymentRateLimit, bookingRateLimit } from "../middleware/rateLimit.js";
+import { 
+  registerSchema, 
+  loginSchema, 
+  createBookingSchema,
+  updateBookingStatusSchema,
+  createServiceSchema,
+  initiatePaymentSchema,
+  verifyPaymentSchema,
+  addReviewSchema,
+  sendMessageSchema,
+  objectIdParamSchema
+} from "../schemas/validation.js";
 import * as Auth from "../controllers/auth.controller.js";
 import * as Services from "../controllers/services.controller.js";
 import * as Bookings from "../controllers/bookings.controller.js";
@@ -14,9 +28,9 @@ export const api = Router();
 // Health
 api.get("/health", (_req, res) => res.json({ ok: true, service: "sewago-backend", env: process.env.NODE_ENV ?? "development" }));
 
-// Auth
-api.post("/auth/register", Auth.register);
-api.post("/auth/login", Auth.login);
+// Auth (with validation and rate limiting)
+api.post("/auth/register", validateRequest(registerSchema), Auth.register);
+api.post("/auth/login", authRateLimit, validateRequest(loginSchema), Auth.login);
 api.post("/auth/refresh", Auth.refresh);
 api.post("/auth/logout", Auth.logout);
 api.get("/auth/me", requireAuth(["user", "provider", "admin"]), Auth.me);
@@ -45,12 +59,12 @@ api.post("/messages/:bookingId", requireAuth(["user", "provider"]), Messages.sen
 // AI
 api.get("/ai/suggest", AI.suggest);
 
-// Payments
-api.post("/payments/initiate", requireAuth(["user"]), Payments.initiatePayment);
-api.post("/payments/verify", Payments.verifyPayment);
+// Payments (with validation and rate limiting)
+api.post("/payments/initiate", requireAuth(["user"]), paymentRateLimit, validateRequest(initiatePaymentSchema), Payments.initiatePayment);
+api.post("/payments/verify", validateRequest(verifyPaymentSchema), Payments.verifyPayment);
 // Legacy endpoints for backward compatibility
-api.post("/payments/esewa/initiate", requireAuth(["user"]), Payments.esewaInitiate);
-api.post("/payments/khalti/initiate", requireAuth(["user"]), Payments.khaltiInitiate);
+api.post("/payments/esewa/initiate", requireAuth(["user"]), paymentRateLimit, Payments.esewaInitiate);
+api.post("/payments/khalti/initiate", requireAuth(["user"]), paymentRateLimit, Payments.khaltiInitiate);
 
 // Admin test-only endpoints (protected by header X-Seed-Key)
 api.post("/admin/seed", async (req, res) => {

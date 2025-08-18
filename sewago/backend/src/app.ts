@@ -14,10 +14,19 @@ import mongoose from "mongoose";
 import { v4 as uuidv4 } from "uuid";
 import client from "prom-client";
 
+// New security middleware
+import { securityHeaders, corsSecurityHeaders, requestId } from "./middleware/security.js";
+import { errorHandler, notFoundHandler } from "./middleware/errorHandler.js";
+import { generalRateLimit, authRateLimit, paymentRateLimit } from "./middleware/rateLimit.js";
+
 export function createApp() {
   const app = express();
   app.set("trust proxy", true);
-  app.use(cors({ origin: env.clientOrigin, credentials: true }));
+  
+  // Enhanced security headers
+  app.use(securityHeaders);
+  app.use(corsSecurityHeaders);
+  
   // Global gzip compression for payloads
   app.use(compression());
   
@@ -146,17 +155,10 @@ export function createApp() {
   app.use(cookieParser());
   app.use(morgan(logFormat));
   app.use("/api", api);
-  // Generic 404 for unknown API routes (after routers)
-  app.use("/api", (_req, res, _next) => {
-    res.status(404).json({ message: "not_found", requestId: (res as any).locals?.requestId });
-  });
-  // Basic error handler for tests and development
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  app.use((err: unknown, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
-    // eslint-disable-next-line no-console
-    console.error("Express error:", err, "reqId=", (res as any).locals?.requestId);
-    res.status(500).json({ message: "internal_error", requestId: (res as any).locals?.requestId });
-  });
+  
+  // Enhanced error handling
+  app.use("/api", notFoundHandler);
+  app.use(errorHandler);
   return app;
 }
 
