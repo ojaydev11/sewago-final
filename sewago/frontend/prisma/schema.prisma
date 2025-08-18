@@ -1,0 +1,158 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String     @id @default(auto()) @map("_id") @db.ObjectId
+  email         String     @unique
+  name          String?
+  phone         String     @unique
+  passwordHash  String
+  coins         Int        @default(0)
+  referralCode  String     @unique
+  role          String     @default("user")
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  
+  // Relations
+  bookings      Booking[]
+  reviews       Review[]
+  referralsMade Referral[] @relation("Referrer")
+  referralsReceived Referral[] @relation("Referred")
+  notifications Notification[]
+}
+
+model Provider {
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  name           String
+  phone          String   @unique
+  verified       Boolean  @default(false)
+  onTimePct      Float    @default(100)
+  completionPct  Float    @default(100)
+  yearsActive    Int      @default(1)
+  tier           String   @default("PROVISIONAL")
+  skills         String[]
+  zones          String[]
+  isOnline       Boolean  @default(false)
+  currentLat     Float?
+  currentLng     Float?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  
+  // Relations
+  bookings       Booking[]
+  notifications  Notification[]
+}
+
+model Service {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  slug        String   @unique
+  name        String
+  description String
+  basePrice   Int
+  city        String
+  category    String
+  imageUrl    String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  bookings    Booking[]
+  reviews     Review[]
+}
+
+model Booking {
+  id           String         @id @default(auto()) @map("_id") @db.ObjectId
+  status       BookingStatus  @default(PENDING_CONFIRMATION)
+  userId       String         @db.ObjectId
+  serviceId    String         @db.ObjectId
+  providerId   String?        @db.ObjectId
+  address      String
+  notes        String?
+  total        Int            @default(0)
+  paid         Boolean        @default(false)
+  scheduledAt  DateTime?
+  createdAt    DateTime       @default(now())
+  completedAt  DateTime?
+  
+  // Relations
+  user         User           @relation(fields: [userId], references: [id])
+  service      Service        @relation(fields: [serviceId], references: [id])
+  provider     Provider?      @relation(fields: [providerId], references: [id])
+  review       Review?
+  notifications Notification[]
+}
+
+enum BookingStatus {
+  PENDING_CONFIRMATION
+  CONFIRMED
+  PROVIDER_ASSIGNED
+  EN_ROUTE
+  IN_PROGRESS
+  COMPLETED
+  CANCELED
+  DISPUTED
+}
+
+model Review {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  rating     Int
+  text       String?
+  mediaUrls  String[]
+  verified   Boolean  @default(true)
+  bookingId  String   @unique @db.ObjectId
+  userId     String   @db.ObjectId
+  serviceId  String   @db.ObjectId
+  createdAt  DateTime @default(now())
+  
+  // Relations
+  booking    Booking  @relation(fields: [bookingId], references: [id])
+  user       User     @relation(fields: [userId], references: [id])
+  service    Service  @relation(fields: [serviceId], references: [id])
+}
+
+model Notification {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId     String?  @db.ObjectId
+  providerId String?  @db.ObjectId
+  bookingId  String?  @db.ObjectId
+  message    String
+  type       String
+  channel    String
+  sentAt     DateTime @default(now())
+  readAt     DateTime?
+  
+  // Relations
+  user       User?     @relation(fields: [userId], references: [id])
+  provider   Provider? @relation(fields: [providerId], references: [id])
+  booking    Booking?  @relation(fields: [bookingId], references: [id])
+}
+
+model Referral {
+  id           String    @id @default(auto()) @map("_id") @db.ObjectId
+  code         String    @unique
+  referrerId   String    @db.ObjectId
+  referredId   String?   @unique @db.ObjectId
+  redeemedAt   DateTime?
+  createdAt    DateTime  @default(now())
+  
+  // Relations
+  referrer     User      @relation("Referrer", fields: [referrerId], references: [id])
+  referred     User?     @relation("Referred", fields: [referredId], references: [id])
+}
+
+model PublicMetric {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  key       String   @unique
+  value     String
+  updatedAt DateTime @updatedAt
+}
