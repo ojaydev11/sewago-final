@@ -27,20 +27,21 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json(response.data);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Payment verification error:', error);
     
-    if (error.response?.status === 404) {
-      return NextResponse.json(
-        { success: false, message: 'Payment reference not found' },
-        { status: 404 }
-      );
-    }
+    if (error && typeof error === 'object' && 'response' in error) {
+      const axiosError = error as { response: { data?: { message?: string }; status: number } };
+      if (axiosError.response?.status === 404) {
+        return NextResponse.json(
+          { success: false, message: 'Payment reference not found' },
+          { status: 404 }
+        );
+      }
 
-    if (error.response) {
       return NextResponse.json(
-        { success: false, message: error.response.data?.message || 'Verification failed' },
-        { status: error.response.status }
+        { success: false, message: axiosError.response.data?.message || 'Verification failed' },
+        { status: axiosError.response.status }
       );
     }
 
@@ -63,7 +64,7 @@ export async function GET(request: NextRequest) {
 
   try {
     // Verify payment automatically on callback
-    const verificationData: any = { referenceId, gateway };
+    const verificationData: Record<string, string | null> = { referenceId, gateway };
 
     // Add gateway-specific parameters
     if (gateway === 'esewa') {

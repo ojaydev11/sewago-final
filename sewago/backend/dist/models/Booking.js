@@ -21,4 +21,5 @@ const bookingSchema = new Schema({
 bookingSchema.index({ userId: 1 });
 bookingSchema.index({ providerId: 1 });
 bookingSchema.index({ status: 1, date: 1 });
+bookingSchema.index({ "payment.referenceId": 1 }, { unique: true, sparse: true });
 export const BookingModel = mongoose.model("Booking", bookingSchema);

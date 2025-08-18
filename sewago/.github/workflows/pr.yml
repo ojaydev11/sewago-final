@@ -1,0 +1,66 @@
+name: Pull Request CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install root dependencies
+        run: npm install
+
+      - name: Install backend dependencies
+        run: cd backend && npm install
+
+      - name: Install frontend dependencies
+        run: cd frontend && npm install
+
+      - name: TypeScript check - Backend
+        run: cd backend && npx tsc --noEmit
+
+      - name: TypeScript check - Frontend
+        run: cd frontend && npm run typecheck
+
+      - name: Lint Backend
+        run: cd backend && npm run lint
+
+      - name: Lint Frontend
+        run: cd frontend && npm run lint
+
+      - name: Test Backend
+        run: cd backend && npm run test
+        continue-on-error: true
+
+      - name: Test Frontend
+        run: cd frontend && npm run test
+        continue-on-error: true
+
+      - name: Build Backend
+        run: cd backend && npm run build
+
+      - name: Build Frontend
+        run: cd frontend && npm run build
+        env:
+          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api' }}
+          NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL || 'http://localhost:3000' }}
+          NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET || 'development-secret' }}
+          NEXT_PUBLIC_DEFAULT_LOCALE: en

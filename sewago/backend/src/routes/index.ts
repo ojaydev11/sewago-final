@@ -75,7 +75,7 @@ api.post("/admin/seed", async (req, res) => {
   if (key !== (process.env.SEED_KEY ?? "dev-seed-key")) return res.status(403).json({ message: "forbidden" });
   const { UserModel } = await import("../models/User.js");
   const { ServiceModel } = await import("../models/Service.js");
-  const bcrypt = (await import("bcrypt")).default;
+  const bcrypt = (await import("bcryptjs")).default;
   const upsertUser = async (doc: any) => {
     const existing = await UserModel.findOne({ email: doc.email });
     if (existing) return existing;

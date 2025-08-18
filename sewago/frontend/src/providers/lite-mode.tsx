@@ -2,6 +2,12 @@
 
 import { createContext, useContext, useEffect, useState } from 'react';
 
+interface NavigatorConnection {
+  connection: {
+    effectiveType?: string;
+  };
+}
+
 interface LiteModeContextType {
   isLiteMode: boolean;
   setLiteMode: (enabled: boolean) => void;
@@ -42,7 +48,7 @@ export function LiteModeProvider({ children }: LiteModeProviderProps) {
     try {
       // Check Network Information API (if available)
       if ('connection' in navigator) {
-        const connection = (navigator as any).connection;
+        const connection = (navigator as unknown as NavigatorConnection).connection;
         const effectiveType = connection?.effectiveType;
         
         if (effectiveType === '2g' || effectiveType === 'slow-2g') {
