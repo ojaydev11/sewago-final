@@ -34,6 +34,16 @@ const nextConfig: NextConfig = {
       { protocol: 'https', hostname: '**' },
     ],
   },
+  async redirects() {
+    const defaultLocale = process.env.NEXT_PUBLIC_DEFAULT_LOCALE || 'en';
+    return [
+      {
+        source: '/',
+        destination: `/services`,
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     return [
       {
