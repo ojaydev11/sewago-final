@@ -21,7 +21,8 @@ export async function POST(request: NextRequest) {
 
     // Optionally forward any Set-Cookie from backend in the response headers
     const next = NextResponse.json(resp.data, { status: 201 });
-    const setCookie = (resp.headers as any)['set-cookie'] as string[] | undefined;
+    const headersRecord = resp.headers as unknown as Record<string, string | string[] | undefined>;
+    const setCookie = headersRecord['set-cookie'];
     if (setCookie && Array.isArray(setCookie)) {
       for (const cookie of setCookie) {
         next.headers.append('set-cookie', cookie);

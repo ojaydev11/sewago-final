@@ -34,8 +34,10 @@ export const metadata: Metadata = {
   },
 };
 
+type ServiceListItem = { title: string; description: string; category: string; id?: string; slug?: string };
+
 export default async function ServicesPage() {
-  let services = [] as any[];
+  let services: ServiceListItem[] = [];
   try {
     const resp = await api.get('/services');
     services = Array.isArray(resp.data) ? resp.data : (resp.data?.services ?? []);

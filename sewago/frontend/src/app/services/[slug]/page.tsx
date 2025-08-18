@@ -13,7 +13,7 @@ export async function generateMetadata({ params }: ServiceDetailPageProps): Prom
     const { slug } = await params;
     const serviceResp = await api.get('/services', { params: { q: slug } });
     const list = Array.isArray(serviceResp.data) ? serviceResp.data : (serviceResp.data?.services ?? []);
-    const service = list.find((s: any) => s.slug === slug);
+    const service = list.find((s: { slug?: string }) => s?.slug === slug);
 
     if (!service) {
       return {
@@ -59,7 +59,7 @@ export default async function ServiceDetailPage({ params }: ServiceDetailPagePro
     const { slug } = await params;
     const serviceResp = await api.get('/services', { params: { q: slug } });
     const list = Array.isArray(serviceResp.data) ? serviceResp.data : (serviceResp.data?.services ?? []);
-    const service = list.find((s: any) => s.slug === slug);
+    const service = list.find((s: { slug?: string }) => s?.slug === slug);
 
     if (!service) {
       notFound();

@@ -9,7 +9,7 @@ export async function GET(
     const { slug } = await params;
     const resp = await api.get('/services', { params: { q: slug } });
     const list = Array.isArray(resp.data) ? resp.data : (resp.data?.services ?? []);
-    const service = list.find((s: any) => s.slug === slug);
+    const service = list.find((s: { slug?: string }) => s?.slug === slug);
 
     if (!service) {
       return NextResponse.json(

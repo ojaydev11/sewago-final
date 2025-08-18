@@ -40,14 +40,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             emailOrPhone: credentials.email,
             password: credentials.password,
           });
-          const data = resp.data as { accessToken?: string; user?: { id: string; name?: string; role: string } };
+          const data: { accessToken?: string; user?: { id: string; name?: string; role: string } } = resp.data;
           if (!data?.user?.id) return null;
-          return {
+          const result: { id: string; email: string; name: string; role: string } = {
             id: data.user.id,
             email: credentials.email,
             name: data.user.name ?? credentials.email,
             role: data.user.role,
-          } as any;
+          };
+          return result as unknown as any;
         } catch (error) {
           // eslint-disable-next-line no-console
           console.error('Auth error:', error);
