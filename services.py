@@ -1,4 +1,5 @@
 from flask import Blueprint, jsonify, request, session
+from sqlalchemy import or_
 from src.models.user import User, ServiceProvider, ServiceCategory, db
 import json
 
@@ -54,16 +55,16 @@ def get_providers():
         if location:
             query = query.filter(User.location.contains(location))
         
-        if min_rating:
+        if min_rating is not None:
             query = query.filter(ServiceProvider.rating >= min_rating)
-        
-        if max_rate:
+
+        if max_rate is not None:
             query = query.filter(ServiceProvider.hourly_rate <= max_rate)
         
         if search:
             search_term = f"%{search}%"
             query = query.filter(
-                db.or_(
+                or_(
                     User.full_name.contains(search_term),
                     ServiceProvider.description.contains(search_term),
                     ServiceProvider.skills.contains(search_term)
