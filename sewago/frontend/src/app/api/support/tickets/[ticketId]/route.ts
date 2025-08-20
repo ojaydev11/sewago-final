@@ -4,6 +4,9 @@ import { SupportTicket } from '@/models/SupportTicket';
 import { AuditLogger } from '@/lib/audit-logger';
 import { dbConnect } from '@/lib/mongodb';
 
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
 export async function GET(
   request: NextRequest,
   { params }: { params: { ticketId: string } }

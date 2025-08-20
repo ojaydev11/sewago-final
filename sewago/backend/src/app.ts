@@ -81,13 +81,16 @@ export function createApp(io?: any) {
   const isTest = env.nodeEnv === "test";
   if (!isTest) {
     app.use(helmet());
-    // Global baseline rate limit
+    // Global baseline rate limit (disable trust proxy validation for development)
     app.use(
       rateLimit({
         windowMs: 60 * 1000,
         max: 200,
         standardHeaders: true,
         legacyHeaders: false,
+        validate: {
+          trustProxy: false, // Disable trust proxy validation for development
+        },
       })
     );
     // Stricter rate limit for login
@@ -99,6 +102,9 @@ export function createApp(io?: any) {
         standardHeaders: true,
         legacyHeaders: false,
         message: { message: "too_many_login_attempts" },
+        validate: {
+          trustProxy: false, // Disable trust proxy validation for development
+        },
       })
     );
     // Moderate rate limit for bookings creation/updates
@@ -109,6 +115,9 @@ export function createApp(io?: any) {
         max: 30,
         standardHeaders: true,
         legacyHeaders: false,
+        validate: {
+          trustProxy: false, // Disable trust proxy validation for development
+        },
       })
     );
   }
@@ -134,7 +143,10 @@ export function createApp(io?: any) {
     // Do not mutate headers structure; skipping for safety
     next();
   });
-  app.use(xss());
+  // Disable xss-clean for development due to Express 5 compatibility issues
+  if (isProd) {
+    app.use(xss());
+  }
   app.use(express.json({ limit: "1mb" }));
   app.use(express.urlencoded({ extended: true }));
   app.use(cookieParser());

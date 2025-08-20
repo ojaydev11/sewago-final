@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+export const runtime = 'nodejs';
 // Force dynamic rendering to prevent build-time prerendering
 export const dynamic = 'force-dynamic';
 

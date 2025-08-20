@@ -1,5 +1,11 @@
 'use client';
 
+// Force dynamic rendering to prevent build-time prerendering
+export const dynamic = 'force-dynamic';
+
+// Build-time guard to prevent execution during build
+const isBuild = process.env.NEXT_PHASE === 'phase-production-build';
+
 import React, { useState } from 'react';
 import { ServiceBundle, BundleService } from '@/models/ServiceBundle';
 import { sampleServiceBundles } from '@/models/ServiceBundle';
@@ -16,6 +22,11 @@ import {
 } from '@heroicons/react/24/outline';
 
 export default function ServiceBundlesPage() {
+  // Return early during build phase
+  if (isBuild) {
+    return <div>Loading...</div>;
+  }
+
   const [selectedBundle, setSelectedBundle] = useState<ServiceBundle | null>(null);
   const [selectedServices, setSelectedServices] = useState<BundleService[]>([]);
   const [searchTerm, setSearchTerm] = useState('');

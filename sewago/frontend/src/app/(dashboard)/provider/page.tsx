@@ -1,5 +1,8 @@
 'use client';
 
+// Force dynamic rendering to prevent build-time prerendering
+export const dynamic = 'force-dynamic';
+
 export default function ProviderPage() {
   return (
     <div className="min-h-screen flex items-center justify-center">

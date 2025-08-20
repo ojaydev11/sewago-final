@@ -1,102 +1,185 @@
 {
+  "common": {
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "close": "Close",
+    "yes": "Yes",
+    "no": "No",
+    "ok": "OK",
+    "error": "Error",
+    "success": "Success",
+    "warning": "Warning",
+    "info": "Information"
+  },
+  "navigation": {
+    "home": "Home",
+    "services": "Services",
+    "about": "About",
+    "contact": "Contact",
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout",
+    "dashboard": "Dashboard",
+    "profile": "Profile"
+  },
   "nav": {
     "home": "Home",
     "services": "Services",
     "about": "About",
     "contact": "Contact",
-    "faq": "FAQ",
-    "pricing": "Pricing"
+    "faq": "FAQs",
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout",
+    "dashboard": "Dashboard",
+    "profile": "Profile"
   },
-  "hero": {
-    "title": "Local Services in Nepal",
-    "subtitle": "Connect with verified service providers for all your home and business needs",
-    "cta": "Get Started",
-    "learnMore": "Learn More"
+  "auth": {
+    "login": {
+      "title": "Login to SewaGo",
+      "email": "Email",
+      "password": "Password",
+      "forgotPassword": "Forgot Password?",
+      "noAccount": "Don't have an account?",
+      "signUp": "Sign Up"
+    },
+    "register": {
+      "title": "Create SewaGo Account",
+      "name": "Full Name",
+      "email": "Email",
+      "phone": "Phone Number",
+      "password": "Password",
+      "confirmPassword": "Confirm Password",
+      "agreeTerms": "I agree to the Terms of Service and Privacy Policy",
+      "hasAccount": "Already have an account?",
+      "signIn": "Sign In",
+      "userType": "Account Type",
+      "customer": "Customer",
+      "provider": "Service Provider"
+    },
+    "errors": {
+      "invalidCredentials": "Invalid email or password",
+      "emailExists": "Email already exists",
+      "phoneExists": "Phone number already exists",
+      "passwordsNotMatch": "Passwords do not match",
+      "termsRequired": "You must agree to the terms and conditions"
+    }
   },
   "services": {
     "title": "Our Services",
-    "subtitle": "Professional services delivered to your doorstep",
+    "searchPlaceholder": "Search for services...",
     "categories": {
-      "cleaning": "House Cleaning",
-      "electrical": "Electrical Work",
       "plumbing": "Plumbing",
-      "delivery": "Delivery",
-      "tutoring": "Tutoring",
-      "gardening": "Gardening"
+      "electrical": "Electrical",
+      "cleaning": "Cleaning",
+      "painting": "Painting",
+      "carpentry": "Carpentry",
+      "appliance": "Appliance Repair",
+      "gardening": "Gardening",
+      "moving": "Moving & Packing"
     },
-    "features": {
-      "verified": "Verified Providers",
-      "insured": "Fully Insured",
-      "guaranteed": "Satisfaction Guaranteed",
-      "support": "24/7 Support"
-    }
-  },
-  "auth": {
-    "login": "Login",
-    "logout": "Logout",
-    "register": "Register",
-    "signIn": "Sign In",
-    "signUp": "Sign Up",
-    "email": "Email",
-    "password": "Password",
-    "forgotPassword": "Forgot Password?",
-    "dontHaveAccount": "Don't have an account?",
-    "alreadyHaveAccount": "Already have an account?"
-  },
-  "common": {
-    "loading": "Loading...",
-    "error": "Error",
-    "success": "Success",
-    "cancel": "Cancel",
-    "save": "Save",
-    "edit": "Edit",
-    "delete": "Delete",
-    "view": "View",
-    "search": "Search",
-    "filter": "Filter",
-    "sort": "Sort",
-    "price": "Price",
+    "bookNow": "Book Now",
+    "startingFrom": "Starting from",
+    "perHour": "per hour",
+    "viewDetails": "View Details",
+    "noServices": "No services found",
     "rating": "Rating",
     "reviews": "Reviews",
-    "bookNow": "Book Now",
-    "contactUs": "Contact Us",
-    "learnMore": "Learn More",
-    "readMore": "Read More"
+    "by": "by"
   },
-  "footer": {
-    "company": "Company",
-    "services": "Services",
-    "support": "Support",
-    "legal": "Legal",
-    "social": "Follow Us",
-    "newsletter": "Stay Updated",
-    "subscribe": "Subscribe"
-  },
-  "contact": {
-    "title": "Get in Touch",
-    "subtitle": "We're here to help with all your local service needs",
-    "form": {
-      "firstName": "First Name",
-      "lastName": "Last Name",
-      "email": "Email",
-      "phone": "Phone Number",
-      "message": "Message",
-      "sendMessage": "Send Message"
-    },
-    "info": {
-      "email": "Email Support",
-      "phone": "Phone Support",
-      "liveChat": "Live Chat",
-      "office": "Our Office"
+  "booking": {
+    "title": "Book Service",
+    "selectDate": "Select Date",
+    "selectTime": "Select Time",
+    "address": "Service Address",
+    "notes": "Additional Notes",
+    "optional": "Optional",
+    "total": "Total",
+    "proceedToPayment": "Proceed to Payment",
+    "confirmBooking": "Confirm Booking",
+    "bookingConfirmed": "Booking Confirmed!",
+    "paymentMethod": "Payment Method",
+    "esewa": "eSewa",
+    "khalti": "Khalti",
+    "cash": "Cash on Service",
+    "status": {
+      "pending": "Pending",
+      "confirmed": "Confirmed",
+      "inProgress": "In Progress",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
     }
   },
   "dashboard": {
-    "title": "Dashboard",
     "welcome": "Welcome back",
-    "overview": "Overview",
-    "bookings": "Bookings",
+    "myBookings": "My Bookings",
+    "myServices": "My Services",
+    "earnings": "Earnings",
+    "reviews": "Reviews",
+    "profile": "Profile Settings",
+    "noBookings": "No bookings yet",
+    "noServices": "No services added yet",
+    "addService": "Add New Service"
+  },
+  "payment": {
+    "success": {
+      "title": "Payment Successful!",
+      "message": "Your payment has been processed successfully. Your service provider will be notified shortly.",
+      "bookingReference": "Booking Reference",
+      "viewBookings": "View My Bookings",
+      "bookAnother": "Book Another Service"
+    },
+    "failed": {
+      "title": "Payment Failed",
+      "message": "Your payment could not be completed. Please try again.",
+      "tryAgain": "Try Payment Again",
+      "contactSupport": "Contact Support",
+      "backHome": "Back to Home",
+      "refundNotice": "If money was deducted from your account, it will be automatically refunded within 5-7 business days."
+    }
+  },
+  "currency": {
+    "npr": "NPR",
+    "format": "Rs {amount}"
+  },
+  "footer": {
+    "description": "SewaGo is Nepal's trusted platform for home services. Get quality services from verified professionals.",
+    "quickLinks": "Quick Links",
     "services": "Services",
-    "profile": "Profile",
-    "settings": "Settings"
+    "support": "Support",
+    "legal": "Legal",
+    "followUs": "Follow Us",
+    "allRightsReserved": "All rights reserved"
+  },
+  "contact": {
+    "title": "Contact Us",
+    "phone": "Phone",
+    "email": "Email",
+    "chat": "Live Chat",
+    "available": "Available 24/7"
+  },
+  "errors": {
+    "404": {
+      "title": "Page Not Found",
+      "message": "The page you're looking for doesn't exist or has been moved.",
+      "goHome": "Go Home",
+      "browseServices": "Browse Services"
+    },
+    "500": {
+      "title": "Something went wrong!",
+      "message": "We encountered an unexpected error. Our team has been notified and is working to fix it.",
+      "tryAgain": "Try Again",
+      "goHome": "Go Home"
+    }
   }
 }

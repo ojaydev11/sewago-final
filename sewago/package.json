@@ -6,14 +6,24 @@
     "postinstall": "node -e \"process.exit(process.env.VERCEL?0:1)\" || (playwright install --with-deps || npx playwright install || echo \"Playwright already installed\")",
     "install:all": "npm --prefix backend i && npm --prefix frontend i",
     "dev": "concurrently -n backend,frontend -c blue,magenta \"npm --prefix backend run dev\" \"npm --prefix frontend run dev\"",
+    "test:backend": "cross-env NODE_ENV=test npm --prefix backend run dev",
+    "test:frontend": "cross-env NODE_ENV=test NEXT_PUBLIC_API_URL=http://localhost:4102 npm --prefix frontend run dev -- -p 3003",
     "build": "node -e \"process.exit(process.env.VERCEL?0:1)\" || (npm --prefix backend run build && npm --prefix frontend run build)",
     "start": "concurrently -n backend,frontend -c blue,magenta \"npm --prefix backend run start\" \"npm --prefix frontend run start\"",
     "test": "npm run test --prefix backend && npm run test --prefix frontend",
     "lint": "npm run lint --prefix backend && npm run lint --prefix frontend",
+    "seed:test": "tsx scripts/seed.test.ts",
     "e2e:prepare": "node ./scripts/e2e/prepare.js",
     "e2e:start": "node ./scripts/e2e/run.js",
     "e2e": "npm run e2e:prepare && npm run e2e:start",
-    "e2e:ci": "cross-env CI=1 npm run e2e"
+    "e2e:ci": "cross-env CI=1 npm run e2e",
+    "e2e:full": "playwright test --config playwright.config.ts",
+    "e2e:headed": "playwright test --config playwright.config.ts --headed",
+    "e2e:customer": "playwright test e2e/customer.spec.ts",
+    "e2e:provider": "playwright test e2e/provider.spec.ts", 
+    "e2e:admin": "playwright test e2e/admin.spec.ts",
+    "e2e:lighthouse": "playwright test e2e/lighthouse.spec.ts",
+    "mock:payments": "tsx scripts/mock_esewa.ts && tsx scripts/mock_khalti.ts"
   },
   "devDependencies": {
     "concurrently": "^9.1.0",
@@ -21,7 +31,13 @@
     "wait-on": "^8.0.2",
     "playwright": "^1.47.2",
     "@playwright/test": "^1.47.2",
-    "tsx": "^4.15.7"
+    "playwright-lighthouse": "^4.0.0",
+    "lighthouse": "^12.0.0",
+    "tsx": "^4.15.7",
+    "node-fetch": "^3.3.2",
+    "mongoose": "^8.0.0",
+    "bcrypt": "^5.1.1",
+    "@types/bcrypt": "^5.0.2"
   }
 }
 

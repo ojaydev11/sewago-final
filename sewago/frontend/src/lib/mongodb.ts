@@ -8,6 +8,13 @@ declare global {
 }
 
 export async function dbConnect(): Promise<typeof mongoose | null> {
+  // Skip database connection during build time
+  if (process.env.NEXT_PHASE === 'phase-production-build' || 
+      process.env.NEXT_PHASE === 'phase-export' ||
+      typeof window === 'undefined' && !process.env.MONGODB_URI) {
+    return null;
+  }
+  
   // Skip database connection during build time or when no URI is provided
   if (!process.env.MONGODB_URI) {
     // During build time, this is expected and not an error

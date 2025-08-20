@@ -1,5 +1,11 @@
 'use client';
 
+// Force dynamic rendering to prevent build-time prerendering
+export const dynamic = 'force-dynamic';
+
+// Build-time guard to prevent execution during build
+const isBuild = process.env.NEXT_PHASE === 'phase-production-build';
+
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { 
@@ -36,6 +42,11 @@ interface Provider {
 }
 
 export default function EmergencyConfirmationPage() {
+  // Return early during build phase
+  if (isBuild) {
+    return <div>Loading...</div>;
+  }
+
   const [emergencyData, setEmergencyData] = useState<EmergencyBooking | null>(null);
   const [currentStep, setCurrentStep] = useState<'searching' | 'found' | 'assigned' | 'confirmed'>('searching');
   const [searchProgress, setSearchProgress] = useState(0);

@@ -5,6 +5,9 @@ import { Metadata } from 'next';
 // Force dynamic rendering to prevent build-time issues
 export const dynamic = "force-dynamic";
 
+// Build-time guard to prevent execution during build
+const isBuild = process.env.NEXT_PHASE === 'phase-production-build';
+
 import Link from 'next/link';
 import { designUtils, componentStyles } from '@/lib/design-system';
 import Location from '@/components/Location';
@@ -18,6 +21,11 @@ export const metadata: Metadata = {
 };
 
 export default function ContactPage() {
+  // Return early during build phase
+  if (isBuild) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <main className='min-h-screen relative overflow-hidden'>
       {/* Background gradient elements */}
