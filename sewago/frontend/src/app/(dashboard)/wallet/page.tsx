@@ -1,6 +1,9 @@
 
 'use client';
 
+// Force dynamic rendering to prevent build-time prerendering
+export const dynamic = 'force-dynamic';
+
 import { useState, useEffect } from 'react';
 import { walletService } from '@/lib/wallet';
 import { FEATURE_FLAGS } from '@/lib/feature-flags';

@@ -3,6 +3,7 @@ import { dbConnect } from '@/lib/mongodb';
 import { SupportTicket } from '@/models/SupportTicket';
 
 // Force dynamic rendering to prevent build-time issues
+export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 // POST /api/contact - Create a support ticket

@@ -1,3 +1,6 @@
+// Force dynamic rendering to prevent build-time prerendering
+export const dynamic = 'force-dynamic';
+
 export default function Page(){
   return(
     <div className='mx-auto max-w-3xl p-8'>

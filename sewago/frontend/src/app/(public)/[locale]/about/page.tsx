@@ -7,6 +7,9 @@ export const dynamic = 'force-dynamic';
 export const fetchCache = 'force-no-store';
 export const preferredRegion = 'auto';
 
+// Build-time guard to prevent execution during build
+const isBuild = process.env.NEXT_PHASE === 'phase-production-build';
+
 import Link from 'next/link';
 import { designUtils, componentStyles } from '@/lib/design-system';
 
@@ -17,6 +20,11 @@ export const metadata: Metadata = {
 };
 
 export default function AboutPage() {
+  // Return early during build phase
+  if (isBuild) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <main className='min-h-screen relative overflow-hidden'>
       {/* Background gradient elements */}

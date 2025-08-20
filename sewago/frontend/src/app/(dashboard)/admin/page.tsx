@@ -1,3 +1,6 @@
+// Force dynamic rendering to prevent build-time prerendering
+export const dynamic = 'force-dynamic';
+
 export default function AdminPage() {
   return (
     <div className="min-h-screen flex items-center justify-center">

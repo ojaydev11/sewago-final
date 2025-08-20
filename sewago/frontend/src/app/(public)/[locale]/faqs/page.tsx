@@ -1,10 +1,19 @@
 'use client';
 
+// Force dynamic rendering to prevent build-time prerendering
+export const dynamic = 'force-dynamic';
 
+// Build-time guard to prevent execution during build
+const isBuild = process.env.NEXT_PHASE === 'phase-production-build';
 
 import { designUtils, componentStyles } from '@/lib/design-system';
 
 export default function FAQsPage() {
+  // Return early during build phase
+  if (isBuild) {
+    return <div>Loading...</div>;
+  }
+
   const faqs = [
     {
       question: 'What services does SewaGo offer?',

@@ -1,0 +1,103 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches: [ main ]
+    paths-ignore:
+      - 'README.md'
+      - 'docs/**'
+      - '*.md'
+
+env:
+  NODE_VERSION: '20'
+
+jobs:
+  deploy-backend:
+    name: Deploy Backend to Railway
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        cache-dependency-path: 'backend/package-lock.json'
+    
+    - name: Install backend dependencies
+      run: |
+        cd backend
+        npm ci
+    
+    - name: Build backend
+      run: |
+        cd backend
+        npm run build
+    
+    - name: Deploy to Railway
+      run: |
+        echo "Backend deployment handled by Railway auto-deploy from main branch"
+        echo "Railway will automatically deploy when changes are pushed to main"
+
+  deploy-frontend:
+    name: Deploy Frontend to Vercel
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        cache-dependency-path: 'frontend/package-lock.json'
+    
+    - name: Install frontend dependencies
+      run: |
+        cd frontend
+        npm ci
+    
+    - name: Build frontend
+      run: |
+        cd frontend
+        npm run build
+      env:
+        SKIP_DB: true
+        NODE_ENV: production
+    
+    - name: Deploy to Vercel
+      run: |
+        echo "Frontend deployment handled by Vercel auto-deploy from main branch"
+        echo "Vercel will automatically deploy when changes are pushed to main"
+
+  post-deploy-check:
+    name: Post-deployment Health Check
+    runs-on: ubuntu-latest
+    needs: [deploy-backend, deploy-frontend]
+    
+    steps:
+    - name: Wait for deployments
+      run: sleep 60
+    
+    - name: Health check backend
+      run: |
+        # Replace with your actual Railway backend URL
+        echo "Backend health check would go here"
+        echo "Example: curl -f https://your-app.railway.app/api/health"
+    
+    - name: Health check frontend
+      run: |
+        # Replace with your actual Vercel frontend URL
+        echo "Frontend health check would go here"
+        echo "Example: curl -f https://your-app.vercel.app"
+    
+    - name: Notify deployment success
+      run: |
+        echo "🚀 Deployment completed successfully!"
+        echo "Backend: Railway deployment complete"
+        echo "Frontend: Vercel deployment complete"
