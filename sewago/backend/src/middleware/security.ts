@@ -6,7 +6,7 @@ export const securityHeaders = (req: Request, res: Response, next: NextFunction)
     'Content-Security-Policy',
     [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval'", // Allow inline scripts for development
+      "script-src 'self' 'unsafe-inline'", // Remove unsafe-eval - critical security risk
       "style-src 'self' 'unsafe-inline' fonts.googleapis.com",
       "font-src 'self' fonts.gstatic.com",
       "img-src 'self' data: blob: https:",
