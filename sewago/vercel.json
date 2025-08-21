@@ -37,8 +37,27 @@
           "value": "camera=(), microphone=(), geolocation=()"
         }
       ]
+    },
+    {
+      "source": "/_next/static/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
     }
   ],
+  "env": {
+    "NEXT_PUBLIC_API_URL": "https://sewago-backend.railway.app",
+    "NEXT_PUBLIC_BASE_URL": "https://sewago.vercel.app",
+    "NODE_ENV": "production"
+  },
+  "functions": {
+    "frontend/src/app/**/*.ts": {
+      "maxDuration": 30
+    }
+  },
   "i18n": {
     "locales": ["en", "ne"],
     "defaultLocale": "en"
