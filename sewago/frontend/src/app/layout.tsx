@@ -10,13 +10,10 @@ import { Inter } from 'next/font/google';
 import { Suspense } from 'react';
 import './globals.css';
 
-import Analytics from '@/components/Analytics';
-import CookieConsent from '@/components/CookieConsent';
-import EmergencyServiceButton from '@/components/EmergencyServiceButton';
-import PerformanceMonitor from '@/components/ui/PerformanceMonitor';
 import { AuthProvider } from '@/providers/auth';
 import { ReactQueryProvider } from '@/providers/react-query';
 import { NextIntlClientProvider } from 'next-intl';
+import ClientOnlyComponents from '@/components/ClientOnlyComponents';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -179,13 +176,6 @@ export default async function RootLayout({
         />
       </head>
       <body className={inter.className}>
-        {/* Google Analytics - only in production */}
-        {process.env.NODE_ENV === 'production' && (
-          <Suspense fallback={null}>
-            <Analytics measurementId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || 'G-XXXXXXXXXX'} />
-          </Suspense>
-        )}
-        
         <NextIntlClientProvider messages={messages}>
           <AuthProvider>
             <ReactQueryProvider>
@@ -193,14 +183,10 @@ export default async function RootLayout({
                 {children}
               </main>
               
-              {/* Emergency Service Button */}
-              <EmergencyServiceButton />
-              
-              {/* Cookie Consent for GDPR compliance */}
-              <CookieConsent />
-              
-              {/* Performance Monitor (development and opt-in production) */}
-              <PerformanceMonitor showOnProduction={false} />
+              {/* Client-only components wrapped in Suspense */}
+              <Suspense fallback={null}>
+                <ClientOnlyComponents />
+              </Suspense>
             </ReactQueryProvider>
           </AuthProvider>
         </NextIntlClientProvider>

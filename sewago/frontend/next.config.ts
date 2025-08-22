@@ -94,7 +94,8 @@ const nextConfig: NextConfig = {
       const clientOnlyModules = [
         'sw.js', 'service-worker', 'canvas-confetti', 'framer-motion', 
         'three', 'socket.io-client', '@react-three/drei', '@react-three/fiber', 
-        '@react-three', 'web-vitals', 'leaflet', 'react-leaflet'
+        '@react-three', 'web-vitals', 'leaflet', 'react-leaflet',
+        'web-vitals', 'debug', 'follow-redirects', '@opentelemetry/api'
       ];
       
       config.externals.push(({ request }, callback) => {
@@ -107,25 +108,15 @@ const nextConfig: NextConfig = {
       // Add global polyfills to prevent 'self is not defined' errors during SSR/build
       const webpack = require('webpack');
       
-      // DefinePlugin with comprehensive polyfills
+      // Simple and safe DefinePlugin approach
       config.plugins.push(
         new webpack.DefinePlugin({
+          'self': 'global',
           'typeof self': '"object"',
-          'typeof window': '"object"',
-          'typeof document': '"object"',
-          'typeof navigator': '"object"',
-          'typeof location': '"object"',
-          'self': '(typeof self !== "undefined" ? self : typeof global !== "undefined" ? global : {})',
-          'window': '(typeof window !== "undefined" ? window : typeof global !== "undefined" ? global : {})',
         })
       );
 
-      // Add ProvidePlugin for automatic injection
-      config.plugins.push(
-        new webpack.ProvidePlugin({
-          'self': ['global'],
-        })
-      );
+
     }
 
     // Add more comprehensive client-side library handling
@@ -141,44 +132,9 @@ const nextConfig: NextConfig = {
       ...config.resolve.alias,
     };
 
-    if (!dev) {
-      // Optimize bundle splitting for better caching
-      config.optimization.splitChunks = {
-        chunks: 'all',
-        minSize: 20000,
-        minRemainingSize: 0,
-        minChunks: 1,
-        maxAsyncRequests: 30,
-        maxInitialRequests: 30,
-        enforceSizeThreshold: 50000,
-        cacheGroups: {
-          default: {
-            minChunks: 2,
-            priority: -20,
-            reuseExistingChunk: true,
-          },
-          vendor: {
-            test: /[\\/]node_modules[\\/]/,
-            name: 'vendors',
-            priority: -10,
-            chunks: 'all',
-          },
-          // Separate common UI components
-          ui: {
-            test: /[\\/]components[\\/]ui[\\/]/,
-            name: 'ui-components',
-            priority: 20,
-            chunks: 'all',
-          },
-          // Separate large libraries
-          react: {
-            test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
-            name: 'react-vendor',
-            priority: 30,
-            chunks: 'all',
-          },
-        },
-      };
+             if (!dev) {
+           // Completely disable chunk splitting to prevent vendor.js issues
+           config.optimization.splitChunks = false;
 
       // Additional optimizations for production
       if (!isServer) {
