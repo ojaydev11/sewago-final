@@ -30,17 +30,14 @@ const nextConfig: NextConfig = {
     cpus: 1,
     // Force all pages to be dynamic
     forceSwcTransforms: true,
-    // Ensure middleware doesn't bundle problematic modules
-    serverComponentsExternalPackages: [
-      '@opentelemetry/api',
-      '@opentelemetry/core', 
-      '@opentelemetry/instrumentation',
-      'mongoose',
-      'mongodb',
-      'prisma',
-      '@prisma/client'
-    ],
   },
+
+  // Server external packages to prevent edge function bundling issues
+  serverExternalPackages: [
+    '@opentelemetry/api',
+    '@opentelemetry/core', 
+    '@opentelemetry/instrumentation'
+  ],
   
   // Move these out of experimental as per warning
   skipTrailingSlashRedirect: true,
