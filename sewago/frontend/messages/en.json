@@ -97,6 +97,189 @@
     "reviews": "Reviews",
     "by": "by"
   },
+  "gamification": {
+    "dashboard": {
+      "title": "Rewards Dashboard",
+      "greeting": {
+        "morning": "Good Morning",
+        "afternoon": "Good Afternoon",
+        "evening": "Good Evening"
+      },
+      "motivational": {
+        "start": "Start your reward journey!",
+        "progress": "Great start! Keep going!",
+        "excellent": "Excellent! You're on fire!",
+        "champion": "Amazing! You're a champion!"
+      },
+      "tabs": {
+        "overview": "Overview",
+        "points": "Points",
+        "badges": "Badges",
+        "streaks": "Streaks",
+        "challenges": "Challenges"
+      }
+    },
+    "points": {
+      "title": "Loyalty Points",
+      "balance": "Available Points",
+      "total": "Total",
+      "lifetime": "Lifetime",
+      "description": "Earn points by using services and unlock rewards",
+      "history": "History",
+      "transactions": "Recent Transactions",
+      "noTransactions": "No transactions found",
+      "redeem": "Redeem",
+      "earnMore": "Earn More",
+      "nextMilestone": "Next milestone",
+      "pointsLeft": "points to go",
+      "equivalent": "equivalent value"
+    },
+    "badges": {
+      "title": "Badge Collection",
+      "description": "Unlock achievements and showcase your expertise",
+      "unlocked": "Unlocked",
+      "remaining": "Remaining",
+      "complete": "Complete",
+      "all": "All",
+      "locked": "Locked",
+      "progress": "Progress",
+      "unlockedOn": "Unlocked:",
+      "noBadges": "No badges found",
+      "startEarning": "Start using services to earn your first badge!",
+      "types": {
+        "REGULAR_CUSTOMER": "Regular Customer",
+        "TOP_REVIEWER": "Top Reviewer",
+        "EARLY_ADOPTER": "Early Adopter",
+        "SERVICE_EXPERT": "Service Expert",
+        "LOYAL_MEMBER": "Loyal Member",
+        "STREAK_MASTER": "Streak Master",
+        "CHALLENGE_CHAMPION": "Challenge Champion",
+        "REFERRAL_HERO": "Referral Hero"
+      },
+      "descriptions": {
+        "REGULAR_CUSTOMER": "Complete 5 service bookings",
+        "TOP_REVIEWER": "Write 20 service reviews",
+        "EARLY_ADOPTER": "One of our first users",
+        "SERVICE_EXPERT": "Book 10 services in same category",
+        "LOYAL_MEMBER": "Active for 1+ years",
+        "STREAK_MASTER": "Maintain 4+ week streak",
+        "CHALLENGE_CHAMPION": "Complete seasonal challenge",
+        "REFERRAL_HERO": "Refer 5+ successful users"
+      }
+    },
+    "streaks": {
+      "title": "Activity Streaks",
+      "description": "Maintain consistent activity to earn bonus rewards",
+      "bestStreak": "Best Streak",
+      "longestEver": "Longest Ever",
+      "bonusMultiplier": "Bonus Multiplier",
+      "current": "Current",
+      "status": {
+        "active": "Active",
+        "warning": "At Risk",
+        "expired": "Expired",
+        "inactive": "Inactive"
+      },
+      "nextReward": "Next reward",
+      "lastActivity": "Last activity:",
+      "never": "Never",
+      "howToMaintain": "How to maintain:",
+      "noStreaks": "No streaks yet",
+      "startFirst": "Start your first streak by using services regularly!",
+      "types": {
+        "WEEKLY_BOOKING": "Weekly Booking Streak",
+        "MONTHLY_ACTIVITY": "Monthly Activity Streak",
+        "REVIEW_STREAK": "Review Streak"
+      },
+      "descriptions": {
+        "WEEKLY_BOOKING": "Book a service every week",
+        "MONTHLY_ACTIVITY": "Stay active every month",
+        "REVIEW_STREAK": "Write reviews consistently"
+      }
+    },
+    "challenges": {
+      "title": "Seasonal Challenges",
+      "description": "Complete special challenges for extra rewards",
+      "active": "Active",
+      "completed": "Completed",
+      "join": "Join Challenge",
+      "joinChallenge": "Join Challenge",
+      "claimReward": "Claim Reward",
+      "progress": "Progress",
+      "rewards": "Rewards",
+      "points": "points",
+      "badge": "Badge",
+      "daysLeft": "days left",
+      "dayLeft": "day left",
+      "ended": "Ended",
+      "joined": "Joined successfully!",
+      "claimed": "Reward claimed successfully!",
+      "failedJoin": "Failed to join challenge",
+      "failedClaim": "Failed to claim reward",
+      "noChallenges": "No Active Challenges",
+      "comingSoon": "New challenges coming soon!",
+      "status": {
+        "available": "Available",
+        "active": "Active",
+        "completed": "Completed",
+        "rewardClaimed": "Reward Claimed"
+      }
+    },
+    "store": {
+      "title": "Points Store",
+      "description": "Convert your points into valuable discounts",
+      "availablePoints": "Available Points",
+      "redeem": "Redeem",
+      "history": "History",
+      "serviceAmount": "Service Amount (Optional)",
+      "enterAmount": "Enter amount in NPR",
+      "accurateDiscount": "Enter service amount for accurate discount calculation",
+      "discount": "discount",
+      "maxDiscount": "Max discount:",
+      "pointsNeeded": "points needed",
+      "redeemNow": "Redeem Now",
+      "redeemed": "Successfully redeemed {points} points!",
+      "failed": "Failed to redeem points",
+      "noRedemptions": "No redemptions yet",
+      "redeemFirst": "Redeem your first discount!",
+      "status": {
+        "Applied": "Applied",
+        "Pending": "Pending",
+        "Expired": "Expired",
+        "Cancelled": "Cancelled"
+      },
+      "tiers": {
+        "discount_5": "5% Discount",
+        "discount_10": "10% Discount",
+        "discount_15": "15% Discount",
+        "discount_20": "20% Discount",
+        "free_service": "Free Service (up to NPR 50)"
+      }
+    },
+    "achievements": {
+      "badgeUnlocked": "Badge Unlocked!",
+      "pointsEarned": "Points Earned!",
+      "streakAchieved": "Streak Achieved!",
+      "challengeComplete": "Challenge Complete!",
+      "levelUp": "Level Up!",
+      "achievement": "Achievement!",
+      "claimReward": "Claim Reward",
+      "awesome": "Awesome!",
+      "rareAchievement": "🎉 This is a rare achievement! Congratulations!",
+      "pointsMilestone": "Points Milestone!",
+      "earnedPoints": "You earned {points} points!",
+      "streakMilestone": "Streak Milestone!",
+      "streakCount": "{count} {type} streak!"
+    },
+    "notifications": {
+      "pointsAwarded": "You earned {points} points!",
+      "badgeUnlocked": "New badge unlocked: {badge}!",
+      "streakContinued": "Streak continued! Bonus: {multiplier}x",
+      "challengeJoined": "Successfully joined challenge!",
+      "challengeCompleted": "Challenge completed! Claim your reward!",
+      "rewardClaimed": "Reward claimed successfully!"
+    }
+  },
   "booking": {
     "title": "Book Service",
     "selectDate": "Select Date",
@@ -180,6 +363,166 @@
       "message": "We encountered an unexpected error. Our team has been notified and is working to fix it.",
       "tryAgain": "Try Again",
       "goHome": "Go Home"
+    }
+  },
+  "gamification": {
+    "points": {
+      "title": "Points",
+      "balance": "Points Balance",
+      "available": "Available Points",
+      "total": "Total Points",
+      "lifetime": "Lifetime Points",
+      "earned": "Earned",
+      "redeemed": "Redeemed",
+      "earning": {
+        "booking": "Points for booking",
+        "review": "Points for review",
+        "referral": "Points for referral",
+        "challenge": "Points for challenge"
+      },
+      "redemption": {
+        "title": "Redeem Points",
+        "discount": "Use for discount",
+        "minPoints": "Minimum points",
+        "maxDiscount": "Maximum discount",
+        "confirm": "Redeem",
+        "success": "Points redeemed successfully!"
+      }
+    },
+    "badges": {
+      "title": "Badges",
+      "unlocked": "Unlocked",
+      "locked": "Locked",
+      "progress": "Progress",
+      "earned": "Earned",
+      "types": {
+        "regularCustomer": {
+          "name": "Regular Customer",
+          "description": "Complete 5 or more bookings"
+        },
+        "topReviewer": {
+          "name": "Top Reviewer",
+          "description": "Write 20 or more reviews"
+        },
+        "earlyAdopter": {
+          "name": "Early Adopter",
+          "description": "Join in the first month"
+        },
+        "serviceExpert": {
+          "name": "Service Expert",
+          "description": "Book 10 or more services in the same category"
+        },
+        "loyalMember": {
+          "name": "Loyal Member",
+          "description": "Stay active for 1 year or more"
+        },
+        "streakMaster": {
+          "name": "Streak Master",
+          "description": "Maintain a 4+ week streak"
+        },
+        "challengeChampion": {
+          "name": "Challenge Champion",
+          "description": "Complete a seasonal challenge"
+        },
+        "referralHero": {
+          "name": "Referral Hero",
+          "description": "Make 5 or more successful referrals"
+        }
+      }
+    },
+    "streaks": {
+      "title": "Streaks",
+      "current": "Current Streak",
+      "longest": "Longest Streak",
+      "active": "Active",
+      "broken": "Broken",
+      "days": "days",
+      "weeks": "weeks",
+      "types": {
+        "weeklyBooking": {
+          "name": "Weekly Booking",
+          "description": "Book at least one service every week"
+        },
+        "monthlyActivity": {
+          "name": "Monthly Activity",
+          "description": "Stay active every month"
+        },
+        "reviewStreak": {
+          "name": "Review Streak",
+          "description": "Write consecutive reviews"
+        }
+      },
+      "bonusMultiplier": "Bonus Multiplier",
+      "keepGoing": "Keep going!"
+    },
+    "challenges": {
+      "title": "Challenges",
+      "seasonal": "Seasonal Challenges",
+      "active": "Active Challenges",
+      "completed": "Completed Challenges",
+      "join": "Join",
+      "progress": "Progress",
+      "reward": "Reward",
+      "timeLeft": "Time Left",
+      "daysLeft": "days left",
+      "hoursLeft": "hours left",
+      "completed": "Completed!",
+      "claimReward": "Claim Reward",
+      "festivals": {
+        "dashain": {
+          "name": "Dashain Cleaning Challenge",
+          "description": "Deep clean your home in preparation for Dashain",
+          "greeting": "Happy Dashain! Time to make your home sparkle."
+        },
+        "tihar": {
+          "name": "Tihar Decoration Challenge",
+          "description": "Decorate your home for Tihar festival",
+          "greeting": "Happy Tihar! Get ready for the festival of lights."
+        },
+        "newYear": {
+          "name": "New Year Organization Challenge",
+          "description": "Organize your home for a fresh start",
+          "greeting": "Happy New Year! Let's organize for a fresh beginning."
+        },
+        "summer": {
+          "name": "Summer Maintenance Challenge",
+          "description": "Prepare your home for summer season",
+          "greeting": "Get ready for summer season!"
+        },
+        "monsoon": {
+          "name": "Monsoon Preparation Challenge",
+          "description": "Prepare your home for monsoon season",
+          "greeting": "Get ready for monsoon season!"
+        }
+      }
+    },
+    "dashboard": {
+      "title": "My Gamification",
+      "overview": "Overview",
+      "pointsSummary": "Points Summary",
+      "badgeProgress": "Badge Progress",
+      "activeStreaks": "Active Streaks",
+      "availableChallenges": "Available Challenges",
+      "recentAchievements": "Recent Achievements",
+      "settings": "Gamification Settings"
+    },
+    "notifications": {
+      "pointsEarned": "You earned {points} points!",
+      "badgeUnlocked": "New badge unlocked: {badgeName}",
+      "streakMilestone": "Congratulations! You've reached a {streak} day streak.",
+      "challengeCompleted": "Challenge completed: {challengeName}",
+      "streakWarning": "Warning! Your streak is about to break.",
+      "challengeEnding": "Challenge {challengeName} is ending soon."
+    },
+    "settings": {
+      "title": "Gamification Settings",
+      "notifications": "Enable notifications",
+      "badgeProgress": "Show badge progress",
+      "streakCounter": "Show streak counter",
+      "pointsBalance": "Show points balance",
+      "challengeReminders": "Challenge reminders",
+      "save": "Save Settings",
+      "saved": "Settings saved!"
     }
   }
 }
