@@ -5,9 +5,7 @@ import compression from "compression";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import rateLimit from "express-rate-limit";
-// express-mongo-sanitize is not compatible with Express 5 (req.query setter).
-// Implement a minimal sanitizer that removes keys starting with '$' or containing '.'.
-import xss from "xss-clean";
+// Custom XSS and NoSQL injection protection middleware
 import { env, isProd } from "./config/env.js";
 import { api } from "./routes/index.js";
 import mongoose from "mongoose";
@@ -143,10 +141,49 @@ export function createApp(io?: any) {
     // Do not mutate headers structure; skipping for safety
     next();
   });
-  // Disable xss-clean for development due to Express 5 compatibility issues
-  if (isProd) {
-    app.use(xss());
-  }
+  // Custom XSS sanitization middleware
+  app.use((req, res, next) => {
+    const sanitizeXSS = (obj: any): any => {
+      if (typeof obj === 'string') {
+        return obj
+          .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+          .replace(/<[^>]+>/g, '')
+          .replace(/javascript:/gi, '')
+          .replace(/on\w+=/gi, '');
+      }
+      if (obj && typeof obj === 'object') {
+        for (const key in obj) {
+          if (obj.hasOwnProperty(key)) {
+            obj[key] = sanitizeXSS(obj[key]);
+          }
+        }
+      }
+      return obj;
+    };
+
+    // Sanitize request body
+    if (req.body) {
+      req.body = sanitizeXSS(req.body);
+    }
+    
+    // Sanitize query parameters by creating a new object
+    if (req.query) {
+      const sanitizedQuery: any = {};
+      for (const key in req.query) {
+        if (req.query.hasOwnProperty(key)) {
+          sanitizedQuery[key] = sanitizeXSS(req.query[key]);
+        }
+      }
+      // Replace the query object instead of modifying properties
+      Object.defineProperty(req, 'query', {
+        value: sanitizedQuery,
+        writable: true,
+        configurable: true
+      });
+    }
+    
+    next();
+  });
   app.use(express.json({ limit: "1mb" }));
   app.use(express.urlencoded({ extended: true }));
   app.use(cookieParser());
