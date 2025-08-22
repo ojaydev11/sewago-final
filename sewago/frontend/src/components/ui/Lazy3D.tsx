@@ -67,6 +67,13 @@ function useSupports3D() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    // Skip during SSR/build
+    if (typeof window === 'undefined' || typeof document === 'undefined' || typeof navigator === 'undefined') {
+      setSupports3D(false);
+      setIsLoading(false);
+      return;
+    }
+    
     // Check for WebGL support
     const canvas = document.createElement('canvas');
     const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');

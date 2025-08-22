@@ -19,6 +19,11 @@ function GeometricShape() {
   });
 
   const gradientTexture = useMemo(() => {
+    // Skip during SSR/build
+    if (typeof window === 'undefined' || typeof document === 'undefined') {
+      return null;
+    }
+    
     const canvas = document.createElement('canvas');
     canvas.width = 256;
     canvas.height = 256;
@@ -40,11 +45,12 @@ function GeometricShape() {
   return (
     <Box ref={meshRef} args={[1, 1, 1]} position={[0, 0, 0]}>
       <MeshDistortMaterial
-        map={gradientTexture}
+        map={gradientTexture || undefined}
         distort={0.4}
         speed={2}
         roughness={0.2}
         metalness={0.8}
+        color={gradientTexture ? undefined : "#3B82F6"}
       />
     </Box>
   );
