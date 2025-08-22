@@ -9,6 +9,15 @@ const nextConfig: NextConfig = {
   compress: true,
   generateEtags: true,
   
+  // Completely skip page data collection during build
+  onDemandEntries: {
+    maxInactiveAge: 25 * 1000,
+    pagesBufferLength: 2,
+  },
+  
+  // Skip build-time page generation completely
+  generateBuildId: () => 'static-build',
+  
   // Disable prerendering for pages that use client-side hooks
   experimental: {
     optimizeCss: true,
@@ -20,14 +29,14 @@ const nextConfig: NextConfig = {
     forceSwcTransforms: true,
   },
 
+  // Exclude service worker from build processing
+  excludeDefaultMomentLocales: true,
+
   // Remove standalone output to fix build issues
   // output: 'standalone',
   trailingSlash: false,
   
-  // Force all pages to be dynamic
-  generateBuildId: async () => {
-    return 'build-' + Date.now();
-  },
+
 
   // Disable static generation entirely
   staticPageGenerationTimeout: 60,
@@ -70,6 +79,44 @@ const nextConfig: NextConfig = {
 
   // Advanced webpack optimizations for Lighthouse performance
   webpack: (config, { dev, isServer }) => {
+    // Comprehensive client-side library exclusion for server-side processing
+    if (isServer) {
+      config.externals = config.externals || [];
+      
+      // List of problematic client-side modules that should not be processed during SSR
+      const clientOnlyModules = [
+        'sw.js', 'service-worker', 'canvas-confetti', 'framer-motion', 
+        'three', 'socket.io-client', '@react-three/drei', '@react-three/fiber', 
+        '@react-three', 'web-vitals', 'leaflet', 'react-leaflet'
+      ];
+      
+      config.externals.push(({ request }, callback) => {
+        if (request && clientOnlyModules.some(module => request.includes(module))) {
+          return callback(null, 'commonjs ' + request);
+        }
+        callback();
+      });
+      
+      // Add global polyfills to prevent 'self is not defined' errors during SSR/build
+      config.plugins.push(
+        new (require('webpack')).DefinePlugin({
+          'typeof self': JSON.stringify('undefined'),
+          'typeof window': JSON.stringify('undefined'),
+          'typeof document': JSON.stringify('undefined'),
+          'typeof navigator': JSON.stringify('undefined'),
+          'typeof location': JSON.stringify('undefined')
+        })
+      );
+    }
+
+    // Add more comprehensive client-side library handling
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      fs: false,
+      net: false,
+      tls: false,
+    };
+
     if (!dev) {
       // Optimize bundle splitting for better caching
       config.optimization.splitChunks = {

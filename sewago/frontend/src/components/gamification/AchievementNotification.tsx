@@ -60,17 +60,23 @@ export function AchievementNotification({
       setShowParticles(true);
       
       // Trigger confetti for rare achievements
-      if (achievement.isRare && typeof window !== 'undefined') {
-        import('canvas-confetti').then((confetti) => {
-          confetti.default({
-            particleCount: 100,
-            spread: 70,
-            origin: { y: 0.6 },
-            colors: ['#FFD700', '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7']
+      if (achievement.isRare && typeof window !== 'undefined' && typeof document !== 'undefined') {
+        // Extra safety check and use setTimeout to ensure it runs after hydration
+        setTimeout(() => {
+          import('canvas-confetti').then((confetti) => {
+            if (confetti.default && typeof confetti.default === 'function') {
+              confetti.default({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#FFD700', '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7']
+              });
+            }
+          }).catch(() => {
+            // Silently fail if confetti can't be loaded
+            console.warn('Canvas confetti could not be loaded');
           });
-        }).catch(() => {
-          // Silently fail if confetti can't be loaded
-        });
+        }, 100);
       }
       
       // Auto-hide particles after animation
