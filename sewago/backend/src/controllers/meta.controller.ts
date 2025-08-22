@@ -14,7 +14,13 @@ const categories = [
 ];
 
 export function listCategories(_req: Request, res: Response) {
-  res.json(categories);
+  try {
+    console.log("📋 Categories endpoint called");
+    res.json(categories);
+  } catch (error) {
+    console.error("❌ Categories error:", error);
+    res.status(500).json({ error: "Failed to fetch categories", details: error });
+  }
 }
 
 
