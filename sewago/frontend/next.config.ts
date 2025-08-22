@@ -9,28 +9,20 @@ const nextConfig: NextConfig = {
   compress: true,
   generateEtags: true,
   
-  // Completely skip page data collection during build
-  onDemandEntries: {
-    maxInactiveAge: 25 * 1000,
-    pagesBufferLength: 2,
-  },
-  
-  // Skip build-time page generation completely
+    // Skip build-time page generation completely
   generateBuildId: () => 'static-build',
   
-
-
+  // Disable static generation for problematic pages
+  staticPageGenerationTimeout: 0,
+  
+  
+  
   // Exclude service worker from build processing
   excludeDefaultMomentLocales: true,
-
-  // Remove standalone output to fix build issues
-  // output: 'standalone',
-  trailingSlash: false,
   
 
 
-  // Disable static generation entirely
-  staticPageGenerationTimeout: 60,
+
   
       // Experimental flag to skip page data collection
   experimental: {

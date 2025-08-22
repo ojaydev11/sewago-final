@@ -28,22 +28,44 @@ if (typeof globalThis !== 'undefined') {
 }
 
 // Create a mock document object with essential methods
-if (typeof global !== 'undefined' && typeof global.document === 'object') {
-  if (!global.document.querySelector) {
-    global.document.querySelector = () => null;
+if (typeof global !== 'undefined') {
+  if (!global.document) {
+    global.document = {};
   }
-  if (!global.document.getElementById) {
-    global.document.getElementById = () => null;
-  }
-  if (!global.document.createElement) {
-    global.document.createElement = () => ({});
-  }
-  if (!global.document.head) {
-    global.document.head = {};
-  }
-  if (!global.document.body) {
-    global.document.body = {};
-  }
+  
+  // Mock all essential document methods
+  global.document.querySelector = global.document.querySelector || (() => null);
+  global.document.getElementById = global.document.getElementById || (() => null);
+  global.document.createElement = global.document.createElement || (() => ({}));
+  global.document.head = global.document.head || {};
+  global.document.body = global.document.body || {};
+  global.document.title = global.document.title || '';
+  global.document.cookie = global.document.cookie || '';
+  global.document.readyState = global.document.readyState || 'complete';
+  global.document.hidden = global.document.hidden || false;
+  global.document.documentElement = global.document.documentElement || {};
+  
+  // Mock document methods that might be called
+  global.document.addEventListener = global.document.addEventListener || (() => {});
+  global.document.removeEventListener = global.document.removeEventListener || (() => {});
+  global.document.contains = global.document.contains || (() => false);
+  
+  // Mock documentElement properties
+  global.document.documentElement.scrollTop = global.document.documentElement.scrollTop || 0;
+  global.document.documentElement.scrollHeight = global.document.documentElement.scrollHeight || 1000;
+  
+  // Mock body methods
+  global.document.body.appendChild = global.document.body.appendChild || (() => {});
+  global.document.body.removeChild = global.document.body.removeChild || (() => {});
+  global.document.body.classList = global.document.body.classList || {
+    add: () => {},
+    remove: () => {}
+  };
+  
+  // Mock head methods
+  global.document.head.appendChild = global.document.head.appendChild || (() => {});
+  global.document.head.removeChild = global.document.head.removeChild || (() => {});
+  global.document.head.contains = global.document.head.contains || (() => false);
 }
 
 console.log('Global polyfills loaded successfully');
