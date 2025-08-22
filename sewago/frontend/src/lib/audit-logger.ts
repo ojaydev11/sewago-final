@@ -167,3 +167,5 @@ export class AuditLogger {
     }
   }
 }
+
+export const auditLogger = AuditLogger;

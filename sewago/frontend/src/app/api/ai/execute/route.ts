@@ -57,6 +57,11 @@ let aiCoreInstance: any = null;
 async function getAICore() {
   if (!aiCoreInstance) {
     try {
+      // Skip AI core in build phase
+      if (process.env.NEXT_PHASE === 'phase-production-build') {
+        throw new Error('AI Core not available during build');
+      }
+      
       // Dynamic import to prevent build-time issues
       const { aiCore } = await import('@sewago/ai-core');
       
