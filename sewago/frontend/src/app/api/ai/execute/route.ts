@@ -63,7 +63,8 @@ async function getAICore() {
       }
       
       // Dynamic import to prevent build-time issues
-      const { aiCore } = await import('@sewago/ai-core');
+      // Note: @sewago/ai-core package not available in current build
+      throw new Error('AI Core package not installed');
       
       // Initialize if not already done
       if (!aiCore.initialized) {
