@@ -25,7 +25,12 @@ import { StreakTracker } from './StreakTracker';
 import { ChallengeCard } from './ChallengeCard';
 import { PointsStore } from './PointsStore';
 import { useNotifications } from '@/hooks/useNotifications';
-import { ParticleField } from '@/components/ui/ParticleField';
+import dynamic from 'next/dynamic';
+
+const ParticleField = dynamic(() => import('@/components/ui/ParticleField').then(mod => ({ default: mod.ParticleField })), { 
+  ssr: false,
+  loading: () => <div className="animate-pulse bg-gray-100 w-full h-full" />
+});
 
 interface GamificationData {
   points: {

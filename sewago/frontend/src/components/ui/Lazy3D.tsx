@@ -1,11 +1,18 @@
 'use client';
 
-import { Suspense, lazy, useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { motion } from 'framer-motion';
+import dynamic from 'next/dynamic';
 
-// Lazy load 3D components
-const FloatingGeometry = lazy(() => import('./FloatingGeometry'));
-const ParticleField = lazy(() => import('./ParticleField'));
+// Lazy load 3D components with Next.js dynamic imports (SSR disabled)
+const FloatingGeometry = dynamic(() => import('./FloatingGeometry'), { 
+  ssr: false,
+  loading: () => <div className="animate-pulse bg-gray-200 w-full h-full rounded" />
+});
+const ParticleField = dynamic(() => import('./ParticleField'), { 
+  ssr: false,
+  loading: () => <div className="animate-pulse bg-gray-200 w-full h-full rounded" />
+});
 
 // Loading fallback component
 function ThreeDLoader() {
