@@ -1,6 +1,5 @@
 
 import { RISK_CONFIG } from '@/config/flags';
-import { UAParser } from 'ua-parser-js';
 
 export interface RiskFactors {
   repeatCancellations: number;
@@ -68,7 +67,7 @@ export class RiskEngine {
     let riskScore = 0;
 
     // 1. Device fingerprinting
-    factors.deviceFingerprint = this.generateDeviceFingerprint(params.userAgent, params.ip);
+    factors.deviceFingerprint = await this.generateDeviceFingerprint(params.userAgent, params.ip);
 
     // 2. Check for throwaway email
     factors.throwawayEmail = this.isThrowawayEmail(params.email);
@@ -138,12 +137,19 @@ export class RiskEngine {
     };
   }
 
-  private static generateDeviceFingerprint(userAgent: string, ip: string): string {
-    const parser = new UAParser(userAgent);
-    const browser = parser.getBrowser();
-    const os = parser.getOS();
-    
-    return Buffer.from(`${browser.name}-${browser.version}-${os.name}-${ip.split('.').slice(0, 3).join('.')}`).toString('base64');
+  private static async generateDeviceFingerprint(userAgent: string, ip: string): Promise<string> {
+    try {
+      const { UAParser } = await import('ua-parser-js');
+      const parser = new UAParser(userAgent);
+      const browser = parser.getBrowser();
+      const os = parser.getOS();
+      
+      return Buffer.from(`${browser.name}-${browser.version}-${os.name}-${ip.split('.').slice(0, 3).join('.')}`).toString('base64');
+    } catch (error) {
+      // Fallback if UAParser fails to load
+      console.warn('Failed to load UAParser, using fallback fingerprint');
+      return Buffer.from(`unknown-${ip.split('.').slice(0, 3).join('.')}`).toString('base64');
+    }
   }
 
   private static isThrowawayEmail(email: string): boolean {
