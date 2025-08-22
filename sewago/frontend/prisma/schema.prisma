@@ -26,6 +26,18 @@ model User {
   referralsMade Referral[] @relation("Referrer")
   referralsReceived Referral[] @relation("Referred")
   notifications Notification[]
+  
+  // Gamification Relations
+  loyaltyPoints LoyaltyPoints?
+  badges        UserBadge[]
+  streaks       ActivityStreak[]
+  challengeParticipations ChallengeParticipation[]
+  gamificationSettings GamificationSettings?
+  
+  // Personalization Relations
+  preferences   UserPreferences?
+  behaviors     UserBehavior[]
+  insights      PersonalizationInsights?
 }
 
 model Provider {
@@ -66,6 +78,7 @@ model Service {
   // Relations
   bookings    Booking[]
   reviews     Review[]
+  behaviors   UserBehavior[]
 }
 
 model Booking {
@@ -88,6 +101,9 @@ model Booking {
   provider     Provider?      @relation(fields: [providerId], references: [id])
   review       Review?
   notifications Notification[]
+  
+  // Gamification Relations
+  pointRedemptions PointRedemption[]
 }
 
 enum BookingStatus {
@@ -153,4 +169,264 @@ model PublicMetric {
   key       String   @unique
   value     String
   updatedAt DateTime @updatedAt
+}
+
+// Gamification Models
+
+model LoyaltyPoints {
+  id            String               @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String               @db.ObjectId
+  totalPoints   Int                  @default(0)
+  availablePoints Int              @default(0)
+  lifetimeEarned Int               @default(0)
+  createdAt     DateTime             @default(now())
+  updatedAt     DateTime             @updatedAt
+  
+  // Relations
+  user          User                 @relation(fields: [userId], references: [id])
+  transactions  PointTransaction[]
+  redemptions   PointRedemption[]
+}
+
+model PointTransaction {
+  id            String         @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String         @db.ObjectId
+  loyaltyPointsId String       @db.ObjectId
+  points        Int
+  type          PointType
+  source        String         // "booking", "review", "referral", "challenge"
+  sourceId      String?        @db.ObjectId // booking id, review id, etc.
+  description   String
+  createdAt     DateTime       @default(now())
+  
+  // Relations
+  loyaltyPoints LoyaltyPoints  @relation(fields: [loyaltyPointsId], references: [id])
+}
+
+enum PointType {
+  EARNED
+  REDEEMED
+  EXPIRED
+}
+
+model PointRedemption {
+  id            String         @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String         @db.ObjectId
+  loyaltyPointsId String       @db.ObjectId
+  points        Int
+  discountAmount Int          // in paisa (NPR cents)
+  bookingId     String?        @db.ObjectId
+  status        RedemptionStatus @default(PENDING)
+  createdAt     DateTime       @default(now())
+  redeemedAt    DateTime?
+  
+  // Relations
+  loyaltyPoints LoyaltyPoints  @relation(fields: [loyaltyPointsId], references: [id])
+  booking       Booking?       @relation(fields: [bookingId], references: [id])
+}
+
+enum RedemptionStatus {
+  PENDING
+  APPLIED
+  EXPIRED
+  CANCELLED
+}
+
+model UserBadge {
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String     @db.ObjectId
+  badgeType   BadgeType
+  unlockedAt  DateTime   @default(now())
+  progress    Int        @default(0) // Current progress toward badge
+  target      Int        @default(1) // Target to unlock badge
+  isUnlocked  Boolean    @default(false)
+  
+  // Relations
+  user        User       @relation(fields: [userId], references: [id])
+  
+  @@unique([userId, badgeType])
+}
+
+enum BadgeType {
+  REGULAR_CUSTOMER      // 5+ bookings
+  TOP_REVIEWER         // 20+ reviews
+  EARLY_ADOPTER        // first month user
+  SERVICE_EXPERT       // 10+ bookings in same category
+  LOYAL_MEMBER         // 1+ year active
+  STREAK_MASTER        // 4+ week streak
+  CHALLENGE_CHAMPION   // Complete seasonal challenge
+  REFERRAL_HERO        // 5+ successful referrals
+}
+
+model ActivityStreak {
+  id              String      @id @default(auto()) @map("_id") @db.ObjectId
+  userId          String      @db.ObjectId
+  type            StreakType
+  currentStreak   Int         @default(0)
+  longestStreak   Int         @default(0)
+  lastActivityAt  DateTime?
+  streakStartedAt DateTime?
+  bonusMultiplier Float       @default(1.0)
+  isActive        Boolean     @default(true)
+  
+  // Relations
+  user            User        @relation(fields: [userId], references: [id])
+  
+  @@unique([userId, type])
+}
+
+enum StreakType {
+  WEEKLY_BOOKING    // Weekly booking streak
+  MONTHLY_ACTIVITY  // Monthly activity streak
+  REVIEW_STREAK     // Consecutive review streak
+}
+
+model SeasonalChallenge {
+  id            String                 @id @default(auto()) @map("_id") @db.ObjectId
+  name          String
+  nameNe        String                 // Nepali name
+  description   String
+  descriptionNe String                 // Nepali description
+  type          ChallengeType
+  festival      String?                // Associated festival
+  startDate     DateTime
+  endDate       DateTime
+  target        Int                    // Target to complete
+  reward        Int                    // Points reward
+  badgeReward   BadgeType?             // Optional badge reward
+  isActive      Boolean                @default(true)
+  createdAt     DateTime               @default(now())
+  
+  // Relations
+  participations ChallengeParticipation[]
+}
+
+enum ChallengeType {
+  DASHAIN_CLEANING    // Dashain house cleaning
+  NEW_YEAR_ORGANIZE   // New Year organization
+  SUMMER_MAINTENANCE  // Summer home maintenance
+  MONSOON_PREP       // Monsoon preparation
+  TIHAR_DECORATION   // Tihar decoration services
+  GENERAL_SEASONAL   // General seasonal challenge
+}
+
+model ChallengeParticipation {
+  id            String            @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String            @db.ObjectId
+  challengeId   String            @db.ObjectId
+  progress      Int               @default(0)
+  isCompleted   Boolean           @default(false)
+  completedAt   DateTime?
+  rewardClaimed Boolean           @default(false)
+  joinedAt      DateTime          @default(now())
+  
+  // Relations
+  user          User              @relation(fields: [userId], references: [id])
+  challenge     SeasonalChallenge @relation(fields: [challengeId], references: [id])
+  
+  @@unique([userId, challengeId])
+}
+
+model GamificationSettings {
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String   @unique @db.ObjectId
+  notificationsEnabled Boolean @default(true)
+  showBadgeProgress Boolean  @default(true)
+  showStreakCounter Boolean  @default(true)
+  showPointsBalance Boolean  @default(true)
+  challengeReminders Boolean @default(true)
+  
+  // Relations
+  user              User     @relation(fields: [userId], references: [id])
+}
+
+// Personalization Models
+
+model UserPreferences {
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String   @unique @db.ObjectId
+  preferredCategories String[]
+  preferredTimeSlots String[]
+  preferredProviders String[] @db.ObjectId
+  budgetRange       Json     // {min: number, max: number}
+  locationPreferences Json   // {areas: string[], radius: number}
+  serviceFrequency  Json     // {category: frequency}
+  personalizedSettings Json  // Custom user preferences
+  culturalPreferences Json   // Nepali festivals, traditions
+  languagePreference String  @default("en") // "en" or "ne"
+  notificationPreferences Json // Personalized notification settings
+  lastUpdated       DateTime @updatedAt
+  createdAt         DateTime @default(now())
+  
+  // Relations
+  user              User     @relation(fields: [userId], references: [id])
+}
+
+model UserBehavior {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String   @db.ObjectId
+  action        String   // "view", "book", "complete", "review", "search", "click"
+  serviceId     String?  @db.ObjectId
+  providerId    String?  @db.ObjectId
+  category      String?
+  timeSpent     Int?     // seconds
+  deviceType    String?  // "mobile", "desktop", "tablet"
+  location      Json?    // {lat, lng, area, district}
+  searchQuery   String?  // For search actions
+  clickTarget   String?  // For click tracking
+  sessionId     String?  // Session tracking
+  timestamp     DateTime @default(now())
+  
+  // Relations
+  user          User     @relation(fields: [userId], references: [id])
+  service       Service? @relation(fields: [serviceId], references: [id])
+}
+
+model PersonalizationInsights {
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String   @unique @db.ObjectId
+  topCategories     String[]
+  mostBookedTimes   String[]
+  averageSpending   Int
+  locationHotspots  Json[]   // Popular service areas
+  seasonalPatterns  Json     // Seasonal service preferences
+  providerAffinities String[] @db.ObjectId
+  predictedNeeds    Json[]   // ML predictions
+  personalityProfile Json    // User behavior profile
+  pricesensitivity String   @default("MEDIUM") // LOW, MEDIUM, HIGH
+  bookingPatterns   Json     // Time and frequency patterns
+  recommendationScore Float @default(0.0) // Algorithm effectiveness
+  lastAnalyzed      DateTime @updatedAt
+  createdAt         DateTime @default(now())
+  
+  // Relations
+  user              User     @relation(fields: [userId], references: [id])
+}
+
+model RecommendationLog {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String   @db.ObjectId
+  algorithm     String   // "collaborative", "content", "hybrid", "location"
+  recommendations Json[] // Array of recommended service IDs with scores
+  context       Json     // Context when recommendation was generated
+  userFeedback  String?  // "liked", "disliked", "booked", "ignored"
+  effectiveness Float?   // Calculated effectiveness score
+  timestamp     DateTime @default(now())
+  
+  // Relations (no direct Prisma relations to keep flexible)
+}
+
+model LocationInsights {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  area          String   // Area/district name
+  popularServices String[] // Most popular service categories
+  peakTimes     String[] // Peak booking times
+  averagePricing Json    // Category-wise average pricing
+  seasonalTrends Json    // Seasonal service trends
+  demographics  Json     // User demographics for this area
+  providerDensity Int    // Number of providers in area
+  lastUpdated   DateTime @updatedAt
+  createdAt     DateTime @default(now())
+  
+  @@unique([area])
 }

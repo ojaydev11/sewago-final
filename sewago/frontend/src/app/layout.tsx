@@ -13,6 +13,7 @@ import './globals.css';
 import Analytics from '@/components/Analytics';
 import CookieConsent from '@/components/CookieConsent';
 import EmergencyServiceButton from '@/components/EmergencyServiceButton';
+import PerformanceMonitor from '@/components/ui/PerformanceMonitor';
 import { AuthProvider } from '@/providers/auth';
 import { ReactQueryProvider } from '@/providers/react-query';
 import { NextIntlClientProvider } from 'next-intl';
@@ -134,6 +135,21 @@ export default async function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         
+        {/* Enhanced accessibility and performance */}
+        <meta name="color-scheme" content="dark light" />
+        <meta name="supported-color-schemes" content="dark light" />
+        <link rel="preload" href="/branding/sewago-logo.svg" as="image" type="image/svg+xml" />
+        
+        {/* Resource hints for performance */}
+        <link rel="preload" href="/hero-nepal.svg" as="image" type="image/svg+xml" />
+        <link rel="prefetch" href="/api/services" />
+        
+        {/* Security headers */}
+        <meta httpEquiv="X-Content-Type-Options" content="nosniff" />
+        <meta httpEquiv="X-Frame-Options" content="DENY" />
+        <meta httpEquiv="X-XSS-Protection" content="1; mode=block" />
+        <meta name="referrer" content="strict-origin-when-cross-origin" />
+        
         {/* Structured data for SEO */}
         <script
           type="application/ld+json"
@@ -182,6 +198,9 @@ export default async function RootLayout({
               
               {/* Cookie Consent for GDPR compliance */}
               <CookieConsent />
+              
+              {/* Performance Monitor (development and opt-in production) */}
+              <PerformanceMonitor showOnProduction={false} />
             </ReactQueryProvider>
           </AuthProvider>
         </NextIntlClientProvider>

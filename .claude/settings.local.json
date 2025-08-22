@@ -14,7 +14,14 @@
       "Bash(curl:*)",
       "Bash(npx next dev:*)",
       "mcp__ide__getDiagnostics",
-      "Bash(npm run seed:test:*)"
+      "Bash(npm run seed:test:*)",
+      "Bash(node:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(npm audit:*)",
+      "Bash(npx eslint:*)",
+      "Bash(mkdir:*)"
     ],
     "deny": [],
     "ask": []
