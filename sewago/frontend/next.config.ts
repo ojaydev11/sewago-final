@@ -30,6 +30,16 @@ const nextConfig: NextConfig = {
     cpus: 1,
     // Force all pages to be dynamic
     forceSwcTransforms: true,
+    // Ensure middleware doesn't bundle problematic modules
+    serverComponentsExternalPackages: [
+      '@opentelemetry/api',
+      '@opentelemetry/core', 
+      '@opentelemetry/instrumentation',
+      'mongoose',
+      'mongodb',
+      'prisma',
+      '@prisma/client'
+    ],
   },
   
   // Move these out of experimental as per warning
@@ -79,20 +89,30 @@ const nextConfig: NextConfig = {
     if (isServer) {
       config.externals = config.externals || [];
       
-      // List of problematic client-side modules that should not be processed during SSR
-      const clientOnlyModules = [
-        'sw.js', 'service-worker', 'canvas-confetti', 'framer-motion', 
-        'three', 'socket.io-client', '@react-three/drei', '@react-three/fiber', 
-        '@react-three', 'web-vitals', 'leaflet', 'react-leaflet',
-        'web-vitals', 'debug', 'follow-redirects', '@opentelemetry/api'
-      ];
-      
-      config.externals.push(({ request }, callback) => {
-        if (request && clientOnlyModules.some(module => request.includes(module))) {
-          return callback(null, 'commonjs ' + request);
-        }
-        callback();
-      });
+             // List of problematic client-side modules that should not be processed during SSR
+       const clientOnlyModules = [
+         'sw.js', 'service-worker', 'canvas-confetti', 'framer-motion', 
+         'three', 'socket.io-client', '@react-three/drei', '@react-three/fiber', 
+         '@react-three', 'web-vitals', 'leaflet', 'react-leaflet',
+         'web-vitals', 'debug', 'follow-redirects', '@opentelemetry/api'
+       ];
+       
+              // Only exclude @opentelemetry modules from middleware/edge functions
+       // Keep mongoose, mongodb, prisma for API routes
+       const edgeUnsupportedModules = [
+         '@opentelemetry/api', '@opentelemetry/core', '@opentelemetry/instrumentation'
+       ];
+       
+       config.externals.push(({ request }: { request: string | null }, callback: (err: Error | null, result?: string) => void) => {
+         if (request && clientOnlyModules.some(module => request.includes(module))) {
+           return callback(null, 'commonjs ' + request);
+         }
+         // Only exclude @opentelemetry modules from edge functions
+         if (request && edgeUnsupportedModules.some(module => request.includes(module))) {
+           return callback(null, 'commonjs ' + request);
+         }
+         callback(null);
+       });
       
       // Add global polyfills to prevent 'self is not defined' errors during SSR/build
       const webpack = require('webpack');
@@ -298,6 +318,8 @@ if (typeof global !== 'undefined') {
   eslint: {
     ignoreDuringBuilds: true,
   },
+
+
 
   async rewrites() {
     return {
