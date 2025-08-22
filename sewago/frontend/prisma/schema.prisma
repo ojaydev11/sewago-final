@@ -175,7 +175,7 @@ model PublicMetric {
 
 model LoyaltyPoints {
   id            String               @id @default(auto()) @map("_id") @db.ObjectId
-  userId        String               @db.ObjectId
+  userId        String               @db.ObjectId @unique
   totalPoints   Int                  @default(0)
   availablePoints Int              @default(0)
   lifetimeEarned Int               @default(0)
