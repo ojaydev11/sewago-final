@@ -23,8 +23,7 @@ export async function connectToDatabase(): Promise<void> {
       retryWrites: true,
       retryReads: true,
       maxPoolSize: 10,
-      bufferCommands: false,
-      bufferMaxEntries: 0
+      bufferCommands: false
     });
     console.log("MongoDB connected successfully");
   } catch (error) {
