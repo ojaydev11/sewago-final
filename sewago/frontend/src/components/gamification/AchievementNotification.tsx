@@ -17,8 +17,12 @@ import {
   Flame,
   CheckCircle
 } from 'lucide-react';
-import { ParticleField } from '@/components/ui/ParticleField';
-import confetti from 'canvas-confetti';
+import dynamic from 'next/dynamic';
+
+const ParticleField = dynamic(() => import('@/components/ui/ParticleField').then(mod => ({ default: mod.ParticleField })), { 
+  ssr: false,
+  loading: () => <div className="animate-pulse bg-gray-100 w-full h-full" />
+});
 
 export interface Achievement {
   id: string;
@@ -56,12 +60,16 @@ export function AchievementNotification({
       setShowParticles(true);
       
       // Trigger confetti for rare achievements
-      if (achievement.isRare) {
-        confetti({
-          particleCount: 100,
-          spread: 70,
-          origin: { y: 0.6 },
-          colors: ['#FFD700', '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7']
+      if (achievement.isRare && typeof window !== 'undefined') {
+        import('canvas-confetti').then((confetti) => {
+          confetti.default({
+            particleCount: 100,
+            spread: 70,
+            origin: { y: 0.6 },
+            colors: ['#FFD700', '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7']
+          });
+        }).catch(() => {
+          // Silently fail if confetti can't be loaded
         });
       }
       
