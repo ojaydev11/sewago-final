@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useSession } from 'next-auth/react';
-import { io, Socket } from 'socket.io-client';
+import type { Socket } from 'socket.io-client';
 import { useToast } from '@/components/ui/toast';
 import { isNotificationsEnabled, isPushNotificationsEnabled } from '@/lib/featureFlags';
 
@@ -55,8 +55,12 @@ export function useNotifications() {
   useEffect(() => {
     if (!session?.user?.id || !notificationsEnabled) return;
 
-    const connectSocket = () => {
+    const connectSocket = async () => {
+      // Skip during SSR or build
+      if (typeof window === 'undefined') return;
+      
       try {
+        const { io } = await import('socket.io-client');
         socketRef.current = io(process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000', {
           path: '/ws/socket.io',
           query: { userId: session.user.id },
