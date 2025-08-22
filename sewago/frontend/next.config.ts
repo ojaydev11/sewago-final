@@ -18,16 +18,7 @@ const nextConfig: NextConfig = {
   // Skip build-time page generation completely
   generateBuildId: () => 'static-build',
   
-  // Disable prerendering for pages that use client-side hooks
-  experimental: {
-    optimizeCss: true,
-    optimizePackageImports: ['@heroicons/react', 'lucide-react'],
-    // Disable static generation for problematic pages
-    workerThreads: false,
-    cpus: 1,
-    // Force all pages to be dynamic
-    forceSwcTransforms: true,
-  },
+
 
   // Exclude service worker from build processing
   excludeDefaultMomentLocales: true,
@@ -40,6 +31,21 @@ const nextConfig: NextConfig = {
 
   // Disable static generation entirely
   staticPageGenerationTimeout: 60,
+  
+  // Experimental flag to skip page data collection
+  experimental: {
+    optimizeCss: true,
+    optimizePackageImports: ['@heroicons/react', 'lucide-react'],
+    // Disable static generation for problematic pages
+    workerThreads: false,
+    cpus: 1,
+    // Force all pages to be dynamic
+    forceSwcTransforms: true,
+    // Skip build-time page analysis
+    skipTrailingSlashRedirect: true,
+    // Disable edge runtime optimizations during build
+    allowMiddlewareResponseBody: true,
+  },
   
 
   
@@ -100,15 +106,44 @@ const nextConfig: NextConfig = {
       });
       
       // Add global polyfills to prevent 'self is not defined' errors during SSR/build
+      const webpack = require('webpack');
+      
       config.plugins.push(
-        new (require('webpack')).DefinePlugin({
-          'typeof self': JSON.stringify('undefined'),
-          'typeof window': JSON.stringify('undefined'), 
-          'typeof document': JSON.stringify('undefined'),
-          'typeof navigator': JSON.stringify('undefined'),
-          'typeof location': JSON.stringify('undefined'),
-          'self': 'globalThis',
-          'window': 'globalThis',
+        new webpack.ProvidePlugin({
+          self: 'globalThis',
+          window: 'globalThis',
+          document: ['globalThis', 'document'],
+          navigator: ['globalThis', 'navigator'],
+          location: ['globalThis', 'location']
+        })
+      );
+
+      // Also add DefinePlugin for typeof checks
+      config.plugins.push(
+        new webpack.DefinePlugin({
+          'typeof self': '"object"',
+          'typeof window': '"object"',
+          'typeof document': '"object"',
+          'typeof navigator': '"object"',
+          'typeof location': '"object"'
+        })
+      );
+
+      // Add banner to inject polyfills at the top of every server bundle
+      config.plugins.push(
+        new webpack.BannerPlugin({
+          banner: `
+if (typeof global !== 'undefined' && typeof self === 'undefined') {
+  global.self = global;
+  global.window = global;
+  global.document = global.document || {};
+  global.navigator = global.navigator || {};
+  global.location = global.location || {};
+}
+          `.trim(),
+          raw: true,
+          entryOnly: false,
+          include: /\.js$/
         })
       );
     }
