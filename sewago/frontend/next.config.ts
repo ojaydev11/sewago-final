@@ -32,7 +32,7 @@ const nextConfig: NextConfig = {
   // Disable static generation entirely
   staticPageGenerationTimeout: 60,
   
-  // Experimental flag to skip page data collection
+      // Experimental flag to skip page data collection
   experimental: {
     optimizeCss: true,
     optimizePackageImports: ['@heroicons/react', 'lucide-react'],
@@ -41,11 +41,10 @@ const nextConfig: NextConfig = {
     cpus: 1,
     // Force all pages to be dynamic
     forceSwcTransforms: true,
-    // Skip build-time page analysis
-    skipTrailingSlashRedirect: true,
-    // Disable edge runtime optimizations during build
-    allowMiddlewareResponseBody: true,
   },
+  
+  // Move these out of experimental as per warning
+  skipTrailingSlashRedirect: true,
   
 
   
@@ -108,42 +107,35 @@ const nextConfig: NextConfig = {
       // Add global polyfills to prevent 'self is not defined' errors during SSR/build
       const webpack = require('webpack');
       
-      config.plugins.push(
-        new webpack.ProvidePlugin({
-          self: 'globalThis',
-          window: 'globalThis',
-          document: ['globalThis', 'document'],
-          navigator: ['globalThis', 'navigator'],
-          location: ['globalThis', 'location']
-        })
-      );
-
-      // Also add DefinePlugin for typeof checks
+      // Use DefinePlugin to safely define globals without breaking module resolution
       config.plugins.push(
         new webpack.DefinePlugin({
           'typeof self': '"object"',
           'typeof window': '"object"',
           'typeof document': '"object"',
           'typeof navigator': '"object"',
-          'typeof location': '"object"'
+          'typeof location': '"object"',
+          // Provide safe fallbacks
+          'self': '(typeof self !== "undefined" ? self : typeof global !== "undefined" ? global : {})',
+          'window': '(typeof window !== "undefined" ? window : typeof global !== "undefined" ? global : {})',
         })
       );
 
-      // Add banner to inject polyfills at the top of every server bundle
+      // Add banner to inject polyfills at the top of server bundles only
       config.plugins.push(
         new webpack.BannerPlugin({
           banner: `
-if (typeof global !== 'undefined' && typeof self === 'undefined') {
-  global.self = global;
-  global.window = global;
-  global.document = global.document || {};
-  global.navigator = global.navigator || {};
-  global.location = global.location || {};
+if (typeof global !== 'undefined') {
+  if (typeof global.self === 'undefined') global.self = global;
+  if (typeof global.window === 'undefined') global.window = global;
+  if (typeof global.document === 'undefined') global.document = {};
+  if (typeof global.navigator === 'undefined') global.navigator = {};
+  if (typeof global.location === 'undefined') global.location = {};
 }
           `.trim(),
           raw: true,
           entryOnly: false,
-          include: /\.js$/
+          include: /vendors\.js$/
         })
       );
     }
@@ -154,6 +146,11 @@ if (typeof global !== 'undefined' && typeof self === 'undefined') {
       fs: false,
       net: false,
       tls: false,
+    };
+    
+    // Add resolve alias for globalThis as fallback only
+    config.resolve.alias = {
+      ...config.resolve.alias,
     };
 
     if (!dev) {
