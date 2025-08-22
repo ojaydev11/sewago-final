@@ -98,7 +98,7 @@ export const bookingRateLimit = rateLimit({
     error: "Too many booking requests. Please try again later."
   },
   keyGenerator: (req) => {
-    return req.userId || req.ip;
+    return req.userId || req.ip || 'anonymous';
   }
 });
 
@@ -131,6 +131,7 @@ export const csrfProtection = (req: Request, res: Response, next: NextFunction) 
 export const generateCSRFToken = (req: Request, res: Response) => {
   const token = crypto.randomBytes(32).toString('hex');
   
+  // Initialize session if it doesn't exist
   if (!req.session) {
     req.session = {};
   }
