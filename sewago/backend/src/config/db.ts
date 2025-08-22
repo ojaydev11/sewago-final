@@ -18,10 +18,22 @@ export async function connectToDatabase(): Promise<void> {
   }
 
   try {
-    await mongoose.connect(env.mongoUri, { serverSelectionTimeoutMS: 3000 });
+    await mongoose.connect(env.mongoUri, { 
+      serverSelectionTimeoutMS: 10000,
+      retryWrites: true,
+      retryReads: true,
+      maxPoolSize: 10,
+      bufferCommands: false,
+      bufferMaxEntries: 0
+    });
+    console.log("MongoDB connected successfully");
   } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error("Failed to connect to MongoDB", error);
+    console.error("Failed to connect to MongoDB:", error);
+    console.error("MongoDB URI (masked):", env.mongoUri.replace(/\/\/.*@/, "//***:***@"));
+    console.error("Please check:");
+    console.error("1. MongoDB Atlas IP whitelist includes Railway IPs");
+    console.error("2. Database credentials are correct");
+    console.error("3. Network access is properly configured");
     throw error;
   }
 }
