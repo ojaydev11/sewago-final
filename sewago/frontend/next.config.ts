@@ -107,7 +107,7 @@ const nextConfig: NextConfig = {
       // Add global polyfills to prevent 'self is not defined' errors during SSR/build
       const webpack = require('webpack');
       
-      // Use DefinePlugin to safely define globals without breaking module resolution
+      // DefinePlugin with comprehensive polyfills
       config.plugins.push(
         new webpack.DefinePlugin({
           'typeof self': '"object"',
@@ -115,27 +115,15 @@ const nextConfig: NextConfig = {
           'typeof document': '"object"',
           'typeof navigator': '"object"',
           'typeof location': '"object"',
-          // Provide safe fallbacks
           'self': '(typeof self !== "undefined" ? self : typeof global !== "undefined" ? global : {})',
           'window': '(typeof window !== "undefined" ? window : typeof global !== "undefined" ? global : {})',
         })
       );
 
-      // Add banner to inject polyfills at the top of server bundles only
+      // Add ProvidePlugin for automatic injection
       config.plugins.push(
-        new webpack.BannerPlugin({
-          banner: `
-if (typeof global !== 'undefined') {
-  if (typeof global.self === 'undefined') global.self = global;
-  if (typeof global.window === 'undefined') global.window = global;
-  if (typeof global.document === 'undefined') global.document = {};
-  if (typeof global.navigator === 'undefined') global.navigator = {};
-  if (typeof global.location === 'undefined') global.location = {};
-}
-          `.trim(),
-          raw: true,
-          entryOnly: false,
-          include: /vendors\.js$/
+        new webpack.ProvidePlugin({
+          'self': ['global'],
         })
       );
     }
