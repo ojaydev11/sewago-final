@@ -203,7 +203,7 @@ export const validatePaymentAmount = (req: Request, res: Response, next: NextFun
   // using the orderId and compare it with the received amount
   req.expectedAmount = amount; // This should come from your booking record
   
-  if (Math.abs(amount - req.expectedAmount) > 0.01) {
+  if (Math.abs(amount - (req.expectedAmount || amount)) > 0.01) {
     securityAuditLog('payment_amount_mismatch', { 
       orderId,
       receivedAmount: amount,
@@ -231,13 +231,13 @@ export const fraudDetection = (req: Request, res: Response, next: NextFunction) 
     // High amount transactions from suspicious IPs
     {
       rule: 'high_amount_suspicious_ip',
-      check: () => amount > 50000 && isSuspiciousIP(ip),
+      check: () => amount > 50000 && isSuspiciousIP(ip || ''),
       risk: 'HIGH'
     },
     // Multiple transactions in short time
     {
       rule: 'rapid_transactions',
-      check: () => checkRapidTransactions(transactionId),
+      check: () => checkRapidTransactions(transactionId || ''),
       risk: 'MEDIUM'
     },
     // Suspicious user agent patterns
@@ -293,7 +293,9 @@ export const cacheWebhookResponse = (response: any, idempotencyKey: string) => {
     // Clean up old entries (prevent memory leak)
     if (idempotencyStore.size > 1000) {
       const firstKey = idempotencyStore.keys().next().value;
-      idempotencyStore.delete(firstKey);
+      if (firstKey) {
+        idempotencyStore.delete(firstKey);
+      }
     }
   }
 };

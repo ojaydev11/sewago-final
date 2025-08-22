@@ -8,6 +8,9 @@ declare global {
         role: "user" | "provider" | "admin";
       };
       requestId?: string;
+      session?: any; // Express session support
+      idempotencyKey?: string; // Payment idempotency
+      expectedAmount?: number; // Payment validation
     }
   }
 }
