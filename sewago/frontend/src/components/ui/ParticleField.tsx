@@ -96,7 +96,7 @@ function WireframeGeometry() {
 }
 
 // Main particle field component
-export default function ParticleField({ 
+export function ParticleField({ 
   className = '',
   showWireframe = true 
 }: { 
@@ -122,3 +122,5 @@ export default function ParticleField({
     </div>
   );
 }
+
+export default ParticleField;

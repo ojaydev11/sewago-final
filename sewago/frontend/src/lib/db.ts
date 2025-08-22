@@ -5,7 +5,7 @@ import mongoose from 'mongoose';
 
 let conn: typeof mongoose | null = null;
 
-export async function getDb() {
+export async function dbConnect() {
   // Don't connect during build phase
   if (process.env.NEXT_PHASE === 'phase-production-build') {
     throw new Error('Database connections not allowed during build phase');
@@ -30,6 +30,10 @@ export async function getDb() {
   }
   
   return conn;
+}
+
+export async function getDb() {
+  return dbConnect();
 }
 
 export async function closeDb() {

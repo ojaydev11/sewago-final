@@ -18,10 +18,10 @@ export { GamificationSettings } from './GamificationSettings';
 
 // Additional Models
 export { Address } from './Address';
-export { AuditLog } from './AuditLog';
+export { default as AuditLog } from './AuditLog';
 export { ProviderProfile } from './ProviderProfile';
-export { ProviderTraining } from './ProviderTraining';
-export { RiskAssessment } from './RiskAssessment';
+export { default as ProviderTraining } from './ProviderTraining';
+export { default as RiskAssessment } from './RiskAssessment';
 export { ServiceBundle } from './ServiceBundle';
 export { SupportTicket } from './SupportTicket';
 export { Verification } from './Verification';
