@@ -12,9 +12,6 @@ const nextConfig: NextConfig = {
     // Skip build-time page generation completely
   generateBuildId: () => 'static-build',
   
-  // Disable static generation for problematic pages
-  staticPageGenerationTimeout: 0,
-  
   
   
   // Exclude service worker from build processing
@@ -105,6 +102,56 @@ const nextConfig: NextConfig = {
         new webpack.DefinePlugin({
           'self': 'global',
           'typeof self': '"object"',
+        })
+      );
+
+      // Add BannerPlugin to inject polyfills at the very beginning of all bundles
+      config.plugins.push(
+        new webpack.BannerPlugin({
+          banner: `
+// Global polyfill injection for document APIs
+if (typeof global !== 'undefined') {
+  if (!global.document) {
+    global.document = {};
+  }
+  
+  // Mock all essential document methods
+  global.document.querySelector = global.document.querySelector || (() => null);
+  global.document.getElementById = global.document.getElementById || (() => null);
+  global.document.createElement = global.document.createElement || (() => ({}));
+  global.document.head = global.document.head || {};
+  global.document.body = global.document.body || {};
+  global.document.title = global.document.title || '';
+  global.document.cookie = global.document.cookie || '';
+  global.document.readyState = global.document.readyState || 'complete';
+  global.document.hidden = global.document.hidden || false;
+  global.document.documentElement = global.document.documentElement || {};
+  
+  // Mock document methods that might be called
+  global.document.addEventListener = global.document.addEventListener || (() => {});
+  global.document.removeEventListener = global.document.removeEventListener || (() => {});
+  global.document.contains = global.document.contains || (() => false);
+  
+  // Mock documentElement properties
+  global.document.documentElement.scrollTop = global.document.documentElement.scrollTop || 0;
+  global.document.documentElement.scrollHeight = global.document.documentElement.scrollHeight || 1000;
+  
+  // Mock body methods
+  global.document.body.appendChild = global.document.body.appendChild || (() => {});
+  global.document.body.removeChild = global.document.body.removeChild || (() => {});
+  global.document.body.classList = global.document.body.classList || {
+    add: () => {},
+    remove: () => {}
+  };
+  
+  // Mock head methods
+  global.document.head.appendChild = global.document.head.appendChild || (() => {});
+  global.document.head.removeChild = global.document.head.removeChild || (() => {});
+  global.document.head.contains = global.document.head.contains || (() => false);
+}
+          `.trim(),
+          raw: true,
+          entryOnly: false,
         })
       );
 
