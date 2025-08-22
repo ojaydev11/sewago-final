@@ -41,6 +41,8 @@ const nextConfig: NextConfig = {
   // Disable static generation entirely
   staticPageGenerationTimeout: 60,
   
+
+  
   // Force dynamic rendering for all pages
   // dynamicParams: true,
   
@@ -101,10 +103,12 @@ const nextConfig: NextConfig = {
       config.plugins.push(
         new (require('webpack')).DefinePlugin({
           'typeof self': JSON.stringify('undefined'),
-          'typeof window': JSON.stringify('undefined'),
+          'typeof window': JSON.stringify('undefined'), 
           'typeof document': JSON.stringify('undefined'),
           'typeof navigator': JSON.stringify('undefined'),
-          'typeof location': JSON.stringify('undefined')
+          'typeof location': JSON.stringify('undefined'),
+          'self': 'globalThis',
+          'window': 'globalThis',
         })
       );
     }
