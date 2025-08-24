@@ -156,14 +156,18 @@ export function HapticFeedbackProvider({ children }: HapticFeedbackProviderProps
       supportedPatterns: []
     };
 
-    // Check for Vibration API support
+    // Check for Vibration API support (without triggering vibration)
     if (capabilities.hasVibration) {
       try {
-        await navigator.vibrate(0);
-        capabilities.supportedPatterns.push('basic', 'pattern', 'intensity');
-        setIsHapticSupported(true);
+        // Check if the API exists but don't call it yet (requires user interaction)
+        if (typeof navigator.vibrate === 'function') {
+          capabilities.supportedPatterns.push('basic', 'pattern', 'intensity');
+          setIsHapticSupported(true);
+        } else {
+          capabilities.hasVibration = false;
+        }
       } catch (error) {
-        console.warn('Vibration API not fully supported:', error);
+        console.warn('Vibration API not supported:', error);
         capabilities.hasVibration = false;
       }
     }
@@ -280,12 +284,17 @@ export function HapticFeedbackProvider({ children }: HapticFeedbackProviderProps
     const finalIntensity = Math.min(100, baseIntensity * userMultiplier * batteryMultiplier);
 
     try {
-      // Use Vibration API
-      if (deviceCapabilities.hasVibration) {
-        const scaledPattern = pattern.pattern.map(duration => 
-          Math.round(duration * (finalIntensity / 100))
-        );
-        await navigator.vibrate(scaledPattern);
+      // Use Vibration API (only after user interaction)
+      if (deviceCapabilities.hasVibration && typeof navigator.vibrate === 'function') {
+        try {
+          const scaledPattern = pattern.pattern.map(duration => 
+            Math.round(duration * (finalIntensity / 100))
+          );
+          await navigator.vibrate(scaledPattern);
+        } catch (vibrateError) {
+          console.warn('Vibration requires user interaction first:', vibrateError);
+          // Silently fail - this is expected behavior
+        }
       }
 
       // Use Gamepad Haptic Actuators if available

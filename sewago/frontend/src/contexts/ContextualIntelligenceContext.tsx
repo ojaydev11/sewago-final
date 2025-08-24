@@ -170,14 +170,48 @@ export function ContextualIntelligenceProvider({ children }: ContextualIntellige
   };
 
   const initializeContextTracking = () => {
-    // Track location if available
-    if (navigator.geolocation) {
+    // Track location if available (with proper permissions handling)
+    if (navigator.geolocation && typeof navigator.permissions !== 'undefined') {
+      // Check geolocation permission first
+      navigator.permissions.query({ name: 'geolocation' })
+        .then((permissionStatus) => {
+          if (permissionStatus.state === 'granted') {
+            navigator.geolocation.getCurrentPosition(
+              (position) => {
+                updateLocationContext(position);
+              },
+              (error) => {
+                console.warn('Geolocation error:', error.message);
+              },
+              {
+                timeout: 10000,
+                maximumAge: 60000,
+                enableHighAccuracy: false
+              }
+            );
+          } else {
+            console.info('Geolocation permission not granted');
+          }
+        })
+        .catch(() => {
+          console.info('Permissions API not supported');
+        });
+    } else if (navigator.geolocation) {
+      // Fallback for browsers without permissions API
       navigator.geolocation.getCurrentPosition(
         (position) => {
           updateLocationContext(position);
         },
         (error) => {
-          console.warn('Geolocation not available:', error);
+          // Silently handle geolocation errors to prevent console spam
+          if (error.code !== error.PERMISSION_DENIED) {
+            console.warn('Geolocation error:', error.message);
+          }
+        },
+        {
+          timeout: 10000,
+          maximumAge: 60000,
+          enableHighAccuracy: false
         }
       );
     }

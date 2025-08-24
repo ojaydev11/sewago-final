@@ -137,10 +137,7 @@ export default async function RootLayout({
         {/* Enhanced accessibility and performance */}
         <meta name="color-scheme" content="dark light" />
         <meta name="supported-color-schemes" content="dark light" />
-        <link rel="preload" href="/branding/sewago-logo.svg" as="image" type="image/svg+xml" />
-        
-        {/* Resource hints for performance */}
-        <link rel="preload" href="/hero-nepal.svg" as="image" type="image/svg+xml" />
+        {/* Only prefetch API endpoints, remove unused preloads to fix warnings */}
         <link rel="prefetch" href="/api/services" />
         
         {/* Security headers - X-Frame-Options removed as it's set via HTTP headers */}
