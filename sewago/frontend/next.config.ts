@@ -36,7 +36,10 @@ const nextConfig: NextConfig = {
   serverExternalPackages: [
     '@opentelemetry/api',
     '@opentelemetry/core', 
-    '@opentelemetry/instrumentation'
+    '@opentelemetry/instrumentation',
+    '@opentelemetry/resources',
+    '@opentelemetry/semantic-conventions',
+    '@opentelemetry/auto-instrumentations-node'
   ],
   
   // Move these out of experimental as per warning
@@ -97,7 +100,9 @@ const nextConfig: NextConfig = {
               // Only exclude @opentelemetry modules from middleware/edge functions
        // Keep mongoose, mongodb, prisma for API routes
        const edgeUnsupportedModules = [
-         '@opentelemetry/api', '@opentelemetry/core', '@opentelemetry/instrumentation'
+         '@opentelemetry/api', '@opentelemetry/core', '@opentelemetry/instrumentation',
+         '@opentelemetry/resources', '@opentelemetry/semantic-conventions',
+         '@opentelemetry/auto-instrumentations-node', 'next-intl/server'
        ];
        
        config.externals.push(({ request }: { request: string | null }, callback: (err: Error | null, result?: string) => void) => {
