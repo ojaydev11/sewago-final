@@ -179,16 +179,16 @@ export default async function RootLayout({
             <PremiumUXProvider
               enabled={true}
               features={{
-                hapticFeedback: true,
-                audioFeedback: true,
-                voiceGuidance: true,
-                contextualIntelligence: true,
-                culturalUX: true,
+                hapticFeedback: false,
+                audioFeedback: false,
+                voiceGuidance: false,
+                contextualIntelligence: false,
+                culturalUX: false,
                 accessibilityEnhancements: true,
                 performanceOptimization: true
               }}
               userRole="customer"
-              culturalContext={true}
+              culturalContext={false}
             >
               <main className="min-h-screen bg-gray-50">
                 {children}

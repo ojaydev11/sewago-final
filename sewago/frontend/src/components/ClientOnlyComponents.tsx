@@ -16,14 +16,14 @@ export default function ClientOnlyComponents() {
         <Analytics measurementId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || 'G-XXXXXXXXXX'} />
       )}
       
-      {/* Emergency Service Button */}
-      <EmergencyServiceButton />
+      {/* Emergency Service Button - temporarily disabled to fix runtime errors */}
+      {/* <EmergencyServiceButton /> */}
       
       {/* Cookie Consent for GDPR compliance */}
       <CookieConsent />
       
-      {/* Performance Monitor (development and opt-in production) */}
-      <PerformanceMonitor showOnProduction={false} />
+      {/* Performance Monitor - temporarily disabled to fix runtime errors */}
+      {/* <PerformanceMonitor showOnProduction={false} /> */}
     </>
   );
 }
