@@ -143,9 +143,8 @@ export default async function RootLayout({
         <link rel="preload" href="/hero-nepal.svg" as="image" type="image/svg+xml" />
         <link rel="prefetch" href="/api/services" />
         
-        {/* Security headers */}
+        {/* Security headers - X-Frame-Options removed as it's set via HTTP headers */}
         <meta httpEquiv="X-Content-Type-Options" content="nosniff" />
-        <meta httpEquiv="X-Frame-Options" content="DENY" />
         <meta httpEquiv="X-XSS-Protection" content="1; mode=block" />
         <meta name="referrer" content="strict-origin-when-cross-origin" />
         
