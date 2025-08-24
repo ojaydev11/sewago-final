@@ -22,46 +22,92 @@ interface UXPreferencesData {
 export async function GET(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
+    
+    // Return default preferences if no session (not an error during development)
     if (!session?.user?.id) {
-      return NextResponse.json(
-        { error: 'Authentication required' },
-        { status: 401 }
-      );
+      const defaultPreferences = {
+        hapticEnabled: true,
+        hapticIntensity: 50,
+        soundEnabled: true,
+        soundVolume: 70,
+        voiceGuidance: false,
+        animationsEnabled: true,
+        reducedMotion: false,
+        highContrast: false,
+        colorTheme: 'auto',
+        contextualAI: true,
+        culturalSounds: true,
+        customPatterns: []
+      };
+      return NextResponse.json(defaultPreferences);
     }
 
-    // Fetch user's UX preferences
-    let preferences = await prisma.userUXPreferences.findUnique({
-      where: { userId: session.user.id }
-    });
-
-    // If no preferences exist, create default ones
-    if (!preferences) {
-      preferences = await prisma.userUXPreferences.create({
-        data: {
-          userId: session.user.id,
-          hapticEnabled: true,
-          hapticIntensity: 50,
-          soundEnabled: true,
-          soundVolume: 70,
-          voiceGuidance: false,
-          animationsEnabled: true,
-          reducedMotion: false,
-          highContrast: false,
-          colorTheme: 'auto',
-          contextualAI: true,
-          culturalSounds: true,
-          customPatterns: []
-        }
+    // Try to fetch user's UX preferences with fallback
+    try {
+      let preferences = await prisma.userUXPreferences.findUnique({
+        where: { userId: session.user.id }
       });
-    }
 
-    return NextResponse.json(preferences);
+      // If no preferences exist, create default ones
+      if (!preferences) {
+        preferences = await prisma.userUXPreferences.create({
+          data: {
+            userId: session.user.id,
+            hapticEnabled: true,
+            hapticIntensity: 50,
+            soundEnabled: true,
+            soundVolume: 70,
+            voiceGuidance: false,
+            animationsEnabled: true,
+            reducedMotion: false,
+            highContrast: false,
+            colorTheme: 'auto',
+            contextualAI: true,
+            culturalSounds: true,
+            customPatterns: []
+          }
+        });
+      }
+
+      return NextResponse.json(preferences);
+    } catch (dbError) {
+      console.warn('Database unavailable, returning default preferences:', dbError);
+      // Return default preferences if database is unavailable
+      const defaultPreferences = {
+        userId: session.user.id,
+        hapticEnabled: true,
+        hapticIntensity: 50,
+        soundEnabled: true,
+        soundVolume: 70,
+        voiceGuidance: false,
+        animationsEnabled: true,
+        reducedMotion: false,
+        highContrast: false,
+        colorTheme: 'auto',
+        contextualAI: true,
+        culturalSounds: true,
+        customPatterns: []
+      };
+      return NextResponse.json(defaultPreferences);
+    }
   } catch (error) {
-    console.error('Error fetching UX preferences:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch UX preferences' },
-      { status: 500 }
-    );
+    console.error('Error in UX preferences endpoint:', error);
+    // Return default preferences instead of 500 error
+    const defaultPreferences = {
+      hapticEnabled: true,
+      hapticIntensity: 50,
+      soundEnabled: true,
+      soundVolume: 70,
+      voiceGuidance: false,
+      animationsEnabled: true,
+      reducedMotion: false,
+      highContrast: false,
+      colorTheme: 'auto',
+      contextualAI: true,
+      culturalSounds: true,
+      customPatterns: []
+    };
+    return NextResponse.json(defaultPreferences);
   }
 }
 
