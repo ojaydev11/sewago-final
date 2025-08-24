@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    let locationContext = { area, lat, lng, radius };
+    const locationContext = { area, lat, lng, radius };
 
     // If no location provided, try to get from user preferences or insights
     if (!area && !lat && !lng) {

@@ -524,5 +524,267 @@
       "save": "सेटिंगहरू सेभ गर्नुहोस्",
       "saved": "सेटिंगहरू सेभ भयो!"
     }
+  },
+  "personalization": {
+    "dashboard": {
+      "title": "मेरो डयासबोर्ड",
+      "welcome": "स्वागतम्, {name}!",
+      "memberSince": "{date} देखि सदस्य",
+      "refresh": "रिफ्रेस गर्नुहोस्",
+      "retry": "फेरि प्रयास गर्नुहोस्",
+      "quickActions": "द्रुत कार्यहरू",
+      "recommendedServices": "तपाईंको लागि सिफारिसी",
+      "serviceRecommendationsDesc": "तपाईंको प्राथमिकता र गतिविधिका आधारमा सेवाहरू",
+      "recommendedProviders": "शीर्ष सेवा प्रदायकहरू",
+      "personalizedOffers": "विशेष प्रस्तावहरू",
+      "usageInsights": "तपाईंको प्रयोग अन्तर्दृष्टि",
+      "upcomingBookings": "आगामी बुकिंगहरू",
+      "noUpcomingBookings": "कुनै आगामी बुकिंग छैन",
+      "goals": "तपाईंका लक्ष्यहरू",
+      "recentActivity": "हालको गतिविधि"
+    },
+    "smartGrid": {
+      "title": "स्मार्ट सिफारिसहरू",
+      "description": "{algorithm} एल्गोरिदम प्रयोग गरी {count} व्यक्तिगत सिफारिसहरू देखाइँदै",
+      "searchPlaceholder": "सेवाहरू खोज्नुहोस्...",
+      "noResults": "कुनै सिफारिस फेला परेन",
+      "noResultsHint": "तपाईंका फिल्टरहरू वा खोज शब्दहरू समायोजन गर्ने प्रयास गर्नुहोस्"
+    },
+    "carousel": {
+      "title": {
+        "services": "सिफारिसी सेवाहरू",
+        "providers": "शीर्ष प्रदायकहरू",
+        "offers": "विशेष प्रस्तावहरू",
+        "mixed": "तपाईंको लागि व्यक्तिगत"
+      },
+      "description": {
+        "services": "तपाईंको प्राथमिकताअनुसार सेवाहरू ({count} उपलब्ध)",
+        "providers": "तपाईंको क्षेत्रमा उच्च मूल्याङ्कन प्राप्त प्रदायकहरू ({count} उपलब्ध)",
+        "offers": "तपाईंका लागि मात्र विशेष प्रस्तावहरू ({count} उपलब्ध)",
+        "mixed": "सेवाहरू, प्रदायकहरू, र प्रस्तावहरूको मिश्रण ({count} वस्तुहरू)"
+      },
+      "noRecommendations": "अहिले कुनै सिफारिस उपलब्ध छैन"
+    },
+    "preferences": {
+      "title": "तपाईंका प्राथमिकताहरू",
+      "categories": "मनपर्ने श्रेणीहरू",
+      "timeSlots": "मनपर्ने समय स्लटहरू",
+      "budget": "बजेट दायरा",
+      "location": "स्थान प्राथमिकताहरू",
+      "notifications": "सूचना सेटिंगहरू",
+      "language": "भाषा प्राथमिकता",
+      "cultural": "सांस्कृतिक प्राथमिकताहरू",
+      "save": "प्राथमिकताहरू सेभ गर्नुहोस्",
+      "saved": "प्राथमिकताहरू सफलतापूर्वक सेभ भयो!",
+      "error": "प्राथमिकताहरू सेभ गर्न असफल"
+    },
+    "onboarding": {
+      "welcome": "SewaGo मा स्वागतम्!",
+      "subtitle": "आउनुहोस् तपाईंको अनुभवलाई व्यक्तिगत बनाउँदै",
+      "step1": {
+        "title": "तपाईंलाई कुन सेवाहरूमा चासो छ?",
+        "description": "तपाईंले चाहिने सम्भावित सेवाहरू छान्नुहोस्"
+      },
+      "step2": {
+        "title": "तपाईं कहिले सेवा चाहनुहुन्छ?",
+        "description": "आफ्नो मनपर्ने बुकिंग समयहरू छान्नुहोस्"
+      },
+      "step3": {
+        "title": "तपाईंको बजेट दायरा के हो?",
+        "description": "उपयुक्त विकल्पहरू देखाउन हामीलाई मद्दत गर्नुहोस्"
+      },
+      "step4": {
+        "title": "कुनै सांस्कृतिक प्राथमिकताहरू छन्?",
+        "description": "हामी चाडपर्व र परम्पराका लागि सिफारिसहरू अनुकूलन गर्न सक्छौं"
+      },
+      "complete": "सेटअप पूरा गर्नुहोस्",
+      "skip": "अहिलेका लागि छोड्नुहोस्"
+    },
+    "insights": {
+      "title": "तपाईंको सेवा अन्तर्दृष्टि",
+      "totalBookings": "कुल बुकिंगहरू",
+      "totalSpent": "कुल खर्च",
+      "favoriteCategories": "मनपर्ने श्रेणीहरू",
+      "topProviders": "सबैभन्दा बढी प्रयोग गरिएका प्रदायकहरू",
+      "timePatterns": "बुकिंग बानीहरू",
+      "savingsAchieved": "बचत हासिल",
+      "comparison": {
+        "above": "औसतभन्दा माथि",
+        "below": "औसतभन्दा तल",
+        "similar": "औसत जस्तै"
+      }
+    },
+    "offers": {
+      "personalizedFor": "तपाईंका लागि व्यक्तिगत",
+      "validUntil": "{date} सम्म मान्य",
+      "claimOffer": "प्रस्ताव दाबी गर्नुहोस्",
+      "termsApply": "नियम र शर्तहरू लागू",
+      "limitedTime": "सीमित समयको प्रस्ताव",
+      "festivalSpecial": "{festival} विशेष"
+    },
+    "scheduling": {
+      "smartSuggestions": "स्मार्ट समयतालिका",
+      "bestTimes": "तपाईंका लागि उत्तम समयहरू",
+      "basedOnHistory": "तपाईंको बुकिंग इतिहासका आधारमा",
+      "priceOptimized": "मूल्य अनुकूलित",
+      "weatherConsidered": "मौसम विचार गरिएको",
+      "providerAvailable": "प्रदायक उपलब्ध",
+      "potentialSavings": "सम्भावित बचत: रु {amount}"
+    },
+    "location": {
+      "nearYou": "तपाईंको नजिकमा लोकप्रिय",
+      "trending": "{area} मा ट्रेन्डिङ",
+      "peakTimes": "शिखर बुकिंग समयहरू",
+      "averagePricing": "औसत मूल्य निर्धारण",
+      "culturalEvents": "आगामी सांस्कृतिक कार्यक्रमहरू"
+    },
+    "feedback": {
+      "helpful": "के यो सहयोगी थियो?",
+      "like": "मनपर्छ",
+      "dislike": "मनपर्दैन",
+      "improve": "हामी कसरी सुधार गर्न सक्छौं?",
+      "submit": "प्रतिक्रिया पेश गर्नुहोस्"
+    },
+    "algorithms": {
+      "hybrid": "स्मार्ट मिक्स",
+      "collaborative": "समान प्रयोगकर्ताहरू",
+      "content": "तपाईंका प्राथमिकताहरू",
+      "location": "नजिकका सेवाहरू",
+      "seasonal": "अहिले ट्रेन्डिङ"
+    }
+  },
+  "subscription": {
+    "dashboard": "सदस्यता ड्यासबोर्ड",
+    "currentPlan": "हालको योजना",
+    "upgradePlan": "योजना अपग्रेड गर्नुहोस्",
+    "manageBilling": "बिलिङ व्यवस्थापन",
+    "familyPlan": "पारिवारिक योजना",
+    "benefits": "फाइदाहरू",
+    "usage": "प्रयोग",
+    "billing": "बिलिङ",
+    "plans": "योजनाहरू",
+    "free": "नि:शुल्क",
+    "plus": "प्लस",
+    "pro": "प्रो",
+    "monthly": "मासिक",
+    "yearly": "वार्षिक",
+    "status": {
+      "active": "सक्रिय",
+      "inactive": "निष्क्रिय",
+      "cancelled": "रद्द गरिएको",
+      "expired": "म्याद सकिएको",
+      "pending": "पेन्डिंग"
+    },
+    "tiers": {
+      "free": {
+        "name": "सेवागो नि:शुल्क",
+        "description": "सुरुवात गर्नका लागि उत्तम",
+        "price": "नि:शुल्क"
+      },
+      "plus": {
+        "name": "सेवागो प्लस",
+        "description": "नियमित प्रयोगकर्ताहरूका लागि बढिया सुविधाहरू",
+        "price": "रु. २९९/महिना"
+      },
+      "pro": {
+        "name": "सेवागो प्रो",
+        "description": "पावर प्रयोगकर्ताहरूका लागि प्रिमियम अनुभव",
+        "price": "रु. ५९९/महिना"
+      }
+    },
+    "features": {
+      "standardBooking": "सामान्य बुकिङ अनुभव",
+      "basicSearch": "आधारभूत खोज सुविधा",
+      "basicSupport": "आधारभूत ग्राहक सहायता",
+      "discount15": "सबै सेवाहरूमा १५% छुट",
+      "discount25": "सबै सेवाहरूमा २५% छुट",
+      "credits100": "रु. १०० मासिक सेवा क्रेडिट",
+      "credits250": "रु. २५० मासिक सेवा क्रेडिट",
+      "prioritySupport": "प्राथमिकता ग्राहक सहायता",
+      "premiumSupport": "प्रिमियम २४/७ सहायता",
+      "advancedBooking": "उन्नत बुकिङ तालिका",
+      "seasonalDeals": "विशेष मौसमी डिलहरू",
+      "unlimitedBookings": "असीमित सेवा बुकिङहरू",
+      "aiRecommendations": "उन्नत AI सिफारिसहरू",
+      "serviceBundle": "अतिरिक्त छुटसहित सेवा बन्डलिङ",
+      "serviceGuarantee": "प्रिमियम सेवा ग्यारेन्टी र बीमा",
+      "earlyAccess": "नयाँ सेवाहरूमा प्रारम्भिक पहुँच",
+      "conciergeService": "कन्सियर्ज बुकिङ सहायता",
+      "providerPreference": "प्रदायक प्राथमिकता ग्यारेन्टी"
+    },
+    "billing": {
+      "title": "बिलिङ र भुक्तानीहरू",
+      "nextBilling": "अर्को बिलिङ",
+      "lastPayment": "अन्तिम भुक्तानी",
+      "paymentMethod": "भुक्तानी विधि",
+      "autoRenew": "स्वत: नवीकरण",
+      "billingHistory": "बिलिङ इतिहास",
+      "updatePayment": "भुक्तानी विधि अपडेट गर्नुहोस्",
+      "cancelSubscription": "सदस्यता रद्द गर्नुहोस्",
+      "reactivateSubscription": "सदस्यता पुन: सक्रिय गर्नुहोस्",
+      "billingCycle": "बिलिङ साइकल",
+      "currentCost": "हालको लागत",
+      "dueDate": "देय मिति",
+      "amount": "रकम",
+      "downloadInvoice": "इनभ्वाइस डाउनलोड गर्नुहोस्"
+    },
+    "family": {
+      "title": "पारिवारिक योजना",
+      "createPlan": "पारिवारिक योजना सिर्जना गर्नुहोस्",
+      "inviteMember": "सदस्य निमन्त्रणा गर्नुहोस्",
+      "removeMember": "सदस्य हटाउनुहोस्",
+      "familyOwner": "पारिवारिक योजना मालिक",
+      "maxMembers": "अधिकतम सदस्यहरू",
+      "currentMembers": "हालका सदस्यहरू",
+      "sharedCredits": "साझा क्रेडिटहरू",
+      "pendingInvitations": "पेन्डिंग निमन्त्रणाहरू",
+      "familyBenefits": "पारिवारिक योजना फाइदाहरू",
+      "inviteEmail": "इमेलद्वारा निमन्त्रणा गर्नुहोस्",
+      "memberManagement": "सजिलो सदस्य व्यवस्थापन",
+      "familyDashboard": "पारिवारिक ड्यासबोर्ड",
+      "sharedBenefits": "साझा सदस्यता फाइदाहरू",
+      "invitationSent": "निमन्त्रणा सफलतापूर्वक पठाइयो",
+      "memberRemoved": "सदस्य सफलतापूर्वक हटाइयो"
+    },
+    "benefits": {
+      "title": "तपाईंका फाइदाहरू",
+      "totalSavings": "कुल बचत",
+      "activebenefits": "सक्रिय फाइदाहरू",
+      "usageThisMonth": "यो महिनाको प्रयोग",
+      "utilizationPercentage": "उपयोगिता",
+      "remainingUsage": "बाँकी",
+      "benefitValue": "फाइदाको मूल्य",
+      "nearLimit": "सीमा नजिक",
+      "recommendations": "सिफारिसहरू"
+    },
+    "upgrade": {
+      "title": "तपाईंको योजना अपग्रेड गर्नुहोस्",
+      "unlockFeatures": "प्रिमियम सुविधाहरू अनलक गर्नुहोस्",
+      "startSaving": "आज बचत सुरु गर्नुहोस्",
+      "upgradeNow": "अहिले अपग्रेड गर्नुहोस्",
+      "compareFeatures": "सुविधाहरूको तुलना गर्नुहोस्",
+      "chooseYourPlan": "तपाईंको योजना छान्नुहोस्",
+      "mostPopular": "सबैभन्दा लोकप्रिय",
+      "bestValue": "सर्वोत्तम मूल्य",
+      "upgrade": "अपग्रेड",
+      "currentPlan": "हालको योजना",
+      "alwaysFree": "सधैं नि:शुल्क",
+      "save10Percent": "१०% बचत गर्नुहोस्",
+      "freeCredits": "नि:शुल्क क्रेडिटहरू",
+      "maximumSavings": "अधिकतम बचत",
+      "vipTreatment": "VIP उपचार",
+      "personalService": "व्यक्तिगत सेवा"
+    },
+    "notifications": {
+      "upgradeSuccess": "सफलतापूर्वक {tier} मा अपग्रेड भयो!",
+      "downgradedToFree": "तपाईंको सदस्यता नि:शुल्क टियरमा डाउनग्रेड भएको छ।",
+      "paymentMethodUpdated": "भुक्तानी विधि सफलतापूर्वक अपडेट भयो।",
+      "autoRenewEnabled": "तपाईंको सदस्यताको लागि स्वत: नवीकरण सक्षम गरियो।",
+      "autoRenewDisabled": "तपाईंको सदस्यताको लागि स्वत: नवीकरण असक्षम गरियो।",
+      "subscriptionCancelled": "तपाईंको सदस्यता रद्द गरिएको छ।",
+      "familyInvitationSent": "पारिवारिक निमन्त्रणा सफलतापूर्वक पठाइयो।",
+      "memberRemovedFromFamily": "पारिवारिक योजनाबाट सदस्य हटाइयो।",
+      "welcomeBack": "स्वागत छ! तपाईंको सदस्यता पुन: सक्रिय गरिएको छ।"
+    }
   }
 }

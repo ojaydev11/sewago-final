@@ -5,10 +5,14 @@
   "scripts": {
     "dev": "next dev -p 5000",
     "build": "next build",
+    "build:production": "cross-env NODE_ENV=production next build",
+    "build:no-typecheck": "cross-env SKIP_TYPE_CHECK=true next build",
     "vercel-build": "next build",
     "start": "next start -p 3000",
     "lint": "next lint",
+    "lint:fix": "next lint --fix",
     "type-check": "tsc --noEmit",
+    "type-check:watch": "tsc --noEmit --watch",
     "test": "vitest run --reporter=dot",
     "test:watch": "vitest --reporter=dot",
     "test:coverage": "vitest run --coverage",
@@ -17,7 +21,8 @@
     "prisma:gen": "prisma generate",
     "prisma:migrate": "prisma migrate dev --name init_jules_batch",
     "prisma:seed": "tsx scripts/seed.ts",
-    "e2e": "playwright test"
+    "e2e": "playwright test",
+    "production-ready": "npm run lint:fix && npm run build:production"
   },
   "dependencies": {
     "@auth/mongodb-adapter": "^3.10.0",

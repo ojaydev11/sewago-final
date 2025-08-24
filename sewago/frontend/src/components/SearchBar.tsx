@@ -1,9 +1,10 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { Search } from 'lucide-react';
+import { Search, Mic } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
+import { PredictiveSearchEngine } from '@/components/ai/PredictiveSearchEngine';
 
 const searchVariants = {
   initial: { opacity: 0, y: 50, scale: 0.95 },
@@ -29,9 +30,38 @@ const searchHover = {
   }
 };
 
-export default function SearchBar() {
+interface SearchBarProps {
+  useSmartSearch?: boolean;
+  userId?: string;
+}
+
+export default function SearchBar({ useSmartSearch = true, userId }: SearchBarProps) {
   const r = useRouter();
   const [isFocused, setIsFocused] = useState(false);
+  
+  const handleSearchPerformed = (query: string) => {
+    r.push(`/search?q=${encodeURIComponent(query)}`);
+  };
+
+  if (useSmartSearch) {
+    return (
+      <motion.div
+        className='mx-auto w-full max-w-4xl -mt-20 relative z-20'
+        variants={searchVariants}
+        initial="initial"
+        animate="animate"
+        whileHover={searchHover}
+      >
+        <PredictiveSearchEngine
+          placeholder="Ask me anything... Try: 'Book house cleaning tomorrow' or 'Find electrical repair'"
+          className="glass-card shadow-xl"
+          showFilters={true}
+          showVoiceSearch={true}
+          onSearchPerformed={handleSearchPerformed}
+        />
+      </motion.div>
+    );
+  }
   
   return (
     <motion.form
@@ -44,7 +74,7 @@ export default function SearchBar() {
       onSubmit={(e) => {
         e.preventDefault();
         const q = new FormData(e.currentTarget).get('q') || '';
-        r.push(`/services?query=${encodeURIComponent(String(q))}`);
+        handleSearchPerformed(String(q));
       }}
     >
       <label className='sr-only' htmlFor='q'>Search for services</label>

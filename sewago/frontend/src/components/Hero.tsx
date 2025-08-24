@@ -3,6 +3,8 @@
 import ServiceHubIllustration from './ui/ServiceHubIllustration';
 import { motion } from 'framer-motion';
 import Lazy3D from './ui/Lazy3D';
+import SearchBar from './SearchBar';
+import { ContextualNotifications } from './ai/ContextualNotifications';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -178,7 +180,17 @@ export default function Hero() {
             </motion.div>
           </motion.div>
         </motion.div>
+        
+        {/* AI-Powered Search Bar */}
+        <SearchBar useSmartSearch={true} />
       </div>
+      
+      {/* Contextual Notifications */}
+      <ContextualNotifications 
+        position="top-right"
+        maxNotifications={3}
+        location={{ lat: 27.7172, lng: 85.3240, city: 'Kathmandu' }}
+      />
       
       {/* Enhanced bottom accent line */}
       <motion.div

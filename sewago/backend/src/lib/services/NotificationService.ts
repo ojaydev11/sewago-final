@@ -48,7 +48,7 @@ export class NotificationService {
           message,
           type,
           channel,
-          sentAt: notification.sentAt,
+          sentAt: notification.createdAt,
         });
       }
 
@@ -83,7 +83,7 @@ export class NotificationService {
           message,
           type,
           channel,
-          sentAt: notification.sentAt,
+          sentAt: notification.createdAt,
         });
       }
 

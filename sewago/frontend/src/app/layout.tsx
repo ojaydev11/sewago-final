@@ -14,6 +14,7 @@ import { AuthProvider } from '@/providers/auth';
 import { ReactQueryProvider } from '@/providers/react-query';
 import { NextIntlClientProvider } from 'next-intl';
 import ClientOnlyComponents from '@/components/ClientOnlyComponents';
+import PremiumUXProvider from '@/components/ux/PremiumUXProvider';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -179,14 +180,29 @@ export default async function RootLayout({
         <NextIntlClientProvider messages={messages}>
           <AuthProvider>
             <ReactQueryProvider>
-              <main className="min-h-screen bg-gray-50">
-                {children}
-              </main>
-              
-              {/* Client-only components wrapped in Suspense */}
-              <Suspense fallback={null}>
-                <ClientOnlyComponents />
-              </Suspense>
+              <PremiumUXProvider
+                enabled={true}
+                features={{
+                  hapticFeedback: true,
+                  audioFeedback: true,
+                  voiceGuidance: true,
+                  contextualIntelligence: true,
+                  culturalUX: true,
+                  accessibilityEnhancements: true,
+                  performanceOptimization: true
+                }}
+                userRole="customer"
+                culturalContext={true}
+              >
+                <main className="min-h-screen bg-gray-50">
+                  {children}
+                </main>
+                
+                {/* Client-only components wrapped in Suspense */}
+                <Suspense fallback={null}>
+                  <ClientOnlyComponents />
+                </Suspense>
+              </PremiumUXProvider>
             </ReactQueryProvider>
           </AuthProvider>
         </NextIntlClientProvider>
