@@ -26,7 +26,8 @@
       "Bash(npm run type-check:*)",
       "Bash(npm run production-ready:*)",
       "Bash(timeout 300 npm run build:production)",
-      "Bash(timeout:*)"
+      "Bash(timeout:*)",
+      "WebFetch(domain:sewago-final.vercel.app)"
     ],
     "deny": [],
     "ask": []
