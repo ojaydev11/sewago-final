@@ -92,17 +92,17 @@ export default async function RootLayout({
   // Handle missing locale gracefully
   const locale = params?.locale || 'en';
   
-  // Lazy load messages only when not in build phase
-  let messages = {};
-  if (!isBuild) {
-    try {
-      const { getMessages } = await import('next-intl/server');
-      messages = await getMessages();
-    } catch (error) {
-      // Fallback to empty messages during build
-      console.warn('Could not load messages during build phase');
-    }
-  }
+  // Temporarily disabled for deployment - causes 500 errors
+  // let messages = {};
+  // if (!isBuild) {
+  //   try {
+  //     const { getMessages } = await import('next-intl/server');
+  //     messages = await getMessages();
+  //   } catch (error) {
+  //     // Fallback to empty messages during build
+  //     console.warn('Could not load messages during build phase');
+  //   }
+  // }
 
   return (
     <html lang={locale}>
@@ -178,35 +178,33 @@ export default async function RootLayout({
         />
       </head>
       <body className={inter.className}>
-        <NextIntlClientProvider messages={messages}>
-          <AuthProvider>
-            <ReactQueryProvider>
-              <PremiumUXProvider
-                enabled={true}
-                features={{
-                  hapticFeedback: true,
-                  audioFeedback: true,
-                  voiceGuidance: true,
-                  contextualIntelligence: true,
-                  culturalUX: true,
-                  accessibilityEnhancements: true,
-                  performanceOptimization: true
-                }}
-                userRole="customer"
-                culturalContext={true}
-              >
-                <main className="min-h-screen bg-gray-50">
-                  {children}
-                </main>
-                
-                {/* Client-only components wrapped in Suspense */}
-                <Suspense fallback={null}>
-                  <ClientOnlyComponents />
-                </Suspense>
-              </PremiumUXProvider>
-            </ReactQueryProvider>
-          </AuthProvider>
-        </NextIntlClientProvider>
+        <AuthProvider>
+          <ReactQueryProvider>
+            <PremiumUXProvider
+              enabled={true}
+              features={{
+                hapticFeedback: true,
+                audioFeedback: true,
+                voiceGuidance: true,
+                contextualIntelligence: true,
+                culturalUX: true,
+                accessibilityEnhancements: true,
+                performanceOptimization: true
+              }}
+              userRole="customer"
+              culturalContext={true}
+            >
+              <main className="min-h-screen bg-gray-50">
+                {children}
+              </main>
+              
+              {/* Client-only components wrapped in Suspense */}
+              <Suspense fallback={null}>
+                <ClientOnlyComponents />
+              </Suspense>
+            </PremiumUXProvider>
+          </ReactQueryProvider>
+        </AuthProvider>
       </body>
     </html>
   );
