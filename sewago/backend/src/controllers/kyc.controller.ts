@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import mongoose from "mongoose";
 import { UserModel } from "../models/User.js";
 import { NotificationModel } from "../models/Notification.js";
 import { v4 as uuidv4 } from "uuid";
@@ -183,10 +184,10 @@ export const updateKYC = async (req: Request, res: Response) => {
       success: true,
       message: "KYC information updated successfully",
       kyc: {
-        businessName: user.provider.businessName,
-        categories: user.provider.categories,
-        description: user.provider.description,
-        baseLocation: user.provider.baseLocation,
+        businessName: user.provider?.businessName,
+        categories: user.provider?.categories,
+        description: user.provider?.description,
+        baseLocation: user.provider?.baseLocation,
         address: user.profile?.address,
         emergencyContact: user.profile?.emergencyContact
       }
@@ -238,7 +239,9 @@ export const addKYCDocument = async (req: Request, res: Response) => {
     };
 
     if (!user.provider?.kycDocuments) {
-      user.provider!.kycDocuments = [];
+      if (user.provider) {
+        user.provider.kycDocuments = user.provider.kycDocuments || [];
+      }
     }
     user.provider!.kycDocuments.push(newDocument);
 
@@ -290,12 +293,14 @@ export const removeKYCDocument = async (req: Request, res: Response) => {
       return res.status(404).json({ message: "Document not found" });
     }
 
-    user.provider.kycDocuments.splice(docIndex, 1);
+    if (user.provider) {
+      user.provider.kycDocuments.splice(docIndex, 1);
 
-    // Update KYC status if no documents remain
-    if (user.provider.kycDocuments.length === 0) {
-      user.provider.kycStatus = "NOT_SUBMITTED";
-      user.provider.kycSubmittedAt = undefined;
+      // Update KYC status if no documents remain
+      if (user.provider.kycDocuments.length === 0) {
+        user.provider.kycStatus = "NOT_SUBMITTED";
+        user.provider.kycSubmittedAt = undefined;
+      }
     }
 
     await user.save();
@@ -303,8 +308,8 @@ export const removeKYCDocument = async (req: Request, res: Response) => {
     res.json({
       success: true,
       message: "Document removed successfully",
-      remainingDocuments: user.provider.kycDocuments.length,
-      kycStatus: user.provider.kycStatus
+      remainingDocuments: user.provider?.kycDocuments?.length || 0,
+      kycStatus: user.provider?.kycStatus
     });
   } catch (error) {
     console.error("Error removing KYC document:", error);
@@ -386,11 +391,11 @@ export const approveKYC = async (req: Request, res: Response) => {
     // Approve KYC
     provider.provider.kycStatus = "APPROVED";
     provider.provider.kycApprovedAt = new Date();
-    provider.provider.kycApprovedBy = adminId;
+    provider.provider.kycApprovedBy = new mongoose.Types.ObjectId(adminId);
     provider.provider.isVerified = true;
 
-    // Add verified badge
-    provider.addBadge("VERIFIED", "KYC verified provider", undefined);
+    // Add verified badge (placeholder - implement badge system integration)
+    // provider.addBadge("VERIFIED", "KYC verified provider", undefined);
 
     await provider.save();
 

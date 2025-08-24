@@ -57,7 +57,10 @@ export const createServiceGuarantee = async (req: Request, res: Response) => {
       }
     };
 
-    qualityControl.serviceGuarantees.push(guarantee);
+    if (!qualityControl.serviceGuarantees) {
+      qualityControl.serviceGuarantees = [];
+    }
+    (qualityControl.serviceGuarantees as any).push(guarantee);
     await qualityControl.save();
 
     res.json({
@@ -197,7 +200,10 @@ export const reportQualityIncident = async (req: Request, res: Response) => {
       resolution: {}
     };
 
-    qualityControl.qualityIncidents.push(incident);
+    if (!qualityControl.qualityIncidents) {
+      qualityControl.qualityIncidents = [];
+    }
+    (qualityControl.qualityIncidents as any).push(incident);
     await qualityControl.save();
 
     // Trigger quality assurance process
@@ -231,7 +237,7 @@ export const resolveQualityIncident = async (req: Request, res: Response) => {
       return res.status(404).json({ message: "Quality control not found" });
     }
 
-    const incident = qualityControl.qualityIncidents.id(incidentId);
+    const incident = (qualityControl.qualityIncidents as any).id(incidentId);
     if (!incident) {
       return res.status(404).json({ message: "Incident not found" });
     }

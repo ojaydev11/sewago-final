@@ -85,7 +85,9 @@ export const markNotificationAsRead = async (req: Request, res: Response) => {
       return res.status(404).json({ message: "Notification not found" });
     }
 
-    await notification.markAsRead();
+    notification.readAt = new Date();
+    notification.isRead = true;
+    await notification.save();
 
     res.json({
       success: true,
@@ -151,7 +153,8 @@ export const markNotificationAsClicked = async (req: Request, res: Response) => 
       return res.status(404).json({ message: "Notification not found" });
     }
 
-    await notification.markAsClicked();
+    notification.clickedAt = new Date();
+    await notification.save();
 
     res.json({
       success: true,
@@ -186,7 +189,8 @@ export const dismissNotification = async (req: Request, res: Response) => {
       return res.status(404).json({ message: "Notification not found" });
     }
 
-    await notification.dismiss();
+    notification.dismissedAt = new Date();
+    await notification.save();
 
     res.json({
       success: true,
@@ -226,6 +230,14 @@ export const updateNotificationPreferences = async (req: Request, res: Response)
 
     // Update notification preferences
     if (user.preferences) {
+      if (!user.preferences.notifications) {
+        user.preferences.notifications = {
+          email: true,
+          sms: true,
+          push: true,
+          inApp: true
+        };
+      }
       if (email !== undefined) user.preferences.notifications.email = email;
       if (sms !== undefined) user.preferences.notifications.sms = sms;
       if (push !== undefined) user.preferences.notifications.push = push;

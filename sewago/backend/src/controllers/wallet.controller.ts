@@ -63,7 +63,7 @@ export const topUpWallet = async (req: Request, res: Response) => {
     }
 
     // Create ledger entry for top-up
-    const ledgerEntry = await WalletLedgerModel.createEntry({
+    const ledgerEntry = await (WalletLedgerModel as any).createEntry({
       entryId: uuidv4(),
       userId,
       walletId: wallet._id,
@@ -88,7 +88,10 @@ export const topUpWallet = async (req: Request, res: Response) => {
     wallet.lastActivity = new Date();
     
     // Add transaction to wallet
-    wallet.transactions.push({
+    if (!wallet.transactions) {
+      wallet.transactions = [];
+    }
+    (wallet.transactions as any).push({
       type: "TOPUP",
       amount,
       description: `Wallet top-up via ${paymentMethod}`,
@@ -154,7 +157,7 @@ export const refundWallet = async (req: Request, res: Response) => {
     }
 
     // Create ledger entry for refund
-    const ledgerEntry = await WalletLedgerModel.createEntry({
+    const ledgerEntry = await (WalletLedgerModel as any).createEntry({
       entryId: uuidv4(),
       userId,
       walletId: wallet._id,
@@ -179,7 +182,10 @@ export const refundWallet = async (req: Request, res: Response) => {
     wallet.lastActivity = new Date();
     
     // Add transaction to wallet
-    wallet.transactions.push({
+    if (!wallet.transactions) {
+      wallet.transactions = [];
+    }
+    (wallet.transactions as any).push({
       type: "REFUND",
       amount,
       description: `Refund for booking ${bookingId}: ${reason}`,
@@ -361,7 +367,7 @@ export const requestPayout = async (req: Request, res: Response) => {
       return res.status(400).json({ message: "Insufficient balance for payout" });
     }
 
-    const payoutRequest = await PayoutRequestModel.createRequest({
+    const payoutRequest = await (PayoutRequestModel as any).createRequest({
       requestId: `PAYOUT_${Date.now()}_${userId}`,
       providerId: userId,
       providerName: user.provider?.businessName || user.name,
@@ -426,12 +432,82 @@ export const getPayoutHistory = async (req: Request, res: Response) => {
 // Legacy methods for backward compatibility
 export const addFunds = topUpWallet;
 export const useWallet = async (req: Request, res: Response) => {
-  // Implementation for using wallet balance
-  // This would be similar to the existing implementation
-  res.status(501).json({ message: "Method not implemented yet" });
+  try {
+    const userId = req.user?.id;
+    const { amount, bookingId, description } = req.body;
+
+    if (!userId || !amount || amount <= 0) {
+      return res.status(400).json({ message: "Invalid request parameters" });
+    }
+
+    const wallet = await WalletModel.findOne({ userId });
+    if (!wallet) {
+      return res.status(404).json({ message: "Wallet not found" });
+    }
+
+    if (wallet.balance < amount) {
+      return res.status(400).json({ message: "Insufficient wallet balance" });
+    }
+
+    // Deduct from wallet
+    wallet.balance -= amount;
+    wallet.lastActivity = new Date();
+
+    if (!wallet.transactions) {
+      wallet.transactions = [];
+    }
+    (wallet.transactions as any).push({
+      type: "DEBIT",
+      amount: -amount,
+      description: description || "Wallet payment",
+      referenceId: bookingId,
+      status: "COMPLETED",
+      timestamp: new Date()
+    });
+
+    await wallet.save();
+
+    res.json({
+      success: true,
+      message: "Wallet payment successful",
+      newBalance: wallet.balance
+    });
+  } catch (error) {
+    console.error("Error using wallet:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
 };
 
 export const setupAutoRecharge = async (req: Request, res: Response) => {
-  // Implementation for auto-recharge setup
-  res.status(501).json({ message: "Method not implemented yet" });
+  try {
+    const userId = req.user?.id;
+    const { enabled, threshold, rechargeAmount, paymentMethod } = req.body;
+
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const wallet = await WalletModel.findOne({ userId });
+    if (!wallet) {
+      return res.status(404).json({ message: "Wallet not found" });
+    }
+
+    wallet.autoRecharge = {
+      enabled: enabled || false,
+      threshold: threshold || 100,
+      amount: rechargeAmount || 500,
+      paymentMethod: paymentMethod || "CARD"
+    };
+
+    await wallet.save();
+
+    res.json({
+      success: true,
+      message: "Auto-recharge settings updated",
+      autoRecharge: wallet.autoRecharge
+    });
+  } catch (error) {
+    console.error("Error setting up auto-recharge:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
 };

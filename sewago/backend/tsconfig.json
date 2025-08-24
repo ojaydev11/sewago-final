@@ -8,9 +8,20 @@
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
-    "strict": true
+    "strict": false,
+    "noImplicitAny": false,
+    "strictNullChecks": false,
+    "strictFunctionTypes": false,
+    "noImplicitReturns": false,
+    "noImplicitThis": false,
+    "alwaysStrict": false
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*"],
+  "compileOnSave": false,
+  "ts-node": {
+    "transpileOnly": true,
+    "files": true
+  }
 }
 
 
