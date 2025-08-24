@@ -1,7 +1,7 @@
 import type { NextConfig } from 'next';
-import createNextIntlPlugin from 'next-intl/plugin';
-
-const withNextIntl = createNextIntlPlugin('./i18n-config.ts');
+// Temporarily disabled to fix Edge Runtime issues
+// import createNextIntlPlugin from 'next-intl/plugin';
+// const withNextIntl = createNextIntlPlugin('./i18n-config.ts');
 
 const nextConfig: NextConfig = {
   // Production optimizations
@@ -341,4 +341,5 @@ if (typeof global !== 'undefined') {
   },
 };
 
-export default withNextIntl(nextConfig);
+// export default withNextIntl(nextConfig);
+export default nextConfig;
