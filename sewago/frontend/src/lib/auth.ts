@@ -6,7 +6,8 @@ import { getMongoClient } from './mongodb';
 import { User } from '../models/User';
 
 export const authOptions = {
-  adapter: MongoDBAdapter(getMongoClient()!),
+  // Only use MongoDB adapter if database is available
+  adapter: process.env.MONGODB_URI ? MongoDBAdapter(getMongoClient()!) : undefined,
   providers: [
     CredentialsProvider({
       name: 'credentials',
@@ -20,6 +21,12 @@ export const authOptions = {
         }
 
         try {
+          // Skip database check if not available (demo mode)
+          if (!process.env.MONGODB_URI) {
+            console.warn('MongoDB not configured, skipping authentication');
+            return null;
+          }
+
           const user = await User.findOne({ email: credentials.email });
           
           if (!user) {
@@ -47,7 +54,7 @@ export const authOptions = {
     })
   ],
   session: {
-    strategy: 'jwt',
+    strategy: 'jwt' as const,
   },
   callbacks: {
     async jwt({ token, user }: any) {
@@ -68,7 +75,7 @@ export const authOptions = {
   pages: {
     signIn: '/account/login',
   },
-  secret: process.env.AUTH_SECRET,
+  secret: process.env.AUTH_SECRET || 'fallback-secret-for-demo',
 };
 
 export default NextAuth(authOptions);
