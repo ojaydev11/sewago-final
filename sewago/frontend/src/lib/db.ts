@@ -51,3 +51,6 @@ export function getConnectionStatus() {
     readyState: mongoose.connection.readyState,
   };
 }
+
+// Export Prisma client for API routes that use it
+export { prisma } from './prisma';

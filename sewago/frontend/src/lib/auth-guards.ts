@@ -79,3 +79,61 @@ export async function optionalAuth() {
     requireAuth: false
   });
 }
+
+// Higher-order function for API route protection
+export function withAuth(
+  handler: (req: Request, context: { params?: any }) => Promise<Response>,
+  options: AuthGuardOptions = {}
+) {
+  return async (req: Request, context: { params?: any }) => {
+    try {
+      const session = await getServerSession(authOptions);
+      
+      // Check authentication requirements
+      const {
+        requireAuth = true,
+        allowedRoles = []
+      } = options;
+
+      if (requireAuth && !session) {
+        return new Response(
+          JSON.stringify({ error: 'Authentication required' }), 
+          { 
+            status: 401,
+            headers: { 'Content-Type': 'application/json' }
+          }
+        );
+      }
+
+      // Check role requirements
+      if (allowedRoles.length > 0 && session?.user?.role) {
+        if (!allowedRoles.includes(session.user.role)) {
+          return new Response(
+            JSON.stringify({ error: 'Insufficient permissions' }), 
+            { 
+              status: 403,
+              headers: { 'Content-Type': 'application/json' }
+            }
+          );
+        }
+      }
+
+      // Add session to request context
+      (req as any).user = session?.user;
+      
+      return handler(req, context);
+    } catch (error) {
+      console.error('Auth guard error:', error);
+      return new Response(
+        JSON.stringify({ error: 'Internal server error' }), 
+        { 
+          status: 500,
+          headers: { 'Content-Type': 'application/json' }
+        }
+      );
+    }
+  };
+}
+
+// Export withAuth as the default auth function for compatibility
+export { withAuth as default };
