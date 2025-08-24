@@ -44,20 +44,18 @@ export default function RootPage() {
             <CounterBar />
           </div>
           
-          {/* Trust Layer - Verified Reviews Carousel */}
-          <div className='relative z-10 bg-transparent'>
+          {/* Other components temporarily disabled to isolate runtime errors */}
+          {/* <div className='relative z-10 bg-transparent'>
             <VerifiedReviewsCarousel />
           </div>
           
-          {/* Service Categories Grid */}
           <div className='relative z-10 bg-transparent'>
             <CategoriesGrid />
           </div>
           
-          {/* Trust Layer - Customer Reviews */}
           <div className='relative z-10 bg-transparent'>
             <CustomerReviews />
-          </div>
+          </div> */}
           
           {/* Trust Layer - Trust Indicators */}
           <div className='relative z-10 bg-white'>
