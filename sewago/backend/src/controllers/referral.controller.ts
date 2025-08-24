@@ -3,6 +3,7 @@ import { ReferralModel } from "../models/Referral.js";
 import { UserModel } from "../models/User.js";
 import { WalletModel } from "../models/Wallet.js";
 import { v4 as uuidv4 } from "uuid";
+import mongoose from "mongoose";
 
 // Generate referral code
 export const generateReferralCode = async (req: Request, res: Response) => {
@@ -68,7 +69,7 @@ export const useReferralCode = async (req: Request, res: Response) => {
     }
 
     // Update referral
-    referral.referredId = userId;
+    referral.referredId = new mongoose.Types.ObjectId(userId);
     referral.status = "ACTIVE";
     referral.conversionDate = new Date();
     await referral.save();
@@ -78,7 +79,10 @@ export const useReferralCode = async (req: Request, res: Response) => {
     const referredWallet = await WalletModel.findOne({ userId });
 
     if (referrerWallet) {
-      referrerWallet.transactions.push({
+      if (!referrerWallet.transactions) {
+        referrerWallet.transactions = [];
+      }
+      (referrerWallet.transactions as any).push({
         type: "REFERRAL",
         amount: 100, // Referrer bonus
         description: "Referral bonus",
@@ -90,7 +94,10 @@ export const useReferralCode = async (req: Request, res: Response) => {
     }
 
     if (referredWallet) {
-      referredWallet.transactions.push({
+      if (!referredWallet.transactions) {
+        referredWallet.transactions = [];
+      }
+      (referredWallet.transactions as any).push({
         type: "REFERRAL",
         amount: 50, // Referred user bonus
         description: "Welcome bonus for using referral code",
@@ -173,7 +180,7 @@ export const createSocialCircle = async (req: Request, res: Response) => {
     referral.socialCircle = {
       circleId,
       circleName,
-      members: [userId],
+      members: [new mongoose.Types.ObjectId(userId)],
       maxMembers
     };
 
@@ -205,15 +212,17 @@ export const joinSocialCircle = async (req: Request, res: Response) => {
       return res.status(400).json({ message: "Social circle not found" });
     }
 
-    if (referral.socialCircle.members.includes(userId)) {
+    if (referral.socialCircle?.members.includes(userId)) {
       return res.status(400).json({ message: "Already a member of this circle" });
     }
 
-    if (referral.socialCircle.members.length >= referral.socialCircle.maxMembers) {
+    if (referral.socialCircle?.members.length >= referral.socialCircle?.maxMembers) {
       return res.status(400).json({ message: "Social circle is full" });
     }
 
-    referral.socialCircle.members.push(userId);
+    if (referral.socialCircle) {
+      referral.socialCircle.members.push(new mongoose.Types.ObjectId(userId));
+    }
     await referral.save();
 
     res.json({
@@ -242,7 +251,7 @@ export const setupSplitPayment = async (req: Request, res: Response) => {
       return res.status(400).json({ message: "Social circle not found" });
     }
 
-    if (!referral.socialCircle.members.includes(userId)) {
+    if (!referral.socialCircle?.members.includes(userId)) {
       return res.status(400).json({ message: "Not a member of this circle" });
     }
 

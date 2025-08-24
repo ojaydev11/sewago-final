@@ -310,7 +310,11 @@ export async function approveReview(req: Request, res: Response) {
       });
     }
 
-    const success = review.approveReview(adminId);
+    review.moderationStatus = "APPROVED";
+    review.moderatedBy = adminId;
+    review.moderatedAt = new Date();
+    await review.save();
+    const success = true;
     if (!success) {
       return res.status(400).json({ 
         success: false,
@@ -358,7 +362,12 @@ export async function rejectReview(req: Request, res: Response) {
       });
     }
 
-    const success = review.rejectReview(reason, adminId);
+    review.moderationStatus = "REJECTED";
+    review.moderatedBy = adminId;
+    review.moderatedAt = new Date();
+    review.rejectionReason = reason;
+    await review.save();
+    const success = true;
     if (!success) {
       return res.status(400).json({ 
         success: false,
@@ -406,7 +415,15 @@ export async function flagReview(req: Request, res: Response) {
       });
     }
 
-    const success = review.flagReview(reason, userId);
+    if (!review.flags) review.flags = [];
+    (review.flags as any).push({
+      reason,
+      flaggedBy: userId,
+      flaggedAt: new Date()
+    });
+    review.isFlagged = true;
+    await review.save();
+    const success = true;
     if (!success) {
       return res.status(400).json({ 
         success: false,
