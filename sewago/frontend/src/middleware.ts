@@ -1,6 +1,9 @@
 
 import createMiddleware from 'next-intl/middleware';
-import { locales, defaultLocale } from './i18n';
+
+// Define locales directly to avoid imports that might cause Edge Runtime issues
+const locales = ['en', 'ne'] as const;
+const defaultLocale = 'en' as const;
  
 export default createMiddleware({
   // A list of all locales that are supported
@@ -15,5 +18,8 @@ export default createMiddleware({
  
 export const config = {
   // Match only internationalized pathnames
-  matcher: ['/', '/(ne|en)/:path*']
+  matcher: ['/', '/(ne|en)/:path*'],
+  
+  // Explicitly specify Edge Runtime to avoid bundling issues
+  runtime: 'edge'
 };
