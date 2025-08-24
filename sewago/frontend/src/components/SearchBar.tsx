@@ -2,33 +2,14 @@
 
 import { useRouter } from 'next/navigation';
 import { Search, Mic } from 'lucide-react';
-import { motion } from 'framer-motion';
 import { useState } from 'react';
-import { PredictiveSearchEngine } from '@/components/ai/PredictiveSearchEngine';
+// Temporarily disabled complex components to fix SSR issues
+// import { motion } from 'framer-motion';
+// import { PredictiveSearchEngine } from '@/components/ai/PredictiveSearchEngine';
 
-const searchVariants = {
-  initial: { opacity: 0, y: 50, scale: 0.95 },
-  animate: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: {
-      duration: 0.8,
-      delay: 0.8,
-      ease: [0.22, 1, 0.36, 1]
-    }
-  }
-};
-
-const searchHover = {
-  scale: 1.02,
-  boxShadow: "0 25px 50px rgba(59, 130, 246, 0.3)",
-  transition: {
-    type: "spring",
-    stiffness: 300,
-    damping: 20
-  }
-};
+// Simplified animations using CSS classes instead of framer-motion
+// const searchVariants = { initial: { opacity: 0, y: 50 }, animate: { opacity: 1, y: 0 } };
+// const searchHover = { scale: 1.02 };
 
 interface SearchBarProps {
   useSmartSearch?: boolean;
@@ -43,34 +24,11 @@ export default function SearchBar({ useSmartSearch = true, userId }: SearchBarPr
     r.push(`/search?q=${encodeURIComponent(query)}`);
   };
 
-  if (useSmartSearch) {
-    return (
-      <motion.div
-        className='mx-auto w-full max-w-4xl -mt-20 relative z-20'
-        variants={searchVariants}
-        initial="initial"
-        animate="animate"
-        whileHover={searchHover}
-      >
-        <PredictiveSearchEngine
-          placeholder="Ask me anything... Try: 'Book house cleaning tomorrow' or 'Find electrical repair'"
-          className="glass-card shadow-xl"
-          showFilters={true}
-          showVoiceSearch={true}
-          onSearchPerformed={handleSearchPerformed}
-        />
-      </motion.div>
-    );
-  }
-  
+  // Simplified version without complex animations to prevent SSR errors
   return (
-    <motion.form
+    <form
       role='search'
       className='mx-auto w-full max-w-4xl -mt-20 relative z-20'
-      variants={searchVariants}
-      initial="initial"
-      animate="animate"
-      whileHover={searchHover}
       onSubmit={(e) => {
         e.preventDefault();
         const q = new FormData(e.currentTarget).get('q') || '';
@@ -79,49 +37,20 @@ export default function SearchBar({ useSmartSearch = true, userId }: SearchBarPr
     >
       <label className='sr-only' htmlFor='q'>Search for services</label>
       
-      {/* Enhanced search container with modern styling */}
-      <motion.div
-        className='relative group'
-        animate={{
-          boxShadow: isFocused
-            ? '0 0 40px rgba(59, 130, 246, 0.4)'
-            : '0 0 20px rgba(59, 130, 246, 0.2)'
-        }}
-        transition={{ duration: 0.3 }}
-      >
-        <motion.div
-          className='absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl blur-xl'
-          animate={{
-            opacity: isFocused ? 0.6 : 0.3,
-            scale: isFocused ? 1.05 : 1
-          }}
-          transition={{ duration: 0.3 }}
-        />
+      {/* Simplified search container */}
+      <div className='relative group'>
+        <div className={`absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl blur-xl transition-opacity duration-300 ${
+          isFocused ? 'opacity-60' : 'opacity-30'
+        }`} />
         
-        <motion.div
-          className='relative flex items-center gap-4 glass-card px-6 py-5 shadow-xl'
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          transition={{ type: "spring", stiffness: 400 }}
-        >
-          {/* Search icon with enhanced glow effect */}
-          <motion.div
-            className='relative'
-            animate={{
-              rotate: isFocused ? 360 : 0
-            }}
-            transition={{ duration: 0.5 }}
-          >
+        <div className='relative flex items-center gap-4 glass-card px-6 py-5 shadow-xl hover:scale-105 transition-transform duration-200'>
+          {/* Search icon with simplified styling */}
+          <div className='relative'>
             <Search className='text-white w-6 h-6 relative z-10' />
-            <motion.div
-              className='absolute inset-0 w-6 h-6 bg-white/20 rounded-full blur-md'
-              animate={{
-                scale: isFocused ? 1.3 : 1,
-                opacity: isFocused ? 0.8 : 0.4
-              }}
-              transition={{ duration: 0.3 }}
-            />
-          </motion.div>
+            <div className={`absolute inset-0 w-6 h-6 bg-white/20 rounded-full blur-md transition-all duration-300 ${
+              isFocused ? 'scale-125 opacity-80' : 'scale-100 opacity-40'
+            }`} />
+          </div>
           
           {/* Enhanced input field with focus animations */}
           <input
@@ -134,46 +63,18 @@ export default function SearchBar({ useSmartSearch = true, userId }: SearchBarPr
             onBlur={() => setIsFocused(false)}
           />
           
-          {/* Enhanced accent elements with motion */}
+          {/* Simplified accent elements */}
           <div className='flex items-center gap-2'>
-            <motion.div
-              className='w-2 h-2 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full'
-              animate={{
-                scale: [1, 1.3, 1],
-                opacity: [0.7, 1, 0.7]
-              }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
-            />
-            <motion.div
-              className='w-2 h-2 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full'
-              animate={{
-                scale: [1, 1.3, 1],
-                opacity: [0.7, 1, 0.7]
-              }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: 0.5
-              }}
-            />
+            <div className='w-2 h-2 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full animate-pulse' />
+            <div className='w-2 h-2 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full animate-pulse' style={{ animationDelay: '0.5s' }} />
           </div>
-        </motion.div>
+        </div>
         
-        {/* Enhanced bottom glow line */}
-        <motion.div
-          className='absolute -bottom-1 left-1/2 transform -translate-x-1/2 h-1 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full blur-sm'
-          animate={{
-            width: isFocused ? '90%' : '75%',
-            opacity: isFocused ? 0.9 : 0.6
-          }}
-          transition={{ duration: 0.3 }}
-        />
-      </motion.div>
-    </motion.form>
+        {/* Simplified bottom glow line */}
+        <div className={`absolute -bottom-1 left-1/2 transform -translate-x-1/2 h-1 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full blur-sm transition-all duration-300 ${
+          isFocused ? 'w-[90%] opacity-90' : 'w-[75%] opacity-60'
+        }`} />
+      </div>
+    </form>
   );
 }
