@@ -12,7 +12,8 @@ import './globals.css';
 
 import { AuthProvider } from '@/providers/auth';
 import { ReactQueryProvider } from '@/providers/react-query';
-import { NextIntlClientProvider } from 'next-intl';
+// Temporarily disabled for deployment
+// import { NextIntlClientProvider } from 'next-intl';
 import ClientOnlyComponents from '@/components/ClientOnlyComponents';
 import PremiumUXProvider from '@/components/ux/PremiumUXProvider';
 
