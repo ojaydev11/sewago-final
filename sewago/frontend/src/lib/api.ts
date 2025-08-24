@@ -23,7 +23,7 @@ api.interceptors.response.use(
   (error) => {
     const reqId = error?.response?.headers?.["x-request-id"];
     if (reqId) {
-      // eslint-disable-next-line no-console
+       
       console.error("API error reqId=", reqId, error?.response?.status);
     }
     return Promise.reject(error);

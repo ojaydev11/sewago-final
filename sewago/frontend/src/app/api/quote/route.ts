@@ -34,7 +34,7 @@ export interface QuoteResponse {
 
 // simple per-IP rate limiter
 declare global {
-  // eslint-disable-next-line no-var
+   
   var __quote_hits: Map<string, { count: number; ts: number }> | undefined
 }
 

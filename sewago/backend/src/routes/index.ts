@@ -9,7 +9,14 @@ import * as AI from "../controllers/ai.controller.js";
 import * as Payments from "../controllers/payments.controller.js";
 import * as Meta from "../controllers/meta.controller.js";
 import * as Tracking from "../controllers/tracking.controller.js";
-import * as Admin from "./admin.js";
+import * as Wallet from "../controllers/wallet.controller.js";
+import * as KYC from "../controllers/kyc.controller.js";
+import * as Notifications from "../controllers/notifications.controller.js";
+import * as Referral from "../controllers/referral.controller.js";
+import * as Community from "../controllers/community.controller.js";
+import * as AIFeatures from "../controllers/ai-features.controller.js";
+import * as QualityControl from "../controllers/quality-control.controller.js";
+import Admin from "./admin.js";
 import uploadRouter from "./upload.js";
 
 export const api = Router();
@@ -36,10 +43,12 @@ api.post("/bookings", requireAuth(["user"]), Bookings.createBooking);
 api.get("/bookings/me", requireAuth(["user", "provider"]), Bookings.listMyBookings);
 api.patch("/bookings/:id/status", requireAuth(["user", "provider"]), Bookings.updateBookingStatus);
 api.get("/bookings/:id", requireAuth(["user", "provider", "admin"]), Bookings.getBooking);
+api.post("/bookings/:id/reschedule", requireAuth(["user", "provider"]), Bookings.rescheduleBooking);
 
 // Reviews
 api.post("/reviews", requireAuth(["user"]), Reviews.addReview);
 api.get("/reviews/provider/:providerId", Reviews.listProviderReviews);
+api.get("/reviews/pending-moderation", requireAuth(["admin"]), Reviews.getPendingModeration);
 
 // Messages
 api.get("/messages/:bookingId", requireAuth(["user", "provider"]), Messages.listMessages);
@@ -56,74 +65,96 @@ api.post("/payments/khalti/initiate", requireAuth(["user"]), Payments.khaltiInit
 api.post("/provider/location", requireAuth(["provider"]), Tracking.updateProviderLocation);
 api.post("/provider/status", requireAuth(["provider"]), Tracking.updateProviderStatus);
 
-// Admin routes
-api.use("/admin", Admin.adminRouter);
+// Enhanced Wallet & Payment System (P0)
+api.get("/wallet", requireAuth(["user", "provider"]), Wallet.getUserWallet);
+api.post("/wallet/topup", requireAuth(["user", "provider"]), Wallet.topUpWallet);
+api.post("/wallet/refund", requireAuth(["user", "provider"]), Wallet.refundWallet);
+api.get("/wallet/transactions", requireAuth(["user", "provider"]), Wallet.getTransactionHistory);
+api.get("/wallet/export", requireAuth(["user", "provider"]), Wallet.exportTransactions);
+api.post("/wallet/setup-bnpl", requireAuth(["user", "provider"]), Wallet.setupBNPL);
+api.post("/wallet/payout-request", requireAuth(["provider"]), Wallet.requestPayout);
+api.get("/wallet/payout-history", requireAuth(["provider"]), Wallet.getPayoutHistory);
 
-// Admin test-only endpoints (protected by header X-Seed-Key)
-api.post("/admin/seed", async (req, res) => {
-  if (process.env.NODE_ENV === "production" && process.env.ALLOW_SEEDING !== "true") {
-    return res.status(403).json({ message: "disabled_in_production" });
-  }
-  const key = req.header("X-Seed-Key");
-  if (key !== (process.env.SEED_KEY ?? "dev-seed-key")) return res.status(403).json({ message: "forbidden" });
-  const { UserModel } = await import("../models/User.js");
-  const { ServiceModel } = await import("../models/Service.js");
-  const bcrypt = (await import("bcrypt")).default;
-  const upsertUser = async (doc: any) => {
-    const existing = await UserModel.findOne({ email: doc.email });
-    if (existing) return existing;
-    const passwordHash = await bcrypt.hash(doc.password ?? "password123", 12);
-    return UserModel.create({ ...doc, passwordHash });
-  };
-  const provider = await upsertUser({
-    name: "Provider One",
-    email: "provider1@example.com",
-    phone: "9800000001",
-    role: "provider",
-    provider: { businessName: "Pro One", categories: ["plumbing"], description: "Plumbing services", baseLocation: "Kathmandu", pricePerHour: 1000, isVerified: true },
-  });
-  const user = await upsertUser({
-    name: "User One",
-    email: "user1@example.com",
-    phone: "9800000002",
-    role: "user",
-  });
-  const existingService = await ServiceModel.findOne({ providerId: provider._id });
-  const service = existingService ?? (await ServiceModel.create({
-    title: "Basic Plumbing",
-    description: "Fix leaks and clogs",
-    basePrice: 1500,
-    images: [],
-    location: "Kathmandu",
-    providerId: provider._id,
-  }));
-  res.json({ ok: true, userId: user._id, providerId: provider._id, serviceId: service._id });
-});
+// Legacy wallet endpoints for backward compatibility
+api.post("/wallet/add-funds", requireAuth(["user", "provider"]), Wallet.addFunds);
+api.post("/wallet/use", requireAuth(["user", "provider"]), Wallet.useWallet);
+api.post("/wallet/auto-recharge", requireAuth(["user", "provider"]), Wallet.setupAutoRecharge);
 
-api.post("/admin/make-provider", async (req, res) => {
-  if (process.env.NODE_ENV === "production" && process.env.ALLOW_SEEDING !== "true") {
-    return res.status(403).json({ message: "disabled_in_production" });
-  }
-  const key = req.header("X-Seed-Key");
-  if (key !== (process.env.SEED_KEY ?? "dev-seed-key")) return res.status(403).json({ message: "forbidden" });
-  const { userId } = req.query as { userId?: string };
-  if (!userId) return res.status(400).json({ message: "userId required" });
-  const { UserModel } = await import("../models/User.js");
-  await UserModel.updateOne({ _id: userId }, { $set: { role: "provider" } });
-  res.json({ ok: true });
-});
+// KYC & Provider Verification (P0)
+api.post("/kyc/submit", requireAuth(["provider"]), KYC.submitKYC);
+api.get("/kyc/status", requireAuth(["provider"]), KYC.getKYCStatus);
+api.patch("/kyc/update", requireAuth(["provider"]), KYC.updateKYC);
+api.post("/kyc/documents", requireAuth(["provider"]), KYC.addKYCDocument);
+api.delete("/kyc/documents/:documentType", requireAuth(["provider"]), KYC.removeKYCDocument);
 
-// Meta
-api.get("/meta/categories", Meta.listCategories);
-api.get("/categories", Meta.listCategories);
+// Admin KYC Management
+api.get("/admin/kyc/pending", requireAuth(["admin"]), KYC.getPendingKYC);
+api.post("/admin/kyc/:providerId/approve", requireAuth(["admin"]), KYC.approveKYC);
+api.post("/admin/kyc/:providerId/reject", requireAuth(["admin"]), KYC.rejectKYC);
 
-// Tracking
-api.post("/tracking/location", requireAuth(["provider"]), Tracking.updateProviderLocation);
-api.post("/tracking/status", requireAuth(["provider"]), Tracking.updateProviderStatus);
-api.get("/tracking/:bookingId", requireAuth(["user", "provider"]), Tracking.getTrackingInfo);
-api.get("/tracking/:bookingId/eta", requireAuth(["user", "provider"]), Tracking.getETA);
+// Provider Availability & Scheduling (P0)
+api.get("/providers/:id/slots", requireAuth(["user", "provider"]), Bookings.getProviderSlots);
+api.post("/providers/:id/slots/lock", requireAuth(["user"]), Bookings.lockProviderSlot);
+api.post("/providers/:id/slots/unlock", requireAuth(["user"]), Bookings.unlockProviderSlot);
 
-// File Upload
+// Enhanced Notifications System (P0)
+api.get("/notifications", requireAuth(["user", "provider", "admin"]), Notifications.getUserNotifications);
+api.patch("/notifications/:notificationId/read", requireAuth(["user", "provider", "admin"]), Notifications.markNotificationAsRead);
+api.patch("/notifications/read-all", requireAuth(["user", "provider", "admin"]), Notifications.markAllNotificationsAsRead);
+api.patch("/notifications/:notificationId/click", requireAuth(["user", "provider", "admin"]), Notifications.markNotificationAsClicked);
+api.patch("/notifications/:notificationId/dismiss", requireAuth(["user", "provider", "admin"]), Notifications.dismissNotification);
+api.get("/notifications/preferences", requireAuth(["user", "provider", "admin"]), Notifications.getNotificationPreferences);
+api.patch("/notifications/preferences", requireAuth(["user", "provider", "admin"]), Notifications.updateNotificationPreferences);
+api.post("/notifications/test", requireAuth(["user", "provider", "admin"]), Notifications.sendTestNotification);
+api.get("/notifications/stats", requireAuth(["user", "provider", "admin"]), Notifications.getNotificationStats);
+api.get("/admin/notifications/stats", requireAuth(["admin"]), Notifications.getSystemNotificationStats);
+
+// Referral & Social Network
+api.post("/referral/generate", requireAuth(["user", "provider"]), Referral.generateReferralCode);
+api.post("/referral/use", requireAuth(["user", "provider"]), Referral.useReferralCode);
+api.get("/referral/stats", requireAuth(["user", "provider"]), Referral.getReferralStats);
+api.post("/referral/social-circle", requireAuth(["user", "provider"]), Referral.createSocialCircle);
+api.post("/referral/join-circle", requireAuth(["user", "provider"]), Referral.joinSocialCircle);
+api.post("/referral/split-payment", requireAuth(["user", "provider"]), Referral.setupSplitPayment);
+api.get("/referral/social-circles", requireAuth(["user", "provider"]), Referral.getSocialCircles);
+
+// Community Features
+api.post("/community/stories", requireAuth(["user", "provider"]), Community.createUserStory);
+api.get("/community/stories", Community.getUserStories);
+api.post("/community/stories/:storyId/like", requireAuth(["user", "provider"]), Community.toggleStoryLike);
+api.post("/community/stories/:storyId/comments", requireAuth(["user", "provider"]), Community.addStoryComment);
+api.post("/community/spotlights", requireAuth(["provider"]), Community.createProviderSpotlight);
+api.get("/community/spotlights", Community.getProviderSpotlights);
+api.get("/community/social-proof", Community.getSocialProof);
+api.post("/community/events", requireAuth(["user", "provider"]), Community.createEvent);
+api.post("/community/events/:eventId/join", requireAuth(["user", "provider"]), Community.joinEvent);
+
+// AI Features & Smart Technical Features
+api.get("/ai/search-predictions", AIFeatures.getSearchPredictions);
+api.post("/ai/voice-booking", requireAuth(["user", "provider"]), AIFeatures.processVoiceBooking);
+api.post("/ai/scheduling-recommendations", requireAuth(["user", "provider"]), AIFeatures.getSchedulingRecommendations);
+api.get("/ai/pricing-suggestions/:serviceId", AIFeatures.getPricingSuggestions);
+api.post("/ai/user-behavior", requireAuth(["user", "provider"]), AIFeatures.updateUserBehavior);
+
+// Quality Control System
+api.get("/quality/guarantees", QualityControl.getServiceGuarantees);
+api.get("/quality/guarantees/:serviceId", QualityControl.getServiceGuarantees);
+api.post("/quality/guarantees", requireAuth(["admin"]), QualityControl.createServiceGuarantee);
+api.get("/quality/metrics", QualityControl.getQualityMetrics);
+api.get("/quality/provider-scores", QualityControl.getProviderQualityScores);
+api.get("/quality/provider-scores/:providerId", QualityControl.getProviderQualityScores);
+api.post("/quality/incidents", requireAuth(["user", "provider"]), QualityControl.reportQualityIncident);
+api.patch("/quality/incidents/:incidentId/resolve", requireAuth(["admin"]), QualityControl.resolveQualityIncident);
+api.get("/quality/assurance-settings", QualityControl.getQualityAssuranceSettings);
+api.put("/quality/assurance-settings", requireAuth(["admin"]), QualityControl.updateQualityAssuranceSettings);
+api.get("/quality/feedback-analysis", QualityControl.getFeedbackAnalysis);
+
+// File uploads
 api.use("/upload", uploadRouter);
+
+// Admin routes
+api.use("/admin", Admin);
+
+export default api;
 
 

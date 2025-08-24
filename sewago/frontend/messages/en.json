@@ -19,7 +19,12 @@
     "error": "Error",
     "success": "Success",
     "warning": "Warning",
-    "info": "Information"
+    "info": "Information",
+    "refresh": "Refresh",
+    "retry": "Retry",
+    "bookNow": "Book Now",
+    "viewMore": "View More",
+    "showLess": "Show Less"
   },
   "navigation": {
     "home": "Home",
@@ -523,6 +528,268 @@
       "challengeReminders": "Challenge reminders",
       "save": "Save Settings",
       "saved": "Settings saved!"
+    }
+  },
+  "personalization": {
+    "dashboard": {
+      "title": "My Dashboard",
+      "welcome": "Welcome, {name}!",
+      "memberSince": "Member since {date}",
+      "refresh": "Refresh",
+      "retry": "Try Again",
+      "quickActions": "Quick Actions",
+      "recommendedServices": "Recommended for You",
+      "serviceRecommendationsDesc": "Services curated based on your preferences and activity",
+      "recommendedProviders": "Top Providers",
+      "personalizedOffers": "Special Offers",
+      "usageInsights": "Your Usage Insights",
+      "upcomingBookings": "Upcoming Bookings",
+      "noUpcomingBookings": "No upcoming bookings",
+      "goals": "Your Goals",
+      "recentActivity": "Recent Activity"
+    },
+    "smartGrid": {
+      "title": "Smart Recommendations",
+      "description": "Showing {count} personalized recommendations using {algorithm} algorithm",
+      "searchPlaceholder": "Search services...",
+      "noResults": "No recommendations found",
+      "noResultsHint": "Try adjusting your filters or search terms"
+    },
+    "carousel": {
+      "title": {
+        "services": "Recommended Services",
+        "providers": "Top Providers",
+        "offers": "Special Offers",
+        "mixed": "Personalized for You"
+      },
+      "description": {
+        "services": "Services tailored to your preferences ({count} available)",
+        "providers": "Highly rated providers in your area ({count} available)",
+        "offers": "Exclusive offers just for you ({count} available)",
+        "mixed": "A mix of services, providers, and offers ({count} items)"
+      },
+      "noRecommendations": "No recommendations available at the moment"
+    },
+    "preferences": {
+      "title": "Your Preferences",
+      "categories": "Preferred Categories",
+      "timeSlots": "Preferred Time Slots",
+      "budget": "Budget Range",
+      "location": "Location Preferences",
+      "notifications": "Notification Settings",
+      "language": "Language Preference",
+      "cultural": "Cultural Preferences",
+      "save": "Save Preferences",
+      "saved": "Preferences saved successfully!",
+      "error": "Failed to save preferences"
+    },
+    "onboarding": {
+      "welcome": "Welcome to SewaGo!",
+      "subtitle": "Let's personalize your experience",
+      "step1": {
+        "title": "What services interest you?",
+        "description": "Select the services you're most likely to need"
+      },
+      "step2": {
+        "title": "When do you prefer services?",
+        "description": "Choose your preferred booking times"
+      },
+      "step3": {
+        "title": "What's your budget range?",
+        "description": "Help us show you appropriate options"
+      },
+      "step4": {
+        "title": "Any cultural preferences?",
+        "description": "We can customize recommendations for festivals and traditions"
+      },
+      "complete": "Complete Setup",
+      "skip": "Skip for now"
+    },
+    "insights": {
+      "title": "Your Service Insights",
+      "totalBookings": "Total Bookings",
+      "totalSpent": "Total Spent",
+      "favoriteCategories": "Favorite Categories",
+      "topProviders": "Most Used Providers",
+      "timePatterns": "Booking Patterns",
+      "savingsAchieved": "Savings Achieved",
+      "comparison": {
+        "above": "above average",
+        "below": "below average",
+        "similar": "similar to average"
+      }
+    },
+    "offers": {
+      "personalizedFor": "Personalized for you",
+      "validUntil": "Valid until {date}",
+      "claimOffer": "Claim Offer",
+      "termsApply": "Terms and conditions apply",
+      "limitedTime": "Limited time offer",
+      "festivalSpecial": "{festival} Special"
+    },
+    "scheduling": {
+      "smartSuggestions": "Smart Scheduling",
+      "bestTimes": "Best times for you",
+      "basedOnHistory": "Based on your booking history",
+      "priceOptimized": "Price optimized",
+      "weatherConsidered": "Weather considered",
+      "providerAvailable": "Provider available",
+      "potentialSavings": "Potential savings: NPR {amount}"
+    },
+    "location": {
+      "nearYou": "Popular near you",
+      "trending": "Trending in {area}",
+      "peakTimes": "Peak booking times",
+      "averagePricing": "Average pricing",
+      "culturalEvents": "Upcoming cultural events"
+    },
+    "feedback": {
+      "helpful": "Was this helpful?",
+      "like": "Like",
+      "dislike": "Dislike",
+      "improve": "How can we improve?",
+      "submit": "Submit Feedback"
+    },
+    "algorithms": {
+      "hybrid": "Smart Mix",
+      "collaborative": "Similar Users",
+      "content": "Your Preferences",
+      "location": "Nearby Services",
+      "seasonal": "Trending Now"
+    }
+  },
+  "subscription": {
+    "dashboard": "Subscription Dashboard",
+    "currentPlan": "Current Plan",
+    "upgradePlan": "Upgrade Plan",
+    "manageBilling": "Manage Billing",
+    "familyPlan": "Family Plan",
+    "benefits": "Benefits",
+    "usage": "Usage",
+    "billing": "Billing",
+    "plans": "Plans",
+    "free": "Free",
+    "plus": "Plus",
+    "pro": "Pro",
+    "monthly": "Monthly",
+    "yearly": "Yearly",
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "cancelled": "Cancelled",
+      "expired": "Expired",
+      "pending": "Pending"
+    },
+    "tiers": {
+      "free": {
+        "name": "SewaGo Free",
+        "description": "Perfect for getting started",
+        "price": "Free"
+      },
+      "plus": {
+        "name": "SewaGo Plus",
+        "description": "Enhanced features for regular users",
+        "price": "NPR 299/month"
+      },
+      "pro": {
+        "name": "SewaGo Pro",
+        "description": "Premium experience for power users",
+        "price": "NPR 599/month"
+      }
+    },
+    "features": {
+      "standardBooking": "Standard booking experience",
+      "basicSearch": "Basic search functionality",
+      "basicSupport": "Basic customer support",
+      "discount15": "15% discount on all services",
+      "discount25": "25% discount on all services",
+      "credits100": "NPR 100 monthly service credits",
+      "credits250": "NPR 250 monthly service credits",
+      "prioritySupport": "Priority customer support",
+      "premiumSupport": "Premium 24/7 support",
+      "advancedBooking": "Advanced booking scheduling",
+      "seasonalDeals": "Exclusive seasonal deals",
+      "unlimitedBookings": "Unlimited service bookings",
+      "aiRecommendations": "Advanced AI recommendations",
+      "serviceBundle": "Service bundling with extra discounts",
+      "serviceGuarantee": "Premium service guarantees & insurance",
+      "earlyAccess": "Early access to new services",
+      "conciergeService": "Concierge booking assistance",
+      "providerPreference": "Provider preference guarantees"
+    },
+    "billing": {
+      "title": "Billing & Payments",
+      "nextBilling": "Next Billing",
+      "lastPayment": "Last Payment",
+      "paymentMethod": "Payment Method",
+      "autoRenew": "Auto-Renewal",
+      "billingHistory": "Billing History",
+      "updatePayment": "Update Payment Method",
+      "cancelSubscription": "Cancel Subscription",
+      "reactivateSubscription": "Reactivate Subscription",
+      "billingCycle": "Billing Cycle",
+      "currentCost": "Current Cost",
+      "dueDate": "Due Date",
+      "amount": "Amount",
+      "downloadInvoice": "Download Invoice"
+    },
+    "family": {
+      "title": "Family Plan",
+      "createPlan": "Create Family Plan",
+      "inviteMember": "Invite Family Member",
+      "removeMember": "Remove Member",
+      "familyOwner": "Family Plan Owner",
+      "maxMembers": "Max Members",
+      "currentMembers": "Current Members",
+      "sharedCredits": "Shared Credits",
+      "pendingInvitations": "Pending Invitations",
+      "familyBenefits": "Family Plan Benefits",
+      "inviteEmail": "Invite by Email",
+      "memberManagement": "Easy member management",
+      "familyDashboard": "Family dashboard",
+      "sharedBenefits": "Shared subscription benefits",
+      "invitationSent": "Invitation sent successfully",
+      "memberRemoved": "Member removed successfully"
+    },
+    "benefits": {
+      "title": "Your Benefits",
+      "totalSavings": "Total Savings",
+      "activebenefits": "Active Benefits",
+      "usageThisMonth": "Usage This Month",
+      "utilizationPercentage": "Utilization",
+      "remainingUsage": "Remaining",
+      "benefitValue": "Benefit Value",
+      "nearLimit": "Near Limit",
+      "recommendations": "Recommendations"
+    },
+    "upgrade": {
+      "title": "Upgrade Your Plan",
+      "unlockFeatures": "Unlock Premium Features",
+      "startSaving": "Start Saving Today",
+      "upgradeNow": "Upgrade Now",
+      "compareFeatures": "Compare Features",
+      "chooseYourPlan": "Choose Your Plan",
+      "mostPopular": "Most Popular",
+      "bestValue": "Best Value",
+      "upgrade": "Upgrade",
+      "currentPlan": "Current Plan",
+      "alwaysFree": "Always Free",
+      "save10Percent": "Save 10%",
+      "freeCredits": "Free Credits",
+      "maximumSavings": "Maximum Savings",
+      "vipTreatment": "VIP Treatment",
+      "personalService": "Personal Service"
+    },
+    "notifications": {
+      "upgradeSuccess": "Successfully upgraded to {tier}!",
+      "downgradedToFree": "Your subscription has been downgraded to the free tier.",
+      "paymentMethodUpdated": "Payment method updated successfully.",
+      "autoRenewEnabled": "Auto-renewal enabled for your subscription.",
+      "autoRenewDisabled": "Auto-renewal disabled for your subscription.",
+      "subscriptionCancelled": "Your subscription has been cancelled.",
+      "familyInvitationSent": "Family invitation sent successfully.",
+      "memberRemovedFromFamily": "Member removed from family plan.",
+      "welcomeBack": "Welcome back! Your subscription has been reactivated."
     }
   }
 }

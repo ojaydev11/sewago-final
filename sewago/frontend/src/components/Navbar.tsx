@@ -2,10 +2,11 @@
 'use client';
 
 import Link from 'next/link';
-import { Menu } from 'lucide-react';
+import { Menu, Crown } from 'lucide-react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
+import { TierBadge } from './subscriptions/TierBadge';
 
 const navVariants = {
   hidden: { opacity: 0, y: -50 },
@@ -47,6 +48,10 @@ const buttonVariants = {
 
 export default function Navbar() {
   const [isMenuHover, setIsMenuHover] = useState(false);
+  
+  // Mock user subscription data - in real app, this would come from auth context
+  const userTier = 'PLUS'; // This would be fetched from user's subscription
+  const isAuthenticated = true; // This would come from auth context
   
   return (
     <motion.header
@@ -99,28 +104,61 @@ export default function Navbar() {
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.4, duration: 0.6 }}
         >
-          {/* Enhanced sign in link with motion */}
-          <Link href='/auth/login' className='relative group'>
+          {/* Subscription Tier Badge for authenticated users */}
+          {isAuthenticated && (
             <motion.div
-              className='px-6 py-3 text-white font-medium min-h-[44px] min-w-[44px] flex items-center'
-              whileHover={{
-                color: "#93C5FD",
-                transition: { duration: 0.2 }
-              }}
-              whileTap={{ scale: 0.95 }}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.6, duration: 0.3 }}
             >
-              <span className='relative z-10'>Sign in</span>
-              {/* Enhanced hover underline effect */}
-              <motion.div
-                className='absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-blue-400 to-purple-400'
-                initial={{ width: 0 }}
-                whileHover={{
-                  width: "100%",
-                  transition: { duration: 0.3, ease: "easeOut" }
-                }}
-              />
+              <Link href='/dashboard/subscription' className='block'>
+                <TierBadge tier={userTier as any} animated />
+              </Link>
             </motion.div>
-          </Link>
+          )}
+          
+          {/* Subscription upgrade link for FREE users */}
+          {isAuthenticated && userTier === 'FREE' && (
+            <Link href='/dashboard/subscription' className='relative group'>
+              <motion.div
+                className='px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium rounded-full min-h-[44px] min-w-[44px] flex items-center gap-2'
+                whileHover={{
+                  scale: 1.05,
+                  boxShadow: "0 10px 25px rgba(59, 130, 246, 0.3)",
+                  transition: { duration: 0.2 }
+                }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Crown className="h-4 w-4" />
+                <span className='text-sm'>Upgrade</span>
+              </motion.div>
+            </Link>
+          )}
+          
+          {/* Enhanced sign in link with motion */}
+          {!isAuthenticated && (
+            <Link href='/auth/login' className='relative group'>
+              <motion.div
+                className='px-6 py-3 text-white font-medium min-h-[44px] min-w-[44px] flex items-center'
+                whileHover={{
+                  color: "#93C5FD",
+                  transition: { duration: 0.2 }
+                }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <span className='relative z-10'>Sign in</span>
+                {/* Enhanced hover underline effect */}
+                <motion.div
+                  className='absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-blue-400 to-purple-400'
+                  initial={{ width: 0 }}
+                  whileHover={{
+                    width: "100%",
+                    transition: { duration: 0.3, ease: "easeOut" }
+                  }}
+                />
+              </motion.div>
+            </Link>
+          )}
           
           {/* Enhanced menu button with motion */}
           <motion.button

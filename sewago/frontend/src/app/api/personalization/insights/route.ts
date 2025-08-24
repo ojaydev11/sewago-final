@@ -442,7 +442,7 @@ function determineUserSegment(insights: any) {
 function analyzeLifestageIndicators(insights: any, bookings: any[]) {
   const categories = insights.topCategories;
   
-  let indicators = [];
+  const indicators = [];
   
   if (categories.includes('Baby Care') || categories.includes('Child Care')) {
     indicators.push('young_family');
