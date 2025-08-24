@@ -233,7 +233,11 @@ if (typeof global !== 'undefined') {
           },
           {
             key: 'Permissions-Policy',
-            value: 'camera=(), microphone=(), geolocation=()'
+            value: 'camera=(), microphone=(), geolocation=(self)'
+          },
+          {
+            key: 'Content-Security-Policy',
+            value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' 'inline-speculation-rules'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https: wss:; media-src 'self' https:; object-src 'none'; base-uri 'self'; frame-ancestors 'none';"
           },
           // Security headers
           {
@@ -330,13 +334,16 @@ if (typeof global !== 'undefined') {
           source: '/api/_frontend/:path*',
           destination: '/api-frontend/:path*',
         },
+      ],
+      afterFiles: [],
+      fallback: [
+        // Only redirect specific backend API routes to external server
+        // Frontend API routes (auth, ux, etc.) will be handled locally
         {
-          source: '/api/:path*',
+          source: '/api/backend/:path*',
           destination: `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8001'}/api/:path*`,
         }
       ],
-      afterFiles: [],
-      fallback: [],
     };
   },
 };
