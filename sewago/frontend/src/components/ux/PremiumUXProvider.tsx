@@ -71,14 +71,23 @@ export const PremiumUXProvider: React.FC<PremiumUXProviderProps> = ({
   return (
     <HapticFeedbackProvider>
       <AudioFeedbackProvider>
-        <ContextualIntelligenceProvider>
+        {features.contextualIntelligence ? (
+          <ContextualIntelligenceProvider>
+            <VoiceGuidanceSystem
+              enabled={features.voiceGuidance}
+              navigationContext={navigationContext}
+            >
+              {children}
+            </VoiceGuidanceSystem>
+          </ContextualIntelligenceProvider>
+        ) : (
           <VoiceGuidanceSystem
             enabled={features.voiceGuidance}
             navigationContext={navigationContext}
           >
             {children}
           </VoiceGuidanceSystem>
-        </ContextualIntelligenceProvider>
+        )}
       </AudioFeedbackProvider>
     </HapticFeedbackProvider>
   );

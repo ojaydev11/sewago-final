@@ -65,20 +65,15 @@ export default function Hero() {
         <SearchBar useSmartSearch={true} />
       </div>
       
-      {/* Contextual Notifications */}
-      <ContextualNotifications 
+      {/* Contextual Notifications - Disabled to prevent SSR errors */}
+      {/* <ContextualNotifications 
         position="top-right"
         maxNotifications={3}
         location={{ lat: 27.7172, lng: 85.3240, city: 'Kathmandu' }}
-      />
+      /> */}
       
-      {/* Enhanced bottom accent line */}
-      <motion.div
-        className='absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-400 to-purple-400'
-        initial={{ scaleX: 0 }}
-        animate={{ scaleX: 1 }}
-        transition={{ duration: 1.5, delay: 1, ease: "easeOut" }}
-      />
+      {/* Enhanced bottom accent line - Simplified to prevent SSR errors */}
+      <div className='absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-400 to-purple-400 opacity-80' />
     </section>
   );
 }
