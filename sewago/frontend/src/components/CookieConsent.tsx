@@ -16,9 +16,10 @@ interface CookiePreferences {
 }
 
 export default function CookieConsent() {
-  const t = useTranslations();
+  // const t = useTranslations(); // Temporarily disabled to prevent i18n hydration issues
   const [isVisible, setIsVisible] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
+  const [isClient, setIsClient] = useState(false);
   const [preferences, setPreferences] = useState<CookiePreferences>({
     necessary: true, // Always required
     analytics: false,
@@ -48,8 +49,15 @@ export default function CookieConsent() {
     document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;`;
   };
 
+  // Ensure client-side only rendering to prevent hydration mismatch
   useEffect(() => {
-    // Check if user has already made a choice
+    setIsClient(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isClient) return;
+    
+    // Check if user has already made a choice (only runs on client)
     const consent = getCookie('sewago-cookie-consent');
     if (!consent) {
       setIsVisible(true);
@@ -68,7 +76,7 @@ export default function CookieConsent() {
         setIsVisible(true);
       }
     }
-  }, []);
+  }, [isClient]);
 
   const applyAnalyticsConsent = (analyticsEnabled: boolean) => {
     if (typeof window !== 'undefined') {
@@ -149,7 +157,8 @@ export default function CookieConsent() {
     }));
   };
 
-  if (!isVisible) return null;
+  // Don't render anything during SSR or if not visible
+  if (!isClient || !isVisible) return null;
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 p-4 bg-black/50 backdrop-blur-sm">

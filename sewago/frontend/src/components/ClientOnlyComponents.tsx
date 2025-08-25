@@ -11,10 +11,10 @@ const PerformanceMonitor = dynamic(() => import('@/components/ui/PerformanceMoni
 export default function ClientOnlyComponents() {
   return (
     <>
-      {/* Google Analytics - only in production */}
-      {process.env.NODE_ENV === 'production' && (
+      {/* Google Analytics - disabled to prevent NODE_ENV hydration mismatch */}
+      {/* {process.env.NODE_ENV === 'production' && (
         <Analytics measurementId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || 'G-XXXXXXXXXX'} />
-      )}
+      )} */}
       
       {/* Emergency Service Button - temporarily disabled to fix runtime errors */}
       {/* <EmergencyServiceButton /> */}
