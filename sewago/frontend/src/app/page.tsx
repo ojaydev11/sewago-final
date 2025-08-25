@@ -31,10 +31,10 @@ export default function RootPage() {
           {/* BINARY-DISABLE B.1: Temporarily disable Hero to isolate #419 */}
           {/* <Hero /> */}
           
-          {/* Search section with enhanced positioning */}
-          <div className='relative z-20 bg-transparent'>
+          {/* BINARY-DISABLE B.5: Remove SearchBar to isolate #419 */}
+          {/* <div className='relative z-20 bg-transparent'>
             <SearchBar />
-          </div>
+          </div> */}
           
           {/* Services section with improved spacing */}
           <div className='relative z-10 bg-transparent'>
