@@ -27,7 +27,8 @@ export default function RootPage() {
         
         {/* Content */}
         <div className='relative z-10'>
-          <Hero />
+          {/* BINARY-DISABLE B.1: Temporarily disable Hero to isolate #419 */}
+          {/* <Hero /> */}
           
           {/* Search section with enhanced positioning */}
           <div className='relative z-20 bg-transparent'>
