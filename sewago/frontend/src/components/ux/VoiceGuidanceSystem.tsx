@@ -133,10 +133,12 @@ const VoiceGuidanceSystem: React.FC<VoiceGuidanceSystemProps> = ({
   const queueTimeoutRef = useRef<NodeJS.Timeout>();
 
   useEffect(() => {
-    // Detect user's language preference
-    const browserLang = navigator.language;
-    if (browserLang.startsWith('ne') || browserLang.includes('Nepal')) {
-      setCurrentLanguage('ne-NP');
+    // Only detect language on client side to prevent hydration mismatch
+    if (typeof navigator !== 'undefined') {
+      const browserLang = navigator.language;
+      if (browserLang.startsWith('ne') || browserLang.includes('Nepal')) {
+        setCurrentLanguage('ne-NP');
+      }
     }
   }, []);
 
@@ -263,7 +265,7 @@ const VoiceGuidanceSystem: React.FC<VoiceGuidanceSystemProps> = ({
       }
 
       // Handle interruption
-      if (item.options.interrupt) {
+      if (item.options.interrupt && typeof speechSynthesis !== 'undefined') {
         speechSynthesis.cancel();
       }
 
