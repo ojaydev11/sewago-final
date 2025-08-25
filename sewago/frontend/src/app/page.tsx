@@ -16,7 +16,8 @@ export const dynamic = "force-dynamic";
 export default function RootPage() {
   return (
     <>
-      <SchemaMarkup schema={homepageSchema} />
+      {/* BINARY-DISABLE B.2: Remove SchemaMarkup to isolate #419 */}
+      {/* <SchemaMarkup schema={homepageSchema} /> */}
       <main className='min-h-screen relative overflow-hidden'>
         {/* Background gradient elements */}
         <div className='fixed inset-0 pointer-events-none'>
