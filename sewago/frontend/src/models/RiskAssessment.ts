@@ -26,13 +26,11 @@ export interface IRiskAssessment extends Document {
 const RiskAssessmentSchema: Schema = new Schema({
   bookingId: { 
     type: String, 
-    required: true,
-    index: true 
+    required: true
   },
   userId: { 
     type: String, 
-    required: true,
-    index: true 
+    required: true
   },
   riskScore: { 
     type: Number, 

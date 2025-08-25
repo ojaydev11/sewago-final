@@ -21,8 +21,7 @@ const ProviderTrainingSchema: Schema = new Schema({
   providerId: { 
     type: String, 
     required: true, 
-    unique: true,
-    index: true
+    unique: true
   },
   courses: [{
     courseId: { type: String, required: true },
@@ -39,8 +38,7 @@ const ProviderTrainingSchema: Schema = new Schema({
     type: String, 
     required: true,
     enum: ['bronze', 'silver', 'gold', 'none'],
-    default: 'none',
-    index: true
+    default: 'none'
   },
   totalPoints: { type: Number, default: 0 },
   badges: [{ type: String }]
