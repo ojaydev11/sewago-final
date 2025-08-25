@@ -41,10 +41,10 @@ export default function RootPage() {
             <ServicesGrid />
           </div>
           
-          {/* Trust Layer - CounterBar (replaces LiveCounters) */}
-          <div className='relative z-10'>
+          {/* BINARY-DISABLE B.3: Remove CounterBar to isolate #419 */}
+          {/* <div className='relative z-10'>
             <CounterBar />
-          </div>
+          </div> */}
           
           {/* Other components temporarily disabled to isolate runtime errors */}
           {/* <div className='relative z-10 bg-transparent'>
