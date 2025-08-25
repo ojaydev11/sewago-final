@@ -195,10 +195,10 @@ export default async function RootLayout({
                 {children}
               </main>
               
-              {/* Client-only components wrapped in Suspense */}
-              <Suspense fallback={null}>
+              {/* BINARY-DISABLE A.2: Temporarily disable ClientOnlyComponents to isolate #419 */}
+              {/* <Suspense fallback={null}>
                 <ClientOnlyComponents />
-              </Suspense>
+              </Suspense> */}
             {/* </PremiumUXProvider> */}
           </ReactQueryProvider>
         </AuthProvider>
