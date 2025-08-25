@@ -36,9 +36,15 @@ export default function RootPage() {
             <SearchBar />
           </div> */}
           
-          {/* Services section with improved spacing */}
-          <div className='relative z-10 bg-transparent'>
+          {/* BINARY-DISABLE B.7: Remove ServicesGrid (final component) to isolate #419 */}
+          {/* <div className='relative z-10 bg-transparent'>
             <ServicesGrid />
+          </div> */}
+          
+          {/* Minimal content to test hydration */}
+          <div className='relative z-10 p-8 text-center'>
+            <h1 className='text-4xl font-bold text-blue-600 mb-4'>SewaGo - Minimal Test</h1>
+            <p className='text-gray-600'>Testing hydration with minimal components</p>
           </div>
           
           {/* BINARY-DISABLE B.3: Remove CounterBar to isolate #419 */}
