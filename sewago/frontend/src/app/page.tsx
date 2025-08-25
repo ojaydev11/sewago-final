@@ -59,10 +59,10 @@ export default function RootPage() {
             <CustomerReviews />
           </div> */}
           
-          {/* Trust Layer - Trust Indicators */}
-          <div className='relative z-10 bg-white'>
+          {/* BINARY-DISABLE B.4: Remove TrustIndicators to isolate #419 */}
+          {/* <div className='relative z-10 bg-white'>
             <TrustIndicators variant="default" />
-          </div>
+          </div> */}
         </div>
         
         {/* Bottom accent line */}
