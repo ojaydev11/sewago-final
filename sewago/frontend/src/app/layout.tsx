@@ -176,7 +176,8 @@ export default async function RootLayout({
       <body className={inter.className}>
         <AuthProvider>
           <ReactQueryProvider>
-            <PremiumUXProvider
+            {/* BINARY-DISABLE A.1: Temporarily disable PremiumUXProvider to isolate #419 */}
+            {/* <PremiumUXProvider
               enabled={true}
               features={{
                 hapticFeedback: false,
@@ -189,7 +190,7 @@ export default async function RootLayout({
               }}
               userRole="customer"
               culturalContext={false}
-            >
+            > */}
               <main className="min-h-screen bg-gray-50">
                 {children}
               </main>
@@ -198,7 +199,7 @@ export default async function RootLayout({
               <Suspense fallback={null}>
                 <ClientOnlyComponents />
               </Suspense>
-            </PremiumUXProvider>
+            {/* </PremiumUXProvider> */}
           </ReactQueryProvider>
         </AuthProvider>
       </body>
