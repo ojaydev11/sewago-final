@@ -28,18 +28,15 @@ const AuditLogSchema: Schema = new Schema({
   entityType: { 
     type: String, 
     required: true,
-    enum: ['booking', 'user', 'provider', 'risk', 'payment', 'support'],
-    index: true
+    enum: ['booking', 'user', 'provider', 'risk', 'payment', 'support']
   },
   entityId: { 
     type: String, 
-    required: true,
-    index: true 
+    required: true
   },
   action: { 
     type: String, 
-    required: true,
-    index: true
+    required: true
   },
   performedBy: {
     userId: { type: String, required: true },

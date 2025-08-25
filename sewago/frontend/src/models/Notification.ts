@@ -41,13 +41,11 @@ const NotificationSchema = new Schema<INotification>({
     type: Schema.Types.ObjectId,
     ref: 'User',
     required: true,
-    index: true,
   },
   type: {
     type: String,
     enum: ['booking', 'payment', 'verification', 'system', 'promotional', 'reminder'],
     required: true,
-    index: true,
   },
   title: {
     type: String,
@@ -63,7 +61,6 @@ const NotificationSchema = new Schema<INotification>({
     type: String,
     enum: ['low', 'medium', 'high', 'urgent'],
     default: 'medium',
-    index: true,
   },
   category: {
     type: String,
@@ -104,17 +101,14 @@ const NotificationSchema = new Schema<INotification>({
   // Scheduling
   scheduledFor: {
     type: Date,
-    index: true,
   },
   expiresAt: {
     type: Date,
-    index: true,
   },
   
   // Related entities
   relatedId: {
     type: Schema.Types.ObjectId,
-    index: true,
   },
   relatedType: {
     type: String,
@@ -135,7 +129,6 @@ const NotificationSchema = new Schema<INotification>({
   createdAt: {
     type: Date,
     default: Date.now,
-    index: true,
   },
   updatedAt: {
     type: Date,
