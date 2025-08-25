@@ -170,6 +170,11 @@ export function ContextualIntelligenceProvider({ children }: ContextualIntellige
   };
 
   const initializeContextTracking = () => {
+    // Only run in browser environment
+    if (typeof window === 'undefined' || typeof navigator === 'undefined') {
+      return;
+    }
+    
     // Track location if available (with proper permissions handling)
     if (navigator.geolocation && typeof navigator.permissions !== 'undefined') {
       // Check geolocation permission first
@@ -229,16 +234,18 @@ export function ContextualIntelligenceProvider({ children }: ContextualIntellige
 
     // Track network status
     updateNetworkContext();
-    window.addEventListener('online', updateNetworkContext);
-    window.addEventListener('offline', updateNetworkContext);
+    if (typeof window !== 'undefined') {
+      window.addEventListener('online', updateNetworkContext);
+      window.addEventListener('offline', updateNetworkContext);
 
-    // Track screen orientation changes
-    window.addEventListener('orientationchange', () => {
-      setTimeout(() => updateDeviceContext(), 100);
-    });
+      // Track screen orientation changes
+      window.addEventListener('orientationchange', () => {
+        setTimeout(() => updateDeviceContext(), 100);
+      });
 
-    // Track window resize
-    window.addEventListener('resize', updateDeviceContext);
+      // Track window resize
+      window.addEventListener('resize', updateDeviceContext);
+    }
   };
 
   const updateLocationContext = (position: GeolocationPosition) => {
@@ -313,6 +320,11 @@ export function ContextualIntelligenceProvider({ children }: ContextualIntellige
   };
 
   const updateNetworkContext = () => {
+    // Only run in browser environment
+    if (typeof window === 'undefined' || typeof navigator === 'undefined') {
+      return;
+    }
+    
     // @ts-ignore - Navigator connection types
     const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
     let connectionSpeed: 'slow' | 'fast' | 'offline' = 'fast';
@@ -343,6 +355,10 @@ export function ContextualIntelligenceProvider({ children }: ContextualIntellige
   };
 
   const updateDeviceContext = () => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+    
     setState(prev => ({
       ...prev,
       currentContext: {
@@ -556,13 +572,13 @@ export function ContextualIntelligenceProvider({ children }: ContextualIntellige
   };
 
   const applyThemeAdaptation = (adaptation: UIAdaptation) => {
-    if (adaptation.changes.colorScheme) {
+    if (typeof document !== 'undefined' && adaptation.changes.colorScheme) {
       document.documentElement.setAttribute('data-theme', adaptation.changes.colorScheme);
     }
   };
 
   const applyPerformanceAdaptation = (adaptation: UIAdaptation) => {
-    if (adaptation.changes.animationsEnabled === false) {
+    if (typeof document !== 'undefined' && adaptation.changes.animationsEnabled === false) {
       document.documentElement.style.setProperty('--animation-duration', '0s');
       document.documentElement.classList.add('reduced-motion');
     }
@@ -571,22 +587,24 @@ export function ContextualIntelligenceProvider({ children }: ContextualIntellige
   const applyContentAdaptation = (adaptation: UIAdaptation) => {
     // This would typically update a global store or context
     // that components can subscribe to for content changes
-    window.dispatchEvent(new CustomEvent('contextualContentUpdate', {
-      detail: {
-        target: adaptation.target,
-        changes: adaptation.changes
-      }
-    }));
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('contextualContentUpdate', {
+        detail: {
+          target: adaptation.target,
+          changes: adaptation.changes
+        }
+      }));
+    }
   };
 
   const applyCulturalAdaptation = (adaptation: UIAdaptation) => {
-    if (adaptation.changes.festivalTheme) {
+    if (typeof document !== 'undefined' && adaptation.changes.festivalTheme) {
       document.documentElement.setAttribute('data-festival', adaptation.changes.festivalTheme);
     }
   };
 
   const applyAccessibilityAdaptation = (adaptation: UIAdaptation) => {
-    if (adaptation.changes.highContrast) {
+    if (typeof document !== 'undefined' && adaptation.changes.highContrast) {
       document.documentElement.classList.add('high-contrast');
     }
   };
@@ -710,8 +728,9 @@ function getTimeContext(): TimeContext {
 }
 
 function getDeviceContext(): DeviceContext {
-  const screenWidth = window.innerWidth;
-  const screenHeight = window.innerHeight;
+  // Default values for SSR
+  const screenWidth = typeof window !== 'undefined' ? window.innerWidth : 1024;
+  const screenHeight = typeof window !== 'undefined' ? window.innerHeight : 768;
   
   let deviceType: 'mobile' | 'tablet' | 'desktop' = 'desktop';
   if (screenWidth <= 768) deviceType = 'mobile';
