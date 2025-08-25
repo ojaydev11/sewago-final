@@ -176,7 +176,8 @@ export default async function RootLayout({
       <body className={inter.className}>
         {/* BINARY-DISABLE B.6: Replace AuthProvider with noop to eliminate session divergence */}
         {/* <AuthProvider> */}
-          <ReactQueryProvider>
+        {/* BINARY-DISABLE B.8: Remove ReactQueryProvider - Absolute minimal test */}
+          {/* <ReactQueryProvider> */}
             {/* BINARY-DISABLE A.1: Temporarily disable PremiumUXProvider to isolate #419 */}
             {/* <PremiumUXProvider
               enabled={true}
@@ -201,7 +202,7 @@ export default async function RootLayout({
                 <ClientOnlyComponents />
               </Suspense> */}
             {/* </PremiumUXProvider> */}
-          </ReactQueryProvider>
+          {/* </ReactQueryProvider> */}
         {/* </AuthProvider> */}
       </body>
     </html>
