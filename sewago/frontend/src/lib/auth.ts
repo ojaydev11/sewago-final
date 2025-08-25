@@ -1,13 +1,13 @@
 import NextAuth from 'next-auth';
-import { MongoDBAdapter } from '@auth/mongodb-adapter';
+// import { MongoDBAdapter } from '@auth/mongodb-adapter';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import bcrypt from 'bcryptjs';
-import { getMongoClient } from './mongodb';
-import { User } from '../models/User';
+// import bcrypt from 'bcryptjs';
+// import { getMongoClient } from './mongodb';
+// import { User } from '../models/User';
 
 export const authOptions = {
-  // Only use MongoDB adapter if database is available
-  adapter: process.env.MONGODB_URI ? MongoDBAdapter(getMongoClient()!) : undefined,
+  // Frontend does not use MongoDB - all auth handled via Railway API
+  // adapter: process.env.MONGODB_URI ? MongoDBAdapter(getMongoClient()!) : undefined,
   providers: [
     CredentialsProvider({
       name: 'credentials',
@@ -21,31 +21,17 @@ export const authOptions = {
         }
 
         try {
-          // Skip database check if not available (demo mode)
-          if (!process.env.MONGODB_URI) {
-            console.warn('MongoDB not configured, skipping authentication');
-            return null;
-          }
-
-          const user = await User.findOne({ email: credentials.email });
+          // Frontend authentication disabled - handle via Railway API to prevent MongoDB SSR crashes
+          console.warn('Frontend authentication disabled to prevent MongoDB SSR crashes');
+          return null;
           
-          if (!user) {
-            return null;
-          }
-
-          const isPasswordValid = await bcrypt.compare(credentials.password, user.hash);
-          
-          if (!isPasswordValid) {
-            return null;
-          }
-
-          return {
-            id: user._id.toString(),
-            email: user.email,
-            name: user.name,
-            role: user.role,
-            phone: user.phone,
-          };
+          // TODO: Replace with Railway API call
+          // const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
+          //   method: 'POST',
+          //   headers: { 'Content-Type': 'application/json' },
+          //   body: JSON.stringify(credentials)
+          // });
+          // return response.ok ? await response.json() : null;
         } catch (error) {
           console.error('Auth error:', error);
           return null;

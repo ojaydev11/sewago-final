@@ -6,10 +6,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { MapPin, Star, Clock } from 'lucide-react';
-import { IService } from '@/models/Service';
+// import { IService } from '@/models/Service';
 
 interface ServiceGridProps {
-  services: IService[];
+  services: any[]; // TODO: Replace with API types from Railway
 }
 
 export default function ServiceGrid({ services }: ServiceGridProps) {

@@ -1,7 +1,9 @@
-import { Service } from '@/models/Service';
-import { Booking } from '@/models/Booking';
-import { User } from '@/models/User';
-import { dbConnect } from '@/lib/mongodb';
+// import { Service } from '@/models/Service';
+// import { Booking } from '@/models/Booking';
+// import { User } from '@/models/User';
+// import { dbConnect } from '@/lib/mongodb';
+
+// Frontend AI tools disabled to prevent MongoDB SSR crashes
 
 // Tool result interface
 export interface ToolResult<T = any> {

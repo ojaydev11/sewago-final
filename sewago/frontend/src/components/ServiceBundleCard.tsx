@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { ServiceBundle } from '@/models/ServiceBundle';
+// import { ServiceBundle } from '@/models/ServiceBundle';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
