@@ -1,5 +1,5 @@
 import { newId } from "./id";
-import type { ServiceBundle } from "@/types/service-bundles";
+import type { ServiceBundle } from "../../types/service-bundles";
 
 export const sampleServiceBundles: ServiceBundle[] = [
   { 

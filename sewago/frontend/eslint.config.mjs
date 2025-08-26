@@ -61,7 +61,9 @@ const eslintConfig = [
       "src/contexts/**/*.tsx",
       "src/hooks/**/*.ts",
       "src/providers/**/*.tsx",
-      "src/lib/**/*.ts"
+      "src/lib/**/*.ts",
+      "src/app/**/*.tsx",
+      "src/app/**/*.ts"
     ]
   },
   {

@@ -2,15 +2,11 @@
 // import { getRequestConfig } from 'next-intl/server';
 
 // Prevent this config from running during build phase
-if (process.env.NEXT_PHASE === 'phase-production-build') {
-  // Return empty config during build
-  const emptyConfig = () => ({ messages: {}, locale: 'en' });
-  export default emptyConfig;
-} else {
-  // Return a no-op config that doesn't use next-intl
-  const noOpConfig = () => ({ messages: {}, locale: 'en' });
-  export default noOpConfig;
-}
+const config = process.env.NEXT_PHASE === 'phase-production-build'
+  ? () => ({ messages: {}, locale: 'en' })
+  : () => ({ messages: {}, locale: 'en' });
+
+export default config;
 
 // Legacy code - disabled for deployment
 /*

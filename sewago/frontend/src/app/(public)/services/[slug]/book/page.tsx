@@ -301,13 +301,7 @@ export default function ServiceBookingPage() {
             <button 
               onClick={() => {
                 if (isClient) {
-                  // Use dynamic execution to avoid ESLint issues
-                  const reloadPage = () => {
-                    if (typeof window !== 'undefined') {
-                      window.location.reload();
-                    }
-                  };
-                  reloadPage();
+                  window.location.reload();
                 }
               }}
               className="bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary/90 transition-colors"

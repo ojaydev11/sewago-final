@@ -52,7 +52,22 @@ interface TrackingUpdate {
 
 export default function BookingTrackPage() {
   const params = useParams();
-  const bookingId = params.id as string;
+  
+  if (!params?.id) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-gray-400 mb-4">
+            <ExclamationTriangleIcon className="w-16 h-16 mx-auto" />
+          </div>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">Invalid booking ID</h3>
+          <p className="text-gray-600">Please check the URL and try again.</p>
+        </div>
+      </div>
+    );
+  }
+  
+  const bookingId = params.id;
   
   const [booking, setBooking] = useState<Booking | null>(null);
   const [loading, setLoading] = useState(true);
