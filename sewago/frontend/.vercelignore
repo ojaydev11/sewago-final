@@ -1,5 +1,4 @@
 sewago-final/
-frontend/
 **/models/**
 **/prisma/**
 node_modules/
