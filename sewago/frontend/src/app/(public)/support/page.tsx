@@ -112,8 +112,10 @@ export default function SupportCenter() {
     );
   }
 
-  // Check if auth is enabled
-  if (typeof window !== 'undefined' && !process.env.NEXT_PUBLIC_AUTH_ENABLED) {
+  // Check if auth is enabled (only on client side)
+  const isAuthEnabled = typeof window !== 'undefined' ? process.env.NEXT_PUBLIC_AUTH_ENABLED === 'true' : true;
+  
+  if (typeof window !== 'undefined' && !isAuthEnabled) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">

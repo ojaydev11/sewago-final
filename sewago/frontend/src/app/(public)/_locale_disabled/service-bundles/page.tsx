@@ -138,7 +138,10 @@ export default function ServiceBundlesPage() {
       savings: (selectedBundle.originalPrice || 0) - (selectedBundle.discountedPrice || 0)
     };
     
-    localStorage.setItem('selectedBundleOrder', JSON.stringify(bundleOrder));
+    // Only access localStorage on client side
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('selectedBundleOrder', JSON.stringify(bundleOrder));
+    }
     
     // Navigate to booking page
     router.push('/book?type=bundle');

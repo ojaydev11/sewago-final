@@ -1,5 +1,7 @@
 'use client';
 
+import Link from 'next/link';
+
 type Props = { error: Error & { digest?: string }; reset: () => void };
 
 export default function ErrorPage({ reset }: Props) {
@@ -12,7 +14,7 @@ export default function ErrorPage({ reset }: Props) {
         <button onClick={() => reset()} className="rounded-md border px-4 py-2">
           Try again
         </button>
-        <a href="/" className="underline">Go home</a>
+        <Link href="/" className="underline">Go home</Link>
       </div>
     </div>
   );

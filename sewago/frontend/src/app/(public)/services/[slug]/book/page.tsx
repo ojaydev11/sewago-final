@@ -42,12 +42,14 @@ export default function BookingPage() {
   useEffect(() => {
     const loadService = async () => {
       try {
-        // Check localStorage first for instant render
-        const cached = localStorage.getItem(`service_${slug}`);
-        if (cached) {
-          const service = JSON.parse(cached);
-          setServiceData(service);
-          setIsLoading(false);
+        // Check localStorage first for instant render (only on client)
+        if (typeof window !== 'undefined') {
+          const cached = localStorage.getItem(`service_${slug}`);
+          if (cached) {
+            const service = JSON.parse(cached);
+            setServiceData(service);
+            setIsLoading(false);
+          }
         }
 
         // Fetch fresh data with 5s timeout
@@ -66,7 +68,9 @@ export default function BookingPage() {
             shortDesc: service.shortDesc
           };
           setServiceData(serviceData);
-          localStorage.setItem(`service_${slug}`, JSON.stringify(serviceData));
+          if (typeof window !== 'undefined') {
+            localStorage.setItem(`service_${slug}`, JSON.stringify(serviceData));
+          }
           setIsLoading(false);
         }
       } catch (error) {
@@ -80,19 +84,21 @@ export default function BookingPage() {
 
   // Persist step and quote data to localStorage
   useEffect(() => {
-    if (currentStep > 1) {
+    if (currentStep > 1 && typeof window !== 'undefined') {
       localStorage.setItem(`booking_step_${slug}`, currentStep.toString());
     }
   }, [currentStep, slug]);
 
   useEffect(() => {
-    if (quoteData) {
+    if (quoteData && typeof window !== 'undefined') {
       localStorage.setItem(`booking_quote_${slug}`, JSON.stringify(quoteData));
     }
   }, [quoteData, slug]);
 
   // Restore from localStorage on mount
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
     const savedStep = localStorage.getItem(`booking_step_${slug}`);
     const savedQuote = localStorage.getItem(`booking_quote_${slug}`);
     

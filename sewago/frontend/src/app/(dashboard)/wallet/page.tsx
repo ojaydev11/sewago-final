@@ -55,7 +55,7 @@ export default function WalletPage() {
       const url = URL.createObjectURL(blob);
       
       // Use a safer approach for downloads
-      if (typeof window !== 'undefined') {
+      if (typeof window !== 'undefined' && typeof document !== 'undefined') {
         const a = document.createElement('a');
         a.href = url;
         a.download = `wallet-history-${new Date().toISOString().split('T')[0]}.csv`;

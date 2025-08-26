@@ -1,4 +1,5 @@
 import 'server-only';
+import Link from 'next/link';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -11,7 +12,7 @@ export default function NotFound() {
         The page you're looking for doesn't exist.
       </p>
       <div className="mt-6">
-        <a href="/" className="underline">Go home</a>
+        <Link href="/" className="underline">Go home</Link>
       </div>
     </div>
   );

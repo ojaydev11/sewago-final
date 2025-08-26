@@ -47,15 +47,10 @@ export default function EmergencyConfirmationPage() {
   const [eta, setEta] = useState<string>('Calculating...');
   const router = useRouter();
 
-  // Check if we're in build phase
-  const isBuild = typeof window === 'undefined';
-
-  // Return early during build phase
-  if (isBuild) {
-    return <div>Loading...</div>;
-  }
-
   useEffect(() => {
+    // Only run on client side
+    if (typeof window === 'undefined') return;
+    
     // Get emergency booking data from localStorage
     const storedData = localStorage.getItem('emergencyBooking');
     if (storedData) {
@@ -69,6 +64,14 @@ export default function EmergencyConfirmationPage() {
     // Simulate the emergency service process
     simulateEmergencyProcess();
   }, [router]);
+
+  // Check if we're in build phase
+  const isBuild = typeof window === 'undefined';
+
+  // Return early during build phase
+  if (isBuild) {
+    return <div>Loading...</div>;
+  }
 
   const simulateEmergencyProcess = async () => {
     // Step 1: Searching for providers
