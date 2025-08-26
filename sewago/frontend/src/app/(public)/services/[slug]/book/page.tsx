@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { useSafeLocalStorage, useClientOnly } from '@/hooks/useClientOnly';
+import { useSafeLocalStorage } from '@/hooks/useClientOnly';
 // Mock session hook - replace with actual backend integration
 const useSession = () => ({ data: { user: { id: 'mock-user-id', name: 'Mock User', email: 'mock@example.com' } } });
 import { Button } from '@/components/ui/button';
@@ -39,15 +39,16 @@ export default function ServiceBookingPage() {
   const [serviceData, setServiceData] = useState<ServiceData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
+  const [isClient, setIsClient] = useState(false);
   
   // Use safe hooks
-  const isClient = useClientOnly();
   const [cachedService, setCachedService] = useSafeLocalStorage<any>(`service_${slug}`, null);
   const [savedStep, setSavedStep] = useSafeLocalStorage<number>(`booking_step_${slug}`, 1);
   const [savedQuote, setSavedQuote] = useSafeLocalStorage<any>(`booking_quote_${slug}`, null);
 
   // Load service data
   useEffect(() => {
+    setIsClient(true);
     if (!slug) return;
     
     const loadService = async () => {

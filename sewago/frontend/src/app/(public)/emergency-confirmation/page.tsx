@@ -12,7 +12,7 @@ import {
   StarIcon
 } from '@heroicons/react/24/outline';
 import { CheckCircleIcon as CheckCircleSolid } from '@heroicons/react/24/solid';
-import { useSafeLocalStorage, useClientOnly } from '@/hooks/useClientOnly';
+import { useSafeLocalStorage } from '@/hooks/useClientOnly';
 
 interface EmergencyBooking {
   serviceId: string;
@@ -43,13 +43,14 @@ export default function EmergencyConfirmationPage() {
   const [foundProviders, setFoundProviders] = useState<Provider[]>([]);
   const [selectedProvider, setSelectedProvider] = useState<Provider | null>(null);
   const [eta, setEta] = useState<string>('Calculating...');
+  const [isClient, setIsClient] = useState(false);
   const router = useRouter();
   
   // Use safe hooks
   const [storedEmergencyData, setStoredEmergencyData] = useSafeLocalStorage<EmergencyBooking | null>('emergencyBooking', null);
-  const isClient = useClientOnly();
 
   useEffect(() => {
+    setIsClient(true);
     // Use safe localStorage data
     if (storedEmergencyData) {
       setEmergencyData(storedEmergencyData);
