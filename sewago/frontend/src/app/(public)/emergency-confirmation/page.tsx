@@ -45,18 +45,26 @@ export default function EmergencyConfirmationPage() {
   const router = useRouter();
 
   useEffect(() => {
-    // Get emergency booking data from localStorage
-    const storedData = localStorage.getItem('emergencyBooking');
-    if (storedData) {
-      setEmergencyData(JSON.parse(storedData));
-    } else {
-      // Redirect if no emergency data
-      router.push('/');
-      return;
-    }
+    // Only run on client side
+    if (typeof window === 'undefined') return;
+    
+    try {
+      // Get emergency booking data from localStorage
+      const storedData = localStorage.getItem('emergencyBooking');
+      if (storedData) {
+        setEmergencyData(JSON.parse(storedData));
+      } else {
+        // Redirect if no emergency data
+        router.push('/');
+        return;
+      }
 
-    // Simulate the emergency service process
-    simulateEmergencyProcess();
+      // Simulate the emergency service process
+      simulateEmergencyProcess();
+    } catch (error) {
+      console.error('Failed to load emergency data:', error);
+      router.push('/');
+    }
   }, [router]);
 
   const simulateEmergencyProcess = async () => {
@@ -132,7 +140,13 @@ export default function EmergencyConfirmationPage() {
 
   const handleContactProvider = () => {
     // In a real app, this would initiate a call or chat
-    window.open(`tel:+9779800000001`, '_blank');
+    if (typeof window !== 'undefined') {
+      try {
+        window.open(`tel:+9779800000001`, '_blank');
+      } catch (error) {
+        console.error('Failed to open phone link:', error);
+      }
+    }
   };
 
   const handleTrackService = () => {
