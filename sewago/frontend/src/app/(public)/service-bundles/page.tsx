@@ -97,13 +97,7 @@ export default function ServiceBundlesPage() {
   const [storedBundleOrder, setStoredBundleOrder] = useSafeLocalStorage<any>('selectedBundleOrder', null);
   const isClient = useClientOnly();
 
-  // Check if we're in build phase
-  const isBuild = typeof window === 'undefined';
 
-  // Return early during build phase
-  if (isBuild) {
-    return <div>Loading...</div>;
-  }
 
   const categories = [
     { id: 'all', name: 'All Categories', count: sampleServiceBundles.length },

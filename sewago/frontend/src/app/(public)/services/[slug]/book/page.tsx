@@ -299,7 +299,7 @@ export default function ServiceBookingPage() {
             </p>
             <button 
               onClick={() => {
-                if (typeof window !== 'undefined') {
+                if (isClient) {
                   window.location.reload();
                 }
               }}
@@ -308,6 +308,21 @@ export default function ServiceBookingPage() {
               Retry
             </button>
           </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Ensure serviceData is available before rendering
+  if (!serviceData) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-gray-400 mb-4">
+            <Clock className="w-16 h-16 mx-auto" />
+          </div>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">Loading service...</h3>
+          <p className="text-gray-600">Please wait while we load the service details.</p>
         </div>
       </div>
     );

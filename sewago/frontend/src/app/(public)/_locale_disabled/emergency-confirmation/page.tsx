@@ -15,7 +15,7 @@ import {
   StarIcon
 } from '@heroicons/react/24/outline';
 import { CheckCircleIcon as CheckCircleSolid } from '@heroicons/react/24/solid';
-import { useSafeLocalStorage } from '@/hooks/useClientOnly';
+import { useSafeLocalStorage, useClientOnly } from '@/hooks/useClientOnly';
 
 interface EmergencyBooking {
   serviceId: string;
@@ -64,13 +64,8 @@ export default function EmergencyConfirmationPage() {
     }
   }, [storedEmergencyData, router]);
 
-  // Check if we're in build phase
-  const isBuild = typeof window === 'undefined';
-
-  // Return early during build phase
-  if (isBuild) {
-    return <div>Loading...</div>;
-  }
+  // Use safe hooks
+  const isClient = useClientOnly();
 
   const simulateEmergencyProcess = async () => {
     // Step 1: Searching for providers
@@ -145,13 +140,12 @@ export default function EmergencyConfirmationPage() {
 
   const handleContactProvider = () => {
     // In a real app, this would initiate a call or chat
-    try {
-      // Use safe window access
-      if (typeof window !== 'undefined') {
+    if (isClient) {
+      try {
         window.open(`tel:+9779800000001`, '_blank');
+      } catch (error) {
+        console.error('Failed to open phone link:', error);
       }
-    } catch (error) {
-      console.error('Failed to open phone link:', error);
     }
   };
 
