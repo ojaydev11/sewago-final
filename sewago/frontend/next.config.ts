@@ -108,6 +108,8 @@ const nextConfig: NextConfig = {
       '@prisma/client': false,
     };
 
+    // Temporarily disable complex entry manipulation to fix webpack build error
+    /*
     if (isServer && !process.env.NEXT_RUNTIME?.includes('edge')) {
       // Inject SSR DOM guard before any server entry (skip Edge runtimes)
       const origEntry = config.entry;
@@ -139,6 +141,7 @@ const nextConfig: NextConfig = {
         'video.js': false,
       };
     }
+    */
 
     if (!dev) {
       // Completely disable chunk splitting to prevent vendor.js issues
