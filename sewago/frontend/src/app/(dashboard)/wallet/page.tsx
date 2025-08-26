@@ -8,6 +8,7 @@ import { useState, useEffect } from 'react';
 import { walletService } from '@/lib/wallet';
 import { FEATURE_FLAGS } from '@/lib/feature-flags';
 import type { WalletBalance, WalletEntry } from '@/lib/wallet';
+import { safeDownloadFile } from '@/hooks/useClientOnly';
 
 export default function WalletPage() {
   const [balance, setBalance] = useState<WalletBalance | null>(null);
@@ -51,24 +52,9 @@ export default function WalletPage() {
       const userId = 'user_123';
       const csvData = await walletService.exportHistory(userId);
       
-      const blob = new Blob([csvData], { type: 'text/csv' });
-      const url = URL.createObjectURL(blob);
-      
-      // Use a safer approach for downloads with proper error handling
-      if (typeof window !== 'undefined' && typeof document !== 'undefined') {
-        try {
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = `wallet-history-${new Date().toISOString().split('T')[0]}.csv`;
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-          URL.revokeObjectURL(url);
-        } catch (error) {
-          console.error('Download failed:', error);
-          URL.revokeObjectURL(url);
-        }
-      }
+      // Use safe download utility
+      const filename = `wallet-history-${new Date().toISOString().split('T')[0]}.csv`;
+      safeDownloadFile(csvData, filename, 'text/csv');
     } catch (error) {
       console.error('Export failed:', error);
     }

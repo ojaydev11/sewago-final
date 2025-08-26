@@ -2,6 +2,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { safeDownloadFile } from '@/hooks/useClientOnly';
 
 // Force dynamic rendering to prevent build-time pre-rendering
 export const dynamic = 'force-dynamic';
@@ -38,24 +39,9 @@ export default function AdminAnalyticsPage() {
         new Date()
       );
       
-      const blob = new Blob([data], { type: 'text/csv' });
-      const url = URL.createObjectURL(blob);
-      
-      // Only run on client side with safe DOM access
-      if (typeof window !== 'undefined' && typeof document !== 'undefined') {
-        try {
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = `${type}-export-${new Date().toISOString().split('T')[0]}.csv`;
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-          URL.revokeObjectURL(url);
-        } catch (error) {
-          console.error('Export failed:', error);
-          URL.revokeObjectURL(url);
-        }
-      }
+      // Use safe download utility
+      const filename = `${type}-export-${new Date().toISOString().split('T')[0]}.csv`;
+      safeDownloadFile(data, filename, 'text/csv');
     } catch (error) {
       console.error('Export failed:', error);
     }

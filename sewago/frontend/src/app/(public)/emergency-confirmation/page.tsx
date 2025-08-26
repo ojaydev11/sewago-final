@@ -12,6 +12,7 @@ import {
   StarIcon
 } from '@heroicons/react/24/outline';
 import { CheckCircleIcon as CheckCircleSolid } from '@heroicons/react/24/solid';
+import { useSafeLocalStorage } from '@/hooks/useClientOnly';
 
 interface EmergencyBooking {
   serviceId: string;
@@ -43,29 +44,22 @@ export default function EmergencyConfirmationPage() {
   const [selectedProvider, setSelectedProvider] = useState<Provider | null>(null);
   const [eta, setEta] = useState<string>('Calculating...');
   const router = useRouter();
+  
+  // Use safe localStorage hook
+  const [storedEmergencyData, setStoredEmergencyData] = useSafeLocalStorage<EmergencyBooking | null>('emergencyBooking', null);
 
   useEffect(() => {
-    // Only run on client side
-    if (typeof window === 'undefined') return;
-    
-    try {
-      // Get emergency booking data from localStorage
-      const storedData = localStorage.getItem('emergencyBooking');
-      if (storedData) {
-        setEmergencyData(JSON.parse(storedData));
-      } else {
-        // Redirect if no emergency data
-        router.push('/');
-        return;
-      }
-
+    // Use safe localStorage data
+    if (storedEmergencyData) {
+      setEmergencyData(storedEmergencyData);
       // Simulate the emergency service process
       simulateEmergencyProcess();
-    } catch (error) {
-      console.error('Failed to load emergency data:', error);
+    } else {
+      // Redirect if no emergency data
       router.push('/');
+      return;
     }
-  }, [router]);
+  }, [storedEmergencyData, router]);
 
   const simulateEmergencyProcess = async () => {
     // Step 1: Searching for providers
@@ -140,12 +134,13 @@ export default function EmergencyConfirmationPage() {
 
   const handleContactProvider = () => {
     // In a real app, this would initiate a call or chat
-    if (typeof window !== 'undefined') {
-      try {
+    try {
+      // Use safe window access
+      if (typeof window !== 'undefined') {
         window.open(`tel:+9779800000001`, '_blank');
-      } catch (error) {
-        console.error('Failed to open phone link:', error);
       }
+    } catch (error) {
+      console.error('Failed to open phone link:', error);
     }
   };
 

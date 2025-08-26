@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import { useSafeLocalStorage } from '@/hooks/useClientOnly';
 // Mock session hook - replace with actual backend integration
 const useSession = () => ({ data: { user: { id: 'mock-user-id', name: 'Mock User', email: 'mock@example.com' } } });
 import { Button } from '@/components/ui/button';

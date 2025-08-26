@@ -8,6 +8,7 @@ const isBuild = process.env.NEXT_PHASE === 'phase-production-build';
 
 import React, { useState } from 'react';
 import ServiceBundleCard from '@/components/ServiceBundleCard';
+import { useSafeLocalStorage } from '@/hooks/useClientOnly';
 
 // Local type definitions to avoid DB imports
 interface ServiceBundle {
@@ -92,6 +93,9 @@ export default function ServiceBundlesPage() {
   const [sortBy, setSortBy] = useState<'price' | 'discount' | 'name'>('price');
   const router = useRouter();
 
+  // Use safe localStorage hook
+  const [storedBundleOrder, setStoredBundleOrder] = useSafeLocalStorage<any>('selectedBundleOrder', null);
+
   // Check if we're in build phase
   const isBuild = typeof window === 'undefined';
 
@@ -148,14 +152,8 @@ export default function ServiceBundlesPage() {
                   (selectedServices.reduce((sum, service) => sum + service.individualPrice, 0) * selectedBundle.discountPercentage / 100)
     };
     
-    // Only access localStorage on client side with error handling
-    if (typeof window !== 'undefined') {
-      try {
-        localStorage.setItem('selectedBundleOrder', JSON.stringify(bundleOrder));
-      } catch (error) {
-        console.error('Failed to save bundle order:', error);
-      }
-    }
+    // Use safe localStorage hook
+    setStoredBundleOrder(bundleOrder);
     
     // Navigate to booking page
     router.push('/book?type=bundle');

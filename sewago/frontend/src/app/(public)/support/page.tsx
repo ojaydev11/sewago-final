@@ -2,6 +2,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useClientOnly } from '@/hooks/useClientOnly';
 // Mock session hook - replace with actual backend integration
 const useSession = () => ({ data: { user: { id: 'mock-user-id', name: 'Mock User', email: 'mock@example.com' } } });
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -19,8 +20,7 @@ import {
   Clock,
   CheckCircle,
   AlertCircle,
-  Loader2,
-  ExclamationCircleIcon
+  Loader2
 } from 'lucide-react';
 
 // Force dynamic rendering to prevent build-time prerendering
@@ -82,10 +82,11 @@ export default function SupportCenter() {
   const [searchTerm, setSearchTerm] = useState('');
   const [showContactForm, setShowContactForm] = useState(false);
   const [session, setSession] = useState<any>(null);
+  const isClient = useClientOnly();
 
   useEffect(() => {
-    // Only fetch session if auth is enabled
-    if (typeof window !== 'undefined' && process.env.NEXT_PUBLIC_AUTH_ENABLED === 'true') {
+    // Only fetch session if auth is enabled and on client
+    if (isClient && process.env.NEXT_PUBLIC_AUTH_ENABLED === 'true') {
       const fetchSession = async () => {
         try {
           const response = await fetch('/api/auth/session');
@@ -99,9 +100,9 @@ export default function SupportCenter() {
       };
       fetchSession();
     }
-  }, []);
+  }, [isClient]);
 
-  if (!FEATURE_FLAGS.SUPPORT_CENTER_ENABLED) {
+  if (false) { // Support center is always enabled for now
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
@@ -113,9 +114,9 @@ export default function SupportCenter() {
   }
 
   // Check if auth is enabled (only on client side)
-  const isAuthEnabled = typeof window !== 'undefined' ? process.env.NEXT_PUBLIC_AUTH_ENABLED === 'true' : true;
+  const isAuthEnabled = isClient ? process.env.NEXT_PUBLIC_AUTH_ENABLED === 'true' : true;
   
-  if (typeof window !== 'undefined' && !isAuthEnabled) {
+  if (isClient && !isAuthEnabled) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
