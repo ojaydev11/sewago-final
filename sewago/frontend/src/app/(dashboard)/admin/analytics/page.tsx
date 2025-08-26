@@ -41,15 +41,20 @@ export default function AdminAnalyticsPage() {
       const blob = new Blob([data], { type: 'text/csv' });
       const url = URL.createObjectURL(blob);
       
-      // Only run on client side
-      if (typeof document !== 'undefined') {
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `${type}-export-${new Date().toISOString().split('T')[0]}.csv`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
+      // Only run on client side with safe DOM access
+      if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+        try {
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `${type}-export-${new Date().toISOString().split('T')[0]}.csv`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+        } catch (error) {
+          console.error('Export failed:', error);
+          URL.revokeObjectURL(url);
+        }
       }
     } catch (error) {
       console.error('Export failed:', error);

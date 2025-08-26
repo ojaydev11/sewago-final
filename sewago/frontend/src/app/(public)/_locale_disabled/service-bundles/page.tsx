@@ -138,9 +138,13 @@ export default function ServiceBundlesPage() {
       savings: (selectedBundle.originalPrice || 0) - (selectedBundle.discountedPrice || 0)
     };
     
-    // Only access localStorage on client side
+    // Only access localStorage on client side with error handling
     if (typeof window !== 'undefined') {
-      localStorage.setItem('selectedBundleOrder', JSON.stringify(bundleOrder));
+      try {
+        localStorage.setItem('selectedBundleOrder', JSON.stringify(bundleOrder));
+      } catch (error) {
+        console.error('Failed to save bundle order:', error);
+      }
     }
     
     // Navigate to booking page

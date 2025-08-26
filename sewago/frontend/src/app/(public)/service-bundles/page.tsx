@@ -85,17 +85,20 @@ import {
 } from '@heroicons/react/24/outline';
 
 export default function ServiceBundlesPage() {
-  // Return early during build phase
-  if (isBuild) {
-    return <div>Loading...</div>;
-  }
-
   const [selectedBundle, setSelectedBundle] = useState<ServiceBundle | null>(null);
   const [selectedServices, setSelectedServices] = useState<BundleService[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [sortBy, setSortBy] = useState<'price' | 'discount' | 'name'>('price');
   const router = useRouter();
+
+  // Check if we're in build phase
+  const isBuild = typeof window === 'undefined';
+
+  // Return early during build phase
+  if (isBuild) {
+    return <div>Loading...</div>;
+  }
 
   const categories = [
     { id: 'all', name: 'All Categories', count: sampleServiceBundles.length },
@@ -145,7 +148,14 @@ export default function ServiceBundlesPage() {
                   (selectedServices.reduce((sum, service) => sum + service.individualPrice, 0) * selectedBundle.discountPercentage / 100)
     };
     
-    localStorage.setItem('selectedBundleOrder', JSON.stringify(bundleOrder));
+    // Only access localStorage on client side with error handling
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.setItem('selectedBundleOrder', JSON.stringify(bundleOrder));
+      } catch (error) {
+        console.error('Failed to save bundle order:', error);
+      }
+    }
     
     // Navigate to booking page
     router.push('/book?type=bundle');

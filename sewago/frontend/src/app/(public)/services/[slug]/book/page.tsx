@@ -44,11 +44,15 @@ export default function BookingPage() {
       try {
         // Check localStorage first for instant render (only on client)
         if (typeof window !== 'undefined') {
-          const cached = localStorage.getItem(`service_${slug}`);
-          if (cached) {
-            const service = JSON.parse(cached);
-            setServiceData(service);
-            setIsLoading(false);
+          try {
+            const cached = localStorage.getItem(`service_${slug}`);
+            if (cached) {
+              const service = JSON.parse(cached);
+              setServiceData(service);
+              setIsLoading(false);
+            }
+          } catch (error) {
+            console.error('Failed to read from localStorage:', error);
           }
         }
 
@@ -69,7 +73,11 @@ export default function BookingPage() {
           };
           setServiceData(serviceData);
           if (typeof window !== 'undefined') {
-            localStorage.setItem(`service_${slug}`, JSON.stringify(serviceData));
+            try {
+              localStorage.setItem(`service_${slug}`, JSON.stringify(serviceData));
+            } catch (error) {
+              console.error('Failed to save to localStorage:', error);
+            }
           }
           setIsLoading(false);
         }
@@ -85,13 +93,21 @@ export default function BookingPage() {
   // Persist step and quote data to localStorage
   useEffect(() => {
     if (currentStep > 1 && typeof window !== 'undefined') {
-      localStorage.setItem(`booking_step_${slug}`, currentStep.toString());
+      try {
+        localStorage.setItem(`booking_step_${slug}`, currentStep.toString());
+      } catch (error) {
+        console.error('Failed to save step to localStorage:', error);
+      }
     }
   }, [currentStep, slug]);
 
   useEffect(() => {
     if (quoteData && typeof window !== 'undefined') {
-      localStorage.setItem(`booking_quote_${slug}`, JSON.stringify(quoteData));
+      try {
+        localStorage.setItem(`booking_quote_${slug}`, JSON.stringify(quoteData));
+      } catch (error) {
+        console.error('Failed to save quote to localStorage:', error);
+      }
     }
   }, [quoteData, slug]);
 
@@ -99,14 +115,18 @@ export default function BookingPage() {
   useEffect(() => {
     if (typeof window === 'undefined') return;
     
-    const savedStep = localStorage.getItem(`booking_step_${slug}`);
-    const savedQuote = localStorage.getItem(`booking_quote_${slug}`);
-    
-    if (savedStep) {
-      setCurrentStep(parseInt(savedStep));
-    }
-    if (savedQuote) {
-      setQuoteData(JSON.parse(savedQuote));
+    try {
+      const savedStep = localStorage.getItem(`booking_step_${slug}`);
+      const savedQuote = localStorage.getItem(`booking_quote_${slug}`);
+      
+      if (savedStep) {
+        setCurrentStep(parseInt(savedStep));
+      }
+      if (savedQuote) {
+        setQuoteData(JSON.parse(savedQuote));
+      }
+    } catch (error) {
+      console.error('Failed to restore from localStorage:', error);
     }
   }, [slug]);
 
@@ -282,7 +302,11 @@ export default function BookingPage() {
               We're having trouble loading this service. Please try again later.
             </p>
             <button 
-              onClick={() => window.location.reload()}
+              onClick={() => {
+                if (typeof window !== 'undefined') {
+                  window.location.reload();
+                }
+              }}
               className="bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary/90 transition-colors"
             >
               Retry
