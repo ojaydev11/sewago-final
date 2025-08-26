@@ -1,5 +1,6 @@
-export const dynamic = "force-dynamic";
-import dynamicImport from "next/dynamic";
+'use client';
 
-const PageClient = dynamicImport(() => import("./page.client"), { ssr: false });
+export const dynamic = "force-dynamic";
+import PageClient from "./page.client";
+
 export default PageClient;
