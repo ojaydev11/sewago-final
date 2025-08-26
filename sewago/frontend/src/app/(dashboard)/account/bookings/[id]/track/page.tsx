@@ -53,6 +53,15 @@ interface TrackingUpdate {
 export default function BookingTrackPage() {
   const params = useParams();
   
+  // All hooks must be called unconditionally at the top level
+  const [booking, setBooking] = useState<Booking | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [trackingUpdates, setTrackingUpdates] = useState<TrackingUpdate[]>([]);
+  const [eta, setEta] = useState<string>('Calculating...');
+  
+  const { socket, isConnected } = useSocket();
+
+  // Check for valid params after hooks are called
   if (!params?.id) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -69,13 +78,6 @@ export default function BookingTrackPage() {
   
   const bookingId = params.id;
   
-  const [booking, setBooking] = useState<Booking | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [trackingUpdates, setTrackingUpdates] = useState<TrackingUpdate[]>([]);
-  const [eta, setEta] = useState<string>('Calculating...');
-  
-  const { socket, isConnected } = useSocket();
-
   useEffect(() => {
     fetchBooking();
   }, [bookingId]);
