@@ -27,7 +27,10 @@
       "Bash(npm run production-ready:*)",
       "Bash(timeout 300 npm run build:production)",
       "Bash(timeout:*)",
-      "WebFetch(domain:sewago-final.vercel.app)"
+      "WebFetch(domain:sewago-final.vercel.app)",
+      "Bash(npx @modelcontextprotocol/server-puppeteer:*)",
+      "Bash(npm start)",
+      "Bash(npx next start:*)"
     ],
     "deny": [],
     "ask": []

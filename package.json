@@ -2,5 +2,8 @@
   "devDependencies": {
     "@types/puppeteer": "^5.4.7",
     "puppeteer": "^24.16.2"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/server-puppeteer": "^2025.5.12"
   }
 }

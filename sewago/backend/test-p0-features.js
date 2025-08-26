@@ -566,3 +566,4 @@ runAllTests().then(() => {
   printResults();
   process.exit(testResults.failed === 0 ? 0 : 1);
 });
+
