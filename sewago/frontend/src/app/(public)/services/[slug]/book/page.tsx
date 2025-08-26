@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { useSafeLocalStorage } from '@/hooks/useClientOnly';
+import { useSafeLocalStorage, useClientOnly } from '@/hooks/useClientOnly';
 // Mock session hook - replace with actual backend integration
 const useSession = () => ({ data: { user: { id: 'mock-user-id', name: 'Mock User', email: 'mock@example.com' } } });
 import { Button } from '@/components/ui/button';
@@ -14,7 +14,7 @@ import QuoteForm, { QuoteData } from '@/components/booking/QuoteForm';
 import { getServiceBySlug } from '@/lib/services';
 import { Label } from '@/components/ui/label';
 import { formatNPR } from '@/lib/currency';
-import { useCallback } from 'react';
+import { UserIcon } from 'lucide-react';
 
 // Force dynamic rendering to prevent build-time pre-rendering
 export const dynamic = 'force-dynamic';
@@ -26,35 +26,36 @@ interface ServiceData {
   shortDesc: string;
 }
 
-export default function BookingPage() {
+export default function ServiceBookingPage() {
   const params = useParams();
   const router = useRouter();
   const { data: session } = useSession();
+  const slug = params?.slug as string;
+  
+  // State variables
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [quoteData, setQuoteData] = useState<QuoteData | null>(null);
   const [serviceData, setServiceData] = useState<ServiceData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
+  
+  // Use safe hooks
+  const isClient = useClientOnly();
+  const [cachedService, setCachedService] = useSafeLocalStorage<any>(`service_${slug}`, null);
+  const [savedStep, setSavedStep] = useSafeLocalStorage<number>(`booking_step_${slug}`, 1);
+  const [savedQuote, setSavedQuote] = useSafeLocalStorage<any>(`booking_quote_${slug}`, null);
 
-  const slug = params.slug as string;
-
-  // Load service data with timeout and localStorage persistence
+  // Load service data
   useEffect(() => {
+    if (!slug) return;
+    
     const loadService = async () => {
       try {
-        // Check localStorage first for instant render (only on client)
-        if (typeof window !== 'undefined') {
-          try {
-            const cached = localStorage.getItem(`service_${slug}`);
-            if (cached) {
-              const service = JSON.parse(cached);
-              setServiceData(service);
-              setIsLoading(false);
-            }
-          } catch (error) {
-            console.error('Failed to read from localStorage:', error);
-          }
+        // Check cached data first for instant render
+        if (cachedService) {
+          setServiceData(cachedService);
+          setIsLoading(false);
         }
 
         // Fetch fresh data with 5s timeout
@@ -65,21 +66,15 @@ export default function BookingPage() {
         const fetchPromise = getServiceBySlug(slug);
         const service = await Promise.race([fetchPromise, timeoutPromise]);
         
-        if (service) {
+        if (service && typeof service === 'object' && 'name' in service) {
           const serviceData = {
-            name: service.name,
-            basePrice: service.basePrice,
-            category: service.category,
-            shortDesc: service.shortDesc
+            name: (service as any).name || '',
+            basePrice: (service as any).basePrice || 0,
+            category: (service as any).category || '',
+            shortDesc: (service as any).shortDesc || ''
           };
           setServiceData(serviceData);
-          if (typeof window !== 'undefined') {
-            try {
-              localStorage.setItem(`service_${slug}`, JSON.stringify(serviceData));
-            } catch (error) {
-              console.error('Failed to save to localStorage:', error);
-            }
-          }
+          setCachedService(serviceData);
           setIsLoading(false);
         }
       } catch (error) {
@@ -89,49 +84,34 @@ export default function BookingPage() {
       }
     };
     loadService();
-  }, [slug]);
+  }, [slug, cachedService, setCachedService]);
 
-  // Persist step and quote data to localStorage
+  // Persist step and quote data
   useEffect(() => {
-    if (currentStep > 1 && typeof window !== 'undefined') {
-      try {
-        localStorage.setItem(`booking_step_${slug}`, currentStep.toString());
-      } catch (error) {
-        console.error('Failed to save step to localStorage:', error);
-      }
+    if (currentStep > 1) {
+      setSavedStep(currentStep);
     }
-  }, [currentStep, slug]);
+  }, [currentStep, setSavedStep]);
 
   useEffect(() => {
-    if (quoteData && typeof window !== 'undefined') {
-      try {
-        localStorage.setItem(`booking_quote_${slug}`, JSON.stringify(quoteData));
-      } catch (error) {
-        console.error('Failed to save quote to localStorage:', error);
-      }
+    if (quoteData) {
+      setSavedQuote(quoteData);
     }
-  }, [quoteData, slug]);
+  }, [quoteData, setSavedQuote]);
 
-  // Restore from localStorage on mount
+  // Restore from saved data on mount
   useEffect(() => {
-    if (typeof window === 'undefined') return;
-    
-    try {
-      const savedStep = localStorage.getItem(`booking_step_${slug}`);
-      const savedQuote = localStorage.getItem(`booking_quote_${slug}`);
-      
-      if (savedStep) {
-        setCurrentStep(parseInt(savedStep));
-      }
-      if (savedQuote) {
-        setQuoteData(JSON.parse(savedQuote));
-      }
-    } catch (error) {
-      console.error('Failed to restore from localStorage:', error);
+    if (savedStep > 1) {
+      setCurrentStep(savedStep);
     }
-  }, [slug]);
+    if (savedQuote) {
+      setQuoteData(savedQuote);
+    }
+  }, [savedStep, savedQuote]);
 
   const handleQuoteUpdate = useCallback(async (quote: QuoteData) => {
+    if (!serviceData) return;
+    
     try {
       // Call server to get authoritative quote
       const res = await fetch('/api/quote', {
@@ -139,8 +119,8 @@ export default function BookingPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           serviceSlug: slug,
-          serviceName: serviceData?.name ?? '',
-          basePrice: serviceData?.basePrice ?? 0,
+          serviceName: serviceData.name,
+          basePrice: serviceData.basePrice,
           isExpress: quote.isExpress,
           hasWarranty: quote.hasWarranty,
           city: 'Kathmandu',
@@ -170,10 +150,25 @@ export default function BookingPage() {
     }
   }, [slug, serviceData]);
 
-  // Redirect if not authenticated
+  // Check if user is authenticated
   if (!session?.user) {
-    router.push(`/auth/login?callbackUrl=/services/${slug}/book`);
-    return null;
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-gray-400 mb-4">
+            <UserIcon className="w-16 h-16 mx-auto" />
+          </div>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">Authentication Required</h3>
+          <p className="text-gray-600 mb-4">Please log in to book this service.</p>
+          <button
+            onClick={() => router.push('/auth/login')}
+            className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Log In
+          </button>
+        </div>
+      </div>
+    );
   }
 
   const handleSubmit = async () => {

@@ -8,7 +8,7 @@ const isBuild = process.env.NEXT_PHASE === 'phase-production-build';
 
 import React, { useState } from 'react';
 import ServiceBundleCard from '@/components/ServiceBundleCard';
-import { useSafeLocalStorage } from '@/hooks/useClientOnly';
+import { useSafeLocalStorage, useClientOnly } from '@/hooks/useClientOnly';
 
 // Local type definitions to avoid DB imports
 interface ServiceBundle {
@@ -92,9 +92,10 @@ export default function ServiceBundlesPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [sortBy, setSortBy] = useState<'price' | 'discount' | 'name'>('price');
   const router = useRouter();
-
-  // Use safe localStorage hook
+  
+  // Use safe hooks
   const [storedBundleOrder, setStoredBundleOrder] = useSafeLocalStorage<any>('selectedBundleOrder', null);
+  const isClient = useClientOnly();
 
   // Check if we're in build phase
   const isBuild = typeof window === 'undefined';
@@ -139,17 +140,14 @@ export default function ServiceBundlesPage() {
     setSelectedServices(services);
   };
 
-  const handleBookBundle = () => {
+  const handleBundleOrder = () => {
     if (!selectedBundle) return;
     
-    // Store selected bundle data in localStorage or state management
     const bundleOrder = {
       bundleId: selectedBundle.id,
-      bundleName: selectedBundle.name,
       services: selectedServices,
-      totalAmount: selectedServices.reduce((sum, service) => sum + service.individualPrice, 0),
-      finalAmount: selectedServices.reduce((sum, service) => sum + service.individualPrice, 0) - 
-                  (selectedServices.reduce((sum, service) => sum + service.individualPrice, 0) * selectedBundle.discountPercentage / 100)
+      totalPrice: selectedBundle.discountedPrice,
+      timestamp: new Date().toISOString()
     };
     
     // Use safe localStorage hook
@@ -284,7 +282,7 @@ export default function ServiceBundlesPage() {
                   </div>
                 </div>
                 <button
-                  onClick={handleBookBundle}
+                  onClick={handleBundleOrder}
                   className="px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors"
                 >
                   Book Now

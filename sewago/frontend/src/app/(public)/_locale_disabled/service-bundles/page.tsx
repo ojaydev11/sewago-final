@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import ServiceBundleCard from '@/components/ServiceBundleCard';
+import { useSafeLocalStorage } from '@/hooks/useClientOnly';
 
 // Local type definition to avoid DB imports
 interface ServiceBundle {
@@ -81,11 +82,22 @@ const mockBundles: ServiceBundle[] = [
 
 export default function ServiceBundlesPage() {
   const [selectedBundle, setSelectedBundle] = useState<ServiceBundle | null>(null);
+  const [selectedServices, setSelectedServices] = useState<Array<{
+    serviceId: string;
+    serviceName: string;
+    serviceCategory: string;
+    estimatedDuration: number;
+    individualPrice: number;
+    isRequired: boolean;
+  }>>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [sortBy, setSortBy] = useState<'price' | 'discount' | 'name'>('price');
   const router = useRouter();
   
+  // Use safe localStorage hook
+  const [storedBundleOrder, setStoredBundleOrder] = useSafeLocalStorage<any>('selectedBundleOrder', null);
+
   // Use mock data for build-time safety
   const bundles = mockBundles;
   const categories = [
@@ -121,31 +133,23 @@ export default function ServiceBundlesPage() {
       }
     });
 
-  const handleBundleSelect = (bundle: ServiceBundle, services: any[]) => {
+  const handleBundleSelect = (bundle: ServiceBundle) => {
     setSelectedBundle(bundle);
+    setSelectedServices(bundle.services);
   };
 
-  const handleBookBundle = () => {
+  const handleBundleOrder = () => {
     if (!selectedBundle) return;
     
-    // Store selected bundle data in localStorage or state management
     const bundleOrder = {
-      bundleId: selectedBundle.id || '',
-      bundleName: selectedBundle.name || '',
-      services: selectedBundle.services || [],
-      totalAmount: selectedBundle.originalPrice || 0,
-      finalAmount: selectedBundle.discountedPrice || 0,
-      savings: (selectedBundle.originalPrice || 0) - (selectedBundle.discountedPrice || 0)
+      bundleId: selectedBundle.id,
+      services: selectedServices,
+      totalPrice: selectedBundle.discountedPrice,
+      timestamp: new Date().toISOString()
     };
     
-    // Only access localStorage on client side with error handling
-    if (typeof window !== 'undefined') {
-      try {
-        localStorage.setItem('selectedBundleOrder', JSON.stringify(bundleOrder));
-      } catch (error) {
-        console.error('Failed to save bundle order:', error);
-      }
-    }
+    // Use safe localStorage hook
+    setStoredBundleOrder(bundleOrder);
     
     // Navigate to booking page
     router.push('/book?type=bundle');
@@ -274,7 +278,7 @@ export default function ServiceBundlesPage() {
                   </div>
                 </div>
                 <button
-                  onClick={handleBookBundle}
+                  onClick={handleBundleOrder}
                   className="px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors"
                 >
                   Book Now

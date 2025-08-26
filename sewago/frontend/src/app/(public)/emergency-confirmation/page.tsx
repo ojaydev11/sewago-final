@@ -12,7 +12,7 @@ import {
   StarIcon
 } from '@heroicons/react/24/outline';
 import { CheckCircleIcon as CheckCircleSolid } from '@heroicons/react/24/solid';
-import { useSafeLocalStorage } from '@/hooks/useClientOnly';
+import { useSafeLocalStorage, useClientOnly } from '@/hooks/useClientOnly';
 
 interface EmergencyBooking {
   serviceId: string;
@@ -45,8 +45,9 @@ export default function EmergencyConfirmationPage() {
   const [eta, setEta] = useState<string>('Calculating...');
   const router = useRouter();
   
-  // Use safe localStorage hook
+  // Use safe hooks
   const [storedEmergencyData, setStoredEmergencyData] = useSafeLocalStorage<EmergencyBooking | null>('emergencyBooking', null);
+  const isClient = useClientOnly();
 
   useEffect(() => {
     // Use safe localStorage data
@@ -134,13 +135,12 @@ export default function EmergencyConfirmationPage() {
 
   const handleContactProvider = () => {
     // In a real app, this would initiate a call or chat
-    try {
-      // Use safe window access
-      if (typeof window !== 'undefined') {
+    if (isClient) {
+      try {
         window.open(`tel:+9779800000001`, '_blank');
+      } catch (error) {
+        console.error('Failed to open phone link:', error);
       }
-    } catch (error) {
-      console.error('Failed to open phone link:', error);
     }
   };
 
