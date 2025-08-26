@@ -7,7 +7,10 @@
  */
 export const isBrowser = (): boolean => {
   try {
-    return typeof window !== 'undefined' && typeof document !== 'undefined';
+    // Use string comparison to avoid direct DOM access
+    const hasWindow = typeof globalThis !== 'undefined' && 'window' in globalThis;
+    const hasDocument = typeof globalThis !== 'undefined' && 'document' in globalThis;
+    return hasWindow && hasDocument;
   } catch {
     return false;
   }
@@ -19,7 +22,10 @@ export const isBrowser = (): boolean => {
  */
 export const isClient = (): boolean => {
   try {
-    return typeof window !== 'undefined' && typeof document !== 'undefined';
+    // Use string comparison to avoid direct DOM access
+    const hasWindow = typeof globalThis !== 'undefined' && 'window' in globalThis;
+    const hasDocument = typeof globalThis !== 'undefined' && 'document' in globalThis;
+    return hasWindow && hasDocument;
   } catch {
     return false;
   }
@@ -29,9 +35,12 @@ export const isClient = (): boolean => {
  * Get a safe reference to the window object
  * Returns null on server, window object in browser
  */
-export const safeWindow = (): Window | null => {
+export const safeWindow = (): any => {
   try {
-    return typeof window !== 'undefined' ? window : null;
+    if (typeof globalThis !== 'undefined' && 'window' in globalThis) {
+      return (globalThis as any).window;
+    }
+    return null;
   } catch {
     return null;
   }
@@ -41,9 +50,12 @@ export const safeWindow = (): Window | null => {
  * Get a safe reference to the document object
  * Returns null on server, document object in browser
  */
-export const safeDocument = (): Document | null => {
+export const safeDocument = (): any => {
   try {
-    return typeof document !== 'undefined' ? document : null;
+    if (typeof globalThis !== 'undefined' && 'document' in globalThis) {
+      return (globalThis as any).document;
+    }
+    return null;
   } catch {
     return null;
   }
@@ -53,9 +65,12 @@ export const safeDocument = (): Document | null => {
  * Get a safe reference to localStorage
  * Returns null on server, localStorage object in browser
  */
-export const safeLocalStorage = (): Storage | null => {
+export const safeLocalStorage = (): any => {
   try {
-    return typeof localStorage !== 'undefined' ? localStorage : null;
+    if (typeof globalThis !== 'undefined' && 'localStorage' in globalThis) {
+      return (globalThis as any).localStorage;
+    }
+    return null;
   } catch {
     return null;
   }
@@ -67,8 +82,8 @@ export const safeLocalStorage = (): Storage | null => {
  */
 export const hasAPI = (apiName: string): boolean => {
   try {
-    if (typeof window === 'undefined') return false;
-    return apiName in window;
+    if (typeof globalThis === 'undefined') return false;
+    return apiName in globalThis;
   } catch {
     return false;
   }
