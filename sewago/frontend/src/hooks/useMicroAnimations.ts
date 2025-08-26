@@ -1,6 +1,7 @@
 'use client';
+import 'client-only';
 
-import { useState, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { performanceOptimizer } from '@/lib/performance-ux';
 import { useHapticFeedback } from './useHapticFeedback';
 import { useAudioFeedback } from './useSoundDesign';

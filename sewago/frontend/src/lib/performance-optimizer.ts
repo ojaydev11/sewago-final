@@ -1,3 +1,7 @@
+'use client';
+import 'client-only';
+import React from 'react';
+
 /**
  * Performance optimization utilities for smart features
  */
@@ -26,7 +30,7 @@ export const debounce = <T extends (...args: any[]) => any>(
   
   return (...args: Parameters<T>) => {
     clearTimeout(timeout);
-    timeout = setTimeout(() => func.apply(null, args), wait);
+    timeout = setTimeout(() => func(...args), wait);
   };
 };
 
@@ -39,7 +43,7 @@ export const throttle = <T extends (...args: any[]) => any>(
   
   return (...args: Parameters<T>) => {
     if (!inThrottle) {
-      func.apply(null, args);
+      func(...args);
       inThrottle = true;
       setTimeout(() => inThrottle = false, limit);
     }
@@ -198,7 +202,7 @@ export const prefetchResource = (href: string): void => {
 
 // Service Worker utilities for AI features
 export const registerAIServiceWorker = async (): Promise<ServiceWorkerRegistration | null> => {
-  if ('serviceWorker' in navigator) {
+  if (typeof navigator !== 'undefined' && 'serviceWorker' in navigator) {
     try {
       const registration = await navigator.serviceWorker.register('/sw-ai.js');
       console.log('AI Service Worker registered:', registration);
@@ -213,7 +217,7 @@ export const registerAIServiceWorker = async (): Promise<ServiceWorkerRegistrati
 
 // Network-aware loading
 export const getNetworkInfo = () => {
-  if ('connection' in navigator) {
+  if (typeof navigator !== 'undefined' && 'connection' in navigator) {
     const connection = (navigator as any).connection;
     if (connection) {
       return {
@@ -296,7 +300,7 @@ export const createErrorBoundary = (fallbackComponent: React.ComponentType) => {
 // WebAssembly utilities for AI processing
 export const loadWebAssemblyModule = async (wasmPath: string) => {
   try {
-    if ('WebAssembly' in window) {
+    if (typeof window !== 'undefined' && 'WebAssembly' in window) {
       const wasmModule = await WebAssembly.instantiateStreaming(
         fetch(wasmPath),
         {
@@ -318,10 +322,10 @@ export class AIPerformanceMonitor {
   private observers = new Map<string, PerformanceObserver>();
 
   startTiming(label: string): () => void {
-    const startTime = performance.now();
+    const startTime = typeof performance !== 'undefined' ? performance.now() : 0;
     
     return () => {
-      const endTime = performance.now();
+      const endTime = typeof performance !== 'undefined' ? performance.now() : 0;
       const duration = endTime - startTime;
       
       if (!this.metrics.has(label)) {
@@ -367,7 +371,7 @@ export class AIPerformanceMonitor {
 
   observeWebVitals() {
     // Observe Core Web Vitals
-    if ('PerformanceObserver' in window) {
+    if (typeof window !== 'undefined' && 'PerformanceObserver' in window) {
       const observer = new PerformanceObserver((list) => {
         for (const entry of list.getEntries()) {
           if (entry.entryType === 'largest-contentful-paint') {
@@ -391,10 +395,11 @@ export class AIPerformanceMonitor {
 
 export const aiPerformanceMonitor = new AIPerformanceMonitor();
 
-// Initialize performance monitoring
-if (typeof window !== 'undefined') {
-  trackBundleSize();
-  aiPerformanceMonitor.observeWebVitals();
-}
-
-import React from 'react';
+// Initialize performance monitoring only in browser
+// Move initialization to useEffect or event handlers to avoid top-level DOM access
+export const initializePerformanceMonitoring = () => {
+  if (typeof window !== 'undefined') {
+    trackBundleSize();
+    aiPerformanceMonitor.observeWebVitals();
+  }
+};

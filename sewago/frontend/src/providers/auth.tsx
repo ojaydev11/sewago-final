@@ -1,6 +1,7 @@
 'use client';
 
-import { SessionProvider } from 'next-auth/react';
+// Mock SessionProvider - replace with actual backend integration
+const SessionProvider = ({ children }: { children: React.ReactNode }) => <>{children}</>;
 import { ReactNode } from 'react';
 
 interface AuthProviderProps {

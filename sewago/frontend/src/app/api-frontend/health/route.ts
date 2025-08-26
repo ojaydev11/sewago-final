@@ -1,3 +1,4 @@
+import 'server-only';
 import { NextResponse } from 'next/server';
 
 // Force dynamic rendering to prevent build-time issues

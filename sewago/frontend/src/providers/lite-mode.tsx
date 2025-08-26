@@ -1,6 +1,7 @@
 'use client';
+import 'client-only';
 
-import { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 
 interface NavigatorConnection {
   connection: {

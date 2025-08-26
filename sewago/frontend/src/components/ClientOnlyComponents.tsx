@@ -19,8 +19,8 @@ export default function ClientOnlyComponents() {
       {/* Emergency Service Button - temporarily disabled to fix runtime errors */}
       {/* <EmergencyServiceButton /> */}
       
-      {/* Cookie Consent for GDPR compliance */}
-      <CookieConsent />
+      {/* Cookie Consent for GDPR compliance - temporarily disabled to fix build errors */}
+      {/* <CookieConsent /> */}
       
       {/* Performance Monitor - temporarily disabled to fix runtime errors */}
       {/* <PerformanceMonitor showOnProduction={false} /> */}

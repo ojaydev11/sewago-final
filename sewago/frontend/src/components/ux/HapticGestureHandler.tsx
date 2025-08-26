@@ -111,7 +111,7 @@ const HapticGestureHandler: React.FC<HapticGestureHandlerProps> = ({
 
     // Request permission for iOS 13+
     if (typeof DeviceMotionEvent !== 'undefined' && 'requestPermission' in DeviceMotionEvent) {
-      // @ts-ignore
+      // @ts-expect-error - TouchEvent types may vary
       DeviceMotionEvent.requestPermission().then(response => {
         if (response === 'granted') {
           window.addEventListener('devicemotion', handleMotion);

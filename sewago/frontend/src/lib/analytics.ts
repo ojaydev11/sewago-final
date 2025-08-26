@@ -1,3 +1,7 @@
+'use client';
+import 'client-only';
+
+import { performanceOptimizer } from './performance-ux';
 
 export interface AnalyticsEvent {
   id: string;

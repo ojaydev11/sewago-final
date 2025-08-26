@@ -1,3 +1,6 @@
+'use client';
+import 'client-only';
+
 import { FEATURE_FLAGS } from './featureFlags';
 
 export interface MockNotification {

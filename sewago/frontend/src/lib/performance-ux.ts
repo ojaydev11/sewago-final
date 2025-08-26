@@ -1,3 +1,6 @@
+'use client';
+import 'client-only';
+
 // Performance optimization utilities for UX features
 
 interface PerformanceConfig {

@@ -6,7 +6,8 @@ export const fetchCache = 'force-no-store';
 export const preferredRegion = 'auto';
 
 import { useState } from 'react';
-import { signIn } from 'next-auth/react';
+// Mock auth function - replace with actual backend integration
+const signIn = async (provider: string, options: any) => ({ error: null });
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -29,18 +30,9 @@ export default function LoginPage() {
     setError('');
 
     try {
-      const result = await signIn('credentials', {
-        email,
-        password,
-        redirect: false,
-      });
-
-      if (result?.error) {
-        setError('Invalid email or password');
-      } else {
-        router.push('/dashboard');
-        router.refresh();
-      }
+      // Mock authentication - replace with actual backend API call
+      console.log('Login attempt:', { email, password });
+      setError('Authentication is disabled in frontend-only mode. Please integrate with backend API.');
     } catch (error) {
       setError('An error occurred. Please try again.');
     } finally {

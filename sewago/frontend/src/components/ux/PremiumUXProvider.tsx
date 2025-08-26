@@ -1,6 +1,6 @@
 'use client';
 
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 import { HapticFeedbackProvider } from '@/contexts/HapticFeedbackContext';
 import { AudioFeedbackProvider } from '@/contexts/AudioFeedbackContext';
 import { ContextualIntelligenceProvider } from '@/contexts/ContextualIntelligenceContext';
@@ -42,31 +42,40 @@ export const PremiumUXProvider: React.FC<PremiumUXProviderProps> = ({
   userRole = 'customer',
   culturalContext = true
 }) => {
+  const [navigationContext, setNavigationContext] = useState<any>(undefined);
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  // Determine navigation context based on current page - only on client side
+  useEffect(() => {
+    if (!isClient) return;
+    
+    const getNavigationContext = () => {
+      const path = window.location.pathname;
+      let currentPage = 'home';
+      
+      if (path.includes('/services')) currentPage = 'services';
+      else if (path.includes('/booking')) currentPage = 'booking';
+      else if (path.includes('/dashboard')) currentPage = 'dashboard';
+      else if (path.includes('/profile') || path.includes('/account')) currentPage = 'profile';
+      else if (path.includes('/payment')) currentPage = 'payment';
+      
+      return {
+        currentPage,
+        userRole,
+        actionContext: path
+      };
+    };
+
+    setNavigationContext(getNavigationContext());
+  }, [isClient, userRole]);
+
   if (!enabled) {
     return <>{children}</>;
   }
-
-  // Determine navigation context based on current page
-  const getNavigationContext = () => {
-    if (typeof window === 'undefined') return undefined;
-    
-    const path = window.location.pathname;
-    let currentPage = 'home';
-    
-    if (path.includes('/services')) currentPage = 'services';
-    else if (path.includes('/booking')) currentPage = 'booking';
-    else if (path.includes('/dashboard')) currentPage = 'dashboard';
-    else if (path.includes('/profile') || path.includes('/account')) currentPage = 'profile';
-    else if (path.includes('/payment')) currentPage = 'payment';
-    
-    return {
-      currentPage,
-      userRole,
-      actionContext: path
-    };
-  };
-
-  const navigationContext = getNavigationContext();
 
   return (
     <HapticFeedbackProvider>

@@ -1,5 +1,7 @@
-"use client";
-import { ReactNode, createContext, useContext, useEffect, useState } from "react";
+'use client';
+import 'client-only';
+
+import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 
 type Lang = "en" | "ne";
 

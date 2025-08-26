@@ -1,34 +1,18 @@
 'use client';
 
-import { useEffect } from 'react';
+type Props = { error: Error & { digest?: string }; reset: () => void };
 
-export default function Error({
-  error,
-  reset,
-}: {
-  error: Error & { digest?: string };
-  reset: () => void;
-}) {
-  useEffect(() => {
-    // Log the error to an error reporting service
-    console.error(error);
-  }, [error]);
-
+export default function ErrorPage({ reset }: Props) {
+  // No DOM work in render; any DOM should be in useEffect if needed.
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center p-4">
-      <div className="text-center">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">
-          Something went wrong!
-        </h2>
-        <p className="text-gray-600 mb-6">
-          We encountered an error while processing your request.
-        </p>
-        <button
-          onClick={reset}
-          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
-        >
+    <div className="mx-auto max-w-xl p-10 text-center">
+      <h1 className="text-3xl font-bold">Something went wrong</h1>
+      <p className="mt-2 text-muted-foreground">An unexpected error occurred.</p>
+      <div className="mt-6 flex items-center justify-center gap-3">
+        <button onClick={() => reset()} className="rounded-md border px-4 py-2">
           Try again
         </button>
+        <a href="/" className="underline">Go home</a>
       </div>
     </div>
   );

@@ -1,18 +1,16 @@
-import { getServerSession } from 'next-auth';
+// Mock auth - replace with actual backend integration
+const getServerSession = async () => null;
+const authOptions = {};
 
 // Force dynamic rendering to prevent build-time issues
 export const dynamic = "force-dynamic";
 
 import { redirect } from 'next/navigation';
-import { authOptions } from '@/lib/auth';
 import { NotificationSettings } from '@/components/NotificationSettings';
 
 export default async function NotificationSettingsPage() {
-  const session = await getServerSession(authOptions);
-  
-  if (!session?.user) {
-    redirect('/auth/signin');
-  }
+  // Notification settings are disabled in frontend-only mode
+  redirect('/dashboard');
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">

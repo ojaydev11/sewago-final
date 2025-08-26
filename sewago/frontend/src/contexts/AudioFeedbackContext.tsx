@@ -1,4 +1,5 @@
 'use client';
+import 'client-only';
 
 import React, { createContext, useContext, useState, useEffect, ReactNode, useRef } from 'react';
 
@@ -214,7 +215,7 @@ export function AudioFeedbackProvider({ children }: AudioFeedbackProviderProps) 
 
   const initializeAudioSystem = async () => {
     // Check for audio support
-    const audioSupported = typeof AudioContext !== 'undefined' || typeof webkitAudioContext !== 'undefined';
+    const audioSupported = typeof AudioContext !== 'undefined' || typeof (window as any).webkitAudioContext !== 'undefined';
     setIsAudioSupported(audioSupported);
 
     // Check for speech synthesis support
@@ -223,8 +224,7 @@ export function AudioFeedbackProvider({ children }: AudioFeedbackProviderProps) 
 
     if (audioSupported) {
       try {
-        // @ts-ignore
-        const AudioContextClass = AudioContext || webkitAudioContext;
+        const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
         const context = new AudioContextClass();
         setAudioContext(context);
 

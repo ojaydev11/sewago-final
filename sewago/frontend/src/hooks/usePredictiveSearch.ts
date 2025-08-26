@@ -1,6 +1,7 @@
 'use client';
+import 'client-only';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useDebounce } from './useDebounce';
 
 interface SearchPrediction {

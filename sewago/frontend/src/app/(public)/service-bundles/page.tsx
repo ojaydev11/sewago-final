@@ -7,9 +7,72 @@ export const dynamic = 'force-dynamic';
 const isBuild = process.env.NEXT_PHASE === 'phase-production-build';
 
 import React, { useState } from 'react';
-// import { ServiceBundle, BundleService } from '@/models/ServiceBundle';
-// import { sampleServiceBundles } from '@/models/ServiceBundle';
 import ServiceBundleCard from '@/components/ServiceBundleCard';
+
+// Local type definitions to avoid DB imports
+interface ServiceBundle {
+  id: string;
+  name: string;
+  description: string;
+  services: BundleService[];
+  originalPrice: number;
+  discountedPrice: number;
+  discountPercentage: number;
+  category: string;
+  tags: string[];
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+interface BundleService {
+  serviceId: string;
+  serviceName: string;
+  serviceCategory: string;
+  estimatedDuration: number;
+  individualPrice: number;
+  isRequired: boolean;
+}
+
+// Mock data for build-time safety
+const sampleServiceBundles: ServiceBundle[] = [
+  {
+    id: 'spring-cleaning-bundle',
+    name: 'Spring Cleaning Bundle',
+    description: 'Complete home cleaning package including deep cleaning, window washing, and organization',
+    services: [
+      { serviceId: 'house-cleaning', serviceName: 'House Cleaning', serviceCategory: 'cleaning', estimatedDuration: 120, individualPrice: 1500, isRequired: true },
+      { serviceId: 'window-cleaning', serviceName: 'Window Cleaning', serviceCategory: 'cleaning', estimatedDuration: 90, individualPrice: 800, isRequired: true },
+      { serviceId: 'organization', serviceName: 'Home Organization', serviceCategory: 'cleaning', estimatedDuration: 180, individualPrice: 1200, isRequired: true }
+    ],
+    originalPrice: 3500,
+    discountedPrice: 2800,
+    discountPercentage: 20,
+    category: 'cleaning',
+    tags: ['cleaning', 'spring', 'bundle', 'popular'],
+    isActive: true,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  },
+  {
+    id: 'electrical-maintenance-bundle',
+    name: 'Electrical Maintenance Bundle',
+    description: 'Comprehensive electrical safety check and maintenance package',
+    services: [
+      { serviceId: 'electrical-inspection', serviceName: 'Electrical Inspection', serviceCategory: 'electrical', estimatedDuration: 120, individualPrice: 2000, isRequired: true },
+      { serviceId: 'wiring-repair', serviceName: 'Wiring Repair', serviceCategory: 'electrical', estimatedDuration: 90, individualPrice: 1500, isRequired: true },
+      { serviceId: 'safety-upgrade', serviceName: 'Safety Upgrades', serviceCategory: 'electrical', estimatedDuration: 180, individualPrice: 2500, isRequired: true }
+    ],
+    originalPrice: 6000,
+    discountedPrice: 4800,
+    discountPercentage: 20,
+    category: 'electrical',
+    tags: ['electrical', 'maintenance', 'safety', 'limited'],
+    isActive: true,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  }
+];
 import { useRouter } from 'next/navigation';
 import { formatNPR } from '@/lib/currency';
 import { 

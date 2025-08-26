@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useSession } from 'next-auth/react';
+// Mock session hook - replace with actual backend integration
+const useSession = () => ({ data: { user: { name: 'Mock User', email: 'mock@example.com', role: 'provider' } }, status: 'authenticated' });
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';

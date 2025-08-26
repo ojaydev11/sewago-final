@@ -1,4 +1,5 @@
 'use client';
+import 'client-only';
 
 import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 
@@ -222,9 +223,8 @@ export function ContextualIntelligenceProvider({ children }: ContextualIntellige
     }
 
     // Track battery status if available
-    // @ts-ignore - Battery API types
-    if (navigator.getBattery) {
-      navigator.getBattery().then((battery) => {
+    if ('getBattery' in navigator) {
+      (navigator as any).getBattery().then((battery: any) => {
         updateBatteryContext(battery);
         
         battery.addEventListener('levelchange', () => updateBatteryContext(battery));
@@ -325,7 +325,7 @@ export function ContextualIntelligenceProvider({ children }: ContextualIntellige
       return;
     }
     
-    // @ts-ignore - Navigator connection types
+    // @ts-expect-error - Navigator connection types
     const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
     let connectionSpeed: 'slow' | 'fast' | 'offline' = 'fast';
 

@@ -1,8 +1,16 @@
 'use client';
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { useSession } from 'next-auth/react';
-import { notificationService } from '@/lib/notificationService';
+// Mock session hook - replace with actual backend integration
+const useSession = () => ({ data: { user: { id: 'mock-user-id', name: 'Mock User', email: 'mock@example.com' } } });
+// Mock notification services - replace with actual backend integration
+const notificationService = {
+  getUserNotifications: async () => ({ notifications: [], unreadCount: 0 }),
+  createNotification: async (data: any) => ({ id: 'mock', ...data }),
+  markAsRead: async () => {},
+  markAllAsRead: async () => {},
+  deleteNotification: async () => {}
+};
 import { pushNotificationService } from '@/lib/pushNotificationService';
 import { useToast } from '@/components/ui/toast';
 

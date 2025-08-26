@@ -4,7 +4,8 @@
 export const dynamic = 'force-dynamic';
 
 import React, { useState } from 'react';
-import { signIn } from 'next-auth/react';
+// Mock auth function - replace with actual backend integration
+const signIn = async (provider: string, options: any) => ({ error: null });
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
@@ -80,34 +81,13 @@ export default function ProviderRegisterPage() {
     }
 
     try {
-      const response = await fetch('/api/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          password: formData.password,
-          role: 'PROVIDER',
-          bio: formData.bio,
-          specialties: formData.specialties,
-          experience: parseInt(formData.experience) || 0,
-          phone: formData.phone,
-        }),
-      });
+      // Mock registration API call - replace with actual backend integration
+      const response = { ok: false, json: async () => ({ error: 'Provider registration is disabled in frontend-only mode' }) };
 
-      if (response.ok) {
-        // Auto-sign in after successful registration
-        const result = await signIn('credentials', {
-          email: formData.email,
-          password: formData.password,
-          redirect: false,
-        });
-
-        if (result?.error) {
-          setError('Registration successful but auto-login failed. Please sign in manually.');
-        } else {
-          router.push('/provider/dashboard');
-        }
+      if (false) { // Always false in mock mode
+        // Mock auto-login after registration
+        console.log('Provider registration successful:', formData.email);
+        setError('Provider registration is disabled in frontend-only mode. Please integrate with backend API.');
       } else {
         const data = await response.json();
         setError(data.error || 'Registration failed');

@@ -1,16 +1,18 @@
-
+import 'server-only';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 export default function NotFound() {
   return (
-    <div style={{maxWidth:720, margin:'4rem auto', textAlign:'center', padding:'2rem'}}>
-      <h1 style={{fontSize:28, fontWeight:600}}>Page not found</h1>
-      <p style={{marginTop:8, opacity:0.7}}>The page you're looking for doesn't exist.</p>
-      <a href="/" style={{display:'inline-block', marginTop:24, padding:'8px 16px', border:'1px solid #ccc', borderRadius:8}}>
-        Go home
-      </a>
+    <div className="mx-auto max-w-xl p-10 text-center">
+      <h1 className="text-3xl font-bold">Page not found</h1>
+      <p className="mt-2 text-muted-foreground">
+        The page you're looking for doesn't exist.
+      </p>
+      <div className="mt-6">
+        <a href="/" className="underline">Go home</a>
+      </div>
     </div>
   );
 }

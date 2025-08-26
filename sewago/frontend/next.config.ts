@@ -1,7 +1,38 @@
 import type { NextConfig } from 'next';
-// Temporarily disabled to fix Edge Runtime issues
-// import createNextIntlPlugin from 'next-intl/plugin';
-// const withNextIntl = createNextIntlPlugin('./i18n-config.ts');
+import path from 'path';
+
+/** Prints an import chain when a module that *contains* DOM usage is included */
+class DomUseTracerPlugin {
+  apply(compiler: any) {
+    compiler.hooks.compilation.tap('DomUseTracerPlugin', (compilation: any) => {
+      compilation.hooks.succeedModule.tap('DomUseTracerPlugin', (mod: any) => {
+        const res = mod.resource;
+        if (!res) return;
+        if (!/\.(t|j)sx?$/.test(res)) return;
+        const srcObj = mod.originalSource && mod.originalSource();
+        const code = srcObj && srcObj.source ? String(srcObj.source()) : '';
+        if (!code) return;
+
+        // quick heuristic: DOM globals
+        if (/\b(document|window|navigator|localStorage)\s*\./.test(code)) {
+          const chain = [];
+          const seen = new Set();
+          let cur = mod;
+          while (cur && !seen.has(cur)) {
+            seen.add(cur);
+            chain.push(cur.resource || (cur.identifier && cur.identifier()));
+            cur = cur.issuer;
+          }
+          console.log(
+            '\n[SSR DOM TRACE] Offender included in server bundle:',
+            '\n  Module:', res,
+            '\n  Imported via:\n   - ' + chain.filter(Boolean).join('\n   - ')
+          );
+        }
+      });
+    });
+  }
+}
 
 const nextConfig: NextConfig = {
   // Production optimizations
@@ -9,19 +40,13 @@ const nextConfig: NextConfig = {
   compress: true,
   generateEtags: true,
   
-    // Skip build-time page generation completely
-  generateBuildId: () => 'static-build',
-  
-  
+  // Skip build-time page generation completely
+  // generateBuildId: removed to allow proper cache busting across deploys
   
   // Exclude service worker from build processing
   excludeDefaultMomentLocales: true,
   
-
-
-
-  
-      // Experimental flag to skip page data collection
+  // Experimental flag to skip page data collection
   experimental: {
     optimizeCss: true,
     optimizePackageImports: ['@heroicons/react', 'lucide-react'],
@@ -30,6 +55,7 @@ const nextConfig: NextConfig = {
     cpus: 1,
     // Force all pages to be dynamic
     forceSwcTransforms: true,
+    // Note: instrumentationHook not available in this Next.js version
   },
 
   // Server external packages to prevent edge function bundling issues
@@ -45,26 +71,6 @@ const nextConfig: NextConfig = {
   // Move these out of experimental as per warning
   skipTrailingSlashRedirect: true,
   
-
-  
-  // Force dynamic rendering for all pages
-  // dynamicParams: true,
-  
-  // Disable static optimization
-  // staticGenerationAsyncStorage: false,
-  
-  // Force runtime rendering
-  // runtime: 'nodejs',
-  
-  // Completely disable static generation
-  // generateStaticParams: false,
-  
-  // Force all pages to be dynamic
-  // unstable_runtimeJS: true,
-  
-  // Disable static optimization
-  // unstable_JsPreload: false,
-
   // Image optimization for Lighthouse performance
   images: {
     domains: [
@@ -83,104 +89,9 @@ const nextConfig: NextConfig = {
     unoptimized: false,
   },
 
-  // Advanced webpack optimizations for Lighthouse performance
+  // Simplified webpack configuration
   webpack: (config, { dev, isServer }) => {
-    // Comprehensive client-side library exclusion for server-side processing
-    if (isServer) {
-      config.externals = config.externals || [];
-      
-             // List of problematic client-side modules that should not be processed during SSR
-       const clientOnlyModules = [
-         'sw.js', 'service-worker', 'canvas-confetti', 'framer-motion', 
-         'three', 'socket.io-client', '@react-three/drei', '@react-three/fiber', 
-         '@react-three', 'web-vitals', 'leaflet', 'react-leaflet',
-         'web-vitals', 'debug', 'follow-redirects', '@opentelemetry/api'
-       ];
-       
-              // Only exclude @opentelemetry modules from middleware/edge functions
-       // Keep mongoose, mongodb, prisma for API routes
-       const edgeUnsupportedModules = [
-         '@opentelemetry/api', '@opentelemetry/core', '@opentelemetry/instrumentation',
-         '@opentelemetry/resources', '@opentelemetry/semantic-conventions',
-         '@opentelemetry/auto-instrumentations-node', 'next-intl/server'
-       ];
-       
-       config.externals.push(({ request }: { request: string | null }, callback: (err: Error | null, result?: string) => void) => {
-         if (request && clientOnlyModules.some(module => request.includes(module))) {
-           return callback(null, 'commonjs ' + request);
-         }
-         // Only exclude @opentelemetry modules from edge functions
-         if (request && edgeUnsupportedModules.some(module => request.includes(module))) {
-           return callback(null, 'commonjs ' + request);
-         }
-         callback(null);
-       });
-      
-      // Add global polyfills to prevent 'self is not defined' errors during SSR/build
-      const webpack = require('webpack');
-      
-      // Simple and safe DefinePlugin approach
-      config.plugins.push(
-        new webpack.DefinePlugin({
-          'self': 'global',
-          'typeof self': '"object"',
-        })
-      );
-
-      // Add BannerPlugin to inject polyfills at the very beginning of all bundles
-      config.plugins.push(
-        new webpack.BannerPlugin({
-          banner: `
-// Global polyfill injection for document APIs
-if (typeof global !== 'undefined') {
-  if (!global.document) {
-    global.document = {};
-  }
-  
-  // Mock all essential document methods
-  global.document.querySelector = global.document.querySelector || (() => null);
-  global.document.getElementById = global.document.getElementById || (() => null);
-  global.document.createElement = global.document.createElement || (() => ({}));
-  global.document.head = global.document.head || {};
-  global.document.body = global.document.body || {};
-  global.document.title = global.document.title || '';
-  global.document.cookie = global.document.cookie || '';
-  global.document.readyState = global.document.readyState || 'complete';
-  global.document.hidden = global.document.hidden || false;
-  global.document.documentElement = global.document.documentElement || {};
-  
-  // Mock document methods that might be called
-  global.document.addEventListener = global.document.addEventListener || (() => {});
-  global.document.removeEventListener = global.document.removeEventListener || (() => {});
-  global.document.contains = global.document.contains || (() => false);
-  
-  // Mock documentElement properties
-  global.document.documentElement.scrollTop = global.document.documentElement.scrollTop || 0;
-  global.document.documentElement.scrollHeight = global.document.documentElement.scrollHeight || 1000;
-  
-  // Mock body methods
-  global.document.body.appendChild = global.document.body.appendChild || (() => {});
-  global.document.body.removeChild = global.document.body.removeChild || (() => {});
-  global.document.body.classList = global.document.body.classList || {
-    add: () => {},
-    remove: () => {}
-  };
-  
-  // Mock head methods
-  global.document.head.appendChild = global.document.head.appendChild || (() => {});
-  global.document.head.removeChild = global.document.head.removeChild || (() => {});
-  global.document.head.contains = global.document.head.contains || (() => false);
-}
-          `.trim(),
-          raw: true,
-          entryOnly: false,
-        })
-      );
-
-
-    }
-
-    // Add more comprehensive client-side library handling
+    // Add resolve fallbacks for client-side libraries
     config.resolve.fallback = {
       ...config.resolve.fallback,
       fs: false,
@@ -191,11 +102,47 @@ if (typeof global !== 'undefined') {
     // Add resolve alias for globalThis as fallback only
     config.resolve.alias = {
       ...config.resolve.alias,
+      // DB alias guards - prevent accidental DB imports
+      mongoose: false,
+      mongodb: false,
+      '@prisma/client': false,
     };
 
-             if (!dev) {
-           // Completely disable chunk splitting to prevent vendor.js issues
-           config.optimization.splitChunks = false;
+    if (isServer && !process.env.NEXT_RUNTIME?.includes('edge')) {
+      // Inject SSR DOM guard before any server entry (skip Edge runtimes)
+      const origEntry = config.entry;
+      config.entry = async () => {
+        const entries = await (typeof origEntry === 'function' ? origEntry() : origEntry);
+        for (const k of Object.keys(entries)) {
+          // Skip Next.js legacy Pages runtime entries entirely (_app, _document, _error)
+          if (k.startsWith('pages/')) continue;
+          const arr = Array.isArray(entries[k]) ? entries[k] : [entries[k]];
+          entries[k] = [path.resolve('scripts/ssr-dom-guard.cjs'), ...arr];
+        }
+        return entries;
+      };
+      
+      // print import chains for DOM usage in server bundle (skip Edge runtimes)
+      config.plugins.push(new DomUseTracerPlugin());
+
+      // hard-stop common DOM-only libs on server
+      config.resolve.alias = {
+        ...(config.resolve.alias || {}),
+        'mapbox-gl': false,
+        'lottie-web': false,
+        'chart.js': false,
+        'dompurify': false,
+        'firebase/app': false,
+        'firebase/auth': false,
+        'react-dom/client': false,
+        'three': false,
+        'video.js': false,
+      };
+    }
+
+    if (!dev) {
+      // Completely disable chunk splitting to prevent vendor.js issues
+      config.optimization.splitChunks = false;
 
       // Additional optimizations for production
       if (!isServer) {
@@ -306,7 +253,6 @@ if (typeof global !== 'undefined') {
         destination: '/',
         permanent: true,
       },
-      // REMOVED: Self-redirect loop that was causing infinite redirects
     ];
   },
 
@@ -315,17 +261,15 @@ if (typeof global !== 'undefined') {
     CUSTOM_KEY: process.env.CUSTOM_KEY,
   },
 
-  // Temporarily disable TypeScript checking for build
+  // TypeScript checking enabled for build safety
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false,
   },
 
-  // Disable ESLint during build to prevent blocking
+  // ESLint enabled for build safety
   eslint: {
-    ignoreDuringBuilds: true,
+    ignoreDuringBuilds: false,
   },
-
-
 
   async rewrites() {
     return {
@@ -348,5 +292,4 @@ if (typeof global !== 'undefined') {
   },
 };
 
-// export default withNextIntl(nextConfig);
 export default nextConfig;

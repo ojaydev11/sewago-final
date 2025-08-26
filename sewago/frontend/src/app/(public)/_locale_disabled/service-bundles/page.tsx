@@ -1,8 +1,30 @@
 'use client';
 
 import React, { useState } from 'react';
-import { ServiceBundle } from '@/models/ServiceBundle';
 import ServiceBundleCard from '@/components/ServiceBundleCard';
+
+// Local type definition to avoid DB imports
+interface ServiceBundle {
+  id: string;
+  name: string;
+  description: string;
+  services: Array<{
+    serviceId: string;
+    serviceName: string;
+    serviceCategory: string;
+    estimatedDuration: number;
+    individualPrice: number;
+    isRequired: boolean;
+  }>;
+  originalPrice: number;
+  discountedPrice: number;
+  discountPercentage: number;
+  category: string;
+  tags: string[];
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
 import { formatNPR } from '@/lib/currency';
 import { useRouter } from 'next/navigation';
 import { 

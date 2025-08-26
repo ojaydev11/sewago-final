@@ -1,6 +1,7 @@
 'use client';
+import 'client-only';
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useEffect, useRef, useState, useCallback, ReactNode } from 'react';
 
 interface HapticPattern {
   id: string;
@@ -223,7 +224,7 @@ export function HapticFeedbackProvider({ children }: HapticFeedbackProviderProps
   const monitorBattery = async () => {
     if ('getBattery' in navigator) {
       try {
-        // @ts-ignore - Battery API types not fully supported
+        // @ts-expect-error - Battery API types not fully supported
         const battery = await navigator.getBattery();
         const updateBatteryOptimization = () => {
           const batteryLevel = battery.level * 100;

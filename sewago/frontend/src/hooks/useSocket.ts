@@ -1,4 +1,7 @@
-import { useEffect, useState, useRef } from 'react';
+'use client';
+import 'client-only';
+
+import { useEffect, useRef, useCallback, useState } from 'react';
 import type { Socket } from 'socket.io-client';
 
 interface UseSocketReturn {

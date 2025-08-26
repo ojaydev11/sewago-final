@@ -1,21 +1,7 @@
+import 'server-only';
 import type { Metadata } from 'next';
-
-// Force dynamic rendering to prevent build-time prerendering issues
-export const dynamic = 'force-dynamic';
-
-// Build-time guard to prevent server-only code from running during build
-const isBuild = process.env.NEXT_PHASE === 'phase-production-build';
-
 import { Inter } from 'next/font/google';
-import { Suspense } from 'react';
 import './globals.css';
-
-import { AuthProvider } from '@/providers/auth';
-import { ReactQueryProvider } from '@/providers/react-query';
-// Temporarily disabled for deployment
-// import { NextIntlClientProvider } from 'next-intl';
-import ClientOnlyComponents from '@/components/ClientOnlyComponents';
-import PremiumUXProvider from '@/components/ux/PremiumUXProvider';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -91,18 +77,6 @@ export default async function RootLayout({
 }) {
   // Handle missing locale gracefully
   const locale = params?.locale || 'en';
-  
-  // Temporarily disabled for deployment - causes 500 errors
-  // let messages = {};
-  // if (!isBuild) {
-  //   try {
-  //     const { getMessages } = await import('next-intl/server');
-  //     messages = await getMessages();
-  //   } catch (error) {
-  //     // Fallback to empty messages during build
-  //     console.warn('Could not load messages during build phase');
-  //   }
-  // }
 
   return (
     <html lang={locale}>
@@ -173,37 +147,10 @@ export default async function RootLayout({
           }}
         />
       </head>
-      <body className={inter.className}>
-        {/* BINARY-DISABLE B.6: Replace AuthProvider with noop to eliminate session divergence */}
-        {/* <AuthProvider> */}
-        {/* BINARY-DISABLE B.8: Remove ReactQueryProvider - Absolute minimal test */}
-          {/* <ReactQueryProvider> */}
-            {/* BINARY-DISABLE A.1: Temporarily disable PremiumUXProvider to isolate #419 */}
-            {/* <PremiumUXProvider
-              enabled={true}
-              features={{
-                hapticFeedback: false,
-                audioFeedback: false,
-                voiceGuidance: false,
-                contextualIntelligence: false,
-                culturalUX: false,
-                accessibilityEnhancements: true,
-                performanceOptimization: true
-              }}
-              userRole="customer"
-              culturalContext={false}
-            > */}
-              <main className="min-h-screen bg-gray-50">
-                {children}
-              </main>
-              
-              {/* BINARY-DISABLE A.2: Temporarily disable ClientOnlyComponents to isolate #419 */}
-              {/* <Suspense fallback={null}>
-                <ClientOnlyComponents />
-              </Suspense> */}
-            {/* </PremiumUXProvider> */}
-          {/* </ReactQueryProvider> */}
-        {/* </AuthProvider> */}
+      <body className={inter.className} suppressHydrationWarning>
+        <main className="min-h-screen bg-gray-50">
+          {children}
+        </main>
       </body>
     </html>
   );

@@ -1,4 +1,7 @@
-import { useState, useEffect, useCallback } from 'react';
+'use client';
+import 'client-only';
+
+import { useState, useEffect, useCallback, useRef } from 'react';
 
 export interface GrowthMetrics {
   totalUsers: number;

@@ -1,3 +1,6 @@
+'use client';
+import 'client-only';
+
 // Utility functions for UX features
 
 import { performanceOptimizer, uxAssetLoader } from './performance-ux';
@@ -318,11 +321,17 @@ export class ContextAnalyzer {
     priority: 'performance' | 'features' | 'accessibility';
     culturalElements: boolean;
   } {
-    const recommendations = {
-      theme: 'auto' as const,
-      animations: 'full' as const,
-      layout: 'comfortable' as const,
-      priority: 'features' as const,
+    const recommendations: {
+      theme: 'light' | 'dark' | 'auto';
+      animations: 'full' | 'reduced' | 'disabled';
+      layout: 'compact' | 'comfortable' | 'spacious';
+      priority: 'performance' | 'features' | 'accessibility';
+      culturalElements: boolean;
+    } = {
+      theme: 'auto',
+      animations: 'full',
+      layout: 'comfortable',
+      priority: 'features',
       culturalElements: context.user.culturalPreferences
     };
 
@@ -371,7 +380,7 @@ export class ContextAnalyzer {
   private static analyzeConnection(): 'fast' | 'slow' | 'offline' {
     if (!navigator.onLine) return 'offline';
     
-    // @ts-ignore - Connection API types
+    // @ts-expect-error - Navigator types may vary
     const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
     
     if (connection) {
@@ -665,10 +674,4 @@ export class AccessibilityUtils {
 }
 
 // Export all utilities
-export {
-  HapticPatternGenerator,
-  SoundManager,
-  ContextAnalyzer,
-  AnimationController,
-  AccessibilityUtils
-};
+// Classes are already exported when defined above

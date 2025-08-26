@@ -1,3 +1,8 @@
+'use client';
+import 'client-only';
+
+import { createI18n } from 'next-international';
+
 export type Locale = 'en' | 'ne';
 
 export interface I18nConfig {

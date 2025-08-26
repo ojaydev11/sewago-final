@@ -4,7 +4,8 @@
 export const dynamic = 'force-dynamic';
 
 import { useEffect } from 'react';
-import { useSession } from 'next-auth/react';
+// Mock session hook - replace with actual backend integration
+const useSession = () => ({ data: { user: { name: 'Mock User', email: 'mock@example.com' } } });
 import { useRouter } from 'next/navigation';
 import { isNotificationsEnabled } from '@/lib/featureFlags';
 

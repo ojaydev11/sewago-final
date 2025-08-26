@@ -1,5 +1,9 @@
+'use client';
+import 'client-only';
+
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { useSession } from 'next-auth/react';
+// Mock session hook - replace with actual backend integration
+const useSession = () => ({ data: { user: { id: 'mock-user-id', name: 'Mock User', email: 'mock@example.com' } } });
 import type { Socket } from 'socket.io-client';
 import { useToast } from '@/components/ui/toast';
 import { isNotificationsEnabled, isPushNotificationsEnabled } from '@/lib/featureFlags';

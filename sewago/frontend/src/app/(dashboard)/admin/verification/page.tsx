@@ -3,21 +3,15 @@ import React from 'react';
 // Force dynamic rendering to prevent build-time issues
 export const dynamic = "force-dynamic";
 
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+// Mock auth - replace with actual backend integration
+const getServerSession = async () => null;
+const authOptions = {};
 import { redirect } from 'next/navigation';
 import AdminVerificationDashboard from '@/components/AdminVerificationDashboard';
 
 export default async function AdminVerificationPage() {
-  const session = await getServerSession(authOptions);
-  
-  if (!session) {
-    redirect('/auth/signin');
-  }
-  
-  if (session.user.role !== 'admin') {
-    redirect('/dashboard');
-  }
+  // Admin verification is disabled in frontend-only mode
+  redirect('/dashboard');
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">

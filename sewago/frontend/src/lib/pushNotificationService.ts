@@ -1,3 +1,8 @@
+'use client';
+import 'client-only';
+
+import { NotificationService } from './notificationService';
+
 export interface PushNotificationPayload {
   title: string;
   body: string;

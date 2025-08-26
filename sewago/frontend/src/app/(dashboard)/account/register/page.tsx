@@ -4,7 +4,8 @@ import React, { useState } from 'react';
 
 // Force dynamic rendering to prevent build-time pre-rendering
 export const dynamic = 'force-dynamic';
-import { signIn } from 'next-auth/react';
+// Mock auth function - replace with actual backend integration
+const signIn = async (provider: string, options: any) => ({ error: null });
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
@@ -49,30 +50,13 @@ export default function RegisterPage() {
     }
 
     try {
-      const response = await fetch('/api/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          password: formData.password,
-          role: formData.role,
-        }),
-      });
+      // Mock registration API call - replace with actual backend integration
+      const response = { ok: false, json: async () => ({ error: 'Registration is disabled in frontend-only mode' }) };
 
-      if (response.ok) {
-        // Auto-sign in after successful registration
-        const result = await signIn('credentials', {
-          email: formData.email,
-          password: formData.password,
-          redirect: false,
-        });
-
-        if (result?.error) {
-          setError('Registration successful but auto-login failed. Please sign in manually.');
-        } else {
-          router.push('/account');
-        }
+      if (false) { // Always false in mock mode
+        // Mock auto-login after registration
+        console.log('Registration successful:', formData.email);
+        setError('Registration is disabled in frontend-only mode. Please integrate with backend API.');
       } else {
         const data = await response.json();
         setError(data.error || 'Registration failed');

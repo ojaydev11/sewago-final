@@ -1,3 +1,6 @@
+'use client';
+import 'client-only';
+
 // Internationalization for SewaGo
 // Supports English (en) and Nepali (ne)
 

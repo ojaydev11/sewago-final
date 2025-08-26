@@ -1,5 +1,3 @@
-import { Types } from 'mongoose';
-
 // Mock data types
 export interface MockUser {
   _id: string;
@@ -60,7 +58,7 @@ class MockStore {
     // Seed some mock services
     this.services = [
       {
-        _id: new Types.ObjectId().toString(),
+        _id: this.generateId(),
         name: 'House Cleaning',
         slug: 'house-cleaning',
         description: 'Professional house cleaning services',
@@ -69,7 +67,7 @@ class MockStore {
         createdAt: new Date(),
       },
       {
-        _id: new Types.ObjectId().toString(),
+        _id: this.generateId(),
         name: 'Electrical Repair',
         slug: 'electrical-repair',
         description: 'Expert electrical repair and maintenance',
@@ -78,7 +76,7 @@ class MockStore {
         createdAt: new Date(),
       },
       {
-        _id: new Types.ObjectId().toString(),
+        _id: this.generateId(),
         name: 'Gardening',
         slug: 'gardening',
         description: 'Landscaping and garden maintenance',
@@ -91,7 +89,7 @@ class MockStore {
     // Seed a mock user
     this.users = [
       {
-        _id: new Types.ObjectId().toString(),
+        _id: this.generateId(),
         name: 'Demo User',
         email: 'demo@example.com',
         passwordHash: '$2b$10$demo.hash.for.testing',
@@ -99,6 +97,10 @@ class MockStore {
         createdAt: new Date(),
       },
     ];
+  }
+
+  private generateId(): string {
+    return Math.random().toString(36).substr(2, 9);
   }
 
   // User methods
@@ -114,7 +116,7 @@ class MockStore {
 
   async create(data: Omit<MockUser, '_id' | 'createdAt'>): Promise<MockUser> {
     const user: MockUser = {
-      _id: new Types.ObjectId().toString(),
+      _id: this.generateId(),
       ...data,
       createdAt: new Date(),
     };
@@ -140,7 +142,7 @@ class MockStore {
   // Booking methods
   async createBooking(data: Omit<MockBooking, '_id' | 'createdAt'>): Promise<MockBooking> {
     const booking: MockBooking = {
-      _id: new Types.ObjectId().toString(),
+      _id: this.generateId(),
       ...data,
       createdAt: new Date(),
     };
@@ -172,7 +174,7 @@ class MockStore {
 
   async create(data: Omit<MockProviderProfile, '_id'>): Promise<MockProviderProfile> {
     const profile: MockProviderProfile = {
-      _id: new Types.ObjectId().toString(),
+      _id: this.generateId(),
       ...data,
     };
     this.providerProfiles.push(profile);

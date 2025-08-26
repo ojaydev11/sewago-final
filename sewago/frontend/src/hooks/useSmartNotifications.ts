@@ -1,4 +1,5 @@
 'use client';
+import 'client-only';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNotifications } from './useNotifications';

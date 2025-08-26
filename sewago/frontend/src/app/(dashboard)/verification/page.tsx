@@ -3,22 +3,16 @@ import React from 'react';
 // Force dynamic rendering to prevent build-time issues
 export const dynamic = "force-dynamic";
 
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+// Mock auth - replace with actual backend integration
+const getServerSession = async () => null;
+const authOptions = {};
 import { redirect } from 'next/navigation';
 import ProviderVerificationForm from '@/components/ProviderVerificationForm';
 import VerificationStatus from '@/components/VerificationStatus';
 
 export default async function VerificationPage() {
-  const session = await getServerSession(authOptions);
-  
-  if (!session) {
-    redirect('/auth/signin');
-  }
-  
-  if (session.user.role !== 'provider') {
-    redirect('/dashboard');
-  }
+  // Verification is disabled in frontend-only mode
+  redirect('/dashboard');
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">

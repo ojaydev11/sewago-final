@@ -6,7 +6,8 @@ import Link from 'next/link';
 // Force dynamic rendering to prevent build-time pre-rendering
 export const dynamic = 'force-dynamic';
 
-import { useSession } from 'next-auth/react';
+// Mock session hook - replace with actual backend integration
+const useSession = () => ({ data: { user: { name: 'Mock User', email: 'mock@example.com' } } });
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';

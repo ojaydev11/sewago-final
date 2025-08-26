@@ -5,7 +5,9 @@ export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 import React, { useState } from 'react';
-import { signIn, getSession } from 'next-auth/react';
+// Mock auth functions - replace with actual backend integration
+const signIn = async (provider: string, options: any) => ({ error: null });
+const getSession = async () => ({ user: { name: 'Mock User', email: 'mock@example.com' } });
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
@@ -24,21 +26,9 @@ export default function LoginPage() {
     setError('');
 
     try {
-      const result = await signIn('credentials', {
-        email,
-        password,
-        redirect: false,
-      });
-
-      if (result?.error) {
-        setError('Invalid email or password');
-      } else {
-        // Check if user is logged in
-        const session = await getSession();
-        if (session) {
-          router.push('/account');
-        }
-      }
+              // Mock authentication - replace with actual backend API call
+        console.log('Login attempt:', { email, password });
+        setError('Authentication is disabled in frontend-only mode. Please integrate with backend API.');
     } catch (error) {
       setError('An error occurred. Please try again.');
     } finally {
