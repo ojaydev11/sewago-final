@@ -34,7 +34,7 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     // Only fetch session if auth is enabled
-    if (typeof window !== 'undefined' && process.env.NEXT_PUBLIC_AUTH_ENABLED === 'true') {
+    if (process.env.NEXT_PUBLIC_AUTH_ENABLED === 'true') {
       const fetchSession = async () => {
         try {
           const response = await fetch('/api/auth/session');
@@ -51,8 +51,14 @@ export default function AdminDashboard() {
     fetchDashboardStats();
   }, []);
 
-  // Check if auth is enabled
-  if (typeof window !== 'undefined' && process.env.NEXT_PUBLIC_AUTH_ENABLED !== 'true') {
+  // Check if auth is enabled - moved to client-side check
+  const [authEnabled, setAuthEnabled] = useState(false);
+  
+  useEffect(() => {
+    setAuthEnabled(process.env.NEXT_PUBLIC_AUTH_ENABLED === 'true');
+  }, []);
+
+  if (!authEnabled) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">

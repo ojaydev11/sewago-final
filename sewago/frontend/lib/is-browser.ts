@@ -1,1 +1,4 @@
-export const isBrowser = () => typeof window !== 'undefined';
+export const isBrowser = () => {
+  if (typeof window === 'undefined') return false;
+  return true;
+};
