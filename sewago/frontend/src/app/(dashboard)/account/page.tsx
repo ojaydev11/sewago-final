@@ -12,8 +12,15 @@ export default async function AccountPage() {
     redirect('/auth/login');
   }
 
-  // Type assertion to include role property
-  const userWithRole = user as typeof user & { role?: string };
+  // Mock user data for frontend-only mode
+  const mockUser = {
+    name: 'Demo User',
+    email: 'demo@example.com',
+    role: 'customer'
+  };
+
+  // Use mock user data since getCurrentUser returns null in frontend mode
+  const userWithRole = mockUser as typeof mockUser & { role?: string };
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
@@ -23,7 +30,7 @@ export default async function AccountPage() {
           <div className="px-4 py-5 sm:p-6 border-b border-gray-200">
             <h1 className="text-2xl font-bold text-gray-900">My Account</h1>
             <p className="mt-1 text-sm text-gray-600">
-              Welcome back, {user.name}
+              Welcome back, {mockUser.name}
             </p>
           </div>
 
@@ -33,11 +40,11 @@ export default async function AccountPage() {
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
                 <label className="block text-sm font-medium text-gray-700">Name</label>
-                <p className="mt-1 text-sm text-gray-900">{user.name}</p>
+                <p className="mt-1 text-sm text-gray-900">{mockUser.name}</p>
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700">Email</label>
-                <p className="mt-1 text-sm text-gray-900">{user.email}</p>
+                <p className="mt-1 text-sm text-gray-900">{mockUser.email}</p>
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700">Account Type</label>

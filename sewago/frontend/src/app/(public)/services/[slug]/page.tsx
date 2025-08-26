@@ -36,14 +36,14 @@ export async function generateMetadata({ params }: ServiceDetailPageProps): Prom
 
   return {
     title: `${service.name} Services in Nepal | SewaGo`,
-    description: `${service.shortDesc} - Professional ${service.name.toLowerCase()} services available in Kathmandu, Pokhara, and across Nepal. Book verified providers with SewaGo.`,
+    description: `${service.description} - Professional ${service.name.toLowerCase()} services available in Kathmandu, Pokhara, and across Nepal. Book verified providers with SewaGo.`,
     keywords: `${service.name}, ${service.category}, local services, ${service.category.toLowerCase()}, Nepal, Kathmandu, Pokhara`,
     alternates: {
       canonical: `${siteUrl}/services/${params.slug}`,
     },
     openGraph: {
       title: `${service.name} Services in Nepal | SewaGo`,
-      description: service.shortDesc,
+      description: service.description,
       url: `${siteUrl}/services/${params.slug}`,
       type: 'website',
     },
@@ -113,22 +113,12 @@ export default async function ServiceDetailPage({ params }: ServiceDetailPagePro
                 <div>
                   <div className="flex items-center space-x-2 mb-2">
                     <Badge variant="secondary">{service.category}</Badge>
-                    {service.isVerified && (
-                      <Badge variant="default" className="bg-green-100 text-green-800">
-                        Verified Service
-                      </Badge>
-                    )}
-                    {service.hasWarranty && (
-                      <Badge variant="outline" className="border-blue-200 text-blue-700">
-                        {service.warrantyDays} Day Warranty
-                      </Badge>
-                    )}
                   </div>
                   <h1 className="text-3xl font-bold text-gray-900 mb-2">
                     {service.name}
                   </h1>
                   <p className="text-xl text-gray-600">
-                    {service.shortDesc}
+                    {service.description}
                   </p>
                 </div>
                 <div className="text-right">
@@ -143,13 +133,13 @@ export default async function ServiceDetailPage({ params }: ServiceDetailPagePro
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t">
                 <div className="text-center">
                   <div className="text-2xl font-bold text-gray-900">
-                    {service.reviewStats?.averageRating?.toFixed(1) || '4.8'}
+                    {service.rating?.toFixed(1) || '4.8'}
                   </div>
                   <div className="text-sm text-gray-500">Rating</div>
                 </div>
                 <div className="text-center">
                   <div className="text-2xl font-bold text-gray-900">
-                    {service.reviewStats?.totalReviews || '50+'}
+                    {service.reviewCount || '50+'}
                   </div>
                   <div className="text-sm text-gray-500">Reviews</div>
                 </div>
@@ -185,7 +175,7 @@ export default async function ServiceDetailPage({ params }: ServiceDetailPagePro
               </h2>
               <div className="prose prose-gray max-w-none">
                 <p className="text-gray-700 leading-relaxed">
-                  {service.longDesc}
+                  {service.description}
                 </p>
               </div>
             </div>
@@ -212,19 +202,13 @@ export default async function ServiceDetailPage({ params }: ServiceDetailPagePro
                   <CheckCircle className="h-5 w-5 text-green-500" />
                   <span className="text-gray-700">Customer support</span>
                 </div>
-                {service.hasWarranty && (
-                  <div className="flex items-center space-x-3">
-                    <Shield className="h-5 w-5 text-blue-500" />
-                    <span className="text-gray-700">{service.warrantyDays} day warranty</span>
-                  </div>
-                )}
               </div>
             </div>
           </div>
 
           {/* Service Promises & Guarantees */}
           <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-            <ServicePromises serviceSlug={slug} />
+            <ServicePromises serviceSlug={params.slug} />
           </div>
 
           {/* Sidebar */}
@@ -277,7 +261,7 @@ export default async function ServiceDetailPage({ params }: ServiceDetailPagePro
             {/* Late Credit Calculator */}
             <Card className="mt-6">
               <LateCreditCalculator 
-                serviceSlug={slug} 
+                serviceSlug={params.slug} 
                 basePrice={service.basePrice} 
               />
             </Card>

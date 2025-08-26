@@ -61,29 +61,17 @@ export default function BookingTrackPage() {
   
   const { socket, isConnected } = useSocket();
 
-  // Check for valid params after hooks are called
-  if (!params?.id) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="text-gray-400 mb-4">
-            <ExclamationTriangleIcon className="w-16 h-16 mx-auto" />
-          </div>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">Invalid booking ID</h3>
-          <p className="text-gray-600">Please check the URL and try again.</p>
-        </div>
-      </div>
-    );
-  }
-  
-  const bookingId = params.id;
-  
+  // Get bookingId safely - will be undefined if params.id doesn't exist
+  const bookingId = typeof params?.id === 'string' ? params.id : undefined;
+
   useEffect(() => {
-    fetchBooking();
+    if (bookingId) {
+      fetchBooking();
+    }
   }, [bookingId]);
 
   useEffect(() => {
-    if (socket && isConnected) {
+    if (socket && isConnected && bookingId) {
       // Join the booking room for real-time updates
       socket.emit('joinBookingRoom', { 
         bookingId, 
@@ -172,7 +160,7 @@ export default function BookingTrackPage() {
         setBooking(data.data);
         
         // Get ETA if provider is assigned
-        if (data.data.providerId) {
+        if (data.data.providerId && bookingId) {
           fetchETA(bookingId);
         }
       } else {

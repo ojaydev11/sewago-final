@@ -281,7 +281,7 @@ export default function ProviderTraining() {
             course={selectedCourse}
             providerId={session.user.id}
             onClose={() => setSelectedCourse(null)}
-            onComplete={fetchTrainingData}
+            onComplete={() => fetchTrainingData(session.user.id)}
           />
         )}
       </div>

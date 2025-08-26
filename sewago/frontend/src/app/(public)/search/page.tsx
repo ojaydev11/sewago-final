@@ -18,10 +18,10 @@ export default function SearchPage() {
   const [suggestions, setSuggestions] = useState<string[]>([]);
   
   const [filters, setFilters] = useState<SearchFilters>({
-    query: searchParams.get('q') || '',
-    serviceCategory: searchParams.get('category') || '',
-    city: searchParams.get('city') || '',
-    verifiedProvidersOnly: searchParams.get('verified') === 'true',
+    query: searchParams?.get('q') || '',
+    serviceCategory: searchParams?.get('category') || '',
+    city: searchParams?.get('city') || '',
+    verifiedProvidersOnly: searchParams?.get('verified') === 'true',
   });
 
   useEffect(() => {

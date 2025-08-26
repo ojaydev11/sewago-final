@@ -10,10 +10,24 @@ import { api } from "@/lib/api";
 type Service = { _id: string; title: string; basePrice: number; location: string; rating?: number };
 
 export default function CategoryServicesPage() {
-  const { category } = useParams<{ category: string }>();
+  const params = useParams<{ category: string }>();
+  const category = params?.category;
   const search = useSearchParams();
   const router = useRouter();
   const location = search.get("location") ?? "";
+  
+  // Early return if category is not available
+  if (!category) {
+    return (
+      <div className="max-w-6xl mx-auto px-4 py-6">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">Category Not Found</h1>
+          <p className="text-gray-600">Please check the URL and try again.</p>
+        </div>
+      </div>
+    );
+  }
+  
   const { data } = useQuery({
     queryKey: ["services", category, location],
     queryFn: async () => (await api.get<Service[]>("/services", { params: { category, location } })).data,

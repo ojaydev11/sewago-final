@@ -195,8 +195,9 @@ export default function AdminProvidersPage() {
   };
 
   const handleToggleProviderStatus = async (providerId: string, isOnline: boolean) => {
+    const action = isOnline ? 'activate' : 'pause';
+    
     try {
-      const action = isOnline ? 'activate' : 'pause';
       const response = await fetch(`/api/admin/providers/${providerId}/${action}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' }

@@ -11,7 +11,9 @@ import { useParams } from "next/navigation";
 type Message = { _id: string; fromUserId: string; toUserId: string; content: string; createdAt: string };
 
 export default function ChatPage() {
-  const { bookingId } = useParams<{ bookingId: string }>();
+  const params = useParams<{ bookingId: string }>();
+  const bookingId = params?.bookingId;
+  
   const [messages, setMessages] = useState<Message[]>([]);
   const [content, setContent] = useState("");
 
@@ -27,10 +29,19 @@ export default function ChatPage() {
   }, [bookingId]);
 
   const send = async () => {
+    if (!bookingId) return;
     const res = await api.post(`/messages/${bookingId}`, { content });
     socket.emit("message:send", { bookingId, message: res.data });
     setContent("");
   };
+
+  if (!bookingId) {
+    return (
+      <div className="max-w-xl mx-auto px-4 py-6">
+        <div className="text-center text-gray-500">Invalid booking ID</div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-xl mx-auto px-4 py-6">

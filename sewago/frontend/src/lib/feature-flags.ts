@@ -15,6 +15,7 @@ export const FEATURE_FLAGS = {
   PARTNER_API_ENABLED: process.env.NEXT_PUBLIC_PARTNER_API_ENABLED === 'true',
   WEBHOOKS_ENABLED: process.env.NEXT_PUBLIC_WEBHOOKS_ENABLED === 'true',
   SEARCH_ENABLED: process.env.NEXT_PUBLIC_SEARCH_ENABLED === 'true',
+  TRAINING_HUB_ENABLED: process.env.NEXT_PUBLIC_TRAINING_HUB_ENABLED === 'true',
 } as const;
 
 export type FeatureFlag = keyof typeof FEATURE_FLAGS;

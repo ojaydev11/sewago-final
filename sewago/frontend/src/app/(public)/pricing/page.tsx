@@ -95,14 +95,14 @@ export default async function PricingPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
           {services.map((service) => (
-            <Card key={service._id} className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+            <Card key={service.id} className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
               <CardHeader className="text-center pb-4">
                 <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
                   <span className="text-2xl">{service.name.charAt(0)}</span>
                 </div>
                 <CardTitle className="text-xl">{service.name}</CardTitle>
                 <CardDescription className="text-gray-600">
-                  {service.shortDesc}
+                  {service.description}
                 </CardDescription>
                 <div className="pt-4">
                   <span className="text-3xl font-bold text-primary">
@@ -125,12 +125,6 @@ export default async function PricingPage() {
                     <Check className="h-4 w-4 text-green-500" />
                     <span>Verified provider</span>
                   </div>
-                  {service.hasWarranty && (
-                    <div className="flex items-center space-x-2 text-sm text-gray-600">
-                      <Check className="h-4 w-4 text-green-500" />
-                      <span>{service.warrantyDays} day warranty</span>
-                    </div>
-                  )}
                 </div>
 
                 <Link href={`/services/${service.slug}/book`} className="w-full">
