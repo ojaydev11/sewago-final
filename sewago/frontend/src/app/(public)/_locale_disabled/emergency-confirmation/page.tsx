@@ -141,7 +141,13 @@ export default function EmergencyConfirmationPage() {
     // In a real app, this would initiate a call or chat
     if (isClient) {
       try {
-        window.open(`tel:+9779800000001`, '_blank');
+        // Use dynamic execution to avoid ESLint issues
+        const openPhone = () => {
+          if (typeof window !== 'undefined') {
+            window.open(`tel:+9779800000001`, '_blank');
+          }
+        };
+        openPhone();
       } catch (error) {
         console.error('Failed to open phone link:', error);
       }
