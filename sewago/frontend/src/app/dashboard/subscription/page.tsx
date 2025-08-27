@@ -1,11 +1,5 @@
 'use client';
 
-// Force dynamic rendering to prevent build-time prerendering
-export const dynamic = 'force-dynamic';
-export const fetchCache = 'force-no-store';
-export const preferredRegion = 'auto';
-export const revalidate = 0;
-
 import { SubscriptionDashboard } from '@/components/subscriptions';
 
 export default function SubscriptionPage() {
