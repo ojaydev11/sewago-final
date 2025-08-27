@@ -16,6 +16,16 @@ export default function CategoryServicesPage() {
   const router = useRouter();
   const location = search.get("location") ?? "";
   
+  // Move useQuery before any conditional returns to follow Rules of Hooks
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["services", category, location],
+    queryFn: async () => {
+      if (!category) return [];
+      return (await api.get<Service[]>("/services", { params: { category, location } })).data;
+    },
+    enabled: !!category, // Only run query when category is available
+  });
+  
   // Early return if category is not available
   if (!category) {
     return (
@@ -27,11 +37,30 @@ export default function CategoryServicesPage() {
       </div>
     );
   }
-  
-  const { data } = useQuery({
-    queryKey: ["services", category, location],
-    queryFn: async () => (await api.get<Service[]>("/services", { params: { category, location } })).data,
-  });
+
+  // Show loading state
+  if (isLoading) {
+    return (
+      <div className="max-w-6xl mx-auto px-4 py-6">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">Loading Services...</h1>
+          <p className="text-gray-600">Please wait while we fetch the services.</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <div className="max-w-6xl mx-auto px-4 py-6">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">Error Loading Services</h1>
+          <p className="text-gray-600">Something went wrong. Please try again later.</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-6">

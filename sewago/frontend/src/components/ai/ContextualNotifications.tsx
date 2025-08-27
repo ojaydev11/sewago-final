@@ -95,14 +95,7 @@ export function ContextualNotifications({
 
   const { formatPrice } = useLocalizedCurrency();
 
-  useEffect(() => {
-    if (location) {
-      fetchContextualData();
-      startContextualUpdates();
-    }
-  }, [location, userId]);
-
-  const fetchContextualData = async () => {
+  const fetchContextualData = useCallback(async () => {
     if (!location) return;
 
     try {
@@ -141,16 +134,23 @@ export function ContextualNotifications({
     } catch (error) {
       console.error('Failed to fetch contextual data:', error);
     }
-  };
+  }, [location, userId]);
 
-  const startContextualUpdates = () => {
+  const startContextualUpdates = useCallback(() => {
     // Update contextual notifications every 5 minutes
     const interval = setInterval(() => {
       fetchContextualData();
     }, 5 * 60 * 1000);
 
     return () => clearInterval(interval);
-  };
+  }, [fetchContextualData]);
+
+  useEffect(() => {
+    if (location) {
+      fetchContextualData();
+      startContextualUpdates();
+    }
+  }, [location, userId, fetchContextualData, startContextualUpdates]);
 
   const generateWeatherNotifications = (weather: any) => {
     const notifications = [];

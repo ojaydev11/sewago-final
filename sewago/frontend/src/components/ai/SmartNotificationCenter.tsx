@@ -86,17 +86,7 @@ export function SmartNotificationCenter({
 
   const { markAsRead, markAllAsRead } = useNotifications();
 
-  useEffect(() => {
-    fetchNotifications();
-    fetchAnalytics();
-    fetchAiInsights();
-  }, [userId]);
-
-  useEffect(() => {
-    filterNotifications();
-  }, [notifications, selectedFilter]);
-
-  const fetchNotifications = async () => {
+  const fetchNotifications = useCallback(async () => {
     try {
       const response = await fetch(`/api/notifications?userId=${userId}&limit=50`);
       if (response.ok) {
@@ -114,9 +104,9 @@ export function SmartNotificationCenter({
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [userId]);
 
-  const fetchAnalytics = async () => {
+  const fetchAnalytics = useCallback(async () => {
     try {
       const response = await fetch(`/api/ai/smart-notifications?userId=${userId}`);
       if (response.ok) {
@@ -126,9 +116,9 @@ export function SmartNotificationCenter({
     } catch (error) {
       console.error('Failed to fetch analytics:', error);
     }
-  };
+  }, [userId]);
 
-  const fetchAiInsights = async () => {
+  const fetchAiInsights = useCallback(async () => {
     try {
       const response = await fetch(`/api/ai/smart-notifications?userId=${userId}`);
       if (response.ok) {
@@ -138,9 +128,9 @@ export function SmartNotificationCenter({
     } catch (error) {
       console.error('Failed to fetch AI insights:', error);
     }
-  };
+  }, [userId]);
 
-  const filterNotifications = () => {
+  const filterNotifications = useCallback(() => {
     let filtered = notifications;
     
     switch (selectedFilter) {
@@ -163,7 +153,17 @@ export function SmartNotificationCenter({
     setFilteredNotifications(filtered.sort((a, b) => 
       new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
     ));
-  };
+  }, [notifications, selectedFilter]);
+
+  useEffect(() => {
+    fetchNotifications();
+    fetchAnalytics();
+    fetchAiInsights();
+  }, [fetchNotifications, fetchAnalytics, fetchAiInsights]);
+
+  useEffect(() => {
+    filterNotifications();
+  }, [filterNotifications]);
 
   const handleNotificationClick = useCallback(async (notification: SmartNotification) => {
     if (!notification.read) {
