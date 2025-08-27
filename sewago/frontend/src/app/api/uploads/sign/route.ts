@@ -8,8 +8,8 @@ export const dynamic = 'force-dynamic';
 
 export async function POST(request: NextRequest) {
   try {
-    const ok = await checkRateLimit(ratePolicies.uploads, getIdentifier(request));
-    if (!ok) return NextResponse.json({ error: 'Rate limited' }, { status: 429, headers: { 'Cache-Control': 'no-store' } });
+    const rateLimitResult = await checkRateLimit(getIdentifier(request), ratePolicies.uploads);
+    if (!rateLimitResult.success) return NextResponse.json({ error: 'Rate limited' }, { status: 429, headers: { 'Cache-Control': 'no-store' } });
 
     const body = await request.json();
 
