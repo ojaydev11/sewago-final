@@ -1,6 +1,5 @@
 'use client';
 
-import { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { StarIcon, MapPinIcon, PhoneIcon, CheckIcon } from '@heroicons/react/24/outline';
@@ -53,75 +52,6 @@ const CITY_INFO = {
     areas: ['Durbar Square', 'Nyatapola Temple', 'Dattatreya Square', 'Pottery Square']
   }
 };
-
-export async function generateStaticParams() {
-  const params = [];
-  for (const service of SERVICES) {
-    for (const city of Object.keys(CITY_INFO)) {
-      params.push({
-        slug: service.slug,
-        city: city
-      });
-    }
-  }
-  return params;
-}
-
-export async function generateMetadata({ 
-  params 
-}: { 
-  params: Promise<{ slug: string; city: string }> 
-}): Promise<Metadata> {
-  const resolvedParams = await params;
-  const service = SERVICES.find(s => s.slug === resolvedParams.slug);
-  const cityInfo = CITY_INFO[resolvedParams.city as keyof typeof CITY_INFO];
-  
-  if (!service || !cityInfo) {
-    return {
-      title: 'Service Not Found - SewaGo',
-      description: 'The requested service could not be found.'
-    };
-  }
-
-  const title = `${service.name} in ${cityInfo.name} - Professional Service | SewaGo`;
-  const description = `Book ${service.name.toLowerCase()} service in ${cityInfo.name}, Nepal. ${service.description}. Starting from NPR ${service.price.min}. Available in all areas of ${cityInfo.name}.`;
-
-  return {
-    title,
-    description,
-    keywords: `${service.name}, ${cityInfo.name}, ${service.category}, service booking, Nepal`,
-    openGraph: {
-      title,
-      description,
-      type: 'website',
-      url: `/services/${service.slug}/${resolvedParams.city}`,
-    },
-    other: {
-      'application/ld+json': JSON.stringify({
-        '@context': 'https://schema.org',
-        '@type': 'Service',
-        name: `${service.name} in ${cityInfo.name}`,
-        description: service.description,
-        provider: {
-          '@type': 'Organization',
-          name: 'SewaGo',
-          url: 'https://sewago.vercel.app'
-        },
-        areaServed: {
-          '@type': 'City',
-          name: cityInfo.name,
-          addressCountry: 'NP'
-        },
-        offers: {
-          '@type': 'Offer',
-          price: service.price.min,
-          priceCurrency: 'NPR',
-          availability: 'InStock'
-        }
-      })
-    }
-  };
-}
 
 export default function ServiceCityPage({ 
   params 
