@@ -15,7 +15,7 @@ const cardVariants = {
     rotateY: 5,
     z: 50,
     transition: {
-      type: "spring",
+      type: "spring" as const,
       stiffness: 300,
       damping: 20
     }
@@ -28,7 +28,7 @@ const iconVariants = {
     scale: 1.1,
     rotate: [0, -5, 5, 0],
     transition: {
-      type: "spring",
+      type: "spring" as const,
       stiffness: 400,
       damping: 15
     }

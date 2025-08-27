@@ -56,7 +56,7 @@ interface ChallengeCardProps {
 
 export function ChallengeCard({ challenge, locale = 'en', onUpdate, compact = false }: ChallengeCardProps) {
   const [loading, setLoading] = useState(false);
-  const { showNotification } = useNotifications();
+  const { createNotification } = useNotifications();
 
   const handleJoinChallenge = async () => {
     try {
@@ -79,20 +79,30 @@ export function ChallengeCard({ challenge, locale = 'en', onUpdate, compact = fa
 
       const result = await response.json();
       
-      showNotification('success', 
-        locale === 'ne' 
+      createNotification({
+        type: 'system',
+        title: locale === 'ne' ? 'चुनौती जोडियो!' : 'Challenge Joined!',
+        message: locale === 'ne' 
           ? 'चुनौती सफलतापूर्वक जोडियो!' 
-          : 'Successfully joined challenge!'
-      );
+          : 'Successfully joined challenge!',
+        priority: 'medium',
+        category: 'success',
+        tags: ['challenge', 'gamification']
+      });
       
       onUpdate?.();
     } catch (error) {
       console.error('Error joining challenge:', error);
-      showNotification('error', 
-        locale === 'ne' 
+      createNotification({
+        type: 'system',
+        title: locale === 'ne' ? 'त्रुटि' : 'Error',
+        message: locale === 'ne' 
           ? 'चुनौती जोड्न असफल' 
-          : 'Failed to join challenge'
-      );
+          : 'Failed to join challenge',
+        priority: 'high',
+        category: 'error',
+        tags: ['challenge', 'gamification']
+      });
     } finally {
       setLoading(false);
     }
@@ -119,20 +129,30 @@ export function ChallengeCard({ challenge, locale = 'en', onUpdate, compact = fa
 
       const result = await response.json();
       
-      showNotification('success', 
-        locale === 'ne' 
+      createNotification({
+        type: 'system',
+        title: locale === 'ne' ? 'पुरस्कार प्राप्त!' : 'Reward Claimed!',
+        message: locale === 'ne' 
           ? `${result.reward} अंक पुरस्कार प्राप्त भयो!` 
-          : `Claimed ${result.reward} points reward!`
-      );
+          : `Claimed ${result.reward} points reward!`,
+        priority: 'medium',
+        category: 'success',
+        tags: ['challenge', 'gamification', 'reward']
+      });
       
       onUpdate?.();
     } catch (error) {
       console.error('Error claiming reward:', error);
-      showNotification('error', 
-        locale === 'ne' 
+      createNotification({
+        type: 'system',
+        title: locale === 'ne' ? 'त्रुटि' : 'Error',
+        message: locale === 'ne' 
           ? 'पुरस्कार प्राप्त गर्न असफल' 
-          : 'Failed to claim reward'
-      );
+          : 'Failed to claim reward',
+        priority: 'high',
+        category: 'error',
+        tags: ['challenge', 'gamification', 'reward']
+      });
     } finally {
       setLoading(false);
     }
@@ -143,7 +163,7 @@ export function ChallengeCard({ challenge, locale = 'en', onUpdate, compact = fa
       return <span className="text-3xl">{iconEmoji}</span>;
     }
     
-    const iconMap = {
+    const iconMap: Record<string, string> = {
       DASHAIN_CLEANING: '🏠',
       NEW_YEAR_ORGANIZE: '🎊',
       SUMMER_MAINTENANCE: '🔧',
@@ -156,7 +176,7 @@ export function ChallengeCard({ challenge, locale = 'en', onUpdate, compact = fa
   };
 
   const getChallengeColor = (color: string) => {
-    const colorMap = {
+    const colorMap: Record<string, string> = {
       red: 'from-red-50 to-pink-50 border-red-200',
       gold: 'from-yellow-50 to-orange-50 border-yellow-200',
       orange: 'from-orange-50 to-red-50 border-orange-200',

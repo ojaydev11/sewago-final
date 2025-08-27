@@ -59,7 +59,7 @@ export function StreakTracker({ data, locale = 'en', compact = false }: StreakTr
       return <span className="text-2xl">{iconEmoji}</span>;
     }
     
-    const iconMap = {
+    const iconMap: Record<string, React.ComponentType<any>> = {
       WEEKLY_BOOKING: Calendar,
       MONTHLY_ACTIVITY: TrendingUp,
       REVIEW_STREAK: Star
@@ -72,7 +72,7 @@ export function StreakTracker({ data, locale = 'en', compact = false }: StreakTr
   const getStreakColor = (color: string, isActive: boolean) => {
     if (!isActive) return 'text-gray-400 bg-gray-100';
     
-    const colorMap = {
+    const colorMap: Record<string, string> = {
       blue: 'text-blue-600 bg-blue-100',
       green: 'text-green-600 bg-green-100',
       yellow: 'text-yellow-600 bg-yellow-100',

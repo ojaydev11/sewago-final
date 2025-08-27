@@ -40,7 +40,7 @@ export function SearchSuggestions({
 }: SearchSuggestionsProps) {
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const { formatPrice } = useLocalizedCurrency();
+  const { formatCurrency } = useLocalizedCurrency();
 
   useEffect(() => {
     if (query.trim().length > 0) {
@@ -179,7 +179,7 @@ export function SearchSuggestions({
                       </span>
                       {suggestion.price && (
                         <span className="text-sm text-blue-600 font-medium">
-                          {formatPrice(suggestion.price)}
+                          {formatCurrency(suggestion.price)}
                         </span>
                       )}
                     </div>

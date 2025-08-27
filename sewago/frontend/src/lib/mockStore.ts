@@ -114,7 +114,7 @@ class MockStore {
     return null;
   }
 
-  async create(data: Omit<MockUser, '_id' | 'createdAt'>): Promise<MockUser> {
+  async createUser(data: Omit<MockUser, '_id' | 'createdAt'>): Promise<MockUser> {
     const user: MockUser = {
       _id: this.generateId(),
       ...data,
@@ -165,14 +165,14 @@ class MockStore {
   }
 
   // Provider profile methods
-  async findOne(filter: any): Promise<MockProviderProfile | null> {
+  async findProviderProfile(filter: any): Promise<MockProviderProfile | null> {
     if (filter.userId) {
       return this.providerProfiles.find(p => p.userId === filter.userId) || null;
     }
     return null;
   }
 
-  async create(data: Omit<MockProviderProfile, '_id'>): Promise<MockProviderProfile> {
+  async createProviderProfile(data: Omit<MockProviderProfile, '_id'>): Promise<MockProviderProfile> {
     const profile: MockProviderProfile = {
       _id: this.generateId(),
       ...data,

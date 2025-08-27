@@ -49,12 +49,15 @@ export function usePerformanceMonitoring() {
       // First Input Delay
       new PerformanceObserver((entryList) => {
         for (const entry of entryList.getEntries()) {
-          const fid = entry.processingStart - entry.startTime;
-          console.log('FID:', fid);
-          
-          // Send to analytics if FID is poor (>300ms)
-          if (fid > 300) {
-            console.warn('Poor FID detected:', fid);
+          const firstInputEntry = entry as PerformanceEventTiming;
+          if (firstInputEntry.processingStart) {
+            const fid = firstInputEntry.processingStart - firstInputEntry.startTime;
+            console.log('FID:', fid);
+            
+            // Send to analytics if FID is poor (>300ms)
+            if (fid > 300) {
+              console.warn('Poor FID detected:', fid);
+            }
           }
         }
       }).observe({ entryTypes: ['first-input'] });
@@ -63,8 +66,9 @@ export function usePerformanceMonitoring() {
       let cls = 0;
       new PerformanceObserver((entryList) => {
         for (const entry of entryList.getEntries()) {
-          if (!entry.hadRecentInput) {
-            cls += (entry as any).value;
+          const layoutShiftEntry = entry as PerformanceEntry & { hadRecentInput?: boolean; value?: number };
+          if (!layoutShiftEntry.hadRecentInput && layoutShiftEntry.value) {
+            cls += layoutShiftEntry.value;
           }
         }
         console.log('CLS:', cls);

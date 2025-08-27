@@ -136,7 +136,7 @@ export default function PaymentComponent({
           {paymentMethods.map((method) => {
             const IconComponent = method.icon;
             const isSelected = selectedMethod === method.id;
-            const isProcessing = isProcessing && selectedMethod === method.id;
+            const isMethodProcessing = isProcessing && selectedMethod === method.id;
             
             return (
               <Card 
@@ -144,7 +144,7 @@ export default function PaymentComponent({
                 className={`bg-white/5 border-white/20 text-white cursor-pointer transition-all duration-200 hover:bg-white/10 ${
                   isSelected ? 'ring-2 ring-accent bg-white/10' : ''
                 }`}
-                onClick={() => !isProcessing && handlePayment(method.id)}
+                onClick={() => !isMethodProcessing && handlePayment(method.id)}
               >
                 <CardContent className="p-4">
                   <div className="flex items-center justify-between">
@@ -172,14 +172,14 @@ export default function PaymentComponent({
                     </div>
                     
                     <div className="flex items-center gap-2">
-                      {isProcessing ? (
+                      {isMethodProcessing ? (
                         <Loader2 className="w-5 h-5 animate-spin text-accent" />
                       ) : (
                         <Button
                           variant="outline"
                           size="sm"
                           className="border-white/20 text-white hover:bg-white/20"
-                          disabled={isProcessing}
+                          disabled={isMethodProcessing}
                         >
                           {method.id === 'cod' ? 'Select' : 'Pay'}
                         </Button>

@@ -2,7 +2,19 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useIntl } from 'react-intl';
+// Mock useIntl hook for development
+const useIntl = () => ({
+  formatMessage: (descriptor: { id: string; defaultMessage?: string }, values?: any) => {
+    if (values && values.name) {
+      return `Welcome, ${values.name}`;
+    }
+    return descriptor.defaultMessage || descriptor.id;
+  },
+  formatDate: (date: Date) => date.toLocaleDateString(),
+  formatTime: (date: Date) => date.toLocaleTimeString(),
+  formatNumber: (num: number) => num.toLocaleString(),
+  locale: 'en'
+});
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -190,7 +202,7 @@ export function PreferenceOnboarding({
             prioritizeQuality={onboardingData.prioritizeQuality}
             wantsOffers={onboardingData.wantsOffers}
             wantsReminders={onboardingData.wantsReminders}
-            onLanguageChange={(lang) => updateData('language', lang)}
+            onLanguageChange={(lang: "en" | "ne") => updateData('language', lang)}
             onFestivalsChange={(festivals) => updateData('festivals', festivals)}
             onPriorityChange={(key, value) => updateData(key as keyof OnboardingData, value)}
             onComplete={handleComplete}
@@ -464,8 +476,14 @@ function BudgetLocationStep({
           <Label className="text-base">Budget Range (NPR)</Label>
           <div className="px-4">
             <Slider
-              value={[budget]}
-              onValueChange={([value]) => onBudgetChange(value)}
+              value={budget}
+              onValueChange={(value) => {
+                if (Array.isArray(value)) {
+                  onBudgetChange(value[0]);
+                } else {
+                  onBudgetChange(value);
+                }
+              }}
               max={10000}
               min={500}
               step={250}
@@ -507,8 +525,14 @@ function BudgetLocationStep({
           <Label className="text-base">Service Radius</Label>
           <div className="px-4">
             <Slider
-              value={[serviceRadius]}
-              onValueChange={([value]) => onRadiusChange(value)}
+              value={serviceRadius}
+              onValueChange={(value) => {
+                if (Array.isArray(value)) {
+                  onRadiusChange(value[0]);
+                } else {
+                  onRadiusChange(value);
+                }
+              }}
               max={20000}
               min={1000}
               step={1000}
@@ -582,15 +606,13 @@ function PersonalizationStep({
         {/* Language Preference */}
         <div className="space-y-3">
           <Label className="text-base">Language Preference</Label>
-          <RadioGroup value={language} onValueChange={onLanguageChange}>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="en" id="en" />
+          <RadioGroup value={language} onValueChange={(value) => onLanguageChange(value as "en" | "ne")}>
+            <RadioGroupItem value="en" id="en">
               <Label htmlFor="en">English</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="ne" id="ne" />
+            </RadioGroupItem>
+            <RadioGroupItem value="ne" id="ne">
               <Label htmlFor="ne">नेपाली (Nepali)</Label>
-            </div>
+            </RadioGroupItem>
           </RadioGroup>
         </div>
 

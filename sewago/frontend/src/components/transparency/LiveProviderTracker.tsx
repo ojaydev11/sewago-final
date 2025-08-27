@@ -26,7 +26,7 @@ interface Provider {
   id: string;
   name: string;
   phone: string;
-  status: 'AVAILABLE' | 'BUSY' | 'EN_ROUTE' | 'OFFLINE' | 'BREAK' | 'EMERGENCY';
+  status: 'AVAILABLE' | 'BUSY' | 'EN_ROUTE' | 'OFFLINE' | 'BREAK' | 'EMERGENCY' | 'UNAVAILABLE';
   currentLat?: number;
   currentLng?: number;
   accuracy?: number;

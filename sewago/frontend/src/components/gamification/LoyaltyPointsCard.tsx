@@ -81,17 +81,17 @@ export function LoyaltyPointsCard({ data, locale = 'en', compact = false }: Loya
 
   const getSourceText = (source: string, type: string) => {
     if (locale === 'ne') {
-      const sourceMap = {
-        booking: 'बुकिङ',
-        review: 'समीक्षा',
-        referral: 'रेफरल',
-        challenge: 'चुनौती',
-        redemption: 'रिडेम्प्सन'
-      };
-      return sourceMap[source] || source;
+          const sourceMap: Record<string, string> = {
+      booking: 'बुकिङ',
+      review: 'समीक्षा',
+      referral: 'रेफरल',
+      challenge: 'चुनौती',
+      redemption: 'रिडेम्प्सन'
+    };
+    return sourceMap[source] || source;
     }
     
-    const sourceMap = {
+    const sourceMap: Record<string, string> = {
       booking: 'Booking',
       review: 'Review',
       referral: 'Referral',

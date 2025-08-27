@@ -304,12 +304,17 @@ export function HapticFeedbackProvider({ children }: HapticFeedbackProviderProps
         for (const gamepad of gamepads) {
           if (gamepad && gamepad.hapticActuators) {
             for (const actuator of gamepad.hapticActuators) {
-              if (actuator.type === 'dual-rumble') {
-                await actuator.playEffect('dual-rumble', {
-                  duration: pattern.duration,
-                  strongMagnitude: finalIntensity / 100,
-                  weakMagnitude: (finalIntensity / 100) * 0.7
-                });
+              // Check if the actuator supports dual-rumble effect
+              if ('playEffect' in actuator) {
+                try {
+                  await actuator.playEffect('dual-rumble', {
+                    duration: pattern.duration,
+                    strongMagnitude: finalIntensity / 100,
+                    weakMagnitude: (finalIntensity / 100) * 0.7
+                  });
+                } catch (error) {
+                  console.warn('Failed to play haptic effect on gamepad:', error);
+                }
               }
             }
           }

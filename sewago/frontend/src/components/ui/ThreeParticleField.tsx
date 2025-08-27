@@ -52,15 +52,11 @@ function Particles({ particleCount = 150, colors }: { particleCount?: number; co
       <bufferGeometry>
         <bufferAttribute
           attach="attributes-position"
-          count={particleCount}
-          array={positions}
-          itemSize={3}
+          args={[positions, 3]}
         />
         <bufferAttribute
           attach="attributes-color"
-          count={particleCount}
-          array={particleColors}
-          itemSize={3}
+          args={[particleColors, 3]}
         />
       </bufferGeometry>
       <pointsMaterial

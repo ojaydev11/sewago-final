@@ -55,8 +55,7 @@ export function SmartFeaturesShowcase({
   const voiceCommands = useVoiceCommands({
     userId,
     language: 'en',
-    continuous: false,
-    enableAnalytics: true
+    continuous: false
   });
 
   const predictiveSearch = usePredictiveSearch({

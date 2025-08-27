@@ -333,15 +333,14 @@ export function useSmartNotifications(config: UseSmartNotificationsConfig): UseS
 
   const markAsRead = async (id: string): Promise<boolean> => {
     try {
-      const success = await baseMarkAsRead(id);
+      await baseMarkAsRead(id);
       
-      if (success) {
-        setNotifications(prev => 
-          prev.map(n => n.id === id ? { ...n, read: true } : n)
-        );
-      }
+      // Update local state
+      setNotifications(prev => 
+        prev.map(n => n.id === id ? { ...n, read: true } : n)
+      );
       
-      return success;
+      return true;
     } catch (error) {
       console.error('Failed to mark notification as read:', error);
       return false;
@@ -350,13 +349,12 @@ export function useSmartNotifications(config: UseSmartNotificationsConfig): UseS
 
   const markAllAsRead = async (): Promise<boolean> => {
     try {
-      const success = await baseMarkAllAsRead(userId);
+      await baseMarkAllAsRead();
       
-      if (success) {
-        setNotifications(prev => prev.map(n => ({ ...n, read: true })));
-      }
+      // Update local state
+      setNotifications(prev => prev.map(n => ({ ...n, read: true })));
       
-      return success;
+      return true;
     } catch (error) {
       console.error('Failed to mark all notifications as read:', error);
       return false;

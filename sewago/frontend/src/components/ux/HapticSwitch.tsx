@@ -66,6 +66,7 @@ const HapticSwitch: React.FC<HapticSwitchProps> = ({
     onCheckedChange?.(newChecked);
 
     // Log interaction
+    const pattern = newChecked ? hapticPatternOn : hapticPatternOff;
     await logSwitchInteraction(newChecked, pattern);
 
     setIsToggling(false);

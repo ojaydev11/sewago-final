@@ -54,7 +54,7 @@ function getRateLimitConfig(path: string): { limit: number; windowMs: number } {
 
 // Generate identifier for rate limiting
 function generateIdentifier(req: NextRequest): string {
-  const ip = req.ip || req.headers.get('x-forwarded-for') || 'unknown';
+  const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
   const userAgent = req.headers.get('user-agent') || 'unknown';
   const path = req.nextUrl.pathname;
   
@@ -85,7 +85,7 @@ export async function rateLimitMiddleware(req: NextRequest): Promise<NextRespons
     const identifier = generateIdentifier(req);
     
     // Apply rate limiting
-    const result = await rateLimit(identifier, config.limit, config.windowMs);
+    const result = await rateLimit(req as unknown as Request, { limit: config.limit, windowSec: Math.floor(config.windowMs / 1000) });
     
     if (!result.success) {
       // Rate limit exceeded
@@ -153,7 +153,7 @@ export async function advancedRateLimitMiddleware(req: NextRequest): Promise<Nex
     }
     
     const identifier = generateIdentifier(req);
-    const result = await rateLimit(identifier, adjustedLimit, adjustedWindow);
+    const result = await rateLimit(req as unknown as Request, { limit: adjustedLimit, windowSec: Math.floor(adjustedWindow / 1000) });
     
     if (!result.success) {
       const retryAfter = Math.ceil((result.resetTime - Date.now()) / 1000);

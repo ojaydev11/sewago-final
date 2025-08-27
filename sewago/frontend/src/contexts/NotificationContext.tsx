@@ -98,10 +98,7 @@ export function NotificationProvider({ children }: NotificationProviderProps) {
 
     try {
       setError(null);
-      const result = await notificationService.getUserNotifications({
-        userId: session.user.id,
-        limit: 50,
-      });
+      const result = await notificationService.getUserNotifications();
       
       setNotifications(result.notifications);
       setUnreadCount(result.unreadCount);
@@ -143,7 +140,7 @@ export function NotificationProvider({ children }: NotificationProviderProps) {
 
     try {
       setError(null);
-      await notificationService.markAsRead(id, session.user.id);
+      await notificationService.markAsRead();
       
       // Update local state
       setNotifications(prev => 
@@ -165,7 +162,7 @@ export function NotificationProvider({ children }: NotificationProviderProps) {
 
     try {
       setError(null);
-      await notificationService.markAllAsRead(session.user.id);
+      await notificationService.markAllAsRead();
       
       // Update local state
       setNotifications(prev => 
@@ -189,7 +186,7 @@ export function NotificationProvider({ children }: NotificationProviderProps) {
 
     try {
       setError(null);
-      await notificationService.deleteNotification(id, session.user.id);
+      await notificationService.deleteNotification();
       
       // Update local state
       const deletedNotification = notifications.find(n => n.id === id);

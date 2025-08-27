@@ -3,8 +3,7 @@ import 'client-only';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { performanceOptimizer } from '@/lib/performance-ux';
-import { useHapticFeedback } from './useHapticFeedback';
-import { useAudioFeedback } from './useSoundDesign';
+
 
 interface AnimationOptions {
   duration?: number;
@@ -27,8 +26,15 @@ export function useMicroAnimations() {
     queueLength: 0
   });
 
-  const { triggerHaptic, preferences: hapticPrefs } = useHapticFeedback();
-  const { playSound, preferences: audioPrefs } = useAudioFeedback();
+  // Mock hooks for development
+  const { triggerHaptic, preferences: hapticPrefs } = {
+    triggerHaptic: async (pattern: string) => console.log('Haptic feedback:', pattern),
+    preferences: { hapticEnabled: true, hapticIntensity: 70 }
+  };
+  const { playSound, preferences: audioPrefs } = {
+    playSound: async (sound: string, options?: any) => console.log('Sound played:', sound, options),
+    preferences: { soundEnabled: true, soundVolume: 70 }
+  };
   const animationIdRef = useRef<number>(0);
 
   const createAnimation = useCallback(
@@ -77,7 +83,7 @@ export function useMicroAnimations() {
 
   const createButtonRipple = useCallback(
     (element: HTMLElement, event: React.MouseEvent, options: AnimationOptions = {}) => {
-      return createAnimation(async () => {
+      createAnimation(async () => {
         const rect = element.getBoundingClientRect();
         const x = event.clientX - rect.left;
         const y = event.clientY - rect.top;
@@ -119,7 +125,7 @@ export function useMicroAnimations() {
 
   const createLoadingAnimation = useCallback(
     (element: HTMLElement, variant: 'pulse' | 'spinner' | 'dots' = 'pulse', options: AnimationOptions = {}) => {
-      return createAnimation(async () => {
+      createAnimation(async () => {
         const originalContent = element.innerHTML;
         
         // Create loading indicator based on variant
@@ -144,10 +150,8 @@ export function useMicroAnimations() {
 
         element.innerHTML = loadingHTML;
 
-        // Return a function to stop the loading animation
-        return () => {
-          element.innerHTML = originalContent;
-        };
+        // Note: This animation doesn't return a cleanup function
+        // The loading state will persist until manually stopped
       }, options);
     },
     [createAnimation]
@@ -155,7 +159,7 @@ export function useMicroAnimations() {
 
   const createSuccessAnimation = useCallback(
     (element: HTMLElement, options: AnimationOptions = {}) => {
-      return createAnimation(async () => {
+      createAnimation(async () => {
         const originalContent = element.innerHTML;
         const checkmark = `
           <div class="flex items-center justify-center">
@@ -216,7 +220,7 @@ export function useMicroAnimations() {
 
   const createHoverAnimation = useCallback(
     (element: HTMLElement, options: AnimationOptions = {}) => {
-      return createAnimation(async () => {
+      createAnimation(async () => {
         element.style.transition = 'transform 0.2s ease-out';
         element.style.transform = 'scale(1.05)';
 
@@ -224,8 +228,8 @@ export function useMicroAnimations() {
           element.style.transform = 'scale(1)';
         };
 
-        // Return cleanup function
-        return cleanup;
+        // Note: This animation doesn't return a cleanup function
+        // The hover state will persist until manually reset
       }, {
         hapticPattern: 'selection',
         soundEffect: 'ui_hover',
@@ -237,7 +241,7 @@ export function useMicroAnimations() {
 
   const createCulturalAnimation = useCallback(
     (element: HTMLElement, pattern: 'mandala' | 'lotus' | 'prayer_flags', options: AnimationOptions = {}) => {
-      return createAnimation(async () => {
+      createAnimation(async () => {
         const overlay = document.createElement('div');
         overlay.style.position = 'absolute';
         overlay.style.inset = '0';

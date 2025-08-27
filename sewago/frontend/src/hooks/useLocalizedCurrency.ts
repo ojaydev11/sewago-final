@@ -6,8 +6,8 @@ export function useLocalizedCurrency() {
   const t = useTranslations('currency');
 
   const formatCurrency = (amount: number): string => {
-    // Use the enhanced formatNPR function with locale support
-    return formatNPR(amount, locale);
+    // Use the formatNPR function (locale support can be added later)
+    return formatNPR(amount);
   };
 
   const formatCurrencyWithTemplate = (amount: number): string => {

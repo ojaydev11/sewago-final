@@ -93,7 +93,7 @@ export function ContextualNotifications({
   const [trafficData, setTrafficData] = useState<any>(null);
   const [userContext, setUserContext] = useState<any>(null);
 
-  const { formatPrice } = useLocalizedCurrency();
+  const { formatCurrency } = useLocalizedCurrency();
 
   const fetchContextualData = useCallback(async () => {
     if (!location) return;

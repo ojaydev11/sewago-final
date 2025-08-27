@@ -130,7 +130,7 @@ const VoiceGuidanceSystem: React.FC<VoiceGuidanceSystemProps> = ({
   const [isProcessingQueue, setIsProcessingQueue] = useState(false);
   const [currentLanguage, setCurrentLanguage] = useState<'en-US' | 'ne-NP'>('en-US');
   const lastAnnouncementRef = useRef<string>('');
-  const queueTimeoutRef = useRef<NodeJS.Timeout>();
+  const queueTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
   useEffect(() => {
     // Only detect language on client side to prevent hydration mismatch

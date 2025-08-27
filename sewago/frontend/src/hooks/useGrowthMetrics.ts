@@ -193,7 +193,7 @@ export const useGrowthMetrics = (
     }
 
     const change = ((current - previous) / previous) * 100;
-    const trend = Math.abs(change) < 1 ? 'stable' : change > 0 ? 'up' : 'down';
+    const trend: 'up' | 'down' | 'stable' = Math.abs(change) < 1 ? 'stable' : change > 0 ? 'up' : 'down';
 
     return { change, trend };
   }, [historicalMetrics, currentMetrics]);
@@ -260,7 +260,7 @@ export const useGrowthMetrics = (
 export const formatGrowthData = (metrics: GrowthMetrics[]) => {
   return metrics.map(metric => ({
     ...metric,
-    date: new Date(metric.createdAt || Date.now()).toLocaleDateString(),
+    date: new Date(Date.now()).toLocaleDateString(),
     // Ensure all numeric values are properly formatted
     totalUsers: Number(metric.totalUsers),
     newUsers: Number(metric.newUsers),
@@ -325,7 +325,7 @@ export const identifyGrowthOpportunities = (
   metrics: GrowthMetrics | null,
   trends: GrowthTrend | null
 ): Array<{ opportunity: string; priority: 'high' | 'medium' | 'low'; description: string }> => {
-  const opportunities = [];
+  const opportunities: Array<{ opportunity: string; priority: 'high' | 'medium' | 'low'; description: string }> = [];
 
   if (!metrics || !trends) return opportunities;
 

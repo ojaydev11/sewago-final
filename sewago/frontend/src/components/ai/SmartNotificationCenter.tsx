@@ -175,7 +175,7 @@ export function SmartNotificationCenter({
   }, [markAsRead]);
 
   const handleMarkAllRead = useCallback(async () => {
-    await markAllAsRead(userId);
+    await markAllAsRead();
     setNotifications(prev => prev.map(n => ({ ...n, read: true })));
   }, [markAllAsRead, userId]);
 

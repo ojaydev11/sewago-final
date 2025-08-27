@@ -1,7 +1,7 @@
 // SewaGo Personalization Recommendation Engine Core
 // Mock version for frontend - no database dependencies
 
-import {
+import type {
   RecommendationRequest,
   ServiceRecommendation,
   ProviderRecommendation,
@@ -210,7 +210,7 @@ export class RecommendationEngine {
           services: ['cleaning', 'electrical']
         }
       ],
-      seasonalPatterns: [
+            seasonalPatterns: [
         {
           season: 'spring',
           preferences: ['cleaning', 'gardening'],
@@ -251,13 +251,43 @@ export class RecommendationEngine {
   async getUserPreferences(userId: string): Promise<UserPreferences> {
     // Mock user preferences
     return {
+      id: `prefs-${userId}`,
       userId,
-      categories: ['cleaning', 'electrical', 'plumbing'],
-      priceRange: { min: 1000, max: 5000 },
-      location: 'Kathmandu',
-      timePreferences: ['weekends', 'evenings'],
-      qualityPreference: 'high',
-      providerPreferences: ['verified', 'rated-4-plus']
+      preferredCategories: ['cleaning', 'electrical', 'plumbing'],
+      preferredTimeSlots: ['weekends', 'evenings'],
+      preferredProviders: ['verified', 'rated-4-plus'],
+      budgetRange: { min: 1000, max: 5000 },
+      locationPreferences: {
+        areas: ['Kathmandu'],
+        radius: 10
+      },
+      serviceFrequency: {
+        cleaning: 'monthly',
+        electrical: 'rarely',
+        plumbing: 'rarely'
+      },
+      personalizedSettings: {
+        showPriceFirst: true,
+        prioritizeRating: true,
+        preferFamiliarProviders: false,
+        autoBookingEnabled: false,
+        smartSchedulingEnabled: true
+      },
+      culturalPreferences: {
+        festivals: ['Dashain', 'Tihar'],
+        traditions: ['Namaste'],
+        language: 'en',
+        religiousConsiderations: []
+      },
+      languagePreference: 'en',
+      notificationPreferences: {
+        recommendations: true,
+        offers: true,
+        scheduling: true,
+        reminders: true
+      },
+      lastUpdated: new Date().toISOString(),
+      createdAt: new Date().toISOString()
     };
   }
 
@@ -270,10 +300,10 @@ export class RecommendationEngine {
       {
         id: 'behavior-1',
         userId,
-        action: 'service_viewed',
+        action: 'view',
         serviceId: 'house-cleaning',
-        timestamp: new Date(),
-        metadata: { category: 'cleaning', price: 2000 }
+        timestamp: new Date().toISOString(),
+        category: 'cleaning'
       }
     ];
   }
@@ -285,14 +315,34 @@ export class RecommendationEngine {
     // Mock location suggestions
     return [
       {
-        id: 'loc-1',
-        type: 'nearby_service',
-        serviceId: 'house-cleaning',
-        serviceName: 'House Cleaning',
-        distance: 1.2,
-        popularity: 0.8,
-        seasonalBoost: 1.1,
-        reasoning: 'Popular in your area, good provider density'
+        area: 'Kathmandu',
+        district: 'Kathmandu',
+        popularServices: [
+          {
+            category: 'cleaning',
+            count: 15,
+            trending: true
+          }
+        ],
+        peakTimes: ['10:00', '14:00', '16:00'],
+        averagePricing: {
+          cleaning: 2000,
+          electrical: 1500,
+          plumbing: 2500
+        },
+        culturalEvents: [
+          {
+            name: 'Dashain',
+            date: '2024-10-15',
+            relatedServices: ['cleaning', 'electrical']
+          }
+        ],
+        weatherBasedSuggestions: [
+          {
+            condition: 'rainy',
+            services: ['cleaning', 'electrical']
+          }
+        ]
       }
     ];
   }
@@ -306,11 +356,15 @@ export class RecommendationEngine {
       {
         id: 'offer-1',
         type: 'discount',
-        serviceId: 'house-cleaning',
-        discount: 20,
-        validUntil: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-        reasoning: 'Based on your cleaning frequency',
-        personalizationScore: 0.85
+        title: 'House Cleaning Discount',
+        description: 'Get 20% off on your next house cleaning service',
+        discountPercentage: 20,
+        services: ['house-cleaning'],
+        validUntil: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+        conditions: ['Valid for new bookings only'],
+        targetingReason: 'Based on your cleaning frequency',
+        usageLimit: 1,
+        isPersonalized: true
       }
     ];
   }
@@ -319,18 +373,30 @@ export class RecommendationEngine {
    * Generate smart scheduling suggestions
    */
   async getSmartSchedulingSuggestions(userId: string, serviceId: string): Promise<SmartSchedulingSuggestion[]> {
-    // Mock scheduling suggestions
+    // Mock smart scheduling suggestions
     return [
       {
-        id: 'schedule-1',
-        serviceId,
-        suggestedTime: new Date(Date.now() + 24 * 60 * 60 * 1000),
-        reasoning: 'Based on provider availability and your preferences',
-        confidence: 0.78,
+        suggestedTime: '2024-10-15T10:00:00Z',
+        confidence: 0.8,
+        reasoning: 'Provider availability and user preference match',
+        factors: {
+          providerAvailability: true,
+          userPreference: true,
+          priceOptimization: false,
+          weatherConsideration: true
+        },
         alternatives: [
-          new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
-          new Date(Date.now() + 3 * 24 * 60 * 60 * 1000)
-        ]
+          {
+            time: '2024-10-15T14:00:00Z',
+            confidence: 0.7,
+            priceImpact: -200
+          }
+        ],
+        pricingInfo: {
+          peakTime: false,
+          expectedPrice: 2000,
+          potentialSavings: 200
+        }
       }
     ];
   }
@@ -341,24 +407,36 @@ export class RecommendationEngine {
   async makePrediction(input: PredictionInput): Promise<PredictionOutput> {
     // Mock prediction
     return {
-      prediction: 'high_booking_probability',
-      confidence: 0.82,
-      factors: ['good_location_match', 'reasonable_pricing', 'high_provider_rating'],
-      recommendations: ['book_early', 'consider_weekend_slot']
+      predictions: [
+        {
+          category: 'cleaning',
+          probability: 0.82,
+          confidence: 0.75
+        }
+      ],
+      modelMetadata: {
+        modelUsed: 'collaborative_filtering',
+        predictionTime: Date.now(),
+        dataFreshness: '1_hour'
+      }
     };
   }
 
   /**
    * Get seasonal patterns
    */
-  async getSeasonalPatterns(): Promise<SeasonalPattern[]> {
+  async getSeasonalPatterns(userId: string): Promise<SeasonalPattern[]> {
     // Mock seasonal patterns
     return [
       {
         season: 'spring',
-        services: ['gardening', 'cleaning'],
-        boost: 1.3,
-        reasoning: 'Festival season, spring cleaning tradition'
+        festivals: ['Dashain'],
+        popularServices: ['cleaning', 'gardening'],
+        priceMultipliers: {
+          cleaning: 1.1,
+          gardening: 1.2
+        },
+        culturalConsiderations: ['Spring cleaning tradition']
       }
     ];
   }
@@ -366,13 +444,35 @@ export class RecommendationEngine {
   /**
    * Get cultural context
    */
-  async getCulturalContext(): Promise<CulturalContext> {
+  async getCulturalContext(userId: string, location: string): Promise<CulturalContext> {
     // Mock cultural context
     return {
-      festivals: ['Dashain', 'Tihar', 'Holi'],
-      seasonalTrends: ['cleaning_before_festivals', 'decorations_during_celebration'],
-      culturalPreferences: ['family_oriented', 'traditional_values'],
-      localCustoms: ['respect_for_elders', 'community_support']
+      festival: 'Dashain',
+      season: 'autumn',
+      religiousObservance: 'Hindu',
+      localEvent: 'Indra Jatra',
+      weatherPattern: 'monsoon_ending'
+    };
+  }
+
+  /**
+   * Get prediction output
+   */
+  async getPredictionOutput(userId: string, input: string): Promise<PredictionOutput> {
+    // Mock prediction output
+    return {
+      predictions: [
+        {
+          category: 'cleaning',
+          probability: 0.8,
+          confidence: 0.75
+        }
+      ],
+      modelMetadata: {
+        modelUsed: 'collaborative_filtering',
+        predictionTime: Date.now(),
+        dataFreshness: '1_hour'
+      }
     };
   }
 

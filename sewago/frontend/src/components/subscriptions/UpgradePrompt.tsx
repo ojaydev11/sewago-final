@@ -89,7 +89,7 @@ export function UpgradePrompt({
     return null;
   }
 
-  const availableTiers = currentTier === 'FREE' ? ['PLUS', 'PRO'] : ['PRO'];
+  const availableTiers: ('PLUS' | 'PRO')[] = currentTier === 'FREE' ? ['PLUS', 'PRO'] : ['PRO'];
   const reasons = upgradeReasons[currentTier];
   const contextMessage = contextMessages[context]?.[currentTier];
 
@@ -254,7 +254,7 @@ export function UpgradePrompt({
                   What you'll get with {getTierConfig(selectedTier).name}:
                 </h4>
                 <div className="space-y-3">
-                  {reasons[selectedTier]?.map((reason, index) => (
+                  {reasons[selectedTier as keyof typeof reasons]?.map((reason, index) => (
                     <motion.div
                       key={index}
                       initial={{ opacity: 0, x: -20 }}

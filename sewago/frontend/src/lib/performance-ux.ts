@@ -65,7 +65,7 @@ class PerformanceUXOptimizer {
 
     // Battery API
     if ('getBattery' in navigator) {
-      navigator.getBattery().then((battery: any) => {
+      (navigator as any).getBattery().then((battery: any) => {
         capabilities.battery = {
           level: Math.round(battery.level * 100),
           charging: battery.charging
@@ -105,7 +105,7 @@ class PerformanceUXOptimizer {
 
     // Monitor battery status
     if ('getBattery' in navigator) {
-      navigator.getBattery().then((battery: any) => {
+      (navigator as any).getBattery().then((battery: any) => {
         const updateBattery = () => {
           if (this.deviceCapabilities.battery) {
             this.deviceCapabilities.battery.level = Math.round(battery.level * 100);
@@ -220,9 +220,9 @@ class PerformanceUXOptimizer {
     contextualAI: boolean;
   } {
     const recommendations = {
-      animations: 'normal' as const,
+      animations: 'normal' as 'normal' | 'reduce' | 'disable',
       hapticIntensity: 100,
-      audioQuality: 'high' as const,
+      audioQuality: 'high' as 'high' | 'medium' | 'low',
       contextualAI: true
     };
 
@@ -377,7 +377,7 @@ export class UXAssetLoader {
   }
 
   private async fetchSoundAsset(soundName: string, priority: 'low' | 'high'): Promise<AudioBuffer | null> {
-    const optimizer = PerformanceUXOptimizer.getInstance();
+    const optimizer = performanceOptimizer;
     
     // Skip loading if optimizing for connection and it's low priority
     if (optimizer.shouldOptimizeForConnection() && priority === 'low') {

@@ -55,7 +55,7 @@ export function useGamification(locale = 'en') {
   const [data, setData] = useState<GamificationData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { showNotification } = useNotifications();
+  const { createNotification } = useNotifications();
   const { showAchievement, AchievementNotificationComponent } = useAchievementNotifications(locale);
 
   const fetchGamificationData = useCallback(async () => {
@@ -242,11 +242,18 @@ export function useGamification(locale = 'en') {
 
       const result = await response.json();
       
-      showNotification('success', 
-        locale === 'ne' 
+      createNotification({
+        type: 'system',
+        title: locale === 'ne' 
           ? 'चुनौती सफलतापूर्वक जोडियो!' 
-          : 'Successfully joined challenge!'
-      );
+          : 'Successfully joined challenge!',
+        message: locale === 'ne' 
+          ? 'चुनौती सफलतापूर्वक जोडियो!' 
+          : 'Successfully joined challenge!',
+        priority: 'medium',
+        category: 'success',
+        tags: ['challenge', 'gamification']
+      });
       
       // Refresh data to update UI
       await fetchGamificationData();
@@ -254,14 +261,21 @@ export function useGamification(locale = 'en') {
       return result;
     } catch (error) {
       console.error('Error joining challenge:', error);
-      showNotification('error', 
-        locale === 'ne' 
+      createNotification({
+        type: 'system',
+        title: locale === 'ne' 
           ? 'चुनौती जोड्न असफल' 
-          : 'Failed to join challenge'
-      );
+          : 'Failed to join challenge',
+        message: locale === 'ne' 
+          ? 'चुनौती जोड्न असफल' 
+          : 'Failed to join challenge',
+        priority: 'high',
+        category: 'error',
+        tags: ['challenge', 'error']
+      });
       throw error;
     }
-  }, [fetchGamificationData, showNotification, locale]);
+  }, [fetchGamificationData, createNotification, locale]);
 
   const redeemPoints = useCallback(async (tierId: string, serviceAmount?: number) => {
     try {
@@ -282,11 +296,18 @@ export function useGamification(locale = 'en') {
 
       const result = await response.json();
       
-      showNotification('success', 
-        locale === 'ne' 
+      createNotification({
+        type: 'system',
+        title: locale === 'ne' 
           ? `${result.redemption.points} अंक सफलतापूर्वक रिडेम भयो!` 
-          : `Successfully redeemed ${result.redemption.points} points!`
-      );
+          : `Successfully redeemed ${result.redemption.points} points!`,
+        message: locale === 'ne' 
+          ? `${result.redemption.points} अंक सफलतापूर्वक रिडेम भयो!` 
+          : `Successfully redeemed ${result.redemption.points} points!`,
+        priority: 'medium',
+        category: 'success',
+        tags: ['redemption', 'gamification']
+      });
       
       // Refresh data to update UI
       await fetchGamificationData();
@@ -294,14 +315,21 @@ export function useGamification(locale = 'en') {
       return result;
     } catch (error) {
       console.error('Error redeeming points:', error);
-      showNotification('error', 
-        locale === 'ne' 
+      createNotification({
+        type: 'system',
+        title: locale === 'ne' 
           ? 'पोइन्ट रिडेम गर्न असफल' 
-          : 'Failed to redeem points'
-      );
+          : 'Failed to redeem points',
+        message: locale === 'ne' 
+          ? 'पोइन्ट रिडेम गर्न असफल' 
+          : 'Failed to redeem points',
+        priority: 'high',
+        category: 'error',
+        tags: ['redemption', 'error']
+      });
       throw error;
     }
-  }, [fetchGamificationData, showNotification, locale]);
+  }, [fetchGamificationData, createNotification, locale]);
 
   // Handle gamification events from booking flow
   const handleBookingComplete = useCallback(async (bookingId: string, serviceCategory: string, amount: number) => {

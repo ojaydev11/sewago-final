@@ -14,8 +14,7 @@ const navVariants = {
     opacity: 1,
     y: 0,
     transition: {
-      duration: 0.6,
-      ease: [0.22, 1, 0.36, 1]
+      duration: 0.6
     }
   }
 };
@@ -26,7 +25,7 @@ const logoVariants = {
     rotate: [0, -2, 2, 0],
     transition: {
       duration: 0.4,
-      type: "spring",
+      type: "spring" as const,
       stiffness: 300
     }
   },
@@ -38,7 +37,7 @@ const buttonVariants = {
     scale: 1.05,
     boxShadow: "0 10px 25px rgba(59, 130, 246, 0.3)",
     transition: {
-      type: "spring",
+      type: "spring" as const,
       stiffness: 400,
       damping: 10
     }
@@ -50,7 +49,7 @@ export default function Navbar() {
   const [isMenuHover, setIsMenuHover] = useState(false);
   
   // Mock user subscription data - in real app, this would come from auth context
-  const userTier = 'PLUS'; // This would be fetched from user's subscription
+  const userTier: 'FREE' | 'BASIC' | 'PLUS' | 'PREMIUM' = 'FREE'; // This would be fetched from user's subscription
   const isAuthenticated = true; // This would come from auth context
   
   return (

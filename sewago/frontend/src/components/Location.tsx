@@ -3,6 +3,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { MapPin, Phone, Mail, Clock, AlertCircle } from 'lucide-react';
 
+// Google Maps types
+declare global {
+  interface Window {
+    google: any;
+  }
+}
+
 interface LocationProps {
   showMap?: boolean;
   className?: string;
@@ -47,10 +54,17 @@ export default function Location({ showMap = true, className = '' }: LocationPro
   const initMap = () => {
     if (!mapRef.current) return;
 
+    // Check if Google Maps API is loaded
+    if (typeof window.google === 'undefined' || !window.google.maps) {
+      setMapError('Google Maps API not loaded');
+      setIsMapLoading(false);
+      return;
+    }
+
     try {
       const kathmandu = { lat: 27.7172, lng: 85.3240 };
       
-      const map = new google.maps.Map(mapRef.current, {
+      const map = new window.google.maps.Map(mapRef.current, {
         zoom: 15,
         center: kathmandu,
         styles: [
@@ -73,7 +87,7 @@ export default function Location({ showMap = true, className = '' }: LocationPro
       });
 
       // Add marker for SewaGo office
-      new google.maps.Marker({
+      new window.google.maps.Marker({
         position: kathmandu,
         map: map,
         title: 'SewaGo - Local Services in Nepal',
@@ -84,12 +98,12 @@ export default function Location({ showMap = true, className = '' }: LocationPro
               <text x="20" y="25" font-family="Arial" font-size="16" font-weight="bold" text-anchor="middle" fill="white">S</text>
             </svg>
           `),
-          scaledSize: new google.maps.Size(40, 40)
+          scaledSize: new window.google.maps.Size(40, 40)
         }
       });
 
       // Add info window
-      const infoWindow = new google.maps.InfoWindow({
+      const infoWindow = new window.google.maps.InfoWindow({
         content: `
           <div style="padding: 10px; max-width: 200px;">
             <h3 style="margin: 0 0 5px 0; color: #DC143C; font-weight: bold;">SewaGo</h3>

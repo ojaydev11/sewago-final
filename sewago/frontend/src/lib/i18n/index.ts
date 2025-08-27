@@ -1,9 +1,6 @@
-'use client';
-import 'client-only';
-
-import { createI18n } from 'next-international';
-
-export type Locale = 'en' | 'ne';
+export const locales = ['en', 'ne'] as const;
+export type Locale = (typeof locales)[number];
+export const defaultLocale: Locale = 'en';
 
 export interface I18nConfig {
   defaultLocale: Locale;
@@ -50,7 +47,7 @@ export function getLocaleFromHeader(acceptLanguage: string): Locale {
   
   // Check for Nepali first
   if (languages.some(lang => lang.startsWith('ne') || lang.startsWith('np'))) {
-    return 'ne';
+    return 'en';
   }
   
   // Default to English

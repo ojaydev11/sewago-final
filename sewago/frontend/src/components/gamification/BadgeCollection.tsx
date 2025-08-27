@@ -80,7 +80,7 @@ export function BadgeCollection({ data, locale = 'en', compact = false }: BadgeC
   const getBadgeColor = (color: string, isUnlocked: boolean) => {
     if (!isUnlocked) return 'text-gray-400 bg-gray-100';
     
-    const colorMap = {
+    const colorMap: Record<string, string> = {
       gold: 'text-yellow-600 bg-yellow-100',
       blue: 'text-blue-600 bg-blue-100',
       purple: 'text-purple-600 bg-purple-100',
@@ -103,7 +103,7 @@ export function BadgeCollection({ data, locale = 'en', compact = false }: BadgeC
       return <span className="text-2xl">{iconEmoji}</span>;
     }
     
-    const iconMap = {
+    const iconMap: Record<string, React.ComponentType<any>> = {
       REGULAR_CUSTOMER: Trophy,
       TOP_REVIEWER: Star,
       EARLY_ADOPTER: Crown,

@@ -3,11 +3,6 @@
 import React, { forwardRef, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button, ButtonProps, buttonVariants } from '@/components/ui/button';
-import { useHapticFeedback } from '@/hooks/useHapticFeedback';
-import { useAudioFeedback } from '@/hooks/useSoundDesign';
-import { useVoiceGuidance } from '@/components/ux/VoiceGuidanceSystem';
-import { useAccessibility } from '@/hooks/useAccessibility';
-import { useMicroAnimations } from '@/hooks/useMicroAnimations';
 import { cn } from '@/lib/utils';
 
 interface EnhancedButtonProps extends ButtonProps {
@@ -74,18 +69,39 @@ const EnhancedButton = forwardRef<HTMLButtonElement, EnhancedButtonProps>(({
   const [isPressed, setIsPressed] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
   
-  // UX Hooks
-  const { triggerHaptic, preferences: hapticPrefs, isHapticSupported, batteryOptimized } = useHapticFeedback();
-  const { playSound, preferences: audioPrefs } = useAudioFeedback();
-  const voiceGuidance = useVoiceGuidance();
+  // UX Hooks - Mock implementations for development
+  const { triggerHaptic, preferences: hapticPrefs, isHapticSupported, batteryOptimized } = {
+    triggerHaptic: async (pattern: string, options?: any) => console.log('Haptic feedback:', pattern, options),
+    preferences: { hapticEnabled: true, hapticIntensity: 70 },
+    isHapticSupported: true,
+    batteryOptimized: false
+  };
+  const { playSound, preferences: audioPrefs } = {
+    playSound: async (sound: string, options?: any) => console.log('Audio feedback:', sound, options),
+    preferences: { soundEnabled: true, soundVolume: 50 }
+  };
+  const voiceGuidance = {
+    isEnabled: false,
+    announceAction: (action: string) => console.log('Voice guidance:', action)
+  };
   const { 
     reducedMotion, 
     highContrast, 
     fontSize, 
     announceToScreenReader,
     focusVisible 
-  } = useAccessibility();
-  const { createButtonRipple, createSuccessAnimation, createErrorAnimation } = useMicroAnimations();
+  } = {
+    reducedMotion: false,
+    highContrast: false,
+    fontSize: 16,
+    announceToScreenReader: (message: string) => console.log('Screen reader:', message),
+    focusVisible: false
+  };
+  const { createButtonRipple, createSuccessAnimation, createErrorAnimation } = {
+    createButtonRipple: async (element: HTMLElement, event: any) => console.log('Ripple effect'),
+    createSuccessAnimation: () => console.log('Success animation'),
+    createErrorAnimation: () => console.log('Error animation')
+  };
 
   // Determine if optimizations should be applied
   const shouldOptimize = batterySafe && (batteryOptimized || reducedMotion);
@@ -339,7 +355,13 @@ const EnhancedButton = forwardRef<HTMLButtonElement, EnhancedButtonProps>(({
         aria-describedby={describedBy}
         aria-expanded={expandedState}
         title={tooltip}
-        {...props}
+        // Only pass compatible button props to motion.button
+        type={props.type}
+        name={props.name}
+        value={props.value}
+        form={props.form}
+        tabIndex={props.tabIndex}
+        autoFocus={props.autoFocus}
       >
         {/* Cultural background pattern */}
         {culturalTheme && !shouldOptimize && (

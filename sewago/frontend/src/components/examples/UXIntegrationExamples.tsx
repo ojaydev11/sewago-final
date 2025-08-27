@@ -28,6 +28,48 @@ export default function UXIntegrationExamples() {
   const [switchState, setSwitchState] = useState(false);
   const [loadingState, setLoadingState] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
 
+  // Mock hooks for development
+const useHapticFeedback = () => ({ triggerHaptic: (pattern: string) => console.log('Haptic feedback triggered:', pattern) });
+const useAudioFeedback = () => ({ playSound: (sound: string, options?: any) => console.log('Sound played:', sound, options) });
+const useContextualIntelligence = () => ({ 
+  state: { 
+    currentContext: {
+      device: {
+        type: 'mobile',
+        screenSize: { width: 375, height: 667 },
+        orientation: 'portrait',
+        connection: '4G'
+      },
+      user: {
+        preferences: { theme: 'light', language: 'en' },
+        behavior: { lastAction: 'search', sessionDuration: 300 }
+      },
+      environment: {
+        location: 'Kathmandu',
+        time: 'afternoon',
+        weather: 'sunny'
+      },
+      time: {
+        hour: 14,
+        isWorkingHours: true,
+        isWeekend: false,
+        nepaliDate: { year: 2080, month: 9, day: 15 }
+      },
+      location: {
+        city: 'Kathmandu',
+        district: 'Kathmandu',
+        isUrban: true,
+        country: 'Nepal',
+        coordinates: { lat: 27.7172, lng: 85.3240 }
+      }
+    },
+    activeAdaptations: ['theme', 'fontSize', 'contrast'],
+    isProcessing: false
+  }, 
+  registerBehavior: (behavior: string, data: any) => Promise.resolve() 
+});
+const useAccessibility = () => ({ announceToScreenReader: (message: string) => console.log('Screen reader:', message) });
+  
   const { triggerHaptic } = useHapticFeedback();
   const { playSound } = useAudioFeedback();
   const { state: contextState, registerBehavior } = useContextualIntelligence();
@@ -149,7 +191,6 @@ export default function UXIntegrationExamples() {
                 <div className="flex flex-wrap gap-3">
                   <HapticButton
                     hapticPattern="success"
-                    soundEffect="success"
                     culturalContext={true}
                     className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg"
                   >
@@ -158,7 +199,6 @@ export default function UXIntegrationExamples() {
                   
                   <HapticButton
                     hapticPattern="error"
-                    soundEffect="error"
                     className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg"
                   >
                     Error
@@ -166,7 +206,6 @@ export default function UXIntegrationExamples() {
                   
                   <HapticButton
                     hapticPattern="nepali_celebration"
-                    soundEffect="nepali_bell"
                     culturalContext={true}
                     className="bg-gradient-to-r from-red-600 to-red-700 text-white px-4 py-2 rounded-lg border-b-2 border-yellow-400"
                   >

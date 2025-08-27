@@ -110,7 +110,7 @@ export function AchievementNotification({
     }
     
     // Fallback to Lucide icons
-    const iconMap = {
+    const iconMap: Record<string, React.ComponentType<any>> = {
       badge: Trophy,
       points: Star,
       streak: Flame,
@@ -140,7 +140,7 @@ export function AchievementNotification({
   };
 
   const getIconColor = (type: string) => {
-    const colorMap = {
+    const colorMap: Record<string, string> = {
       badge: 'text-purple-500',
       points: 'text-yellow-500',
       streak: 'text-orange-500',
@@ -156,7 +156,7 @@ export function AchievementNotification({
       return 'from-yellow-100 via-orange-50 to-red-50 border-yellow-300';
     }
     
-    const gradientMap = {
+    const gradientMap: Record<string, string> = {
       gold: 'from-yellow-50 to-orange-50 border-yellow-200',
       blue: 'from-blue-50 to-indigo-50 border-blue-200',
       purple: 'from-purple-50 to-pink-50 border-purple-200',
@@ -170,7 +170,7 @@ export function AchievementNotification({
 
   const getAchievementTypeText = (type: string) => {
     if (locale === 'ne') {
-      const typeMap = {
+      const typeMap: Record<string, string> = {
         badge: 'ब्याज अनलक!',
         points: 'अंक कमाएको!',
         streak: 'स्ट्रिक बनाएको!',
@@ -180,7 +180,7 @@ export function AchievementNotification({
       return typeMap[type] || 'उपलब्धि!';
     }
     
-    const typeMap = {
+    const typeMap: Record<string, string> = {
       badge: 'Badge Unlocked!',
       points: 'Points Earned!',
       streak: 'Streak Achieved!',

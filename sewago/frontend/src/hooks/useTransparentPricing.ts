@@ -2,6 +2,18 @@
 
 import { useState, useCallback, useEffect } from 'react';
 
+interface PricingStep {
+  label: string;
+  amount: number;
+  type: 'positive' | 'neutral' | 'negative';
+}
+
+interface FormattedPricingBreakdown {
+  steps: PricingStep[];
+  total: number;
+  currency: string;
+}
+
 interface PricingBreakdown {
   basePrice: number;
   taxes: Record<string, number>;
@@ -104,7 +116,9 @@ export function useTransparentPricing() {
         serviceId,
         lat: location.lat.toString(),
         lng: location.lng.toString(),
-        ...filters
+        ...(filters?.minRating !== undefined && { minRating: filters.minRating.toString() }),
+        ...(filters?.maxDistance !== undefined && { maxDistance: filters.maxDistance.toString() }),
+        ...(filters?.availableOnly !== undefined && { availableOnly: filters.availableOnly.toString() })
       });
 
       const response = await fetch(`/api/pricing/comparison?${queryParams}`);
@@ -236,7 +250,7 @@ export function useTransparentPricing() {
   }, []);
 
   // Format price breakdown for display
-  const formatPriceBreakdown = useCallback((breakdown: PricingBreakdown) => {
+  const formatPriceBreakdown = useCallback((breakdown: PricingBreakdown): FormattedPricingBreakdown => {
     const steps = [
       {
         label: 'Base Service Price',
@@ -250,7 +264,7 @@ export function useTransparentPricing() {
       steps.push({
         label: taxName,
         amount: amount,
-        type: 'neutral' as const
+        type: 'positive' as const
       });
     });
 
@@ -259,7 +273,7 @@ export function useTransparentPricing() {
       steps.push({
         label: feeName,
         amount: amount,
-        type: 'neutral' as const
+        type: 'positive' as const
       });
     });
 
@@ -268,7 +282,7 @@ export function useTransparentPricing() {
       steps.push({
         label: discountName,
         amount: -amount,
-        type: 'negative' as const
+        type: 'positive' as const
       });
     });
 
@@ -277,7 +291,7 @@ export function useTransparentPricing() {
       steps.push({
         label: 'Subscription Discount',
         amount: -breakdown.subscriptionDiscount,
-        type: 'negative' as const
+        type: 'positive' as const
       });
     }
 

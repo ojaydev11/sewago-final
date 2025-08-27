@@ -2,7 +2,19 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useIntl } from 'react-intl';
+// Mock useIntl hook for development
+const useIntl = () => ({
+  formatMessage: (descriptor: { id: string; defaultMessage?: string }, values?: any) => {
+    if (values && values.name) {
+      return `Welcome, ${values.name}`;
+    }
+    return descriptor.defaultMessage || descriptor.id;
+  },
+  formatDate: (date: Date) => date.toLocaleDateString(),
+  formatTime: (date: Date) => date.toLocaleTimeString(),
+  formatNumber: (num: number) => num.toLocaleString(),
+  locale: 'en'
+});
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -142,20 +154,20 @@ export function PersonalizedDashboard({
           {/* Service Recommendations */}
           <ServiceRecommendationsSection
             services={dashboardData.recommendations.services}
-            onServiceClick={(service) => handleActionClick('view_service', service)}
-            onBookClick={(service) => handleActionClick('book_service', service)}
+            onServiceClick={(service: ServiceRecommendation) => handleActionClick('view_service', service)}
+            onBookClick={(service: ServiceRecommendation) => handleActionClick('book_service', service)}
           />
 
           {/* Personalized Offers */}
           <PersonalizedOffersSection
             offers={dashboardData.recommendations.offers}
-            onOfferClick={(offer) => handleActionClick('view_offer', offer)}
+            onOfferClick={(offer: PersonalizedOffer) => handleActionClick('view_offer', offer)}
           />
 
           {/* Provider Recommendations */}
           <ProviderRecommendationsSection
             providers={dashboardData.recommendations.providers}
-            onProviderClick={(provider) => handleActionClick('view_provider', provider)}
+            onProviderClick={(provider: any) => handleActionClick('view_provider', provider)}
           />
         </div>
 
@@ -169,13 +181,13 @@ export function PersonalizedDashboard({
           {/* Upcoming Bookings */}
           <UpcomingBookingsSection
             bookings={dashboardData.upcomingBookings}
-            onBookingClick={(booking) => handleActionClick('view_booking', booking)}
+            onBookingClick={(booking: any) => handleActionClick('view_booking', booking)}
           />
 
           {/* Goals */}
           <GoalsSection
             goals={dashboardData.goals}
-            onGoalClick={(goal) => handleActionClick('view_goal', goal)}
+            onGoalClick={(goal: any) => handleActionClick('view_goal', goal)}
           />
 
           {/* Recent Activity */}

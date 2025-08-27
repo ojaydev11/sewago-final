@@ -77,7 +77,7 @@ export interface PersonalizationInsights {
     season: string;
     preferences: string[];
     spending: number;
-  };
+  }[];
   providerAffinities: string[];
   predictedNeeds: {
     service: string;

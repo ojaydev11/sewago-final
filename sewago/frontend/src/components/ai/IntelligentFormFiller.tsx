@@ -77,6 +77,7 @@ export function IntelligentFormFiller({
   const [typingTimeout, setTypingTimeout] = useState<NodeJS.Timeout | null>(null);
 
   const inputRef = useRef<HTMLInputElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const suggestionsRef = useRef<HTMLDivElement>(null);
   const sessionId = useRef(`form_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`);
 
@@ -143,8 +144,8 @@ export function IntelligentFormFiller({
       if (
         suggestionsRef.current &&
         !suggestionsRef.current.contains(event.target as Node) &&
-        inputRef.current &&
-        !inputRef.current.contains(event.target as Node)
+        ((inputRef.current && !inputRef.current.contains(event.target as Node)) ||
+         (textareaRef.current && !textareaRef.current.contains(event.target as Node)))
       ) {
         setShowSuggestions(false);
       }
@@ -298,9 +299,7 @@ export function IntelligentFormFiller({
   };
 
   const renderInput = () => {
-    const inputProps = {
-      ref: inputRef,
-      type: fieldType,
+    const commonProps = {
       value,
       onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => 
         onChange(e.target.value),
@@ -315,10 +314,10 @@ export function IntelligentFormFiller({
     };
 
     if (fieldType === 'textarea') {
-      return <Textarea {...inputProps} rows={3} />;
+      return <Textarea {...commonProps} rows={3} ref={textareaRef} />;
     }
 
-    return <Input {...inputProps} />;
+    return <Input {...commonProps} type={fieldType} ref={inputRef} />;
   };
 
   return (

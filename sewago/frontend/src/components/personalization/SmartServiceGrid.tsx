@@ -2,7 +2,19 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useIntl } from 'react-intl';
+// Mock useIntl hook for development
+const useIntl = () => ({
+  formatMessage: (descriptor: { id: string; defaultMessage?: string }, values?: any) => {
+    if (values && values.name) {
+      return `Welcome, ${values.name}`;
+    }
+    return descriptor.defaultMessage || descriptor.id;
+  },
+  formatDate: (date: Date) => date.toLocaleDateString(),
+  formatTime: (date: Date) => date.toLocaleTimeString(),
+  formatNumber: (num: number) => num.toLocaleString(),
+  locale: 'en'
+});
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';

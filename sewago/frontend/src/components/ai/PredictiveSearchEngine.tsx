@@ -65,7 +65,7 @@ export function PredictiveSearchEngine({
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
   const debouncedQuery = useDebounce(query, 300);
-  const { formatPrice } = useLocalizedCurrency();
+  const { formatCurrency } = useLocalizedCurrency();
 
   // Get user location on mount
   useEffect(() => {
@@ -272,7 +272,7 @@ export function PredictiveSearchEngine({
             </span>
             {prediction.price && (
               <span className="text-sm text-blue-600 font-medium">
-                {formatPrice(prediction.price)}
+                {formatCurrency(prediction.price)}
               </span>
             )}
           </div>

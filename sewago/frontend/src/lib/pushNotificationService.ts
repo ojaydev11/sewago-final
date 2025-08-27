@@ -1,7 +1,7 @@
 'use client';
 import 'client-only';
 
-import { NotificationService } from './notificationService';
+
 
 export interface PushNotificationPayload {
   title: string;
@@ -98,9 +98,10 @@ export class PushNotificationService {
     }
 
     try {
+      const vapidKey = this.urlBase64ToUint8Array(process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || '') as any;
       const subscription = await this.swRegistration.pushManager.subscribe({
         userVisibleOnly: true,
-        applicationServerKey: this.urlBase64ToUint8Array(process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || ''),
+        applicationServerKey: vapidKey as any,
       });
 
       console.log('Push subscription created:', subscription);
@@ -162,13 +163,11 @@ export class PushNotificationService {
         body: payload.body,
         icon: payload.icon || '/icons/icon-192x192.png',
         badge: payload.badge || '/icons/icon-192x192.png',
-        image: payload.image,
         tag: payload.tag,
         data: payload.data,
-        actions: payload.actions,
+
         requireInteraction: payload.requireInteraction || false,
         silent: payload.silent || false,
-        vibrate: payload.vibrate || [100, 50, 100],
       });
     } catch (error) {
       console.error('Error showing notification:', error);
@@ -206,7 +205,7 @@ export class PushNotificationService {
     for (let i = 0; i < rawData.length; ++i) {
       outputArray[i] = rawData.charCodeAt(i);
     }
-    return outputArray;
+    return outputArray as Uint8Array;
   }
 
   /**

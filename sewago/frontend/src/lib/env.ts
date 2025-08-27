@@ -11,11 +11,11 @@ const envSchema = z.object({
   NEXTAUTH_SECRET: z.string().min(32).optional(),
   
   // Feature Flags
-  NEXT_PUBLIC_BOOKING_ENABLED: z.string().transform(val => val === 'true').default('true'),
-  NEXT_PUBLIC_AUTH_ENABLED: z.string().transform(val => val === 'true').default('true'),
-  NEXT_PUBLIC_I18N_ENABLED: z.string().transform(val => val === 'true').default('true'),
-  NEXT_PUBLIC_SEWAAI_ENABLED: z.string().transform(val => val === 'true').default('true'),
-  NEXT_PUBLIC_QUOTE_ESTIMATOR_ENABLED: z.string().transform(val => val === 'true').default('true'),
+  NEXT_PUBLIC_BOOKING_ENABLED: z.string().default('true').transform(val => val === 'true'),
+  NEXT_PUBLIC_AUTH_ENABLED: z.string().default('true').transform(val => val === 'true'),
+  NEXT_PUBLIC_I18N_ENABLED: z.string().default('true').transform(val => val === 'true'),
+  NEXT_PUBLIC_SEWAAI_ENABLED: z.string().default('true').transform(val => val === 'true'),
+  NEXT_PUBLIC_QUOTE_ESTIMATOR_ENABLED: z.string().default('true').transform(val => val === 'true'),
   
   // Environment
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),

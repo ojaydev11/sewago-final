@@ -74,7 +74,8 @@ export default function QuoteForm({ serviceSlug, serviceName, basePrice, onQuote
   const [extraBlocks, setExtraBlocks] = useState<number>(0);
   
   // Mock subscription data - in real app, this would come from auth context
-  const userTier: SubscriptionTier = 'PLUS'; // This would be fetched from user's subscription
+  // Mock subscription data - in real app, this would come from auth context
+  const userTier = 'PLUS' as SubscriptionTier; // This would be fetched from user's subscription - mock for now
   const isAuthenticated = true; // This would come from auth context
   const availableCredits = 15000; // NPR 150 in paisa - from user's subscription
   const [useCredits, setUseCredits] = useState(false);

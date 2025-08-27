@@ -125,7 +125,7 @@ export function GamificationDashboard({ locale = 'en' }: GamificationDashboardPr
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('overview');
   const [showParticles, setShowParticles] = useState(false);
-  const { showNotification } = useNotifications();
+  const { createNotification } = useNotifications();
 
   useEffect(() => {
     fetchGamificationData();
@@ -169,7 +169,14 @@ export function GamificationDashboard({ locale = 'en' }: GamificationDashboardPr
 
     } catch (error) {
       console.error('Error fetching gamification data:', error);
-      showNotification('error', 'Failed to load gamification data');
+      createNotification({
+        type: 'system',
+        title: 'Error',
+        message: 'Failed to load gamification data',
+        priority: 'high',
+        category: 'error',
+        tags: ['gamification', 'dashboard']
+      });
     } finally {
       setLoading(false);
     }

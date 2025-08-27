@@ -197,7 +197,7 @@ export function TierComparison({
               key={tierKey}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 * parseInt(Object.keys(tiers).indexOf(tierKey)) }}
+              transition={{ delay: 0.1 * Object.keys(tiers).indexOf(tierKey) }}
               className="relative"
             >
               {tier.popular && (
@@ -263,7 +263,7 @@ export function TierComparison({
                       .slice(0, 6)
                       .map((feature, index) => (
                         <div key={index} className="flex items-center gap-3">
-                          <feature.icon className="h-4 w-4 text-gray-400" />
+                          {React.createElement(feature.icon, { className: "h-4 w-4 text-gray-400" })}
                           <span className="text-sm text-gray-700">{feature.name}</span>
                           {feature[tierKey.toLowerCase() as 'free' | 'plus' | 'pro'] !== true && (
                             <Badge variant="outline" className="ml-auto text-xs">
@@ -392,7 +392,7 @@ export function TierComparison({
                 <tr key={index} className="hover:bg-gray-50">
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
-                      <feature.icon className="h-4 w-4 text-gray-400" />
+                      {React.createElement(feature.icon, { className: "h-4 w-4 text-gray-400" })}
                       <span className="text-sm font-medium text-gray-900">{feature.name}</span>
                     </div>
                   </td>

@@ -72,7 +72,7 @@ export function SearchResultsPredictor({
     alternatives: string[];
   } | null>(null);
 
-  const { formatPrice } = useLocalizedCurrency();
+  const { formatCurrency } = useLocalizedCurrency();
 
   useEffect(() => {
     if (query.trim().length >= 2) {
@@ -238,7 +238,7 @@ export function SearchResultsPredictor({
                 <div className="flex items-center justify-center mb-1">
                   <DollarSign className="h-4 w-4 text-blue-500 mr-1" />
                   <span className="text-lg font-semibold text-blue-600">
-                    {formatPrice(insights.avgPrice)}
+                    {formatCurrency(insights.avgPrice)}
                   </span>
                 </div>
                 <p className="text-xs text-gray-500">Avg. Price</p>
@@ -384,7 +384,7 @@ export function SearchResultsPredictor({
                         
                         <div className="text-right">
                           <div className="text-lg font-bold text-blue-600">
-                            {formatPrice(prediction.price)}
+                            {formatCurrency(prediction.price)}
                           </div>
                           <div className="text-xs text-gray-500">
                             {Math.round(prediction.confidence * 100)}% match

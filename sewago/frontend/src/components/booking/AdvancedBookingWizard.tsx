@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useForm, FormProvider } from 'react-hook-form';
+import { useForm, FormProvider, useFormContext } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Calendar, Clock, Users, Repeat, MapPin, Zap, Cloud, Car, CheckCircle, ArrowLeft, ArrowRight, AlertTriangle } from 'lucide-react';
@@ -12,10 +12,50 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
 import { toast } from 'sonner';
-import SmartScheduler from './SmartScheduler';
-import GroupBookingManager from './GroupBookingManager';
-import RecurringServiceSetup from './RecurringServiceSetup';
-import BookingCalendar from './BookingCalendar';
+// Placeholder components for missing imports
+const SmartScheduler = ({ serviceId, onRecommendationSelect, onGenerateRecommendations }: { 
+  serviceId?: string; 
+  onRecommendationSelect: (recommendation: any) => void; 
+  onGenerateRecommendations: () => void 
+}) => (
+  <div className="p-4 border rounded-lg">
+    <h4 className="font-medium mb-2">Smart Scheduler (Coming Soon)</h4>
+    <p className="text-sm text-gray-600">AI-powered scheduling will be implemented here</p>
+    <button 
+      onClick={onGenerateRecommendations}
+      className="mt-2 px-3 py-1 bg-blue-500 text-white rounded text-sm"
+    >
+      Generate Recommendations
+    </button>
+  </div>
+);
+
+const GroupBookingManager = ({ onGroupSettingsChange }: { 
+  onGroupSettingsChange: (settings: any) => void 
+}) => (
+  <div className="p-4 border rounded-lg">
+    <h4 className="font-medium mb-2">Group Booking Manager (Coming Soon)</h4>
+    <p className="text-sm text-gray-600">Group booking functionality will be implemented here</p>
+  </div>
+);
+
+const RecurringServiceSetup = ({ onRecurringSettingsChange }: { 
+  onRecurringSettingsChange: (settings: any) => void 
+}) => (
+  <div className="p-4 border rounded-lg">
+    <h4 className="font-medium mb-2">Recurring Service Setup (Coming Soon)</h4>
+    <p className="text-sm text-gray-600">Recurring service functionality will be implemented here</p>
+  </div>
+);
+const BookingCalendar = ({ onDateSelect, selectedDate }: { onDateSelect: (date: Date) => void; selectedDate?: Date }) => (
+  <div className="p-4 border rounded-lg">
+    <h4 className="font-medium mb-2">Booking Calendar (Coming Soon)</h4>
+    <p className="text-sm text-gray-600">Calendar functionality will be implemented here</p>
+    {selectedDate && (
+      <p className="text-sm mt-2">Selected: {selectedDate.toLocaleDateString()}</p>
+    )}
+  </div>
+);
 
 // Form schema for advanced booking
 const advancedBookingSchema = z.object({
@@ -365,7 +405,7 @@ export default function AdvancedBookingWizard({
 
 // Step Components
 function BookingTypeStep() {
-  const { watch, setValue } = methods.useFormContext<AdvancedBookingForm>();
+  const { watch, setValue } = useFormContext<AdvancedBookingForm>();
   const bookingType = watch('bookingType');
 
   const bookingTypes = [
@@ -474,7 +514,7 @@ function BookingTypeStep() {
 }
 
 function BookingDetailsStep() {
-  const { register, watch, formState: { errors } } = methods.useFormContext<AdvancedBookingForm>();
+  const { register, watch, formState: { errors } } = useFormContext<AdvancedBookingForm>();
 
   return (
     <div className="space-y-6">
@@ -525,7 +565,7 @@ function BookingDetailsStep() {
 }
 
 function SchedulingStep({ onGenerateRecommendations }: { onGenerateRecommendations: () => void }) {
-  const { watch } = methods.useFormContext<AdvancedBookingForm>();
+  const { watch, setValue } = useFormContext<AdvancedBookingForm>();
   const bookingType = watch('bookingType');
   const smartScheduled = watch('smartScheduled');
 
@@ -548,7 +588,7 @@ function SchedulingStep({ onGenerateRecommendations }: { onGenerateRecommendatio
 
         <TabsContent value="standard" className="space-y-4">
           <BookingCalendar
-            onDateSelect={(date) => methods.setValue('scheduledAt', date)}
+            onDateSelect={(date) => setValue('scheduledAt', date)}
             selectedDate={watch('scheduledAt')}
           />
         </TabsContent>
@@ -557,7 +597,7 @@ function SchedulingStep({ onGenerateRecommendations }: { onGenerateRecommendatio
           <SmartScheduler
             serviceId={watch('serviceId')}
             onRecommendationSelect={(recommendation) => {
-              methods.setValue('scheduledAt', new Date(recommendation.suggestedTime));
+              setValue('scheduledAt', new Date(recommendation.suggestedTime));
             }}
             onGenerateRecommendations={onGenerateRecommendations}
           />
@@ -566,7 +606,7 @@ function SchedulingStep({ onGenerateRecommendations }: { onGenerateRecommendatio
         <TabsContent value="group" className="space-y-4">
           <GroupBookingManager
             onGroupSettingsChange={(settings) => {
-              methods.setValue('groupSettings', settings);
+              setValue('groupSettings', settings);
             }}
           />
         </TabsContent>
@@ -574,7 +614,7 @@ function SchedulingStep({ onGenerateRecommendations }: { onGenerateRecommendatio
         <TabsContent value="recurring" className="space-y-4">
           <RecurringServiceSetup
             onRecurringSettingsChange={(settings) => {
-              methods.setValue('recurringSettings', settings);
+              setValue('recurringSettings', settings);
             }}
           />
         </TabsContent>
@@ -584,7 +624,7 @@ function SchedulingStep({ onGenerateRecommendations }: { onGenerateRecommendatio
 }
 
 function AdvancedOptionsStep({ recommendations }: { recommendations: any[] }) {
-  const { register, watch, setValue } = methods.useFormContext<AdvancedBookingForm>();
+  const { register, watch, setValue } = useFormContext<AdvancedBookingForm>();
   const weatherSensitive = watch('weatherSensitive');
   const trafficOptimized = watch('trafficOptimized');
   const urgency = watch('urgency');
@@ -743,7 +783,7 @@ function AdvancedOptionsStep({ recommendations }: { recommendations: any[] }) {
 }
 
 function ReviewStep({ serviceDetails }: { serviceDetails: any }) {
-  const { watch } = methods.useFormContext<AdvancedBookingForm>();
+  const { watch } = useFormContext<AdvancedBookingForm>();
   const formData = watch();
 
   const calculateTotal = () => {

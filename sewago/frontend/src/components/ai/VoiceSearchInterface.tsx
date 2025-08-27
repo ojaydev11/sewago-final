@@ -25,7 +25,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
-import { Slider } from '@/components/ui/slider';
+
 import { toast } from 'sonner';
 
 interface VoiceSearchInterfaceProps {
@@ -61,8 +61,8 @@ interface SpeechRecognitionEvent {
 
 declare global {
   interface Window {
-    SpeechRecognition: new () => VoiceRecognition;
-    webkitSpeechRecognition: new () => VoiceRecognition;
+    SpeechRecognition: any;
+    webkitSpeechRecognition: any;
   }
 }
 
@@ -154,10 +154,11 @@ export function VoiceSearchInterface({
       let finalTranscript = '';
       let interimText = '';
 
-      for (let i = event.resultIndex; i < event.results.length; i++) {
-        const result = event.results[i][0];
+      const results = event.results as any;
+      for (let i = event.resultIndex; i < results.length; i++) {
+        const result = results[i][0];
         
-        if (event.results[i].isFinal) {
+        if (results[i].isFinal) {
           finalTranscript += result.transcript;
           setConfidence(result.confidence);
         } else {
@@ -169,7 +170,9 @@ export function VoiceSearchInterface({
         setTranscript(finalTranscript);
         
         if (voiceSettings.autoSend) {
-          await processVoiceCommand(finalTranscript, result.confidence);
+          // Use the confidence from the last final result
+          const lastFinalResult = results[results.length - 1][0];
+          await processVoiceCommand(finalTranscript, lastFinalResult.confidence);
         }
       }
 

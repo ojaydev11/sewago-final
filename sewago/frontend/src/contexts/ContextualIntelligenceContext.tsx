@@ -385,7 +385,7 @@ export function ContextualIntelligenceProvider({ children }: ContextualIntellige
       const timeContext = getTimeContext();
       
       // Fetch weather data if location is available
-      let weatherContext;
+      let weatherContext: any;
       if (state.currentContext.location.latitude && state.currentContext.location.longitude) {
         weatherContext = await fetchWeatherContext(
           state.currentContext.location.latitude,

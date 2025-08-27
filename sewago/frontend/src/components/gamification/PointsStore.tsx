@@ -63,7 +63,7 @@ export function PointsStore({ locale = 'en' }: PointsStoreProps) {
   const [serviceAmount, setServiceAmount] = useState<number>(0);
   const [selectedTier, setSelectedTier] = useState<RedemptionTier | null>(null);
   const { formatCurrency } = useLocalizedCurrency();
-  const { showNotification } = useNotifications();
+  const { createNotification } = useNotifications();
 
   useEffect(() => {
     fetchRedemptionData();
@@ -82,11 +82,14 @@ export function PointsStore({ locale = 'en' }: PointsStoreProps) {
       setData(result);
     } catch (error) {
       console.error('Error fetching redemption data:', error);
-      showNotification('error', 
-        locale === 'ne' 
-          ? 'रिडेम्प्सन डेटा लोड गर्न असफल' 
-          : 'Failed to load redemption data'
-      );
+      createNotification({
+        type: 'system',
+        title: locale === 'ne' ? 'रिडेम्प्सन डेटा लोड गर्न असफल' : 'Failed to load redemption data',
+        message: locale === 'ne' ? 'रिडेम्प्सन डेटा लोड गर्न असफल' : 'Failed to load redemption data',
+        priority: 'high',
+        category: 'error',
+        tags: ['redemption', 'data', 'error']
+      });
     } finally {
       setLoading(false);
     }
@@ -113,11 +116,14 @@ export function PointsStore({ locale = 'en' }: PointsStoreProps) {
 
       const result = await response.json();
       
-      showNotification('success', 
-        locale === 'ne' 
-          ? `${tier.points} अंक सफलतापूर्वक रिडेम भयो!` 
-          : `Successfully redeemed ${tier.points} points!`
-      );
+      createNotification({
+        type: 'system',
+        title: locale === 'ne' ? `${tier.points} अंक सफलतापूर्वक रिडेम भयो!` : `Successfully redeemed ${tier.points} points!`,
+        message: locale === 'ne' ? `${tier.points} अंक सफलतापूर्वक रिडेम भयो!` : `Successfully redeemed ${tier.points} points!`,
+        priority: 'medium',
+        category: 'success',
+        tags: ['redemption', 'success', 'points']
+      });
       
       // Refresh data
       await fetchRedemptionData();
@@ -126,18 +132,21 @@ export function PointsStore({ locale = 'en' }: PointsStoreProps) {
       
     } catch (error) {
       console.error('Error redeeming points:', error);
-      showNotification('error', 
-        locale === 'ne' 
-          ? 'पोइन्ट रिडेम गर्न असफल' 
-          : 'Failed to redeem points'
-      );
+      createNotification({
+        type: 'system',
+        title: locale === 'ne' ? 'पोइन्ट रिडेम गर्न असफल' : 'Failed to redeem points',
+        message: locale === 'ne' ? 'पोइन्ट रिडेम गर्न असफल' : 'Failed to redeem points',
+        priority: 'high',
+        category: 'error',
+        tags: ['redemption', 'error', 'points']
+      });
     } finally {
       setRedeeming(null);
     }
   };
 
   const getTierIcon = (iconEmoji: string, color: string) => {
-    const iconMap = {
+    const iconMap: Record<string, React.ComponentType<any>> = {
       '🎟️': Ticket,
       '🎫': Ticket,
       '🎪': Gift,
@@ -150,7 +159,7 @@ export function PointsStore({ locale = 'en' }: PointsStoreProps) {
   };
 
   const getTierColor = (color: string) => {
-    const colorMap = {
+    const colorMap: Record<string, string> = {
       blue: 'from-blue-50 to-blue-100 border-blue-200 text-blue-700',
       green: 'from-green-50 to-green-100 border-green-200 text-green-700',
       orange: 'from-orange-50 to-orange-100 border-orange-200 text-orange-700',
@@ -178,7 +187,7 @@ export function PointsStore({ locale = 'en' }: PointsStoreProps) {
 
   const getStatusText = (status: string) => {
     if (locale === 'ne') {
-      const statusMap = {
+      const statusMap: Record<string, string> = {
         APPLIED: 'लागू',
         PENDING: 'पेन्डिङ',
         EXPIRED: 'समाप्त',

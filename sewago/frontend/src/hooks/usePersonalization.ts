@@ -21,7 +21,7 @@ export function usePersonalization(userId: string) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const behaviorQueueRef = useRef<Omit<UserBehavior, 'id' | 'timestamp'>[]>([]);
-  const flushTimeoutRef = useRef<NodeJS.Timeout>();
+  const flushTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
   // Track user behavior with batching for performance
   const trackBehavior = useCallback(async (behavior: Omit<UserBehavior, 'id' | 'timestamp'>) => {

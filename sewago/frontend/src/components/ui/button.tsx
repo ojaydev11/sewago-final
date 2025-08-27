@@ -41,7 +41,7 @@ const motionVariants = {
   hover: { 
     scale: 1.05,
     transition: {
-      type: "spring",
+      type: "spring" as const,
       stiffness: 400,
       damping: 17
     }
@@ -49,7 +49,7 @@ const motionVariants = {
   tap: { 
     scale: 0.95,
     transition: {
-      type: "spring",
+      type: "spring" as const,
       stiffness: 400,
       damping: 17
     }
@@ -118,7 +118,11 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         whileTap={disabled ? "rest" : "tap"}
         ref={ref}
         disabled={disabled}
-        {...props}
+        {...(Object.fromEntries(
+          Object.entries(props).filter(([key]) => 
+            !['onDrag', 'onDragStart', 'onDragEnd', 'onDragEnter', 'onDragLeave', 'onDragOver', 'onDrop'].includes(key)
+          )
+        ) as any)}
       >
         {/* Ripple effect */}
         {withRipple && !disabled && (

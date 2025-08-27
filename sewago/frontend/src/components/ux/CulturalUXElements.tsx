@@ -581,7 +581,7 @@ export const CulturalTypography: React.FC<CulturalTypographyProps> = ({
 
 // Helper functions
 const getFestivalEmoji = (festival: string): string => {
-  const emojiMap = {
+  const emojiMap: Record<string, string> = {
     dashain: '🎉',
     tihar: '🪔',
     holi: '🎨',
@@ -593,7 +593,7 @@ const getFestivalEmoji = (festival: string): string => {
 };
 
 const getFestivalGreeting = (festival: string, language: 'en' | 'ne'): string => {
-  const greetings = {
+  const greetings: Record<string, { en: string; ne: string }> = {
     dashain: { 
       en: 'Happy Dashain!', 
       ne: 'दशैंको शुभकामना!' 

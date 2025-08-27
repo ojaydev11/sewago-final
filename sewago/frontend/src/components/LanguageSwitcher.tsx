@@ -18,6 +18,8 @@ export default function LanguageSwitcher() {
   const currentLanguage = languages.find(lang => lang.code === locale) || languages[0];
 
   const handleLanguageChange = (langCode: string) => {
+    if (!pathname) return;
+    
     const segments = pathname.split('/');
     segments[1] = langCode;
     const newPath = segments.join('/');

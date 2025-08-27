@@ -74,10 +74,7 @@ function getClientIP(req: NextRequest): string {
     return realIP;
   }
   
-  // Fall back to request IP (if available)
-  if (req.ip && isValidIP(req.ip)) {
-    return req.ip;
-  }
+  // Note: NextRequest doesn't have an ip property, we rely on headers
   
   // Default fallback
   return 'unknown';

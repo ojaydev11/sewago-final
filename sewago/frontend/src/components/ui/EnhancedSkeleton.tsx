@@ -22,7 +22,11 @@ function Skeleton({
         repeat: Infinity,
         ease: "linear"
       }}
-      {...props}
+      {...(Object.fromEntries(
+        Object.entries(props).filter(([key]) => 
+          !['onDrag', 'onDragStart', 'onDragEnd', 'onDragEnter', 'onDragLeave', 'onDragOver', 'onDrop'].includes(key)
+        )
+      ) as any)}
     />
   );
 }

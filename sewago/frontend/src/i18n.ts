@@ -9,15 +9,17 @@ export const defaultLocale = 'en' as const;
 export type Locale = (typeof locales)[number];
 
 // Prevent this config from running during build phase
-if (process.env.NEXT_PHASE === 'phase-production-build') {
-  // Return empty config during build
-  const emptyConfig = () => ({ messages: {}, locale: 'en' });
-  export default emptyConfig;
-} else {
-  // Return a no-op config that doesn't use next-intl
-  const noOpConfig = () => ({ messages: {}, locale: 'en' });
-  export default noOpConfig;
-}
+const getConfig = () => {
+  if (process.env.NEXT_PHASE === 'phase-production-build') {
+    // Return empty config during build
+    return { messages: {}, locale: 'en' };
+  } else {
+    // Return a no-op config that doesn't use next-intl
+    return { messages: {}, locale: 'en' };
+  }
+};
+
+export default getConfig;
 
 // Legacy code - disabled for deployment
 /*

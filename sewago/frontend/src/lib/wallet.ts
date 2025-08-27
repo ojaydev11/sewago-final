@@ -144,7 +144,7 @@ export class WalletService {
 
     return {
       success: true,
-      deductedAmount,
+      deductedAmount: deductionAmount,
       entries: [deductionEntry]
     };
   }

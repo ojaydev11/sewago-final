@@ -381,8 +381,7 @@ const HapticGestureHandler: React.FC<HapticGestureHandlerProps> = ({
       dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
       dragElastic={0.2}
       animate={{
-        scale: isLongPressing ? 1.05 : 1,
-        backgroundColor: preferences?.animationsEnabled ? backgroundColor : undefined
+        scale: isLongPressing ? 1.05 : 1
       }}
       transition={{
         type: 'spring',
