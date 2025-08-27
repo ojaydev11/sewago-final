@@ -7,17 +7,10 @@ import { LoadingSpinner } from '@/components/LoadingSpinner';
 // Force dynamic rendering to prevent build-time pre-rendering
 export const dynamic = 'force-dynamic';
 
-interface RewardsPageProps {
-  params: Promise<{ locale?: string }>;
-}
-
-export default async function RewardsPage({ params }: RewardsPageProps) {
-  const resolvedParams = await params;
-  const locale = resolvedParams?.locale || 'en';
-
+export default function RewardsPage() {
   return (
     <Suspense fallback={<LoadingSpinner />}>
-      <GamificationDashboard locale={locale} />
+      <GamificationDashboard locale="en" />
     </Suspense>
   );
 }

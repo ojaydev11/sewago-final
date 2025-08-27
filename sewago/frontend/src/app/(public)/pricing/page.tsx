@@ -8,7 +8,6 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Check, Star, Shield, Clock, Users } from 'lucide-react';
-import { getServices } from '@/lib/services';
 
 export const metadata: Metadata = {
   title: 'Pricing - SewaGo',
@@ -18,8 +17,16 @@ export const metadata: Metadata = {
 
 export const revalidate = 3600; // Revalidate every hour
 
-export default async function PricingPage() {
-  const services = await getServices();
+export default function PricingPage() {
+  // Mock services data for frontend-only mode
+  const services = [
+    { id: 1, name: 'House Cleaning', basePrice: 1500, description: 'Professional house cleaning services' },
+    { id: 2, name: 'Plumbing', basePrice: 2000, description: 'Expert plumbing and repair services' },
+    { id: 3, name: 'Electrical', basePrice: 2500, description: 'Certified electrical work and repairs' },
+    { id: 4, name: 'Gardening', basePrice: 1200, description: 'Landscaping and garden maintenance' },
+    { id: 5, name: 'Painting', basePrice: 3000, description: 'Interior and exterior painting services' },
+    { id: 6, name: 'Carpentry', basePrice: 1800, description: 'Custom woodwork and repairs' }
+  ];
 
   const features = [
     'Verified service providers',
@@ -98,46 +105,17 @@ export default async function PricingPage() {
             <Card key={service.id} className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
               <CardHeader className="text-center pb-4">
                 <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-                  <span className="text-2xl">{service.name.charAt(0)}</span>
+                  <Star className="w-8 h-8 text-primary" />
                 </div>
-                <CardTitle className="text-xl">{service.name}</CardTitle>
-                <CardDescription className="text-gray-600">
-                  {service.description}
-                </CardDescription>
-                <div className="pt-4">
-                  <span className="text-3xl font-bold text-primary">
-                    From Rs {service.basePrice}
-                  </span>
-                  <p className="text-sm text-gray-500">Starting price</p>
-                </div>
+                <CardTitle className="text-xl font-semibold text-gray-900">{service.name}</CardTitle>
+                <CardDescription className="text-gray-600">{service.description}</CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <div className="flex items-center space-x-2 text-sm text-gray-600">
-                    <Check className="h-4 w-4 text-green-500" />
-                    <span>Professional service</span>
-                  </div>
-                  <div className="flex items-center space-x-2 text-sm text-gray-600">
-                    <Check className="h-4 w-4 text-green-500" />
-                    <span>Quality guaranteed</span>
-                  </div>
-                  <div className="flex items-center space-x-2 text-sm text-gray-600">
-                    <Check className="h-4 w-4 text-green-500" />
-                    <span>Verified provider</span>
-                  </div>
+              <CardContent className="text-center">
+                <div className="mb-4">
+                  <span className="text-3xl font-bold text-gray-900">रु {service.basePrice}</span>
+                  <span className="text-gray-500">/service</span>
                 </div>
-
-                <Link href={`/services/${service.slug}/book`} className="w-full">
-                  <Button className="w-full bg-primary hover:bg-primary/90">
-                    Book Now
-                  </Button>
-                </Link>
-
-                <Link href={`/services/${service.slug}`} className="w-full">
-                  <Button variant="outline" className="w-full">
-                    View Details
-                  </Button>
-                </Link>
+                <Button className="w-full">Book Now</Button>
               </CardContent>
             </Card>
           ))}

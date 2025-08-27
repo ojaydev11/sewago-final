@@ -1,17 +1,11 @@
+'use client';
+
 // Force dynamic rendering to prevent build-time prerendering
 export const dynamic = 'force-dynamic';
 
-import { getCurrentUser } from '@/lib/auth';
-import { redirect } from 'next/navigation';
 import Link from 'next/link';
 
-export default async function AccountPage() {
-  const user = await getCurrentUser();
-  
-  if (!user) {
-    redirect('/auth/login');
-  }
-
+export default function AccountPage() {
   // Mock user data for frontend-only mode
   const mockUser = {
     name: 'Demo User',
@@ -102,7 +96,7 @@ export default async function AccountPage() {
                   <div className="flex-1 min-w-0">
                     <span className="absolute inset-0" aria-hidden="true" />
                     <p className="text-sm font-medium text-gray-900">Provider Dashboard</p>
-                    <p className="text-sm text-gray-500">Manage service requests</p>
+                    <p className="text-sm text-gray-500">Manage your services</p>
                   </div>
                 </Link>
               )}

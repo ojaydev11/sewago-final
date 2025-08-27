@@ -1,6 +1,4 @@
-// Mock auth - replace with actual backend integration
-const getServerSession = async () => null;
-const authOptions = {};
+'use client';
 
 // Force dynamic rendering to prevent build-time issues
 export const dynamic = "force-dynamic";
@@ -8,7 +6,7 @@ export const dynamic = "force-dynamic";
 import { redirect } from 'next/navigation';
 import { NotificationSettings } from '@/components/NotificationSettings';
 
-export default async function NotificationSettingsPage() {
+export default function NotificationSettingsPage() {
   // Notification settings are disabled in frontend-only mode
   redirect('/dashboard');
 

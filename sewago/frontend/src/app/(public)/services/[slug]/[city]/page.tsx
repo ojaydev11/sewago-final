@@ -1,19 +1,14 @@
+'use client';
 
 import { Metadata } from 'next';
+import Link from 'next/link';
+import { notFound } from 'next/navigation';
+import { StarIcon, MapPinIcon, PhoneIcon, CheckIcon } from '@heroicons/react/24/outline';
 
 // Force dynamic rendering to prevent build-time issues
 export const dynamic = "force-dynamic";
 
-import { notFound } from 'next/navigation';
-import Link from 'next/link';
-import { 
-  MapPinIcon, 
-  StarIcon,
-  PhoneIcon,
-  CheckIcon 
-} from '@heroicons/react/24/solid';
-
-const CITIES = ['kathmandu', 'lalitpur', 'bhaktapur'] as const;
+// Mock data for frontend-only mode
 const SERVICES = [
   {
     slug: 'house-cleaning',
@@ -21,40 +16,48 @@ const SERVICES = [
     description: 'Professional house cleaning service',
     category: 'Cleaning',
     price: { min: 2000, max: 5000 },
-    features: ['Deep cleaning', 'Sanitization', 'Eco-friendly products']
+    features: ['Deep cleaning', 'Eco-friendly products', 'Flexible scheduling']
   },
   {
-    slug: 'electrical-work',
-    name: 'Electrical Work',
-    description: 'Licensed electricians for all electrical needs',
-    category: 'Electrical',
+    slug: 'plumbing',
+    name: 'Plumbing',
+    description: 'Expert plumbing and repair services',
+    category: 'Repair',
     price: { min: 1500, max: 8000 },
-    features: ['Wiring', 'Installation', 'Troubleshooting']
+    features: ['24/7 emergency service', 'Licensed plumbers', 'Warranty included']
+  },
+  {
+    slug: 'electrical',
+    name: 'Electrical',
+    description: 'Certified electrical work and repairs',
+    category: 'Electrical',
+    price: { min: 2000, max: 10000 },
+    features: ['Safety certified', 'Modern equipment', 'Code compliant']
   }
 ];
 
 const CITY_INFO = {
   kathmandu: {
     name: 'Kathmandu',
-    description: 'Nepal\'s capital and largest city',
-    areas: ['Thamel', 'Baluwatar', 'New Baneshwor', 'Kalanki', 'Koteshwor']
+    description: 'Capital city with modern amenities and traditional charm',
+    areas: ['Thamel', 'Durbar Square', 'Boudhanath', 'Pashupatinath', 'Swayambhunath']
   },
   lalitpur: {
     name: 'Lalitpur',
-    description: 'Historic city known for its arts and culture',
-    areas: ['Patan', 'Jawalakhel', 'Sanepa', 'Kupondole', 'Pulchowk']
+    description: 'City of fine arts and ancient architecture',
+    areas: ['Patan Durbar Square', 'Krishna Mandir', 'Golden Temple', 'Mangal Bazaar']
   },
   bhaktapur: {
     name: 'Bhaktapur',
-    description: 'Ancient city with rich cultural heritage',
-    areas: ['Durbar Square', 'Thimi', 'Madhyapur', 'Suryabinayak', 'Changunarayan']
+    description: 'Preserved medieval city with rich cultural heritage',
+    areas: ['Durbar Square', 'Nyatapola Temple', 'Dattatreya Square', 'Pottery Square']
   }
 };
 
 export async function generateStaticParams() {
   const params = [];
   for (const service of SERVICES) {
-    for (const city of CITIES) {
+    for (const city of Object.keys(CITY_INFO)) {
       params.push({
         slug: service.slug,
         city: city
@@ -120,14 +123,13 @@ export async function generateMetadata({
   };
 }
 
-export default async function ServiceCityPage({ 
+export default function ServiceCityPage({ 
   params 
 }: { 
-  params: Promise<{ slug: string; city: string }> 
+  params: { slug: string; city: string } 
 }) {
-  const resolvedParams = await params;
-  const service = SERVICES.find(s => s.slug === resolvedParams.slug);
-  const cityInfo = CITY_INFO[resolvedParams.city as keyof typeof CITY_INFO];
+  const service = SERVICES.find(s => s.slug === params.slug);
+  const cityInfo = CITY_INFO[params.city as keyof typeof CITY_INFO];
   
   if (!service || !cityInfo) {
     notFound();

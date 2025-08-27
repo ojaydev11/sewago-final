@@ -1,16 +1,15 @@
+'use client';
+
 import React from 'react';
 
 // Force dynamic rendering to prevent build-time issues
 export const dynamic = "force-dynamic";
 
-// Mock auth - replace with actual backend integration
-const getServerSession = async () => null;
-const authOptions = {};
 import { redirect } from 'next/navigation';
 import ProviderVerificationForm from '@/components/ProviderVerificationForm';
 import VerificationStatus from '@/components/VerificationStatus';
 
-export default async function VerificationPage() {
+export default function VerificationPage() {
   // Verification is disabled in frontend-only mode
   redirect('/dashboard');
 
