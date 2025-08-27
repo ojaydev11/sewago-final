@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from 'next/server';
 // Force dynamic rendering to prevent build-time issues
 export const dynamic = 'force-dynamic';
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     // Mock data for development/testing
     const mockCounters = {

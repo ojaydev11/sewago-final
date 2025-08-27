@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
     if (!parsed.success) {
       return NextResponse.json({ success: false, message: 'Invalid input', errors: parsed.error.flatten() }, { status: 400, headers: { 'Cache-Control': 'no-store' } });
     }
-    const { serviceSlug, basePrice, isExpress, hasWarranty, city, extraBlocks } = parsed.data;
+    const { serviceSlug, basePrice, isExpress, hasWarranty, extraBlocks } = parsed.data;
 
     // derive extra block price from config when available
     const extra15 = (pricingConfig.services as any)?.[serviceSlug]?.extra15 ?? 150;
