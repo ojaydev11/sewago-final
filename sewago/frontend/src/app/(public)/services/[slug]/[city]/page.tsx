@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { StarIcon, MapPinIcon, PhoneIcon, CheckIcon } from '@heroicons/react/24/outline';
+import React from 'react'; // Added missing import
 
 // Force dynamic rendering to prevent build-time issues
 export const dynamic = "force-dynamic";
@@ -56,11 +57,49 @@ const CITY_INFO = {
 export default function ServiceCityPage({ 
   params 
 }: { 
-  params: { slug: string; city: string } 
+  params: Promise<{ slug: string; city: string }> 
 }) {
-  const service = SERVICES.find(s => s.slug === params.slug);
-  const cityInfo = CITY_INFO[params.city as keyof typeof CITY_INFO];
-  
+  // Since this is a client component, we'll handle params synchronously
+  // In a real app, you might want to use useEffect to handle the async params
+  const [service, setService] = React.useState<any>(null);
+  const [cityInfo, setCityInfo] = React.useState<any>(null);
+  const [loading, setLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    const resolveParams = async () => {
+      try {
+        const resolvedParams = await params;
+        const foundService = SERVICES.find(s => s.slug === resolvedParams.slug);
+        const foundCityInfo = CITY_INFO[resolvedParams.city as keyof typeof CITY_INFO];
+        
+        if (!foundService || !foundCityInfo) {
+          notFound();
+        }
+        
+        setService(foundService);
+        setCityInfo(foundCityInfo);
+      } catch (error) {
+        console.error('Error resolving params:', error);
+        notFound();
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    resolveParams();
+  }, [params]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
   if (!service || !cityInfo) {
     notFound();
   }
@@ -123,7 +162,7 @@ export default function ServiceCityPage({
             <div className="bg-gray-100 rounded-lg p-6">
               <h3 className="text-lg font-semibold mb-4">Service Areas in {cityInfo.name}</h3>
               <div className="grid grid-cols-2 gap-2">
-                {cityInfo.areas.map((area, index) => (
+                {cityInfo.areas.map((area: string, index: number) => (
                   <div key={index} className="flex items-center gap-2">
                     <CheckIcon className="w-4 h-4 text-green-600" />
                     <span className="text-sm">{area}</span>
@@ -146,7 +185,7 @@ export default function ServiceCityPage({
                 <div>
                   <h3 className="font-semibold mb-3">What's Included</h3>
                   <div className="space-y-2">
-                    {service.features.map((feature, index) => (
+                    {service.features.map((feature: string, index: number) => (
                       <div key={index} className="flex items-center gap-2">
                         <CheckIcon className="w-4 h-4 text-green-600" />
                         <span className="text-sm">{feature}</span>
