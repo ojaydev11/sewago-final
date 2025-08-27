@@ -16,20 +16,21 @@ import ServicePromises from '@/components/ServicePromises';
 import LateCreditCalculator from '@/components/LateCreditCalculator';
 
 interface ServiceDetailPageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 export async function generateMetadata({ params }: ServiceDetailPageProps): Promise<Metadata> {
-  const service = await getServiceBySlug(params.slug);
+  const resolvedParams = await params;
+  const service = await getServiceBySlug(resolvedParams.slug);
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://sewago-final.vercel.app';
   
   if (!service) {
     return {
       title: 'Service Not Found - SewaGo',
       alternates: {
-        canonical: `${siteUrl}/services/${params.slug}`,
+        canonical: `${siteUrl}/services/${resolvedParams.slug}`,
       },
     };
   }
@@ -39,12 +40,12 @@ export async function generateMetadata({ params }: ServiceDetailPageProps): Prom
     description: `${service.description} - Professional ${service.name.toLowerCase()} services available in Kathmandu, Pokhara, and across Nepal. Book verified providers with SewaGo.`,
     keywords: `${service.name}, ${service.category}, local services, ${service.category.toLowerCase()}, Nepal, Kathmandu, Pokhara`,
     alternates: {
-      canonical: `${siteUrl}/services/${params.slug}`,
+      canonical: `${siteUrl}/services/${resolvedParams.slug}`,
     },
     openGraph: {
       title: `${service.name} Services in Nepal | SewaGo`,
       description: service.description,
-      url: `${siteUrl}/services/${params.slug}`,
+      url: `${siteUrl}/services/${resolvedParams.slug}`,
       type: 'website',
     },
   };
@@ -54,10 +55,11 @@ export async function generateMetadata({ params }: ServiceDetailPageProps): Prom
 export const revalidate = 3600;
 
 export default async function ServiceDetailPage({ params }: ServiceDetailPageProps) {
+  const resolvedParams = await params;
   let service;
   
   try {
-    service = await getServiceBySlug(params.slug);
+    service = await getServiceBySlug(resolvedParams.slug);
   } catch (error) {
     console.error('Error loading service:', error);
     // Render minimal above-the-fold summary on error
@@ -208,7 +210,7 @@ export default async function ServiceDetailPage({ params }: ServiceDetailPagePro
 
           {/* Service Promises & Guarantees */}
           <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-            <ServicePromises serviceSlug={params.slug} />
+            <ServicePromises serviceSlug={resolvedParams.slug} />
           </div>
 
           {/* Sidebar */}
@@ -261,7 +263,7 @@ export default async function ServiceDetailPage({ params }: ServiceDetailPagePro
             {/* Late Credit Calculator */}
             <Card className="mt-6">
               <LateCreditCalculator 
-                serviceSlug={params.slug} 
+                serviceSlug={resolvedParams.slug} 
                 basePrice={service.basePrice} 
               />
             </Card>

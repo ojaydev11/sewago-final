@@ -73,10 +73,11 @@ export default async function RootLayout({
   params
 }: {
   children: React.ReactNode;
-  params: { locale?: string };
+  params: Promise<{ locale?: string }>;
 }) {
   // Handle missing locale gracefully
-  const locale = params?.locale || 'en';
+  const resolvedParams = await params;
+  const locale = resolvedParams?.locale || 'en';
 
   return (
     <html lang={locale}>

@@ -67,10 +67,11 @@ export async function generateStaticParams() {
 export async function generateMetadata({ 
   params 
 }: { 
-  params: { slug: string; city: string } 
+  params: Promise<{ slug: string; city: string }> 
 }): Promise<Metadata> {
-  const service = SERVICES.find(s => s.slug === params.slug);
-  const cityInfo = CITY_INFO[params.city as keyof typeof CITY_INFO];
+  const resolvedParams = await params;
+  const service = SERVICES.find(s => s.slug === resolvedParams.slug);
+  const cityInfo = CITY_INFO[resolvedParams.city as keyof typeof CITY_INFO];
   
   if (!service || !cityInfo) {
     return {
@@ -90,7 +91,7 @@ export async function generateMetadata({
       title,
       description,
       type: 'website',
-      url: `/services/${service.slug}/${params.city}`,
+      url: `/services/${service.slug}/${resolvedParams.city}`,
     },
     other: {
       'application/ld+json': JSON.stringify({
@@ -119,13 +120,14 @@ export async function generateMetadata({
   };
 }
 
-export default function ServiceCityPage({ 
+export default async function ServiceCityPage({ 
   params 
 }: { 
-  params: { slug: string; city: string } 
+  params: Promise<{ slug: string; city: string }> 
 }) {
-  const service = SERVICES.find(s => s.slug === params.slug);
-  const cityInfo = CITY_INFO[params.city as keyof typeof CITY_INFO];
+  const resolvedParams = await params;
+  const service = SERVICES.find(s => s.slug === resolvedParams.slug);
+  const cityInfo = CITY_INFO[resolvedParams.city as keyof typeof CITY_INFO];
   
   if (!service || !cityInfo) {
     notFound();

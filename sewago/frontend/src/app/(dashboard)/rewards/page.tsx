@@ -8,11 +8,12 @@ import { LoadingSpinner } from '@/components/LoadingSpinner';
 export const dynamic = 'force-dynamic';
 
 interface RewardsPageProps {
-  params: { locale?: string };
+  params: Promise<{ locale?: string }>;
 }
 
-export default function RewardsPage({ params }: RewardsPageProps) {
-  const locale = params?.locale || 'en';
+export default async function RewardsPage({ params }: RewardsPageProps) {
+  const resolvedParams = await params;
+  const locale = resolvedParams?.locale || 'en';
 
   return (
     <Suspense fallback={<LoadingSpinner />}>
