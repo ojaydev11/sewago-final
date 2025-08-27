@@ -6,8 +6,6 @@ export const fetchCache = 'force-no-store';
 export const preferredRegion = 'auto';
 
 import { useState } from 'react';
-// Mock auth function - replace with actual backend integration
-const signIn = async (provider: string, options: any) => ({ error: null });
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -112,17 +110,15 @@ export default function LoginPage() {
                 </p>
               </div>
 
-              {/* Demo credentials - only show in non-production environments */}
-              {process.env.NODE_ENV !== 'production' && (
-                <div className="text-center text-xs text-gray-500 bg-gray-50 p-4 rounded-lg border border-gray-200">
-                  <p className="font-semibold mb-3 text-gray-700">Demo Accounts:</p>
-                  <div className="space-y-1 text-gray-600">
-                    <p>Admin: admin@sewago.com / admin123</p>
-                    <p>Provider: ram@example.com / provider123</p>
-                    <p>Customer: sita@example.com / customer123</p>
-                  </div>
+              {/* Demo credentials */}
+              <div className="text-center text-xs text-gray-500 bg-gray-50 p-4 rounded-lg border border-gray-200">
+                <p className="font-semibold mb-3 text-gray-700">Demo Accounts:</p>
+                <div className="space-y-1 text-gray-600">
+                  <p>Admin: admin@sewago.com / admin123</p>
+                  <p>Provider: ram@example.com / provider123</p>
+                  <p>Customer: sita@example.com / customer123</p>
                 </div>
-              )}
+              </div>
             </form>
           </CardContent>
         </Card>
