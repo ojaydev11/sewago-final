@@ -6,7 +6,7 @@ import Link from 'next/link';
 
 export default function PaymentSuccessPage() {
   const searchParams = useSearchParams();
-  const bookingId = searchParams.get('bookingId');
+  const bookingId = searchParams?.get('bookingId') || null;
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

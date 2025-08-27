@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 export default function PaymentFailedPage() {
   const searchParams = useSearchParams();
-  const error = searchParams.get('error');
+  const error = searchParams?.get('error') || null;
 
   const getErrorMessage = (errorCode: string | null) => {
     switch (errorCode) {
