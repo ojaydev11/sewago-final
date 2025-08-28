@@ -8,6 +8,10 @@ import ReviewForm from '@/components/ReviewForm';
 import PhotoGallery from '@/components/PhotoGallery';
 import PhotoUpload from '@/components/PhotoUpload';
 
+// Force dynamic rendering to prevent prerendering issues
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export default function ReviewSystemDemo() {
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [submittedReview, setSubmittedReview] = useState<any>(null);
