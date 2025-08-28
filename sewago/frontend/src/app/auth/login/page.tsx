@@ -5,10 +5,6 @@ export const dynamic = 'force-dynamic';
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Eye, EyeOff, Mail, Lock } from 'lucide-react';
 
 export default function LoginPage() {
@@ -37,45 +33,45 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full">
-        <Card className="shadow-xl border-0">
-          <CardHeader className="text-center pb-6">
-            <div className="mx-auto w-16 h-16 bg-gradient-to-br from-primary to-primary/80 rounded-2xl flex items-center justify-center mb-6">
+        <div className="bg-white shadow-xl border-0 rounded-xl">
+          <div className="text-center pb-6 px-6 pt-6">
+            <div className="mx-auto w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mb-6">
               <span className="text-white font-bold text-2xl">S</span>
             </div>
-            <CardTitle className="text-3xl font-bold text-gray-900">Welcome back</CardTitle>
-            <CardDescription className="text-lg text-gray-600 mt-2">
+            <h1 className="text-3xl font-bold text-gray-900">Welcome back</h1>
+            <p className="text-lg text-gray-600 mt-2">
               Sign in to your SewaGo account
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6">
+            </p>
+          </div>
+          <div className="space-y-6 px-6 pb-6">
             <form onSubmit={handleSubmit} className="space-y-5">
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-sm font-semibold text-gray-700">Email</Label>
+                <label htmlFor="email" className="text-sm font-semibold text-gray-700">Email</label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                  <Input
+                  <input
                     id="email"
                     type="email"
                     placeholder="Enter your email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="pl-10 h-12 text-base border-gray-300 focus:border-primary focus:ring-primary"
+                    className="pl-10 h-12 text-base border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 w-full rounded-md px-3 py-2 outline-none transition-all"
                     required
                   />
                 </div>
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-sm font-semibold text-gray-700">Password</Label>
+                <label htmlFor="password" className="text-sm font-semibold text-gray-700">Password</label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                  <Input
+                  <input
                     id="password"
                     type={showPassword ? 'text' : 'password'}
                     placeholder="Enter your password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="pl-10 pr-10 h-12 text-base border-gray-300 focus:border-primary focus:ring-primary"
+                    className="pl-10 pr-10 h-12 text-base border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 w-full rounded-md px-3 py-2 outline-none transition-all"
                     required
                   />
                   <button
@@ -94,13 +90,17 @@ export default function LoginPage() {
                 </div>
               )}
 
-              <Button type="submit" className="w-full h-12 text-base font-semibold" disabled={isLoading}>
+              <button 
+                type="submit" 
+                className="w-full h-12 text-base font-semibold bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-md hover:from-blue-600 hover:to-blue-700 focus:ring-2 focus:ring-blue-200 transition-all disabled:opacity-50 disabled:cursor-not-allowed" 
+                disabled={isLoading}
+              >
                 {isLoading ? 'Signing in...' : 'Sign In'}
-              </Button>
+              </button>
 
               <div className="text-center text-sm text-gray-600 pt-2">
                 <p>Don't have an account?{' '}
-                  <Link href="/auth/register" className="text-primary hover:underline font-semibold transition-colors">
+                  <Link href="/auth/register" className="text-blue-500 hover:underline font-semibold transition-colors">
                     Sign up
                   </Link>
                 </p>
@@ -116,8 +116,8 @@ export default function LoginPage() {
                 </div>
               </div>
             </form>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
     </div>
   );
