@@ -4,7 +4,6 @@ import { SubscriptionDashboard } from '@/components/subscriptions';
 
 // Force dynamic rendering to prevent static generation issues
 export const dynamic = 'force-dynamic';
-export const revalidate = 0;
 
 export default function SubscriptionPage() {
   // In a real application, you would get the userId from authentication context

@@ -2,7 +2,6 @@
 
 // Force dynamic rendering to prevent build-time prerendering
 export const dynamic = 'force-dynamic';
-export const revalidate = 0;
 
 import React, { useState } from 'react';
 // Mock auth functions - replace with actual backend integration
