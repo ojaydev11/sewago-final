@@ -30,7 +30,8 @@
       "WebFetch(domain:sewago-final.vercel.app)",
       "Bash(npx @modelcontextprotocol/server-puppeteer:*)",
       "Bash(npm start)",
-      "Bash(npx next start:*)"
+      "Bash(npx next start:*)",
+      "Bash(git reset:*)"
     ],
     "deny": [],
     "ask": []
