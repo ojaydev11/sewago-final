@@ -16,7 +16,8 @@ import {
   Phone, 
   Clock, 
   Users,
-  Sparkles
+  Sparkles,
+  X
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
