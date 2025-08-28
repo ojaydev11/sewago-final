@@ -6,7 +6,6 @@ export const runtime = 'nodejs';
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Eye, EyeOff, Mail, Lock } from 'lucide-react';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -49,14 +48,13 @@ export default function LoginPage() {
               <div className="space-y-2">
                 <label htmlFor="email" className="text-sm font-semibold text-gray-700">Email</label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                   <input
                     id="email"
                     type="email"
                     placeholder="Enter your email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="pl-10 h-12 text-base border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 w-full rounded-md px-3 py-2 outline-none transition-all"
+                    className="h-12 text-base border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 w-full rounded-md px-3 py-2 outline-none transition-all"
                     required
                   />
                 </div>
@@ -65,14 +63,13 @@ export default function LoginPage() {
               <div className="space-y-2">
                 <label htmlFor="password" className="text-sm font-semibold text-gray-700">Password</label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                   <input
                     id="password"
                     type={showPassword ? 'text' : 'password'}
                     placeholder="Enter your password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="pl-10 pr-10 h-12 text-base border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 w-full rounded-md px-3 py-2 outline-none transition-all"
+                    className="pr-10 h-12 text-base border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 w-full rounded-md px-3 py-2 outline-none transition-all"
                     required
                   />
                   <button
@@ -80,7 +77,7 @@ export default function LoginPage() {
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
                   >
-                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                    {showPassword ? '🙈' : '👁️'}
                   </button>
                 </div>
               </div>
