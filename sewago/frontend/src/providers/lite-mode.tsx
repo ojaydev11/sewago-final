@@ -1,7 +1,7 @@
 'use client';
 import 'client-only';
 
-import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
 
 interface NavigatorConnection {
   connection: {
@@ -34,18 +34,30 @@ export function LiteModeProvider({ children }: LiteModeProviderProps) {
   const [isLiteMode, setIsLiteMode] = useState(false);
   const [connectionSpeed, setConnectionSpeed] = useState<'fast' | 'slow' | 'unknown'>('unknown');
 
-  useEffect(() => {
-    // Load lite mode preference from localStorage
-    const savedLiteMode = localStorage.getItem('sewago-lite-mode');
-    if (savedLiteMode !== null) {
-      setIsLiteMode(JSON.parse(savedLiteMode));
-    }
-
-    // Detect network connection speed
-    detectConnectionSpeed();
+  const setLiteMode = useCallback((enabled: boolean) => {
+    setIsLiteMode(enabled);
+    localStorage.setItem('sewago-lite-mode', JSON.stringify(enabled));
   }, []);
 
-  const detectConnectionSpeed = async () => {
+  const suggestLiteMode = useCallback(() => {
+    // Only suggest if user hasn't explicitly set a preference
+    const savedLiteMode = localStorage.getItem('sewago-lite-mode');
+    if (savedLiteMode === null && !isLiteMode) {
+      // Show a subtle notification suggesting lite mode
+      if (typeof window !== 'undefined') {
+        setTimeout(() => {
+          const shouldEnable = window.confirm(
+            'We detected a slower internet connection. Enable Lite Mode for better performance?'
+          );
+          if (shouldEnable) {
+            setLiteMode(true);
+          }
+        }, 2000);
+      }
+    }
+  }, [isLiteMode, setLiteMode]);
+
+  const detectConnectionSpeed = useCallback(async () => {
     try {
       // Check Network Information API (if available)
       if ('connection' in navigator) {
@@ -93,34 +105,22 @@ export function LiteModeProvider({ children }: LiteModeProviderProps) {
       console.warn('Could not detect connection speed:', error);
       setConnectionSpeed('unknown');
     }
-  };
+  }, [isLiteMode, setLiteMode, suggestLiteMode]);
 
-  const suggestLiteMode = () => {
-    // Only suggest if user hasn't explicitly set a preference
-    const savedLiteMode = localStorage.getItem('sewago-lite-mode');
-    if (savedLiteMode === null && !isLiteMode) {
-      // Show a subtle notification suggesting lite mode
-      if (typeof window !== 'undefined') {
-        setTimeout(() => {
-          const shouldEnable = window.confirm(
-            'We detected a slower internet connection. Enable Lite Mode for better performance?'
-          );
-          if (shouldEnable) {
-            setLiteMode(true);
-          }
-        }, 2000);
-      }
-    }
-  };
-
-  const setLiteMode = (enabled: boolean) => {
-    setIsLiteMode(enabled);
-    localStorage.setItem('sewago-lite-mode', JSON.stringify(enabled));
-  };
-
-  const toggleLiteMode = () => {
+  const toggleLiteMode = useCallback(() => {
     setLiteMode(!isLiteMode);
-  };
+  }, [isLiteMode, setLiteMode]);
+
+  useEffect(() => {
+    // Load lite mode preference from localStorage
+    const savedLiteMode = localStorage.getItem('sewago-lite-mode');
+    if (savedLiteMode !== null) {
+      setIsLiteMode(JSON.parse(savedLiteMode));
+    }
+
+    // Detect network connection speed
+    detectConnectionSpeed();
+  }, [detectConnectionSpeed]);
 
   const value: LiteModeContextType = {
     isLiteMode,
