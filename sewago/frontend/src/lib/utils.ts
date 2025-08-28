@@ -14,88 +14,11 @@ export function cn(...inputs: ClassValue[]) {
 export function generateTicketId(): string {
   const timestamp = Date.now().toString(36);
   const random = Math.random().toString(36).substr(2, 5);
-  return `TK${timestamp}${random}`.toUpperCase();
+  return `TKT-${timestamp}-${random}`.toUpperCase();
 }
 
 /**
- * Generate unique booking ID
- */
-export function generateBookingId(): string {
-  const timestamp = Date.now().toString(36);
-  const random = Math.random().toString(36).substr(2, 5);
-  return `BK${timestamp}${random}`.toUpperCase();
-}
-
-/**
- * Format currency for display
- */
-export function formatCurrency(amount: number, currency: string = 'NPR'): string {
-  return new Intl.NumberFormat('en-NP', {
-    style: 'currency',
-    currency: currency,
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(amount);
-}
-
-/**
- * Format price for display (Nepalese Rupee)
- */
-export function formatPrice(amount: number): string {
-  return `Rs ${new Intl.NumberFormat('en-IN').format(amount)}`;
-}
-
-/**
- * Format date for display
- */
-export function formatDate(date: Date | string): string {
-  const d = typeof date === 'string' ? new Date(date) : date;
-  return new Intl.DateTimeFormat('en-NP', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  }).format(d);
-}
-
-/**
- * Calculate time difference in minutes
- */
-export function getTimeDifferenceMinutes(date1: Date, date2: Date): number {
-  return Math.abs(date1.getTime() - date2.getTime()) / (1000 * 60);
-}
-
-/**
- * Sanitize user input to prevent XSS
- */
-export function sanitizeInput(input: string): string {
-  return input
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#x27;')
-    .replace(/\//g, '&#x2F;');
-}
-
-/**
- * Validate email format
- */
-export function isValidEmail(email: string): boolean {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
-}
-
-/**
- * Validate phone number (Nepal format)
- */
-export function isValidNepalPhone(phone: string): boolean {
-  const phoneRegex = /^(\+977)?[9][6-9]\d{8}$/;
-  return phoneRegex.test(phone.replace(/\s/g, ''));
-}
-
-/**
- * Generate secure random string
+ * Generate secure random ID
  */
 export function generateSecureId(length: number = 8): string {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -124,113 +47,94 @@ export function debounce<T extends (...args: any[]) => any>(
  * Rate limiter for client-side
  */
 export class ClientRateLimit {
-  private calls: number[] = [];
-  
-  constructor(
-    private maxCalls: number,
-    private windowMs: number
-  ) {}
-  
-  canMakeCall(): boolean {
-    const now = Date.now();
-    this.calls = this.calls.filter(call => now - call < this.windowMs);
+  private calls: number[] = []
+  private maxCalls: number
+  private timeWindow: number
+
+  constructor(maxCalls: number = 10, timeWindow: number = 60000) {
+    this.maxCalls = maxCalls
+    this.timeWindow = timeWindow
+  }
+
+  canCall(): boolean {
+    const now = Date.now()
+    this.calls = this.calls.filter(time => now - time < this.timeWindow)
     
-    if (this.calls.length >= this.maxCalls) {
-      return false;
+    if (this.calls.length < this.maxCalls) {
+      this.calls.push(now)
+      return true
     }
     
-    this.calls.push(now);
-    return true;
+    return false
   }
-  
-  getTimeUntilReset(): number {
-    if (this.calls.length === 0) return 0;
-    const oldestCall = Math.min(...this.calls);
-    return Math.max(0, this.windowMs - (Date.now() - oldestCall));
+
+  reset(): void {
+    this.calls = []
   }
 }
 
 /**
- * Performance monitoring utilities
+ * Format price in Nepali Rupees
  */
-export class PerformanceMonitor {
-  private static marks: Map<string, number> = new Map();
-  
-  static mark(name: string): void {
-    this.marks.set(name, performance.now());
-  }
-  
-  static measure(name: string, startMark: string): number {
-    const startTime = this.marks.get(startMark);
-    if (!startTime) {
-      console.warn(`Start mark '${startMark}' not found`);
-      return 0;
-    }
-    
-    const duration = performance.now() - startTime;
-    console.log(`[Performance] ${name}: ${duration.toFixed(2)}ms`);
-    return duration;
-  }
-  
-  static clearMarks(): void {
-    this.marks.clear();
-  }
+export function formatPrice(amount: number): string {
+  return new Intl.NumberFormat('en-IN', {
+    style: 'currency',
+    currency: 'NPR',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2
+  }).format(amount);
+}
+
+/**
+ * Format date in readable format
+ */
+export function formatDate(date: Date): string {
+  return new Intl.DateTimeFormat('en-US', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric'
+  }).format(date);
+}
+
+/**
+ * Generate slug from string
+ */
+export function generateSlug(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '');
 }
 
 /**
  * Accessibility utilities
  */
 export const a11y = {
-  /**
-   * Generate accessible ID
-   */
-  generateId: (prefix: string = 'element'): string => {
-    return `${prefix}-${Math.random().toString(36).substr(2, 9)}`;
-  },
-  
-  /**
-   * Announce to screen readers
-   */
-  announce: (message: string, priority: 'polite' | 'assertive' = 'polite'): void => {
-    const announcer = document.createElement('div');
-    announcer.setAttribute('aria-live', priority);
-    announcer.setAttribute('aria-atomic', 'true');
-    announcer.className = 'sr-only';
-    announcer.textContent = message;
-    
-    document.body.appendChild(announcer);
-    setTimeout(() => document.body.removeChild(announcer), 1000);
-  },
-  
-  /**
-   * Trap focus within element
-   */
   trapFocus: (element: HTMLElement): (() => void) => {
     const focusableElements = element.querySelectorAll(
-      'a[href], button, textarea, input[type="text"], input[type="radio"], input[type="checkbox"], select'
-    ) as NodeListOf<HTMLElement>;
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    );
     
-    const firstElement = focusableElements[0];
-    const lastElement = focusableElements[focusableElements.length - 1];
+    const firstElement = focusableElements[0] as HTMLElement;
+    const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
     
     const handleTabKey = (e: KeyboardEvent) => {
-      if (e.key !== 'Tab') return;
-      
-      if (e.shiftKey) {
-        if (document.activeElement === firstElement) {
-          lastElement.focus();
-          e.preventDefault();
-        }
-      } else {
-        if (document.activeElement === lastElement) {
-          firstElement.focus();
-          e.preventDefault();
+      if (e.key === 'Tab') {
+        if (e.shiftKey) {
+          if (document.activeElement === firstElement) {
+            e.preventDefault();
+            lastElement.focus();
+          }
+        } else {
+          if (document.activeElement === lastElement) {
+            e.preventDefault();
+            firstElement.focus();
+          }
         }
       }
     };
     
     element.addEventListener('keydown', handleTabKey);
-    firstElement?.focus();
     
     return () => {
       element.removeEventListener('keydown', handleTabKey);

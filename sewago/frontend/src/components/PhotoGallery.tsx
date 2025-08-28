@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   MagnifyingGlassIcon, 
   ChevronLeftIcon, 
@@ -65,12 +65,12 @@ export default function PhotoGallery({
   };
 
   // Add keyboard event listener
-  useState(() => {
+  useEffect(() => {
     if (typeof window !== 'undefined') {
       window.addEventListener('keydown', handleKeyDown);
       return () => window.removeEventListener('keydown', handleKeyDown);
     }
-  });
+  }, [isLightboxOpen]);
 
   if (photos.length === 0) {
     return null;
