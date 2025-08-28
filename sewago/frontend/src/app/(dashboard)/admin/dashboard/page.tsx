@@ -7,7 +7,6 @@ import Link from 'next/link';
 import { 
   ClockIcon,
   ExclamationTriangleIcon,
-  CheckCircleIcon,
   UserGroupIcon,
   DocumentTextIcon,
   ShieldCheckIcon,

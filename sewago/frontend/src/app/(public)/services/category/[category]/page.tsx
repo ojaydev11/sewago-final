@@ -13,7 +13,6 @@ export default function CategoryServicesPage() {
   const params = useParams<{ category: string }>();
   const category = params?.category;
   const search = useSearchParams();
-  const router = useRouter();
   const location = search?.get("location") ?? "";
   
   // Move useQuery before any conditional returns to follow Rules of Hooks

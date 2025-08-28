@@ -4,7 +4,7 @@
 // Force dynamic rendering to prevent build-time prerendering
 export const dynamic = 'force-dynamic';
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { searchEngine } from '@/lib/search';
 import { FEATURE_FLAGS } from '@/lib/feature-flags';
@@ -24,13 +24,7 @@ export default function SearchPage() {
     verifiedProvidersOnly: searchParams?.get('verified') === 'true',
   });
 
-  useEffect(() => {
-    if (FEATURE_FLAGS.SEARCH_ENABLED) {
-      performSearch();
-    }
-  }, [filters]);
-
-  const performSearch = async () => {
+  const performSearch = useCallback(async () => {
     setLoading(true);
     try {
       const response = await searchEngine.search(filters, 'user_123');
@@ -41,7 +35,13 @@ export default function SearchPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filters]);
+
+  useEffect(() => {
+    if (FEATURE_FLAGS.SEARCH_ENABLED) {
+      performSearch();
+    }
+  }, [performSearch]);
 
   const updateFilters = (newFilters: Partial<SearchFilters>) => {
     const updatedFilters = { ...filters, ...newFilters };

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -69,13 +69,17 @@ export function FamilyPlanManager({ userId, subscription, onUpdate }: FamilyPlan
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [showInviteDialog, setShowInviteDialog] = useState(false);
 
-  useEffect(() => {
-    fetchFamilyPlan();
-  }, [userId]);
-
-  const fetchFamilyPlan = async () => {
+  const fetchFamilyPlan = useCallback(async () => {
     try {
       setLoading(true);
+      
+      // Check if we're in a build environment
+      if (typeof window === 'undefined') {
+        // Use mock data during build/SSR
+        setFamilyPlan(getMockFamilyPlan());
+        return;
+      }
+      
       const response = await fetch(`/api/subscriptions/family?userId=${userId}`);
       const data = await response.json();
       
@@ -90,7 +94,37 @@ export function FamilyPlanManager({ userId, subscription, onUpdate }: FamilyPlan
     } finally {
       setLoading(false);
     }
-  };
+  }, [userId]);
+
+  useEffect(() => {
+    fetchFamilyPlan();
+  }, [fetchFamilyPlan]);
+
+  // Mock data for build/fallback scenarios
+  const getMockFamilyPlan = (): FamilyPlanData => ({
+    id: 'mock-family-123',
+    ownerId: userId,
+    tier: subscription.tier,
+    maxMembers: subscription.tier === 'PRO' ? 6 : 4,
+    currentMembers: 1,
+    sharedCredits: 10000, // Example shared credits
+    owner: {
+      id: 'mock-owner-id',
+      name: 'Mock Owner',
+      email: 'mock.owner@example.com'
+    },
+    subscriptions: [
+      {
+        userId: userId,
+        user: {
+          id: 'mock-owner-id',
+          name: 'Mock Owner',
+          email: 'mock.owner@example.com'
+        }
+      }
+    ],
+    invitations: []
+  });
 
   const createFamilyPlan = async () => {
     try {

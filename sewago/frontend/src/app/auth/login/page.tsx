@@ -33,7 +33,7 @@ export default function LoginPage() {
       // Mock authentication - replace with actual backend API call
       console.log('Login attempt:', { email, password });
       setError('Authentication is disabled in frontend-only mode. Please integrate with backend API.');
-    } catch (error) {
+    } catch {
       setError('An error occurred. Please try again.');
     } finally {
       setIsLoading(false);

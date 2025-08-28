@@ -47,7 +47,7 @@ export default function EmergencyConfirmationPage() {
   const router = useRouter();
   
   // Use safe hooks
-  const [storedEmergencyData, setStoredEmergencyData] = useSafeLocalStorage<EmergencyBooking | null>('emergencyBooking', null);
+  const [storedEmergencyData] = useSafeLocalStorage<EmergencyBooking | null>('emergencyBooking', null);
 
   useEffect(() => {
     setIsClient(true);

@@ -5,21 +5,19 @@ import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Switch } from '@/components/ui/switch';
 import { 
-  Check, 
-  X, 
-  Crown, 
-  Star, 
   Heart, 
-  Zap,
-  Shield,
-  Phone,
-  Gift,
-  Clock,
+  Star, 
+  Crown, 
+  Check, 
+  Gift, 
+  Zap, 
+  Phone, 
+  Clock, 
   Users,
   Sparkles
 } from 'lucide-react';
-import { TierBadge } from './TierBadge';
 import { cn } from '@/lib/utils';
 
 interface TierComparisonProps {

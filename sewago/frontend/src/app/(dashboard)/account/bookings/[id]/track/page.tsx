@@ -3,7 +3,7 @@
 // Force dynamic rendering to prevent build-time prerendering
 export const dynamic = 'force-dynamic';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'next/navigation';
 import { 
   MapPinIcon,
@@ -64,11 +64,48 @@ export default function BookingTrackPage() {
   // Get bookingId safely - will be undefined if params.id doesn't exist
   const bookingId = typeof params?.id === 'string' ? params.id : undefined;
 
+  const fetchBooking = useCallback(async () => {
+    if (!bookingId) return;
+    
+    try {
+      setLoading(true);
+      // Mock API call - replace with actual backend integration
+      const mockBooking: Booking = {
+        id: bookingId,
+        status: 'IN_PROGRESS',
+        serviceId: {
+          name: 'House Cleaning',
+          category: 'Cleaning',
+          basePrice: 1500
+        },
+        providerId: {
+          name: 'John Doe',
+          phone: '+977-9800000001',
+          verified: true,
+          currentLat: 27.7172,
+          currentLng: 85.3240,
+          isOnline: true
+        },
+        address: 'Thamel, Kathmandu',
+        total: 1500,
+        createdAt: new Date().toISOString(),
+        scheduledAt: new Date(Date.now() + 2 * 60 * 60 * 1000).toISOString(),
+        notes: 'Deep cleaning required'
+      };
+      
+      setBooking(mockBooking);
+    } catch (error) {
+      console.error('Failed to fetch booking:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, [bookingId]);
+
   useEffect(() => {
     if (bookingId) {
       fetchBooking();
     }
-  }, [bookingId]);
+  }, [fetchBooking]);
 
   useEffect(() => {
     if (socket && isConnected && bookingId) {
@@ -150,32 +187,6 @@ export default function BookingTrackPage() {
       };
     }
   }, [socket, isConnected, bookingId, booking]);
-
-  const fetchBooking = async () => {
-    try {
-      setLoading(true);
-      const response = await fetch(`/api/bookings/${bookingId}`);
-      if (response.ok) {
-        const data = await response.json();
-        setBooking(data.data);
-        
-        // Get ETA if provider is assigned
-        if (data.data.providerId && bookingId) {
-          fetchETA(bookingId);
-        }
-      } else {
-        console.error('Failed to fetch booking');
-        // For demo purposes, use mock data
-        setBooking(getMockBooking());
-      }
-    } catch (error) {
-      console.error('Error fetching booking:', error);
-      // For demo purposes, use mock data
-      setBooking(getMockBooking());
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const fetchETA = async (bookingId: string) => {
     try {

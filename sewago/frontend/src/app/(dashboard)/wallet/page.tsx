@@ -4,7 +4,7 @@
 // Force dynamic rendering to prevent build-time prerendering
 export const dynamic = 'force-dynamic';
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { walletService } from '@/lib/wallet';
 import { FEATURE_FLAGS } from '@/lib/feature-flags';
 import type { WalletBalance, WalletEntry } from '@/lib/wallet';
@@ -16,15 +16,7 @@ export default function WalletPage() {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<'all' | 'loyalty' | 'referral' | 'resolution' | 'promotion'>('all');
 
-  useEffect(() => {
-    if (FEATURE_FLAGS.WALLET_ENABLED) {
-      loadWalletData();
-    } else {
-      setLoading(false);
-    }
-  }, [filter]);
-
-  const loadWalletData = async () => {
+  const loadWalletData = useCallback(async () => {
     setLoading(true);
     try {
       // Mock user ID - in real app, get from auth context
@@ -45,7 +37,15 @@ export default function WalletPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filter]);
+
+  useEffect(() => {
+    if (FEATURE_FLAGS.WALLET_ENABLED) {
+      loadWalletData();
+    } else {
+      setLoading(false);
+    }
+  }, [loadWalletData]);
 
   const exportHistory = async () => {
     try {

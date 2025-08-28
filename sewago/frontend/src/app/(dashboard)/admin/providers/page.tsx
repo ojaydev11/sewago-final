@@ -3,7 +3,7 @@
 // Force dynamic rendering to prevent build-time prerendering
 export const dynamic = 'force-dynamic';
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { 
   MagnifyingGlassIcon,
   FunnelIcon,
@@ -60,11 +60,7 @@ export default function AdminProvidersPage() {
     pages: 0
   });
 
-  useEffect(() => {
-    fetchProviders();
-  }, [filters, pagination.page]);
-
-  const fetchProviders = async () => {
+  const fetchProviders = useCallback(async () => {
     try {
       setLoading(true);
       
@@ -101,7 +97,11 @@ export default function AdminProvidersPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filters, pagination.page]);
+
+  useEffect(() => {
+    fetchProviders();
+  }, [fetchProviders]);
 
   const getMockProviders = (): Provider[] => [
     {

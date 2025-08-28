@@ -8,15 +8,10 @@ export const dynamic = 'force-dynamic';
 
 // Mock session hook - replace with actual backend integration
 const useSession = () => ({ data: { user: { name: 'Mock User', email: 'mock@example.com' } } });
-import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
   Calendar, 
-  Clock, 
-  MapPin, 
   User, 
   Phone, 
   Mail, 
@@ -29,8 +24,6 @@ import {
   Gift,
   ArrowRight
 } from 'lucide-react';
-import { format } from 'date-fns';
-import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 import { LoyaltyPointsCard } from '@/components/gamification/LoyaltyPointsCard';
 import { BadgeCollection } from '@/components/gamification/BadgeCollection';

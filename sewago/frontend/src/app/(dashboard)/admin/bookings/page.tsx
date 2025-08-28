@@ -3,7 +3,7 @@
 // Force dynamic rendering to prevent build-time prerendering
 export const dynamic = 'force-dynamic';
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { 
   MagnifyingGlassIcon,
   FunnelIcon,
@@ -61,16 +61,12 @@ export default function AdminBookingsPage() {
   });
   const [pagination, setPagination] = useState({
     page: 1,
-    limit: 20,
+    limit: 10,
     total: 0,
     pages: 0
   });
 
-  useEffect(() => {
-    fetchBookings();
-  }, [filters, pagination.page]);
-
-  const fetchBookings = async () => {
+  const fetchBookings = useCallback(async () => {
     try {
       setLoading(true);
       
@@ -108,7 +104,11 @@ export default function AdminBookingsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filters, pagination.page]);
+
+  useEffect(() => {
+    fetchBookings();
+  }, [fetchBookings]);
 
   const getMockBookings = (): Booking[] => [
     {

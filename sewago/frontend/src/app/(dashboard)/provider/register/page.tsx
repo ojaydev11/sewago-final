@@ -25,7 +25,6 @@ export default function ProviderRegisterPage() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  const router = useRouter();
 
   const availableSpecialties = [
     'Plumbing',
@@ -92,7 +91,7 @@ export default function ProviderRegisterPage() {
         const data = await response.json();
         setError(data.error || 'Registration failed');
       }
-    } catch (error) {
+    } catch {
       setError('An error occurred. Please try again.');
     } finally {
       setIsLoading(false);

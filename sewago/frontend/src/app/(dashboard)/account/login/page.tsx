@@ -18,7 +18,6 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,10 +25,10 @@ export default function LoginPage() {
     setError('');
 
     try {
-              // Mock authentication - replace with actual backend API call
-        console.log('Login attempt:', { email, password });
-        setError('Authentication is disabled in frontend-only mode. Please integrate with backend API.');
-    } catch (error) {
+      // Mock authentication - replace with actual backend API call
+      console.log('Login attempt:', { email, password });
+      setError('Authentication is disabled in frontend-only mode. Please integrate with backend API.');
+    } catch {
       setError('An error occurred. Please try again.');
     } finally {
       setIsLoading(false);

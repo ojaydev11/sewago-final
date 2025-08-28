@@ -200,7 +200,7 @@ export default function ServiceBookingPage() {
       });
 
       if (response.ok) {
-        const { booking } = await response.json();
+        await response.json(); // Just consume the response
         toast.success('Booking created successfully!');
         setCurrentStep(3); // Show confirmation
       } else {
