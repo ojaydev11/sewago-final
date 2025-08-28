@@ -17,6 +17,7 @@ import {
   Clock, 
   Users,
   Sparkles,
+  Shield,
   X
 } from 'lucide-react';
 import { cn } from '@/lib/utils';

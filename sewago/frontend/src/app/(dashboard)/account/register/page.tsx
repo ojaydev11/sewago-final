@@ -5,7 +5,6 @@ import React, { useState } from 'react';
 // Force dynamic rendering to prevent build-time pre-rendering
 export const dynamic = 'force-dynamic';
 // Mock auth function - replace with actual backend integration
-const signIn = async (provider: string, options: any) => ({ error: null });
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';

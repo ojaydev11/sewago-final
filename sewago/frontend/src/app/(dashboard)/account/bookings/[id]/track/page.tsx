@@ -105,7 +105,7 @@ export default function BookingTrackPage() {
     if (bookingId) {
       fetchBooking();
     }
-  }, [fetchBooking]);
+  }, [fetchBooking, bookingId]);
 
   useEffect(() => {
     if (socket && isConnected && bookingId) {

@@ -10,7 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { X, Plus, User, Briefcase, Star } from 'lucide-react';
+import { X, Plus, Briefcase, Star } from 'lucide-react';
 
 export default function ProviderOnboardingClient() {
   const { data: session, status } = useSession();

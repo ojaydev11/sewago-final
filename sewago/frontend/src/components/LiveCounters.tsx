@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Users, Star, MapPin, Clock, CheckCircle, TrendingUp } from 'lucide-react';
@@ -25,7 +25,7 @@ export default function LiveCounters({ className = '', showAnimation = true }: L
   const [counts, setCounts] = useState<Record<string, number>>({});
   const [isVisible, setIsVisible] = useState(false);
 
-  const metrics: CounterMetric[] = [
+  const metrics: CounterMetric[] = useMemo(() => [
     {
       id: 'totalServices',
       label: 'Services Completed',
@@ -80,7 +80,7 @@ export default function LiveCounters({ className = '', showAnimation = true }: L
       color: 'text-emerald-600',
       description: 'Platform expansion rate'
     }
-  ];
+  ], []);
 
   // Intersection Observer to trigger animation when component is visible
   useEffect(() => {
@@ -133,7 +133,7 @@ export default function LiveCounters({ className = '', showAnimation = true }: L
     return () => {
       animations.forEach(timer => clearInterval(timer));
     };
-  }, [isVisible, showAnimation]);
+  }, [isVisible, showAnimation, metrics]);
 
   // Initialize counts if no animation
   useEffect(() => {
@@ -144,7 +144,7 @@ export default function LiveCounters({ className = '', showAnimation = true }: L
       }, {} as Record<string, number>);
       setCounts(initialCounts);
     }
-  }, [showAnimation]);
+  }, [showAnimation, metrics]);
 
   return (
     <div id="live-counters" className={`py-12 ${className}`}>

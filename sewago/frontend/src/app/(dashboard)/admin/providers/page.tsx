@@ -97,7 +97,7 @@ export default function AdminProvidersPage() {
     } finally {
       setLoading(false);
     }
-  }, [filters, pagination.page]);
+  }, [filters, pagination.page, pagination.limit]);
 
   useEffect(() => {
     fetchProviders();

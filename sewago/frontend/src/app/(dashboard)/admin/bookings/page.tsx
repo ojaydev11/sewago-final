@@ -104,7 +104,7 @@ export default function AdminBookingsPage() {
     } finally {
       setLoading(false);
     }
-  }, [filters, pagination.page]);
+  }, [filters, pagination.page, pagination.limit]);
 
   useEffect(() => {
     fetchBookings();

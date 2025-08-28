@@ -6,8 +6,6 @@ export const revalidate = 0;
 
 import React, { useState } from 'react';
 // Mock auth functions - replace with actual backend integration
-const signIn = async (provider: string, options: any) => ({ error: null });
-const getSession = async () => ({ user: { name: 'Mock User', email: 'mock@example.com' } });
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';

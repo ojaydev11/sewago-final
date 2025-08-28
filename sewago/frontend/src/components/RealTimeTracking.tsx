@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -126,6 +126,29 @@ export default function RealTimeTracking({
   const [socket, setSocket] = useState<Socket | null>(null);
   const mapRef = useRef<L.Map | null>(null);
 
+  const calculateETA = useCallback((location: Location) => {
+    if (!customerLocation) return;
+    
+    // Simple distance calculation (in a real app, you'd use a routing service)
+    const distance = Math.sqrt(
+      Math.pow(location.lat - customerLocation.lat, 2) + 
+      Math.pow(location.lng - customerLocation.lng, 2)
+    ) * 111; // Rough conversion to km
+    
+    // Assume average speed of 30 km/h for urban areas
+    const estimatedTimeMinutes = Math.round((distance / 30) * 60);
+    
+    if (estimatedTimeMinutes < 1) {
+      setEta('Less than 1 minute');
+    } else if (estimatedTimeMinutes < 60) {
+      setEta(`${estimatedTimeMinutes} minutes`);
+    } else {
+      const hours = Math.floor(estimatedTimeMinutes / 60);
+      const minutes = estimatedTimeMinutes % 60;
+      setEta(`${hours}h ${minutes}m`);
+    }
+  }, [customerLocation]);
+
   useEffect(() => {
     // Initialize Socket.IO connection
     const newSocket = io(process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3001', {
@@ -154,30 +177,7 @@ export default function RealTimeTracking({
     return () => {
       newSocket.close();
     };
-  }, [bookingId, providerId]);
-
-  const calculateETA = (location: Location) => {
-    if (!customerLocation) return;
-    
-    // Simple distance calculation (in a real app, you'd use a routing service)
-    const distance = Math.sqrt(
-      Math.pow(location.lat - customerLocation.lat, 2) + 
-      Math.pow(location.lng - customerLocation.lng, 2)
-    ) * 111; // Rough conversion to km
-    
-    // Assume average speed of 30 km/h for urban areas
-    const estimatedTimeMinutes = Math.round((distance / 30) * 60);
-    
-    if (estimatedTimeMinutes < 1) {
-      setEta('Less than 1 minute');
-    } else if (estimatedTimeMinutes < 60) {
-      setEta(`${estimatedTimeMinutes} minutes`);
-    } else {
-      const hours = Math.floor(estimatedTimeMinutes / 60);
-      const minutes = estimatedTimeMinutes % 60;
-      setEta(`${hours}h ${minutes}m`);
-    }
-  };
+  }, [bookingId, providerId, calculateETA]);
 
   const center = providerLocation || customerLocation;
 
