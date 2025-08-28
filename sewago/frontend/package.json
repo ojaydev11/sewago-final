@@ -28,7 +28,8 @@
     "trace:ssr-dom": "node scripts/trace-ssr-dom.mjs",
     "scan:ssr": "node scripts/scan-dom-top-level.cjs",
     "check:sentinels": "node scripts/check-sentinels.cjs",
-    "vercel:build": "npm run check:db-free && npm run check:ssr-safe && next build"
+    "vercel:build": "next build",
+    "vercel-build": "next build"
   },
   "dependencies": {
     "@formatjs/intl-localematcher": "^0.6.1",

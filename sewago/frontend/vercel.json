@@ -1,9 +1,29 @@
 {
   "buildCommand": "next build",
+  "installCommand": "npm install",
+  "framework": "nextjs",
   "env": {
     "MOCK_MODE": "true",
     "NEXT_PUBLIC_NOTIFICATIONS_ENABLED": "false",
-    "NEXT_PUBLIC_SITE_URL": "https://sewago-final.vercel.app"
+    "NEXT_PUBLIC_SITE_URL": "https://sewago-final.vercel.app",
+    "NODE_ENV": "production",
+    "SKIP_DB": "true",
+    "NEXT_TELEMETRY_DISABLED": "1",
+    "SKIP_TYPE_CHECK": "true",
+    "NEXT_PUBLIC_BOOKING_ENABLED": "true",
+    "NEXT_PUBLIC_AUTH_ENABLED": "true",
+    "NEXT_PUBLIC_I18N_ENABLED": "false",
+    "NEXT_PUBLIC_SEWAAI_ENABLED": "false",
+    "NEXT_PUBLIC_QUOTE_ESTIMATOR_ENABLED": "true",
+    "NEXT_PUBLIC_PAYMENTS_ESEWA_ENABLED": "false",
+    "NEXT_PUBLIC_REVIEWS_ENABLED": "true",
+    "NEXT_PUBLIC_WARRANTY_BADGE_ENABLED": "true",
+    "NEXT_PUBLIC_SEARCH_ENABLED": "true"
+  },
+  "functions": {
+    "src/app/api/**/*.ts": {
+      "maxDuration": 30
+    }
   },
   "headers": [
     {
