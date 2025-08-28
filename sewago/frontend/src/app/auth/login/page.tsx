@@ -3,7 +3,6 @@
 // Force dynamic rendering to prevent build-time prerendering
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
-export const revalidate = false;
 
 import { useState } from 'react';
 import Link from 'next/link';
