@@ -3,33 +3,16 @@
   "version": "1.0.1",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 5000",
+    "dev": "next dev -p 3000",
     "build": "next build",
-    "build:production": "cross-env NODE_ENV=production next build",
-    "build:no-typecheck": "cross-env SKIP_TYPE_CHECK=true next build",
-    "vercel-build": "next build",
     "start": "next start -p 3000",
+    "typecheck": "tsc --noEmit",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
-    "type-check": "tsc --noEmit",
-    "type-check:watch": "tsc --noEmit --watch",
     "test": "vitest run --reporter=dot",
     "test:watch": "vitest --reporter=dot",
     "test:coverage": "vitest run --coverage",
-    "test:ui": "vitest --ui",
-    "seed": "tsx scripts/seed.ts",
-    "prisma:gen": "prisma generate",
-    "prisma:migrate": "prisma migrate dev --name init_jules_batch",
-    "prisma:seed": "tsx scripts/seed.ts",
-    "e2e": "playwright test",
-    "production-ready": "npm run lint:fix && npm run build:production",
-    "check:db-free": "node scripts/check-db-free.js",
-    "check:ssr-safe": "node scripts/check-ssr-safe.mjs",
-    "trace:ssr-dom": "node scripts/trace-ssr-dom.mjs",
-    "scan:ssr": "node scripts/scan-dom-top-level.cjs",
-    "check:sentinels": "node scripts/check-sentinels.cjs",
-    "vercel:build": "next build",
-    "vercel-build": "next build"
+    "test:ui": "vitest --ui"
   },
   "dependencies": {
     "@formatjs/intl-localematcher": "^0.6.1",
@@ -112,8 +95,7 @@
     "vitest": "^3.2.4"
   },
   "engines": {
-    "node": "20.x",
-    "npm": ">=8.0.0"
+    "node": ">=18.18.0"
   },
   "repository": {
     "type": "git",

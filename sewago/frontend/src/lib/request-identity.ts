@@ -2,7 +2,8 @@ import { NextRequest } from 'next/server';
 import { createHash } from 'crypto';
 
 // Get the salt for IP hashing from environment
-const RATE_LIMIT_SALT = process.env.RATE_LIMIT_SALT || 'default-salt-change-in-production';
+// Rate limiting is now handled server-side via API
+const RATE_LIMIT_SALT = 'client-side-salt';
 
 /**
  * Get a secure identifier for a request

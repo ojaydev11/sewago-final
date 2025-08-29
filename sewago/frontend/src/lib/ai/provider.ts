@@ -22,77 +22,50 @@ export interface AIResponse {
 
 // OpenAI Provider (default)
 class OpenAIProvider implements AIProvider {
-  private apiKey: string;
   private model: string;
   
   constructor() {
-    this.apiKey = process.env.OPENAI_API_KEY || '';
-    this.model = process.env.OPENAI_MODEL || 'gpt-3.5-turbo';
-    
-    if (!this.apiKey) {
-      console.warn('OpenAI API key not found. AI features will be limited.');
-    }
+    this.model = 'gpt-3.5-turbo';
   }
   
   async generateResponse(prompt: string, options: AIOptions = {}): Promise<string> {
-    if (!this.apiKey) {
-      return this.generateFallbackResponse(prompt, options);
-    }
-    
     try {
-      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      const response = await fetch('/api/ai', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${this.apiKey}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          model: this.model,
-          messages: [
-            {
-              role: 'system',
-              content: options.systemPrompt || this.getDefaultSystemPrompt(options.locale)
-            },
-            {
-              role: 'user',
-              content: prompt
-            }
-          ],
-          temperature: options.temperature || 0.2,
-          max_tokens: options.maxTokens || 500,
-          top_p: 1,
-          frequency_penalty: 0,
-          presence_penalty: 0
+          prompt,
+          options: {
+            ...options,
+            systemPrompt: options.systemPrompt || this.getDefaultSystemPrompt(options.locale)
+          }
         })
       });
       
       if (!response.ok) {
-        throw new Error(`OpenAI API error: ${response.status}`);
+        throw new Error(`AI API error: ${response.status}`);
       }
       
       const data = await response.json();
-      return data.choices[0]?.message?.content || 'No response generated';
+      return data.response || 'No response generated';
       
     } catch (error) {
-      console.error('OpenAI API error:', error);
+      console.error('AI API error:', error);
       return this.generateFallbackResponse(prompt, options);
     }
   }
   
   async moderateContent(content: string): Promise<boolean> {
-    if (!this.apiKey) {
-      return true; // Allow all content if no API key
-    }
-    
     try {
-      const response = await fetch('https://api.openai.com/v1/moderations', {
+      const response = await fetch('/api/ai/moderate', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${this.apiKey}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          input: content
+          content
         })
       });
       
@@ -101,13 +74,10 @@ class OpenAIProvider implements AIProvider {
       }
       
       const data = await response.json();
-      const results = data.results[0];
-      
-      // Check if content is flagged
-      return !results.flagged;
+      return data.safe;
       
     } catch (error) {
-      console.error('OpenAI moderation error:', error);
+      console.error('AI moderation error:', error);
       return true; // Allow content if moderation fails
     }
   }

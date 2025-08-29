@@ -1,20 +1,24 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import ReviewForm from '@/components/ReviewForm';
 import PhotoGallery from '@/components/PhotoGallery';
 import PhotoUpload from '@/components/PhotoUpload';
+import { isDemoEnabled } from '@/config/demo';
 
 // Force dynamic rendering to prevent prerendering issues
 export const dynamic = 'force-dynamic';
 export const fetchCache = 'force-no-store';
 export const revalidate = 0;
 export const preferredRegion = 'auto';
+export const runtime = 'nodejs';
 
 export default function ReviewSystemDemo() {
+  const router = useRouter();
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [submittedReview, setSubmittedReview] = useState<any>(null);
   const [demoPhotos] = useState([
@@ -22,6 +26,26 @@ export default function ReviewSystemDemo() {
     'https://images.unsplash.com/photo-1581578731548-c64695e69564?w=400&h=400&fit=crop',
     'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=400&fit=crop',
   ]);
+  
+  // Check if demos are enabled on client side and redirect if disabled
+  useEffect(() => {
+    if (!isDemoEnabled()) {
+      router.push('/');
+      return;
+    }
+  }, [router]);
+  
+  // Show loading state while checking demos
+  if (!isDemoEnabled()) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Redirecting...</p>
+        </div>
+      </div>
+    );
+  }
 
   const handleReviewSubmit = async (reviewData: any) => {
     // Simulate API call
