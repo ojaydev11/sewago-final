@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import type { Metadata } from 'next';
 
 // Force dynamic rendering to prevent build-time issues
@@ -15,12 +16,22 @@ import { ReactQueryProvider } from '@/providers/react-query';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 
+=======
+import 'server-only';
+import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
+import './globals.css';
+
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 const inter = Inter({ subsets: ['latin'] });
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://sewago-final.vercel.app';
 
+<<<<<<< HEAD
 // Force dynamic rendering to prevent build-time prerendering issues
 
+=======
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 export async function generateMetadata(): Promise<Metadata> {
   return {
     title: 'SewaGo - Local Services in Nepal',
@@ -82,21 +93,32 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
+<<<<<<< HEAD
 // Prevent static generation - return empty array to force dynamic rendering
 export async function generateStaticParams() {
   return [];
 }
 
+=======
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 export default async function RootLayout({
   children,
   params
 }: {
   children: React.ReactNode;
+<<<<<<< HEAD
   params: { locale?: string };
 }) {
   // Handle missing locale gracefully
   const locale = params?.locale || 'en';
   const messages = await getMessages();
+=======
+  params: Promise<{ locale?: string }>;
+}) {
+  // Handle missing locale gracefully
+  const resolvedParams = await params;
+  const locale = resolvedParams?.locale || 'en';
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 
   return (
     <html lang={locale}>
@@ -128,6 +150,20 @@ export default async function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         
+<<<<<<< HEAD
+=======
+        {/* Enhanced accessibility and performance */}
+        <meta name="color-scheme" content="dark light" />
+        <meta name="supported-color-schemes" content="dark light" />
+        {/* Only prefetch API endpoints, remove unused preloads to fix warnings */}
+        <link rel="prefetch" href="/api/services" />
+        
+        {/* Security headers - X-Frame-Options removed as it's set via HTTP headers */}
+        <meta httpEquiv="X-Content-Type-Options" content="nosniff" />
+        <meta httpEquiv="X-XSS-Protection" content="1; mode=block" />
+        <meta name="referrer" content="strict-origin-when-cross-origin" />
+        
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
         {/* Structured data for SEO */}
         <script
           type="application/ld+json"
@@ -156,6 +192,7 @@ export default async function RootLayout({
           }}
         />
       </head>
+<<<<<<< HEAD
       <body className={inter.className}>
         {/* Google Analytics - only in production */}
         {process.env.NODE_ENV === 'production' && (
@@ -179,6 +216,12 @@ export default async function RootLayout({
             </ReactQueryProvider>
           </AuthProvider>
         </NextIntlClientProvider>
+=======
+      <body className={inter.className} suppressHydrationWarning>
+        <main className="min-h-screen bg-gray-50">
+          {children}
+        </main>
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
       </body>
     </html>
   );

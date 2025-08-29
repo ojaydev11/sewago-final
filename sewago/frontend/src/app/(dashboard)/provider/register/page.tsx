@@ -4,7 +4,12 @@
 export const dynamic = 'force-dynamic';
 
 import React, { useState } from 'react';
+<<<<<<< HEAD
 import { signIn } from 'next-auth/react';
+=======
+// Mock auth function - replace with actual backend integration
+const signIn = async (provider: string, options: any) => ({ error: null });
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
@@ -24,7 +29,10 @@ export default function ProviderRegisterPage() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+<<<<<<< HEAD
   const router = useRouter();
+=======
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 
   const availableSpecialties = [
     'Plumbing',
@@ -80,6 +88,7 @@ export default function ProviderRegisterPage() {
     }
 
     try {
+<<<<<<< HEAD
       const response = await fetch('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -108,11 +117,24 @@ export default function ProviderRegisterPage() {
         } else {
           router.push('/provider/dashboard');
         }
+=======
+      // Mock registration API call - replace with actual backend integration
+      const response = { ok: false, json: async () => ({ error: 'Provider registration is disabled in frontend-only mode' }) };
+
+      if (false) { // Always false in mock mode
+        // Mock auto-login after registration
+        console.log('Provider registration successful:', formData.email);
+        setError('Provider registration is disabled in frontend-only mode. Please integrate with backend API.');
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
       } else {
         const data = await response.json();
         setError(data.error || 'Registration failed');
       }
+<<<<<<< HEAD
     } catch (error) {
+=======
+    } catch {
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
       setError('An error occurred. Please try again.');
     } finally {
       setIsLoading(false);

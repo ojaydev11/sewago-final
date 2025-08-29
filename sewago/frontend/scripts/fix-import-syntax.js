@@ -15,8 +15,13 @@ function fixImportSyntax(filePath) {
     const content = fs.readFileSync(filePath, 'utf8');
     
     // Check if there's a dynamic directive inside import statements
+<<<<<<< HEAD
     if (content.includes('import {\n\n// Force dynamic rendering') || 
         content.includes('import {\n  // Force dynamic rendering')) {
+=======
+    if (content.includes('import {\n  // Force dynamic rendering') || 
+        content.includes('import {\n\n// Force dynamic rendering')) {
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
       console.log(`🔧 Fixing import syntax in: ${filePath}`);
       
       // Remove the dynamic directive from inside imports

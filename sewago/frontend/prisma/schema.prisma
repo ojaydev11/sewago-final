@@ -26,6 +26,52 @@ model User {
   referralsMade Referral[] @relation("Referrer")
   referralsReceived Referral[] @relation("Referred")
   notifications Notification[]
+<<<<<<< HEAD
+=======
+  
+  // Gamification Relations
+  loyaltyPoints LoyaltyPoints?
+  badges        UserBadge[]
+  streaks       ActivityStreak[]
+  challengeParticipations ChallengeParticipation[]
+  gamificationSettings GamificationSettings?
+  
+  // Personalization Relations
+  preferences   UserPreferences?
+  behaviors     UserBehavior[]
+  insights      PersonalizationInsights?
+  
+  // Subscription Relations
+  subscription  Subscription?
+  ownedFamilyPlan FamilyPlan?
+  familyInvitations FamilyInvitation[]
+  
+  // Advanced Booking Relations
+  organizedBookings AdvancedBooking[] @relation("BookingOrganizer")
+  bookingParticipations BookingParticipant[]
+  recurringBookings RecurringBooking[]
+  groupInvitations GroupInvitation[]
+  groupMessages GroupMessage[]
+  calendarSyncs CalendarSync[]
+  
+  // Smart Features Relations
+  searchBehaviors SearchBehavior[]
+  notificationPreferences NotificationPreference?
+  voiceInteractions VoiceInteraction[]
+  formBehaviors FormBehavior[]
+  
+  // UX Features Relations
+  uxPreferences UserUXPreferences?
+  uxAnalytics UXAnalytics[]
+  contextualData ContextualData[]
+  
+  // Transparency Relations
+  transparencyLogs TransparencyLog[]
+  privacyConsents PrivacyConsent[]
+  
+  // Growth & Marketplace Relations
+  customerLifecycle CustomerLifecycle[]
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 }
 
 model Provider {
@@ -48,6 +94,28 @@ model Provider {
   // Relations
   bookings       Booking[]
   notifications  Notification[]
+<<<<<<< HEAD
+=======
+  
+  // Advanced Booking Relations
+  recurringBookings RecurringBooking[]
+  scheduleOptions ScheduleOption[]
+  
+  // Transparency Relations
+  liveLocationData LiveLocationData[]
+  providerStatus ProviderStatus?
+  realTimeMetrics RealTimeMetrics[]
+  transparencyLogs TransparencyLog[]
+  privacyConsents PrivacyConsent[]
+  locationSharing LocationSharing[]
+  serviceQualityTracker ServiceQualityTracker[]
+  
+  // Growth & Marketplace Relations
+  analytics ProviderAnalytics?
+  businessInsights ProviderBusinessInsights?
+  marketingCampaigns ProviderMarketing[]
+  financials ProviderFinancials?
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 }
 
 model Service {
@@ -66,6 +134,13 @@ model Service {
   // Relations
   bookings    Booking[]
   reviews     Review[]
+<<<<<<< HEAD
+=======
+  behaviors   UserBehavior[]
+  
+  // Advanced Booking Relations
+  recurringBookings RecurringBooking[]
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 }
 
 model Booking {
@@ -88,6 +163,19 @@ model Booking {
   provider     Provider?      @relation(fields: [providerId], references: [id])
   review       Review?
   notifications Notification[]
+<<<<<<< HEAD
+=======
+  
+  // Gamification Relations
+  pointRedemptions PointRedemption[]
+  
+  // Advanced Booking Relations
+  advancedBooking AdvancedBooking?
+  
+  // Transparency Relations
+  serviceProgress ServiceProgress?
+  pricingBreakdown PricingBreakdown?
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 }
 
 enum BookingStatus {
@@ -154,3 +242,1521 @@ model PublicMetric {
   value     String
   updatedAt DateTime @updatedAt
 }
+<<<<<<< HEAD
+=======
+
+// Gamification Models
+
+model LoyaltyPoints {
+  id            String               @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String               @db.ObjectId @unique
+  totalPoints   Int                  @default(0)
+  availablePoints Int              @default(0)
+  lifetimeEarned Int               @default(0)
+  createdAt     DateTime             @default(now())
+  updatedAt     DateTime             @updatedAt
+  
+  // Relations
+  user          User                 @relation(fields: [userId], references: [id])
+  transactions  PointTransaction[]
+  redemptions   PointRedemption[]
+}
+
+model PointTransaction {
+  id            String         @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String         @db.ObjectId
+  loyaltyPointsId String       @db.ObjectId
+  points        Int
+  type          PointType
+  source        String         // "booking", "review", "referral", "challenge"
+  sourceId      String?        @db.ObjectId // booking id, review id, etc.
+  description   String
+  createdAt     DateTime       @default(now())
+  
+  // Relations
+  loyaltyPoints LoyaltyPoints  @relation(fields: [loyaltyPointsId], references: [id])
+}
+
+enum PointType {
+  EARNED
+  REDEEMED
+  EXPIRED
+}
+
+model PointRedemption {
+  id            String         @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String         @db.ObjectId
+  loyaltyPointsId String       @db.ObjectId
+  points        Int
+  discountAmount Int          // in paisa (NPR cents)
+  bookingId     String?        @db.ObjectId
+  status        RedemptionStatus @default(PENDING)
+  createdAt     DateTime       @default(now())
+  redeemedAt    DateTime?
+  
+  // Relations
+  loyaltyPoints LoyaltyPoints  @relation(fields: [loyaltyPointsId], references: [id])
+  booking       Booking?       @relation(fields: [bookingId], references: [id])
+}
+
+enum RedemptionStatus {
+  PENDING
+  APPLIED
+  EXPIRED
+  CANCELLED
+}
+
+model UserBadge {
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String     @db.ObjectId
+  badgeType   BadgeType
+  unlockedAt  DateTime   @default(now())
+  progress    Int        @default(0) // Current progress toward badge
+  target      Int        @default(1) // Target to unlock badge
+  isUnlocked  Boolean    @default(false)
+  
+  // Relations
+  user        User       @relation(fields: [userId], references: [id])
+  
+  @@unique([userId, badgeType])
+}
+
+enum BadgeType {
+  REGULAR_CUSTOMER      // 5+ bookings
+  TOP_REVIEWER         // 20+ reviews
+  EARLY_ADOPTER        // first month user
+  SERVICE_EXPERT       // 10+ bookings in same category
+  LOYAL_MEMBER         // 1+ year active
+  STREAK_MASTER        // 4+ week streak
+  CHALLENGE_CHAMPION   // Complete seasonal challenge
+  REFERRAL_HERO        // 5+ successful referrals
+}
+
+model ActivityStreak {
+  id              String      @id @default(auto()) @map("_id") @db.ObjectId
+  userId          String      @db.ObjectId
+  type            StreakType
+  currentStreak   Int         @default(0)
+  longestStreak   Int         @default(0)
+  lastActivityAt  DateTime?
+  streakStartedAt DateTime?
+  bonusMultiplier Float       @default(1.0)
+  isActive        Boolean     @default(true)
+  
+  // Relations
+  user            User        @relation(fields: [userId], references: [id])
+  
+  @@unique([userId, type])
+}
+
+enum StreakType {
+  WEEKLY_BOOKING    // Weekly booking streak
+  MONTHLY_ACTIVITY  // Monthly activity streak
+  REVIEW_STREAK     // Consecutive review streak
+}
+
+model SeasonalChallenge {
+  id            String                 @id @default(auto()) @map("_id") @db.ObjectId
+  name          String
+  nameNe        String                 // Nepali name
+  description   String
+  descriptionNe String                 // Nepali description
+  type          ChallengeType
+  festival      String?                // Associated festival
+  startDate     DateTime
+  endDate       DateTime
+  target        Int                    // Target to complete
+  reward        Int                    // Points reward
+  badgeReward   BadgeType?             // Optional badge reward
+  isActive      Boolean                @default(true)
+  createdAt     DateTime               @default(now())
+  
+  // Relations
+  participations ChallengeParticipation[]
+}
+
+enum ChallengeType {
+  DASHAIN_CLEANING    // Dashain house cleaning
+  NEW_YEAR_ORGANIZE   // New Year organization
+  SUMMER_MAINTENANCE  // Summer home maintenance
+  MONSOON_PREP       // Monsoon preparation
+  TIHAR_DECORATION   // Tihar decoration services
+  GENERAL_SEASONAL   // General seasonal challenge
+}
+
+model ChallengeParticipation {
+  id            String            @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String            @db.ObjectId
+  challengeId   String            @db.ObjectId
+  progress      Int               @default(0)
+  isCompleted   Boolean           @default(false)
+  completedAt   DateTime?
+  rewardClaimed Boolean           @default(false)
+  joinedAt      DateTime          @default(now())
+  
+  // Relations
+  user          User              @relation(fields: [userId], references: [id])
+  challenge     SeasonalChallenge @relation(fields: [challengeId], references: [id])
+  
+  @@unique([userId, challengeId])
+}
+
+model GamificationSettings {
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String   @unique @db.ObjectId
+  notificationsEnabled Boolean @default(true)
+  showBadgeProgress Boolean  @default(true)
+  showStreakCounter Boolean  @default(true)
+  showPointsBalance Boolean  @default(true)
+  challengeReminders Boolean @default(true)
+  
+  // Relations
+  user              User     @relation(fields: [userId], references: [id])
+}
+
+// Personalization Models
+
+model UserPreferences {
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String   @unique @db.ObjectId
+  preferredCategories String[]
+  preferredTimeSlots String[]
+  preferredProviders String[] @db.ObjectId
+  budgetRange       Json     // {min: number, max: number}
+  locationPreferences Json   // {areas: string[], radius: number}
+  serviceFrequency  Json     // {category: frequency}
+  personalizedSettings Json  // Custom user preferences
+  culturalPreferences Json   // Nepali festivals, traditions
+  languagePreference String  @default("en") // "en" or "ne"
+  notificationPreferences Json // Personalized notification settings
+  lastUpdated       DateTime @updatedAt
+  createdAt         DateTime @default(now())
+  
+  // Relations
+  user              User     @relation(fields: [userId], references: [id])
+}
+
+model UserBehavior {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String   @db.ObjectId
+  action        String   // "view", "book", "complete", "review", "search", "click"
+  serviceId     String?  @db.ObjectId
+  providerId    String?  @db.ObjectId
+  category      String?
+  timeSpent     Int?     // seconds
+  deviceType    String?  // "mobile", "desktop", "tablet"
+  location      Json?    // {lat, lng, area, district}
+  searchQuery   String?  // For search actions
+  clickTarget   String?  // For click tracking
+  sessionId     String?  // Session tracking
+  timestamp     DateTime @default(now())
+  
+  // Relations
+  user          User     @relation(fields: [userId], references: [id])
+  service       Service? @relation(fields: [serviceId], references: [id])
+}
+
+model PersonalizationInsights {
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String   @unique @db.ObjectId
+  topCategories     String[]
+  mostBookedTimes   String[]
+  averageSpending   Int
+  locationHotspots  Json[]   // Popular service areas
+  seasonalPatterns  Json     // Seasonal service preferences
+  providerAffinities String[] @db.ObjectId
+  predictedNeeds    Json[]   // ML predictions
+  personalityProfile Json    // User behavior profile
+  pricesensitivity String   @default("MEDIUM") // LOW, MEDIUM, HIGH
+  bookingPatterns   Json     // Time and frequency patterns
+  recommendationScore Float @default(0.0) // Algorithm effectiveness
+  lastAnalyzed      DateTime @updatedAt
+  createdAt         DateTime @default(now())
+  
+  // Relations
+  user              User     @relation(fields: [userId], references: [id])
+}
+
+model RecommendationLog {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String   @db.ObjectId
+  algorithm     String   // "collaborative", "content", "hybrid", "location"
+  recommendations Json[] // Array of recommended service IDs with scores
+  context       Json     // Context when recommendation was generated
+  userFeedback  String?  // "liked", "disliked", "booked", "ignored"
+  effectiveness Float?   // Calculated effectiveness score
+  timestamp     DateTime @default(now())
+  
+  // Relations (no direct Prisma relations to keep flexible)
+}
+
+model LocationInsights {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  area          String   // Area/district name
+  popularServices String[] // Most popular service categories
+  peakTimes     String[] // Peak booking times
+  averagePricing Json    // Category-wise average pricing
+  seasonalTrends Json    // Seasonal service trends
+  demographics  Json     // User demographics for this area
+  providerDensity Int    // Number of providers in area
+  lastUpdated   DateTime @updatedAt
+  createdAt     DateTime @default(now())
+  
+  @@unique([area])
+}
+
+// Subscription System Models
+
+model Subscription {
+  id            String           @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String           @unique @db.ObjectId
+  tier          SubscriptionTier
+  status        SubscriptionStatus
+  startDate     DateTime         @default(now())
+  endDate       DateTime?
+  autoRenew     Boolean          @default(true)
+  paymentMethod String?
+  lastPayment   DateTime?
+  nextBilling   DateTime?
+  familyPlanId  String?          @db.ObjectId
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+  
+  // Relations
+  user          User             @relation(fields: [userId], references: [id])
+  familyPlan    FamilyPlan?      @relation(fields: [familyPlanId], references: [id])
+  benefits      SubscriptionBenefit[]
+  usage         SubscriptionUsage[]
+}
+
+model FamilyPlan {
+  id            String        @id @default(auto()) @map("_id") @db.ObjectId
+  ownerId       String        @unique @db.ObjectId
+  tier          SubscriptionTier
+  maxMembers    Int
+  currentMembers Int          @default(1)
+  sharedCredits Int           @default(0) // in paisa
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  
+  // Relations
+  owner         User          @relation(fields: [ownerId], references: [id])
+  subscriptions Subscription[]
+  invitations   FamilyInvitation[]
+}
+
+model FamilyInvitation {
+  id           String     @id @default(auto()) @map("_id") @db.ObjectId
+  familyPlanId String     @db.ObjectId
+  email        String
+  invitedBy    String     @db.ObjectId
+  status       InvitationStatus @default(PENDING)
+  token        String     @unique
+  expiresAt    DateTime
+  createdAt    DateTime   @default(now())
+  
+  // Relations
+  familyPlan   FamilyPlan @relation(fields: [familyPlanId], references: [id])
+  inviter      User       @relation(fields: [invitedBy], references: [id])
+}
+
+model SubscriptionBenefit {
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  subscriptionId String       @db.ObjectId
+  benefitType    BenefitType
+  value          Json         // Flexible benefit data
+  isActive       Boolean      @default(true)
+  expiresAt      DateTime?
+  usageCount     Int          @default(0)
+  usageLimit     Int?
+  
+  // Relations
+  subscription   Subscription @relation(fields: [subscriptionId], references: [id])
+}
+
+model SubscriptionUsage {
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  subscriptionId String       @db.ObjectId
+  month          String       // "2024-01"
+  bookingsCount  Int          @default(0)
+  discountUsed   Int          @default(0) // in paisa
+  creditsUsed    Int          @default(0) // in paisa
+  supportTickets Int          @default(0)
+  
+  // Relations
+  subscription   Subscription @relation(fields: [subscriptionId], references: [id])
+  
+  @@unique([subscriptionId, month])
+}
+
+enum SubscriptionTier {
+  FREE
+  PLUS
+  PRO
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  INACTIVE
+  CANCELLED
+  EXPIRED
+  PENDING
+}
+
+enum InvitationStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+  EXPIRED
+}
+
+enum BenefitType {
+  DISCOUNT_PERCENTAGE
+  SERVICE_CREDITS
+  PRIORITY_SUPPORT
+  EARLY_ACCESS
+  BOOKING_GUARANTEE
+  CONCIERGE_SERVICE
+}
+
+// Advanced Booking System Models
+
+model AdvancedBooking {
+  id              String            @id @default(auto()) @map("_id") @db.ObjectId
+  bookingId       String?           @unique @db.ObjectId
+  type            BookingType       @default(STANDARD)
+  organizerId     String            @db.ObjectId
+  groupId         String?           @db.ObjectId
+  recurringId     String?           @db.ObjectId
+  smartScheduled  Boolean           @default(false)
+  preferredTimes  Json[]            // Array of time preferences
+  weatherSensitive Boolean          @default(false)
+  trafficOptimized Boolean          @default(false)
+  coordinationChat String?          @db.ObjectId
+  totalCost       Int               @default(0)
+  splitMethod     SplitMethod?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  
+  // Relations
+  booking         Booking?          @relation(fields: [bookingId], references: [id])
+  organizer       User              @relation("BookingOrganizer", fields: [organizerId], references: [id])
+  group           GroupBooking?     @relation(fields: [groupId], references: [id])
+  recurring       RecurringBooking? @relation(fields: [recurringId], references: [id])
+  participants    BookingParticipant[]
+  scheduleOptions ScheduleOption[]
+  messages        GroupMessage[]
+}
+
+model GroupBooking {
+  id              String            @id @default(auto()) @map("_id") @db.ObjectId
+  title           String
+  description     String?
+  maxParticipants Int               @default(10)
+  currentCount    Int               @default(1)
+  splitMethod     SplitMethod       @default(EQUAL)
+  groupDiscount   Float             @default(0)
+  inviteCode      String            @unique
+  chatChannelId   String?           @db.ObjectId
+  isActive        Boolean           @default(true)
+  expiresAt       DateTime?
+  createdAt       DateTime          @default(now())
+  
+  // Relations
+  advancedBookings AdvancedBooking[]
+  participants    BookingParticipant[]
+  invitations     GroupInvitation[]
+  messages        GroupMessage[]
+}
+
+model BookingParticipant {
+  id                String          @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String          @db.ObjectId
+  advancedBookingId String?         @db.ObjectId
+  groupBookingId    String?         @db.ObjectId
+  role              ParticipantRole @default(MEMBER)
+  status            ParticipantStatus @default(PENDING)
+  shareAmount       Int?            // in paisa
+  paymentStatus     PaymentStatus   @default(PENDING)
+  joinedAt          DateTime        @default(now())
+  
+  // Relations
+  user              User            @relation(fields: [userId], references: [id])
+  advancedBooking   AdvancedBooking? @relation(fields: [advancedBookingId], references: [id])
+  groupBooking      GroupBooking?   @relation(fields: [groupBookingId], references: [id])
+}
+
+model RecurringBooking {
+  id              String            @id @default(auto()) @map("_id") @db.ObjectId
+  userId          String            @db.ObjectId
+  serviceId       String            @db.ObjectId
+  providerId      String?           @db.ObjectId
+  frequency       RecurrenceType
+  interval        Int               @default(1) // Every X weeks/months
+  dayOfWeek       Int?              // 0-6 for weekly
+  dayOfMonth      Int?              // 1-31 for monthly
+  preferredTime   String?           // HH:MM format
+  startDate       DateTime
+  endDate         DateTime?
+  isActive        Boolean           @default(true)
+  nextBooking     DateTime?
+  lastBooking     DateTime?
+  totalBookings   Int               @default(0)
+  createdAt       DateTime          @default(now())
+  
+  // Relations
+  user            User              @relation(fields: [userId], references: [id])
+  service         Service           @relation(fields: [serviceId], references: [id])
+  provider        Provider?         @relation(fields: [providerId], references: [id])
+  advancedBookings AdvancedBooking[]
+  scheduleAdjustments ScheduleAdjustment[]
+}
+
+model ScheduleOption {
+  id                String          @id @default(auto()) @map("_id") @db.ObjectId
+  advancedBookingId String          @db.ObjectId
+  providerId        String          @db.ObjectId
+  suggestedTime     DateTime
+  probability       Float           // 0-1 confidence score
+  reasoning         Json            // ML reasoning data
+  weatherFactor     Float?
+  trafficFactor     Float?
+  providerScore     Float
+  userPreferenceScore Float
+  isSelected        Boolean         @default(false)
+  createdAt         DateTime        @default(now())
+  
+  // Relations
+  advancedBooking   AdvancedBooking @relation(fields: [advancedBookingId], references: [id])
+  provider          Provider        @relation(fields: [providerId], references: [id])
+}
+
+model GroupInvitation {
+  id              String            @id @default(auto()) @map("_id") @db.ObjectId
+  groupBookingId  String            @db.ObjectId
+  invitedBy       String            @db.ObjectId
+  invitedEmail    String
+  invitedPhone    String?
+  status          InvitationStatus  @default(PENDING)
+  token           String            @unique
+  expiresAt       DateTime
+  sentAt          DateTime          @default(now())
+  respondedAt     DateTime?
+  
+  // Relations
+  groupBooking    GroupBooking      @relation(fields: [groupBookingId], references: [id])
+  inviter         User              @relation(fields: [invitedBy], references: [id])
+}
+
+model ScheduleAdjustment {
+  id                String           @id @default(auto()) @map("_id") @db.ObjectId
+  recurringBookingId String          @db.ObjectId
+  originalDate      DateTime
+  newDate           DateTime?
+  reason            String
+  type              AdjustmentType
+  isApproved        Boolean          @default(false)
+  createdAt         DateTime         @default(now())
+  
+  // Relations
+  recurringBooking  RecurringBooking @relation(fields: [recurringBookingId], references: [id])
+}
+
+model GroupMessage {
+  id                String           @id @default(auto()) @map("_id") @db.ObjectId
+  groupBookingId    String?          @db.ObjectId
+  advancedBookingId String?          @db.ObjectId
+  senderId          String           @db.ObjectId
+  message           String
+  messageType       MessageType      @default(TEXT)
+  metadata          Json?            // For attachments, location shares, etc.
+  sentAt            DateTime         @default(now())
+  readBy            Json[]           // Array of user IDs who read the message
+  
+  // Relations
+  groupBooking      GroupBooking?    @relation(fields: [groupBookingId], references: [id])
+  advancedBooking   AdvancedBooking? @relation(fields: [advancedBookingId], references: [id])
+  sender            User             @relation(fields: [senderId], references: [id])
+}
+
+model CalendarSync {
+  id              String           @id @default(auto()) @map("_id") @db.ObjectId
+  userId          String           @db.ObjectId
+  provider        CalendarProvider
+  externalId      String           // External calendar event ID
+  syncToken       String?          // For incremental sync
+  accessToken     String?          // Encrypted access token
+  refreshToken    String?          // Encrypted refresh token
+  lastSyncAt      DateTime?
+  isActive        Boolean          @default(true)
+  createdAt       DateTime         @default(now())
+  
+  // Relations
+  user            User             @relation(fields: [userId], references: [id])
+  
+  @@unique([userId, provider, externalId])
+}
+
+model WeatherData {
+  id              String           @id @default(auto()) @map("_id") @db.ObjectId
+  location        String           // City/area name
+  date            DateTime
+  weatherCode     String           // Weather condition code
+  temperature     Float            // in Celsius
+  humidity        Float            // percentage
+  windSpeed       Float            // km/h
+  precipitation   Float            // mm
+  visibility      Float            // km
+  isOutdoorFriendly Boolean        @default(true)
+  createdAt       DateTime         @default(now())
+  
+  @@unique([location, date])
+}
+
+model TrafficData {
+  id              String           @id @default(auto()) @map("_id") @db.ObjectId
+  fromArea        String
+  toArea          String
+  timestamp       DateTime
+  travelTime      Int              // minutes
+  trafficLevel    TrafficLevel
+  incidents       Json[]           // Array of traffic incidents
+  optimalRoutes   Json[]           // Array of route suggestions
+  createdAt       DateTime         @default(now())
+  
+  @@unique([fromArea, toArea, timestamp])
+}
+
+model HolidayCalendar {
+  id              String           @id @default(auto()) @map("_id") @db.ObjectId
+  name            String
+  nameNe          String           // Nepali name
+  date            DateTime
+  type            HolidayType
+  isNationalHoliday Boolean        @default(false)
+  affectsScheduling Boolean        @default(true)
+  description     String?
+  descriptionNe   String?          // Nepali description
+  createdAt       DateTime         @default(now())
+  
+  @@unique([date, name])
+}
+
+enum BookingType {
+  STANDARD
+  GROUP
+  RECURRING
+  SMART_SCHEDULED
+}
+
+enum SplitMethod {
+  EQUAL
+  PERCENTAGE
+  CUSTOM
+  BY_SERVICE
+}
+
+enum ParticipantRole {
+  ORGANIZER
+  MEMBER
+  VIEWER
+}
+
+enum ParticipantStatus {
+  PENDING
+  CONFIRMED
+  DECLINED
+  REMOVED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
+enum RecurrenceType {
+  WEEKLY
+  BIWEEKLY
+  MONTHLY
+  CUSTOM
+}
+
+enum AdjustmentType {
+  HOLIDAY
+  WEATHER
+  PROVIDER_UNAVAILABLE
+  USER_REQUEST
+  SYSTEM_OPTIMIZATION
+}
+
+enum MessageType {
+  TEXT
+  IMAGE
+  LOCATION
+  SERVICE_UPDATE
+  PAYMENT_UPDATE
+  SYSTEM_MESSAGE
+}
+
+enum CalendarProvider {
+  GOOGLE
+  APPLE
+  OUTLOOK
+}
+
+enum TrafficLevel {
+  LOW
+  MODERATE
+  HIGH
+  SEVERE
+}
+
+enum HolidayType {
+  NATIONAL
+  RELIGIOUS
+  CULTURAL
+  FESTIVAL
+  GOVERNMENT
+}
+
+// Smart Features Models
+
+model SearchBehavior {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String?  @db.ObjectId
+  query         String
+  resultClicks  Json[]   // Clicked results
+  sessionId     String
+  location      Json?
+  deviceType    String?
+  timestamp     DateTime @default(now())
+  correctedQuery String? // If query was corrected
+  resultCount   Int
+  abandonedAt   DateTime?
+  
+  user          User?    @relation(fields: [userId], references: [id])
+}
+
+model NotificationPreference {
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String   @unique @db.ObjectId
+  optimalTimes      String[] // Preferred notification times
+  frequency         String   @default("MEDIUM") // LOW, MEDIUM, HIGH
+  channels          String[] // EMAIL, SMS, PUSH, IN_APP
+  categories        Json     // Notification category preferences
+  quietHours        Json     // Start/end times for quiet hours
+  locationBased     Boolean  @default(true)
+  behaviorBased     Boolean  @default(true)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  user              User     @relation(fields: [userId], references: [id])
+}
+
+model VoiceInteraction {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String?  @db.ObjectId
+  command       String
+  intent        String   // "search", "book", "navigate", "query"
+  confidence    Float    // 0-1 confidence score
+  language      String   @default("en") // "en" or "ne"
+  successful    Boolean  @default(false)
+  errorMessage  String?
+  responseTime  Int      // milliseconds
+  timestamp     DateTime @default(now())
+  
+  user          User?    @relation(fields: [userId], references: [id])
+}
+
+model FormBehavior {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String?  @db.ObjectId
+  formType      String   // "booking", "registration", "profile"
+  fieldData     Json     // Field completion patterns
+  completionTime Int     // seconds to complete
+  abandonedFields String[] // Fields left incomplete
+  correctedFields Json   // Fields that were corrected
+  timestamp     DateTime @default(now())
+  
+  user          User?    @relation(fields: [userId], references: [id])
+}
+
+model SmartSearchCache {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  query         String   @unique
+  predictions   Json[]   // Array of predicted results
+  popularity    Int      @default(1)
+  location      String?
+  category      String?
+  lastUpdated   DateTime @updatedAt
+  createdAt     DateTime @default(now())
+}
+
+model NotificationDelivery {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String   @db.ObjectId
+  notificationId String  @db.ObjectId
+  channel       String   // EMAIL, SMS, PUSH, IN_APP
+  status        DeliveryStatus @default(PENDING)
+  scheduledFor  DateTime
+  sentAt        DateTime?
+  deliveredAt   DateTime?
+  openedAt      DateTime?
+  clickedAt     DateTime?
+  errorMessage  String?
+  retryCount    Int      @default(0)
+  
+  @@index([userId, scheduledFor])
+  @@index([status, scheduledFor])
+}
+
+model VoiceCommand {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  command       String   @unique
+  intent        String   // The intended action
+  patterns      String[] // Alternative phrases for the command
+  parameters    Json     // Expected parameters
+  responseTemplate String // Response template
+  language      String   // "en" or "ne"
+  isActive      Boolean  @default(true)
+  confidence    Float    @default(0.8) // Minimum confidence threshold
+  createdAt     DateTime @default(now())
+}
+
+model FormTemplate {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  formType      String   // "booking", "registration", "profile"
+  fieldName     String
+  predictions   Json[]   // Common values for this field
+  dependencies  Json     // Fields this depends on
+  validation    Json     // Validation rules
+  autoFillRules Json     // Auto-fill logic
+  popularity    Int      @default(1)
+  lastUpdated   DateTime @updatedAt
+  
+  @@unique([formType, fieldName])
+}
+
+enum DeliveryStatus {
+  PENDING
+  SENT
+  DELIVERED
+  OPENED
+  CLICKED
+  FAILED
+  CANCELLED
+}
+
+// Transparency System Models
+
+model LiveLocationData {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  providerId      String   @db.ObjectId
+  latitude        Float
+  longitude       Float
+  altitude        Float?
+  accuracy        Float    // GPS accuracy in meters
+  heading         Float?   // Direction of travel
+  speed           Float?   // Speed in km/h
+  timestamp       DateTime @default(now())
+  batteryLevel    Int?     // Provider device battery level
+  isSharing       Boolean  @default(true)
+  
+  provider        Provider @relation(fields: [providerId], references: [id])
+  
+  @@index([providerId, timestamp])
+}
+
+model ProviderStatus {
+  id              String           @id @default(auto()) @map("_id") @db.ObjectId
+  providerId      String           @unique @db.ObjectId
+  status          ProviderStatusType @default(OFFLINE)
+  currentCapacity Int              @default(0)
+  maxCapacity     Int              @default(5)
+  currentServiceArea Json?         // Current service area boundaries
+  lastStatusUpdate DateTime        @default(now())
+  isAvailable     Boolean          @default(false)
+  estimatedAvailableAt DateTime?
+  currentBookingId String?         @db.ObjectId
+  activeBookings  Json[]           // Array of active booking IDs
+  
+  provider        Provider         @relation(fields: [providerId], references: [id])
+  
+  @@index([status, isAvailable])
+}
+
+model ServiceProgress {
+  id              String           @id @default(auto()) @map("_id") @db.ObjectId
+  bookingId       String           @unique @db.ObjectId
+  currentStage    ServiceStage     @default(PENDING)
+  stages          Json[]           // Array of completed stages with timestamps
+  startedAt       DateTime?
+  estimatedCompletion DateTime?
+  actualCompletion DateTime?
+  qualityChecks   Json[]           // Quality checkpoint data
+  customerApprovals Json[]         // Customer approval history
+  evidencePhotos  String[]         // Photo URLs
+  notes           String?
+  issuesReported  Json[]           // Any issues during service
+  milestones      Json[]           // Service milestone tracking
+  
+  booking         Booking          @relation(fields: [bookingId], references: [id])
+  
+  @@index([currentStage, startedAt])
+}
+
+model PricingBreakdown {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  bookingId       String   @unique @db.ObjectId
+  basePrice       Int      // Base service price in paisa
+  taxes           Json     // Tax breakdown
+  fees            Json     // Additional fees
+  discounts       Json     // Applied discounts
+  subscriptionDiscount Int @default(0) // Subscription benefits
+  finalPrice      Int      // Final calculated price
+  currency        String   @default("NPR")
+  calculation     Json     // Detailed calculation steps
+  priceHistory    Json[]   // Historical pricing for comparison
+  providerCut     Int?     // Provider earnings
+  platformFee     Int?     // Platform commission
+  generatedAt     DateTime @default(now())
+  
+  booking         Booking  @relation(fields: [bookingId], references: [id])
+}
+
+model TransparencyLog {
+  id              String           @id @default(auto()) @map("_id") @db.ObjectId
+  entityType      String           // "booking", "provider", "pricing", "location"
+  entityId        String           @db.ObjectId
+  action          TransparencyAction
+  data            Json             // Action data
+  userId          String?          @db.ObjectId
+  providerId      String?          @db.ObjectId
+  timestamp       DateTime         @default(now())
+  userAgent       String?          // User's device info
+  ipAddress       String?          // IP address (encrypted)
+  sessionId       String?          // Session identifier
+  
+  user            User?            @relation(fields: [userId], references: [id])
+  provider        Provider?        @relation(fields: [providerId], references: [id])
+  
+  @@index([entityType, entityId, timestamp])
+}
+
+model RealTimeMetrics {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  providerId      String   @db.ObjectId
+  metric          String   // "response_time", "completion_rate", "rating"
+  value           Float
+  timeWindow      String   // "1h", "24h", "7d", "30d"
+  calculatedAt    DateTime @default(now())
+  
+  provider        Provider @relation(fields: [providerId], references: [id])
+  
+  @@unique([providerId, metric, timeWindow])
+  @@index([providerId, calculatedAt])
+}
+
+model PrivacyConsent {
+  id              String           @id @default(auto()) @map("_id") @db.ObjectId
+  userId          String?          @db.ObjectId
+  providerId      String?          @db.ObjectId
+  consentType     ConsentType
+  granted         Boolean          @default(false)
+  grantedAt       DateTime?
+  revokedAt       DateTime?
+  expiresAt       DateTime?
+  consentData     Json             // Specific consent details
+  version         String           @default("1.0") // Consent version
+  
+  user            User?            @relation(fields: [userId], references: [id])
+  provider        Provider?        @relation(fields: [providerId], references: [id])
+  
+  @@index([userId, consentType])
+  @@index([providerId, consentType])
+}
+
+model LocationSharing {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  providerId      String   @db.ObjectId
+  sharingLevel    SharingLevel     @default(BASIC)
+  allowCustomers  Boolean          @default(true)
+  allowPlatform   Boolean          @default(true)
+  customSettings  Json             // Custom privacy settings
+  activeBookingId String?          @db.ObjectId
+  startTime       DateTime?
+  endTime         DateTime?
+  isActive        Boolean          @default(true)
+  
+  provider        Provider         @relation(fields: [providerId], references: [id])
+  
+  @@unique([providerId, activeBookingId])
+}
+
+model ServiceQualityTracker {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  bookingId       String   @db.ObjectId
+  providerId      String   @db.ObjectId
+  qualityScore    Float    @default(0.0)  // 0-100
+  checkpoints     Json[]   // Quality checkpoints passed
+  issues          Json[]   // Quality issues found
+  customerFeedback Json?   // Real-time customer feedback
+  photosRequired  Boolean  @default(false)
+  photosSubmitted String[] // Photo evidence URLs
+  verificationStatus VerificationStatus @default(PENDING)
+  lastUpdated     DateTime @updatedAt
+  
+  provider        Provider @relation(fields: [providerId], references: [id])
+  
+  @@index([providerId, qualityScore])
+  @@index([bookingId, verificationStatus])
+}
+
+enum ProviderStatusType {
+  AVAILABLE
+  BUSY
+  EN_ROUTE
+  OFFLINE
+  BREAK
+  EMERGENCY
+  UNAVAILABLE
+}
+
+enum ServiceStage {
+  PENDING
+  CONFIRMED
+  PREPARATION
+  EN_ROUTE
+  ARRIVED
+  IN_PROGRESS
+  QUALITY_CHECK
+  CUSTOMER_REVIEW
+  COMPLETED
+  VERIFIED
+  PAYMENT_PENDING
+  CLOSED
+}
+
+enum TransparencyAction {
+  LOCATION_UPDATE
+  STATUS_CHANGE
+  PRICE_UPDATE
+  PROGRESS_UPDATE
+  QUALITY_CHECK
+  COMPLETION
+  CUSTOMER_APPROVAL
+  ISSUE_REPORTED
+  PHOTO_UPLOADED
+  MILESTONE_REACHED
+}
+
+enum ConsentType {
+  LOCATION_TRACKING
+  DATA_SHARING
+  MARKETING
+  ANALYTICS
+  THIRD_PARTY_SHARING
+}
+
+enum SharingLevel {
+  NONE        // No location sharing
+  BASIC       // City/area level only
+  PRECISE     // Exact location
+  CUSTOM      // Custom settings
+}
+
+enum VerificationStatus {
+  PENDING
+  IN_REVIEW
+  VERIFIED
+  REJECTED
+  REQUIRES_RESUBMISSION
+}
+
+// Premium UX Features Models
+
+model UserUXPreferences {
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String   @unique @db.ObjectId
+  hapticEnabled     Boolean  @default(true)
+  hapticIntensity   Int      @default(50) // 0-100
+  soundEnabled      Boolean  @default(true)
+  soundVolume       Int      @default(70) // 0-100
+  voiceGuidance     Boolean  @default(false)
+  animationsEnabled Boolean  @default(true)
+  reducedMotion     Boolean  @default(false)
+  highContrast      Boolean  @default(false)
+  colorTheme        String   @default("auto") // auto, light, dark
+  contextualAI      Boolean  @default(true)
+  culturalSounds    Boolean  @default(true)
+  customPatterns    Json[]   // Custom haptic patterns
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  user              User     @relation(fields: [userId], references: [id])
+}
+
+model UXAnalytics {
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String?  @db.ObjectId
+  interactionType   String   // "click", "scroll", "swipe", "hover"
+  elementId         String   // Component/element identifier
+  duration          Int      // Interaction duration in ms
+  context           Json     // Contextual data (time, location, device)
+  satisfaction      Int?     // User satisfaction rating 1-5
+  deviceType        String
+  screenSize        String
+  timestamp         DateTime @default(now())
+  
+  user              User?    @relation(fields: [userId], references: [id])
+  
+  @@index([userId, interactionType, timestamp])
+}
+
+model HapticPattern {
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  name              String   @unique
+  description       String
+  pattern           Json     // Vibration pattern data
+  category          String   // "success", "error", "notification", "selection"
+  intensity         Int      @default(50)
+  duration          Int      // Pattern duration in ms
+  isDefault         Boolean  @default(false)
+  culturalContext   String?  // "nepali", "general"
+  accessibility     Boolean  @default(false)
+  createdAt         DateTime @default(now())
+  
+  @@index([category, isDefault])
+}
+
+model SoundAsset {
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  name              String   @unique
+  fileUrl           String
+  category          String   // "ui", "notification", "success", "error", "ambient"
+  duration          Int      // Duration in ms
+  volume            Int      @default(70)
+  format            String   // "mp3", "wav", "ogg"
+  culturalContext   String?  // "nepali", "general"
+  accessibility     Boolean  @default(false)
+  isDefault         Boolean  @default(false)
+  createdAt         DateTime @default(now())
+  
+  @@index([category, isDefault])
+}
+
+model ContextualData {
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String   @db.ObjectId
+  contextType       String   // "time", "location", "device", "behavior"
+  contextValue      Json     // Context-specific data
+  uiAdaptations     Json[]   // Applied UI changes
+  effectiveness     Float?   // Adaptation effectiveness score
+  timestamp         DateTime @default(now())
+  
+  user              User     @relation(fields: [userId], references: [id])
+  
+  @@index([userId, contextType, timestamp])
+}
+
+// Growth & Marketplace Features Models
+
+model ProviderAnalytics {
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  providerId        String   @unique @db.ObjectId
+  totalBookings     Int      @default(0)
+  completedBookings Int      @default(0)
+  totalRevenue      Int      @default(0) // in paisa
+  averageRating     Float    @default(0)
+  responseTime      Int      @default(0) // average response time in minutes
+  completionRate    Float    @default(0) // percentage
+  customerRetention Float    @default(0) // percentage
+  growthRate        Float    @default(0) // monthly growth percentage
+  marketShare       Float    @default(0) // percentage in category
+  customerLoyalty   Float    @default(0) // repeat customer rate
+  seasonalTrends    Json[]   // Seasonal performance data
+  performanceTrends Json[]   // Historical performance trends
+  competitorComparison Json  // Comparison with competitors
+  lastUpdated       DateTime @updatedAt
+  createdAt         DateTime @default(now())
+  
+  provider          Provider @relation(fields: [providerId], references: [id])
+  
+  @@index([totalRevenue, averageRating])
+  @@index([providerId, lastUpdated])
+}
+
+model ProviderBusinessInsights {
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  providerId        String   @unique @db.ObjectId
+  strengths         String[] // Key strengths identified
+  opportunities     String[] // Growth opportunities
+  threats           String[] // Market threats
+  recommendations   Json[]   // AI-generated business recommendations
+  marketPosition    String   // Market positioning analysis
+  customerSegments  Json[]   // Customer segment analysis
+  pricingStrategy   Json     // Pricing optimization insights
+  serviceGaps       Json[]   // Service gaps to address
+  competitiveAdvantage String[]  // Unique advantages
+  riskFactors       Json[]   // Business risk factors
+  growthPotential   Float    @default(0) // 0-1 growth potential score
+  lastAnalyzed      DateTime @updatedAt
+  createdAt         DateTime @default(now())
+  
+  provider          Provider @relation(fields: [providerId], references: [id])
+}
+
+model ProviderMarketing {
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  providerId        String   @db.ObjectId
+  campaignType      MarketingCampaignType
+  campaignName      String
+  description       String?
+  budget            Int      @default(0) // in paisa
+  spentAmount       Int      @default(0) // in paisa
+  startDate         DateTime
+  endDate           DateTime?
+  targetAudience    Json     // Target demographic and geographic data
+  channels          String[] // Marketing channels used
+  metrics           Json     // Campaign metrics (impressions, clicks, conversions)
+  roi               Float    @default(0) // Return on investment
+  status            CampaignStatus @default(DRAFT)
+  createdBookings   Int      @default(0) // Bookings generated
+  createdRevenue    Int      @default(0) // Revenue generated in paisa
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  provider          Provider @relation(fields: [providerId], references: [id])
+  
+  @@index([providerId, status])
+  @@index([startDate, endDate])
+}
+
+model ProviderFinancials {
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  providerId        String   @unique @db.ObjectId
+  totalEarnings     Int      @default(0) // in paisa
+  monthlyEarnings   Json[]   // Monthly earnings history
+  outstandingPayments Int    @default(0) // in paisa
+  platformFees      Int      @default(0) // in paisa
+  taxes             Json     // Tax information and calculations
+  expenses          Json[]   // Business expenses
+  profitMargin      Float    @default(0) // percentage
+  paymentMethods    String[] // Preferred payment methods
+  taxCompliance     Json     // Tax compliance data
+  financialGoals    Json     // Set financial targets
+  incomeProjection  Json[]   // Projected income
+  expenseCategories Json     // Categorized expenses
+  lastUpdated       DateTime @updatedAt
+  createdAt         DateTime @default(now())
+  
+  provider          Provider @relation(fields: [providerId], references: [id])
+}
+
+model CityExpansionData {
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  cityName          String   @unique
+  state             String
+  population        Int
+  marketPotential   Float    // 0-1 score
+  competitionLevel  Float    // 0-1 score
+  launchStatus      ExpansionStatus @default(RESEARCH)
+  targetLaunchDate  DateTime?
+  actualLaunchDate  DateTime?
+  initialProviders  Int      @default(0)
+  currentProviders  Int      @default(0)
+  totalBookings     Int      @default(0)
+  monthlyGrowthRate Float    @default(0)
+  marketData        Json     // Demographics, economic data
+  localizationNeeds Json     // Language, cultural requirements
+  successMetrics    Json     // KPIs for this city
+  challenges        String[] // Expansion challenges
+  opportunities     String[] // Market opportunities
+  investmentRequired Int     @default(0) // in paisa
+  expectedROI       Float    @default(0) // Return on investment
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@index([launchStatus, marketPotential])
+  @@index([cityName, state])
+}
+
+model B2BContract {
+  id                String           @id @default(auto()) @map("_id") @db.ObjectId
+  companyName       String
+  contactPerson     String
+  email             String
+  phone             String
+  contractType      B2BContractType
+  status            ContractStatus   @default(DRAFT)
+  startDate         DateTime
+  endDate           DateTime?
+  monthlyValue      Int              // in paisa
+  servicesIncluded  String[]         // Service categories
+  specialTerms      Json?            // Custom terms and conditions
+  discountRate      Float            @default(0) // percentage
+  paymentTerms      String           @default("NET_30")
+  autoRenewal       Boolean          @default(false)
+  dedicatedManager  String?          // Account manager
+  priorityLevel     B2BPriorityLevel @default(STANDARD)
+  billingCycle      BillingCycle     @default(MONTHLY)
+  creditLimit       Int?             // in paisa
+  usedCredit        Int              @default(0) // in paisa
+  customPricing     Json?            // Custom pricing structure
+  slaTerms          Json?            // Service level agreement terms
+  complianceReqs    Json?            // Compliance requirements
+  signedAt          DateTime?
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  
+  bookings          Booking[]
+  
+  @@index([status, contractType])
+  @@index([companyName, status])
+}
+
+model GrowthMetrics {
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  date              DateTime @unique
+  totalUsers        Int      @default(0)
+  newUsers          Int      @default(0)
+  activeUsers       Int      @default(0)
+  totalProviders    Int      @default(0)
+  newProviders      Int      @default(0)
+  activeProviders   Int      @default(0)
+  totalBookings     Int      @default(0)
+  completedBookings Int      @default(0)
+  totalRevenue      Int      @default(0) // in paisa
+  averageOrderValue Int      @default(0) // in paisa
+  conversionRate    Float    @default(0) // percentage
+  customerSatisfaction Float @default(0) // 1-5 score
+  marketPenetration Float    @default(0) // percentage
+  userRetentionRate Float    @default(0) // percentage
+  providerUtilization Float  @default(0) // percentage
+  platformGrowthRate Float   @default(0) // percentage
+  revenueGrowthRate Float    @default(0) // percentage
+  customerAcquisitionCost Int @default(0) // in paisa
+  lifetimeValue     Int      @default(0) // in paisa
+  churnRate         Float    @default(0) // percentage
+  createdAt         DateTime @default(now())
+  
+  @@index([date])
+}
+
+model MarketplaceInsights {
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  category          String
+  region            String?
+  timeframe         String   // "daily", "weekly", "monthly", "quarterly"
+  demandScore       Float    // 0-1 score
+  supplyScore       Float    // 0-1 score
+  competitionLevel  Float    // 0-1 score
+  priceElasticity   Float    // Price sensitivity
+  seasonalFactor    Float    // Seasonal demand multiplier
+  growthOpportunity Float    // 0-1 score
+  marketSaturation  Float    // 0-1 market saturation level
+  customerSatisfaction Float // Average satisfaction in category/region
+  providerPerformance Float  // Average provider performance
+  recommendations   Json[]   // AI-generated recommendations
+  trends            Json[]   // Market trends analysis
+  forecasts         Json[]   // Future predictions
+  dataDate          DateTime
+  createdAt         DateTime @default(now())
+  
+  @@unique([category, region, timeframe, dataDate])
+  @@index([demandScore, growthOpportunity])
+  @@index([category, region, dataDate])
+}
+
+model RevenueAnalytics {
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  date              DateTime
+  timeframe         String   // "daily", "weekly", "monthly", "quarterly", "yearly"
+  totalRevenue      Int      @default(0) // in paisa
+  providerPayouts   Int      @default(0) // in paisa
+  platformFees      Int      @default(0) // in paisa
+  taxes             Int      @default(0) // in paisa
+  operatingExpenses Int      @default(0) // in paisa
+  netProfit         Int      @default(0) // in paisa
+  profitMargin      Float    @default(0) // percentage
+  revenueByCategory Json     // Category-wise revenue breakdown
+  revenueByRegion   Json     // Region-wise revenue breakdown
+  revenueByChannel  Json     // Channel-wise revenue breakdown
+  forecastData      Json?    // Revenue forecast data
+  growthRate        Float    @default(0) // revenue growth rate
+  createdAt         DateTime @default(now())
+  
+  @@unique([date, timeframe])
+  @@index([date, timeframe])
+}
+
+model UserGrowthAnalytics {
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  date              DateTime
+  timeframe         String   // "daily", "weekly", "monthly", "quarterly"
+  newUsers          Int      @default(0)
+  activeUsers       Int      @default(0)
+  returningUsers    Int      @default(0)
+  churnedUsers      Int      @default(0)
+  retentionRate     Float    @default(0) // percentage
+  acquisitionChannels Json   // User acquisition channel data
+  userSegments      Json     // User segment analysis
+  behaviorPatterns  Json     // User behavior insights
+  engagementMetrics Json     // User engagement data
+  satisfactionScore Float    @default(0) // Average satisfaction score
+  lifetimeValue     Int      @default(0) // Average user LTV in paisa
+  acquisitionCost   Int      @default(0) // Average CAC in paisa
+  createdAt         DateTime @default(now())
+  
+  @@unique([date, timeframe])
+  @@index([date, timeframe])
+}
+
+model CompetitorAnalysis {
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  competitorName    String
+  category          String
+  region            String?
+  marketShare       Float    @default(0) // percentage
+  pricingStrategy   Json     // Pricing analysis
+  serviceOffering   Json     // Services offered
+  strengths         String[]
+  weaknesses        String[]
+  customerRating    Float    @default(0)
+  marketPosition    String
+  differentiators   String[] // Key differentiating factors
+  threats           String[] // Threats they pose
+  opportunities     String[] // Opportunities to compete
+  lastAnalyzed      DateTime @updatedAt
+  createdAt         DateTime @default(now())
+  
+  @@unique([competitorName, category, region])
+  @@index([category, region, marketShare])
+}
+
+model PerformanceBenchmark {
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  category          String
+  region            String?
+  providerId        String?  @db.ObjectId
+  benchmarkType     BenchmarkType
+  metric            String   // "response_time", "completion_rate", "rating", etc.
+  value             Float
+  industryAverage   Float
+  topPerformer      Float    // Top 10% performance
+  percentile        Int      // Provider's percentile ranking
+  trend             String   // "improving", "declining", "stable"
+  timeframe         String   // "1w", "1m", "3m", "1y"
+  lastCalculated    DateTime @updatedAt
+  createdAt         DateTime @default(now())
+  
+  @@unique([category, region, providerId, benchmarkType, metric, timeframe])
+  @@index([category, benchmarkType, lastCalculated])
+}
+
+model CustomerLifecycle {
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String   @db.ObjectId
+  stage             LifecycleStage
+  stageEnteredAt    DateTime @default(now())
+  previousStage     LifecycleStage?
+  stageDuration     Int?     // Days in current stage
+  engagementScore   Float    @default(0) // 0-1 engagement level
+  satisfactionScore Float    @default(0) // 1-5 satisfaction
+  riskScore         Float    @default(0) // 0-1 churn risk
+  predictedLTV      Int      @default(0) // Predicted lifetime value in paisa
+  actualLTV         Int      @default(0) // Actual lifetime value in paisa
+  touchpoints       Json[]   // Customer interaction history
+  preferences       Json     // Customer preferences data
+  nextBestAction    Json?    // Recommended next action
+  lastUpdated       DateTime @updatedAt
+  
+  user              User     @relation(fields: [userId], references: [id])
+  
+  @@index([userId, stage])
+  @@index([stage, riskScore])
+}
+
+enum ExpansionStatus {
+  RESEARCH
+  PLANNING
+  PREPARATION
+  LAUNCH
+  ACTIVE
+  PAUSED
+  DISCONTINUED
+}
+
+enum B2BContractType {
+  STANDARD
+  ENTERPRISE
+  GOVERNMENT
+  NONPROFIT
+  STARTUP
+  CUSTOM
+}
+
+enum ContractStatus {
+  DRAFT
+  PENDING_APPROVAL
+  ACTIVE
+  EXPIRED
+  CANCELLED
+  RENEWAL_PENDING
+  SUSPENDED
+}
+
+enum B2BPriorityLevel {
+  STANDARD
+  HIGH
+  PREMIUM
+  ENTERPRISE
+}
+
+enum BillingCycle {
+  MONTHLY
+  QUARTERLY
+  ANNUALLY
+  CUSTOM
+}
+
+enum MarketingCampaignType {
+  AWARENESS
+  ACQUISITION
+  RETENTION
+  UPSELL
+  SEASONAL
+  PROMOTIONAL
+  REFERRAL
+}
+
+enum CampaignStatus {
+  DRAFT
+  SCHEDULED
+  ACTIVE
+  PAUSED
+  COMPLETED
+  CANCELLED
+}
+
+enum BenchmarkType {
+  PERFORMANCE
+  QUALITY
+  EFFICIENCY
+  CUSTOMER_SATISFACTION
+  FINANCIAL
+}
+
+enum LifecycleStage {
+  PROSPECT
+  NEW_CUSTOMER
+  ACTIVE_CUSTOMER
+  LOYAL_CUSTOMER
+  VIP_CUSTOMER
+  AT_RISK
+  CHURNED
+  REACTIVATED
+}
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245

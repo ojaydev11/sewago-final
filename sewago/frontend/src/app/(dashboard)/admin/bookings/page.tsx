@@ -1,6 +1,13 @@
 'use client';
 
+<<<<<<< HEAD
 import { useState, useEffect } from 'react';
+=======
+// Force dynamic rendering to prevent build-time prerendering
+export const dynamic = 'force-dynamic';
+
+import React, { useState, useEffect, useCallback } from 'react';
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 import { 
   MagnifyingGlassIcon,
   FunnelIcon,
@@ -58,16 +65,24 @@ export default function AdminBookingsPage() {
   });
   const [pagination, setPagination] = useState({
     page: 1,
+<<<<<<< HEAD
     limit: 20,
+=======
+    limit: 10,
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
     total: 0,
     pages: 0
   });
 
+<<<<<<< HEAD
   useEffect(() => {
     fetchBookings();
   }, [filters, pagination.page]);
 
   const fetchBookings = async () => {
+=======
+  const fetchBookings = useCallback(async () => {
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
     try {
       setLoading(true);
       
@@ -105,7 +120,15 @@ export default function AdminBookingsPage() {
     } finally {
       setLoading(false);
     }
+<<<<<<< HEAD
   };
+=======
+  }, [filters, pagination.page, pagination.limit]);
+
+  useEffect(() => {
+    fetchBookings();
+  }, [fetchBookings]);
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 
   const getMockBookings = (): Booking[] => [
     {

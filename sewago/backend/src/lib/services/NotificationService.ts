@@ -48,7 +48,11 @@ export class NotificationService {
           message,
           type,
           channel,
+<<<<<<< HEAD
           sentAt: notification.sentAt,
+=======
+          sentAt: notification.createdAt,
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
         });
       }
 
@@ -83,7 +87,11 @@ export class NotificationService {
           message,
           type,
           channel,
+<<<<<<< HEAD
           sentAt: notification.sentAt,
+=======
+          sentAt: notification.createdAt,
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
         });
       }
 

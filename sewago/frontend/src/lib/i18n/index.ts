@@ -1,4 +1,10 @@
+<<<<<<< HEAD
 export type Locale = 'en' | 'ne';
+=======
+export const locales = ['en', 'ne'] as const;
+export type Locale = (typeof locales)[number];
+export const defaultLocale: Locale = 'en';
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 
 export interface I18nConfig {
   defaultLocale: Locale;
@@ -45,7 +51,11 @@ export function getLocaleFromHeader(acceptLanguage: string): Locale {
   
   // Check for Nepali first
   if (languages.some(lang => lang.startsWith('ne') || lang.startsWith('np'))) {
+<<<<<<< HEAD
     return 'ne';
+=======
+    return 'en';
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
   }
   
   // Default to English

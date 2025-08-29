@@ -3,7 +3,11 @@
 // Force dynamic rendering to prevent build-time prerendering
 export const dynamic = 'force-dynamic';
 
+<<<<<<< HEAD
 import { useQuery, useMutation } from "@tanstack/react-query";
+=======
+import { useQuery } from "@tanstack/react-query";
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 
 import { api } from "@/lib/api";
 import { formatNPR } from "@/lib/currency";

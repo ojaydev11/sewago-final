@@ -9,9 +9,14 @@ interface AnalyticsProps {
 
 declare global {
   interface Window {
+<<<<<<< HEAD
     gtag: (...args: any[]) => void;
     dataLayer: any[];
     performance: Performance;
+=======
+    gtag?: (...args: any[]) => void;
+    dataLayer?: any[];
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
   }
 }
 
@@ -20,6 +25,7 @@ export default function Analytics({ measurementId }: AnalyticsProps) {
   const searchParams = useSearchParams();
 
   useEffect(() => {
+<<<<<<< HEAD
     // Initialize Google Analytics
     if (typeof window !== 'undefined' && !window.gtag) {
       // Load Google Analytics script
@@ -48,12 +54,44 @@ export default function Analytics({ measurementId }: AnalyticsProps) {
         page_location: window.location.href,
         page_path: pathname,
       });
+=======
+    // Initialize Google Analytics with error handling
+    if (typeof window !== 'undefined' && measurementId && !window.gtag) {
+      try {
+        // Load Google Analytics script
+        const script = document.createElement('script');
+        script.async = true;
+        script.src = `https://www.googletagmanager.com/gtag/js?id=${measurementId}`;
+        script.onload = () => {
+          // Initialize gtag only after script loads
+          window.dataLayer = window.dataLayer || [];
+          window.gtag = function(...args: any[]) { 
+            window.dataLayer?.push(args); 
+          };
+
+          // Configure gtag
+          window.gtag?.('js', new Date());
+          window.gtag?.('config', measurementId, {
+            page_title: document.title,
+            page_location: window.location.href,
+            send_page_view: true,
+          });
+        };
+        script.onerror = () => {
+          console.warn('Failed to load Google Analytics');
+        };
+        document.head.appendChild(script);
+      } catch (error) {
+        console.warn('Analytics initialization failed:', error);
+      }
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
     }
   }, [measurementId]);
 
   // Track page views when route changes
   useEffect(() => {
     if (typeof window !== 'undefined' && window.gtag) {
+<<<<<<< HEAD
       const url = pathname + (searchParams?.toString() ? `?${searchParams.toString()}` : '');
       
       window.gtag('event', 'page_view', {
@@ -303,12 +341,29 @@ export default function Analytics({ measurementId }: AnalyticsProps) {
     }
   }, [pathname]);
 
+=======
+      try {
+        const url = pathname + (searchParams?.toString() ? `?${searchParams.toString()}` : '');
+        
+        window.gtag('event', 'page_view', {
+          page_title: document.title,
+          page_location: window.location.origin + url,
+          page_path: pathname,
+        });
+      } catch (error) {
+        console.warn('Analytics page view tracking failed:', error);
+      }
+    }
+  }, [pathname, searchParams]);
+
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
   return null; // This component doesn't render anything
 }
 
 // Export utility function for manual event tracking
 export function trackEvent(action: string, category: string, label?: string, value?: number) {
   if (typeof window !== 'undefined' && window.gtag) {
+<<<<<<< HEAD
     window.gtag('event', action, {
       event_category: category,
       event_label: label,
@@ -324,5 +379,16 @@ export function dispatchGtagEvent(action: string, category: string, label?: stri
       detail: { action, category, label, value }
     });
     window.dispatchEvent(event);
+=======
+    try {
+      window.gtag('event', action, {
+        event_category: category,
+        event_label: label,
+        value: value,
+      });
+    } catch (error) {
+      console.warn('Event tracking failed:', error);
+    }
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
   }
 }

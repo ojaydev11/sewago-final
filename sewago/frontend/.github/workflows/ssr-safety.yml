@@ -1,0 +1,27 @@
+name: SSR safety
+on: [push, pull_request]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: 
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run build
+      - run: npm run scan:ssr
+      - run: npm run check:sentinels
+      - name: Test SSR guard on Node runtime
+        run: |
+          # Start dev server in background
+          npm run dev &
+          sleep 10
+          # Node route should show guardOk true
+          curl -fsSL "http://localhost:5000/api/diag/node" | jq -e '.guardOk == true'
+          # Edge route should not trip the guard (no thrown error path)
+          curl -fsSL "http://localhost:5000/api/diag/edge" | jq -e '.edgeOk == true'
+        env:
+          VERCEL_URL: http://localhost:5000

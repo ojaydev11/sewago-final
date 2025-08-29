@@ -7,7 +7,10 @@ import Link from 'next/link';
 import { 
   ClockIcon,
   ExclamationTriangleIcon,
+<<<<<<< HEAD
   CheckCircleIcon,
+=======
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
   UserGroupIcon,
   DocumentTextIcon,
   ShieldCheckIcon,
@@ -34,7 +37,11 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     // Only fetch session if auth is enabled
+<<<<<<< HEAD
     if (typeof window !== 'undefined' && process.env.NEXT_PUBLIC_AUTH_ENABLED === 'true') {
+=======
+    if (process.env.NEXT_PUBLIC_AUTH_ENABLED === 'true') {
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
       const fetchSession = async () => {
         try {
           const response = await fetch('/api/auth/session');
@@ -51,8 +58,19 @@ export default function AdminDashboard() {
     fetchDashboardStats();
   }, []);
 
+<<<<<<< HEAD
   // Check if auth is enabled
   if (typeof window !== 'undefined' && process.env.NEXT_PUBLIC_AUTH_ENABLED !== 'true') {
+=======
+  // Check if auth is enabled - moved to client-side check
+  const [authEnabled, setAuthEnabled] = useState(false);
+  
+  useEffect(() => {
+    setAuthEnabled(process.env.NEXT_PUBLIC_AUTH_ENABLED === 'true');
+  }, []);
+
+  if (!authEnabled) {
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">

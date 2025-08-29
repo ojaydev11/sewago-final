@@ -1,7 +1,10 @@
 import type { NextConfig } from 'next';
+<<<<<<< HEAD
 import createNextIntlPlugin from 'next-intl/plugin';
 
 const withNextIntl = createNextIntlPlugin('./i18n-config.ts');
+=======
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 
 const nextConfig: NextConfig = {
   // Production optimizations
@@ -9,6 +12,7 @@ const nextConfig: NextConfig = {
   compress: true,
   generateEtags: true,
   
+<<<<<<< HEAD
   // Disable prerendering for pages that use client-side hooks
   experimental: {
     optimizeCss: true,
@@ -27,11 +31,14 @@ const nextConfig: NextConfig = {
     return 'build-' + Date.now();
   },
 
+=======
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
   // Image optimization
   images: {
     domains: [
       'images.unsplash.com',
       'via.placeholder.com',
+<<<<<<< HEAD
       'localhost'
     ],
     formats: ['image/webp', 'image/avif'],
@@ -104,10 +111,24 @@ const nextConfig: NextConfig = {
       },
       // REMOVED: Self-redirect loop that was causing infinite redirects
     ];
+=======
+      'localhost',
+      's3.amazonaws.com',
+      'your-s3-bucket.s3.amazonaws.com'
+    ],
+    formats: ['image/avif', 'image/webp'],
+    minimumCacheTTL: 60,
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    dangerouslyAllowSVG: true,
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+    unoptimized: false,
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
   },
 
   // Environment variables validation
   env: {
+<<<<<<< HEAD
     CUSTOM_KEY: process.env.CUSTOM_KEY,
   },
 
@@ -140,3 +161,20 @@ const nextConfig: NextConfig = {
 };
 
 export default withNextIntl(nextConfig);
+=======
+    NEXT_PUBLIC_ENABLE_DEMOS: process.env.NEXT_PUBLIC_ENABLE_DEMOS,
+  },
+
+  // TypeScript checking enabled for build safety
+  typescript: {
+    ignoreBuildErrors: false,
+  },
+
+  // ESLint enabled for build safety
+  eslint: {
+    ignoreDuringBuilds: false,
+  },
+};
+
+export default nextConfig;
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245

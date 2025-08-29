@@ -105,7 +105,11 @@ export default function ProviderVerificationForm() {
     setFormData(prev => ({
       ...prev,
       [section]: {
+<<<<<<< HEAD
         ...prev[section],
+=======
+        ...(prev[section] as Record<string, any>),
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
         [field]: value,
       },
     }));
@@ -115,8 +119,13 @@ export default function ProviderVerificationForm() {
     setFormData(prev => ({
       ...prev,
       [section]: {
+<<<<<<< HEAD
         ...prev[section],
         [arrayField]: prev[section][arrayField as keyof any].map((item: any, i: number) =>
+=======
+        ...(prev[section] as Record<string, any>),
+        [arrayField]: (prev[section] as Record<string, any>)[arrayField].map((item: any, i: number) =>
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
           i === index ? { ...item, [field]: value } : item
         ),
       },
@@ -127,8 +136,13 @@ export default function ProviderVerificationForm() {
     setFormData(prev => ({
       ...prev,
       [section]: {
+<<<<<<< HEAD
         ...prev[section],
         [arrayField]: [...prev[section][arrayField as keyof any], template],
+=======
+        ...(prev[section] as Record<string, any>),
+        [arrayField]: [...(prev[section] as Record<string, any>)[arrayField], template],
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
       },
     }));
   };
@@ -137,8 +151,13 @@ export default function ProviderVerificationForm() {
     setFormData(prev => ({
       ...prev,
       [section]: {
+<<<<<<< HEAD
         ...prev[section],
         [arrayField]: prev[section][arrayField as keyof any].filter((_: any, i: number) => i !== index),
+=======
+        ...(prev[section] as Record<string, any>),
+        [arrayField]: (prev[section] as Record<string, any>)[arrayField].filter((_: any, i: number) => i !== index),
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
       },
     }));
   };

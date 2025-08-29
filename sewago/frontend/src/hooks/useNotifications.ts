@@ -1,6 +1,16 @@
+<<<<<<< HEAD
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useSession } from 'next-auth/react';
 import { io, Socket } from 'socket.io-client';
+=======
+'use client';
+import 'client-only';
+
+import { useState, useEffect, useCallback, useRef } from 'react';
+// Mock session hook - replace with actual backend integration
+const useSession = () => ({ data: { user: { id: 'mock-user-id', name: 'Mock User', email: 'mock@example.com' } } });
+import type { Socket } from 'socket.io-client';
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 import { useToast } from '@/components/ui/toast';
 import { isNotificationsEnabled, isPushNotificationsEnabled } from '@/lib/featureFlags';
 
@@ -55,8 +65,17 @@ export function useNotifications() {
   useEffect(() => {
     if (!session?.user?.id || !notificationsEnabled) return;
 
+<<<<<<< HEAD
     const connectSocket = () => {
       try {
+=======
+    const connectSocket = async () => {
+      // Skip during SSR or build
+      if (typeof window === 'undefined') return;
+      
+      try {
+        const { io } = await import('socket.io-client');
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
         socketRef.current = io(process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000', {
           path: '/ws/socket.io',
           query: { userId: session.user.id },

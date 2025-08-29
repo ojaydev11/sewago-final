@@ -1,5 +1,12 @@
+<<<<<<< HEAD
 "use client";
 import { ReactNode, createContext, useContext, useEffect, useState } from "react";
+=======
+'use client';
+import 'client-only';
+
+import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 
 type LiteContextType = {
   lite: boolean;

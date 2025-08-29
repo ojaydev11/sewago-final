@@ -1,5 +1,8 @@
+<<<<<<< HEAD
 import { Types } from 'mongoose';
 
+=======
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 // Mock data types
 export interface MockUser {
   _id: string;
@@ -60,7 +63,11 @@ class MockStore {
     // Seed some mock services
     this.services = [
       {
+<<<<<<< HEAD
         _id: new Types.ObjectId().toString(),
+=======
+        _id: this.generateId(),
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
         name: 'House Cleaning',
         slug: 'house-cleaning',
         description: 'Professional house cleaning services',
@@ -69,7 +76,11 @@ class MockStore {
         createdAt: new Date(),
       },
       {
+<<<<<<< HEAD
         _id: new Types.ObjectId().toString(),
+=======
+        _id: this.generateId(),
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
         name: 'Electrical Repair',
         slug: 'electrical-repair',
         description: 'Expert electrical repair and maintenance',
@@ -78,7 +89,11 @@ class MockStore {
         createdAt: new Date(),
       },
       {
+<<<<<<< HEAD
         _id: new Types.ObjectId().toString(),
+=======
+        _id: this.generateId(),
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
         name: 'Gardening',
         slug: 'gardening',
         description: 'Landscaping and garden maintenance',
@@ -91,7 +106,11 @@ class MockStore {
     // Seed a mock user
     this.users = [
       {
+<<<<<<< HEAD
         _id: new Types.ObjectId().toString(),
+=======
+        _id: this.generateId(),
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
         name: 'Demo User',
         email: 'demo@example.com',
         passwordHash: '$2b$10$demo.hash.for.testing',
@@ -101,6 +120,13 @@ class MockStore {
     ];
   }
 
+<<<<<<< HEAD
+=======
+  private generateId(): string {
+    return Math.random().toString(36).substr(2, 9);
+  }
+
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
   // User methods
   async findOne(filter: any): Promise<MockUser | null> {
     if (filter.email) {
@@ -112,9 +138,15 @@ class MockStore {
     return null;
   }
 
+<<<<<<< HEAD
   async create(data: Omit<MockUser, '_id' | 'createdAt'>): Promise<MockUser> {
     const user: MockUser = {
       _id: new Types.ObjectId().toString(),
+=======
+  async createUser(data: Omit<MockUser, '_id' | 'createdAt'>): Promise<MockUser> {
+    const user: MockUser = {
+      _id: this.generateId(),
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
       ...data,
       createdAt: new Date(),
     };
@@ -140,7 +172,11 @@ class MockStore {
   // Booking methods
   async createBooking(data: Omit<MockBooking, '_id' | 'createdAt'>): Promise<MockBooking> {
     const booking: MockBooking = {
+<<<<<<< HEAD
       _id: new Types.ObjectId().toString(),
+=======
+      _id: this.generateId(),
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
       ...data,
       createdAt: new Date(),
     };
@@ -163,16 +199,26 @@ class MockStore {
   }
 
   // Provider profile methods
+<<<<<<< HEAD
   async findOne(filter: any): Promise<MockProviderProfile | null> {
+=======
+  async findProviderProfile(filter: any): Promise<MockProviderProfile | null> {
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
     if (filter.userId) {
       return this.providerProfiles.find(p => p.userId === filter.userId) || null;
     }
     return null;
   }
 
+<<<<<<< HEAD
   async create(data: Omit<MockProviderProfile, '_id'>): Promise<MockProviderProfile> {
     const profile: MockProviderProfile = {
       _id: new Types.ObjectId().toString(),
+=======
+  async createProviderProfile(data: Omit<MockProviderProfile, '_id'>): Promise<MockProviderProfile> {
+    const profile: MockProviderProfile = {
+      _id: this.generateId(),
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
       ...data,
     };
     this.providerProfiles.push(profile);

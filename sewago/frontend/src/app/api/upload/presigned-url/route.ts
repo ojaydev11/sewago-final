@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
@@ -46,5 +47,18 @@ export async function POST(request: NextRequest) {
       { error: 'Internal server error' },
       { status: 500 }
     );
+=======
+import 'server-only';
+import { NextRequest, NextResponse } from 'next/server';
+
+export const dynamic = 'force-dynamic';
+
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
+    return NextResponse.json({ success: true, data: { url: 'https://example.com', body } }, { status: 200, headers: { 'Cache-Control': 'no-store' } });
+  } catch (error) {
+    return NextResponse.json({ success: false, message: 'Failed to get presigned url' }, { status: 500, headers: { 'Cache-Control': 'no-store' } });
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
   }
 }

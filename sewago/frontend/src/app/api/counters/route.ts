@@ -1,9 +1,17 @@
+<<<<<<< HEAD
+=======
+import 'server-only';
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 import { NextRequest, NextResponse } from 'next/server';
 
 // Force dynamic rendering to prevent build-time issues
 export const dynamic = 'force-dynamic';
 
+<<<<<<< HEAD
 export async function GET(request: NextRequest) {
+=======
+export async function GET() {
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
   try {
     // Mock data for development/testing
     const mockCounters = {
@@ -20,7 +28,13 @@ export async function GET(request: NextRequest) {
     if (hour >= 9 && hour <= 17) {
       mockCounters.jobsCompleted += Math.floor(Math.random() * 2000);
       mockCounters.avgResponseM = Math.max(10, mockCounters.avgResponseM - 5);
+<<<<<<< HEAD
       mockCounters.satisfaction = Math.min(100, (parseFloat(mockCounters.satisfaction) + 2).toFixed(1));
+=======
+      // Ensure satisfaction remains a string by converting the calculation result
+      const newSatisfaction = Math.min(100, parseFloat(mockCounters.satisfaction) + 2);
+      mockCounters.satisfaction = newSatisfaction.toFixed(1);
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
     }
 
     return NextResponse.json({

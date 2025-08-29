@@ -1,7 +1,12 @@
 
 'use client';
 
+<<<<<<< HEAD
 import { useState, useEffect } from 'react';
+=======
+import React, { useState, useEffect, useCallback } from 'react';
+import { safeDownloadFile } from '@/hooks/useClientOnly';
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 
 // Force dynamic rendering to prevent build-time pre-rendering
 export const dynamic = 'force-dynamic';
@@ -13,11 +18,15 @@ export default function AdminAnalyticsPage() {
   const [period, setPeriod] = useState<'daily' | 'weekly' | 'monthly'>('weekly');
   const [loading, setLoading] = useState(true);
 
+<<<<<<< HEAD
   useEffect(() => {
     loadAnalytics();
   }, [period]);
 
   const loadAnalytics = async () => {
+=======
+  const loadAnalytics = useCallback(async () => {
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
     setLoading(true);
     try {
       const data = await analyticsService.calculateKPIs(period);
@@ -27,7 +36,15 @@ export default function AdminAnalyticsPage() {
     } finally {
       setLoading(false);
     }
+<<<<<<< HEAD
   };
+=======
+  }, [period]);
+
+  useEffect(() => {
+    loadAnalytics();
+  }, [loadAnalytics]);
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 
   const exportData = async (type: string) => {
     try {
@@ -38,6 +55,7 @@ export default function AdminAnalyticsPage() {
         new Date()
       );
       
+<<<<<<< HEAD
       const blob = new Blob([data], { type: 'text/csv' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -47,6 +65,11 @@ export default function AdminAnalyticsPage() {
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
+=======
+      // Use safe download utility
+      const filename = `${type}-export-${new Date().toISOString().split('T')[0]}.csv`;
+      safeDownloadFile(data, filename, 'text/csv');
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
     } catch (error) {
       console.error('Export failed:', error);
     }

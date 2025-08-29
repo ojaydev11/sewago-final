@@ -22,6 +22,7 @@ export interface AIResponse {
 
 // OpenAI Provider (default)
 class OpenAIProvider implements AIProvider {
+<<<<<<< HEAD
   private apiKey: string;
   private model: string;
   
@@ -63,10 +64,32 @@ class OpenAIProvider implements AIProvider {
           top_p: 1,
           frequency_penalty: 0,
           presence_penalty: 0
+=======
+  private model: string;
+  
+  constructor() {
+    this.model = 'gpt-3.5-turbo';
+  }
+  
+  async generateResponse(prompt: string, options: AIOptions = {}): Promise<string> {
+    try {
+      const response = await fetch('/api/ai', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          prompt,
+          options: {
+            ...options,
+            systemPrompt: options.systemPrompt || this.getDefaultSystemPrompt(options.locale)
+          }
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
         })
       });
       
       if (!response.ok) {
+<<<<<<< HEAD
         throw new Error(`OpenAI API error: ${response.status}`);
       }
       
@@ -75,11 +98,22 @@ class OpenAIProvider implements AIProvider {
       
     } catch (error) {
       console.error('OpenAI API error:', error);
+=======
+        throw new Error(`AI API error: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      return data.response || 'No response generated';
+      
+    } catch (error) {
+      console.error('AI API error:', error);
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
       return this.generateFallbackResponse(prompt, options);
     }
   }
   
   async moderateContent(content: string): Promise<boolean> {
+<<<<<<< HEAD
     if (!this.apiKey) {
       return true; // Allow all content if no API key
     }
@@ -93,6 +127,16 @@ class OpenAIProvider implements AIProvider {
         },
         body: JSON.stringify({
           input: content
+=======
+    try {
+      const response = await fetch('/api/ai/moderate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          content
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
         })
       });
       
@@ -101,6 +145,7 @@ class OpenAIProvider implements AIProvider {
       }
       
       const data = await response.json();
+<<<<<<< HEAD
       const results = data.results[0];
       
       // Check if content is flagged
@@ -108,6 +153,12 @@ class OpenAIProvider implements AIProvider {
       
     } catch (error) {
       console.error('OpenAI moderation error:', error);
+=======
+      return data.safe;
+      
+    } catch (error) {
+      console.error('AI moderation error:', error);
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
       return true; // Allow content if moderation fails
     }
   }

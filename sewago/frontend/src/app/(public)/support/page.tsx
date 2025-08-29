@@ -2,6 +2,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+<<<<<<< HEAD
 import { useSession } from 'next-auth/react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -9,6 +10,12 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+=======
+import { useClientOnly } from '@/hooks/useClientOnly';
+// Mock session hook - replace with actual backend integration
+const useSession = () => ({ data: { user: { id: 'mock-user-id', name: 'Mock User', email: 'mock@example.com' } } });
+import { Button } from '@/components/ui/button';
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 import { Badge } from '@/components/ui/badge';
 import { 
   MessageCircle,
@@ -18,8 +25,12 @@ import {
   Clock,
   CheckCircle,
   AlertCircle,
+<<<<<<< HEAD
   Loader2,
   ExclamationCircleIcon
+=======
+  Loader2
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 } from 'lucide-react';
 
 // Force dynamic rendering to prevent build-time prerendering
@@ -81,10 +92,18 @@ export default function SupportCenter() {
   const [searchTerm, setSearchTerm] = useState('');
   const [showContactForm, setShowContactForm] = useState(false);
   const [session, setSession] = useState<any>(null);
+<<<<<<< HEAD
 
   useEffect(() => {
     // Only fetch session if auth is enabled
     if (typeof window !== 'undefined' && process.env.NEXT_PUBLIC_AUTH_ENABLED === 'true') {
+=======
+  const isClient = useClientOnly();
+
+  useEffect(() => {
+    // Only fetch session if auth is enabled and on client
+    if (isClient && process.env.NEXT_PUBLIC_AUTH_ENABLED === 'true') {
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
       const fetchSession = async () => {
         try {
           const response = await fetch('/api/auth/session');
@@ -98,9 +117,15 @@ export default function SupportCenter() {
       };
       fetchSession();
     }
+<<<<<<< HEAD
   }, []);
 
   if (!FEATURE_FLAGS.SUPPORT_CENTER_ENABLED) {
+=======
+  }, [isClient]);
+
+  if (false) { // Support center is always enabled for now
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
@@ -111,8 +136,15 @@ export default function SupportCenter() {
     );
   }
 
+<<<<<<< HEAD
   // Check if auth is enabled
   if (typeof window !== 'undefined' && !process.env.NEXT_PUBLIC_AUTH_ENABLED) {
+=======
+  // Check if auth is enabled (only on client side)
+  const isAuthEnabled = isClient ? process.env.NEXT_PUBLIC_AUTH_ENABLED === 'true' : true;
+  
+  if (isClient && !isAuthEnabled) {
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">

@@ -3,7 +3,13 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Menu, User, LogOut } from 'lucide-react';
+<<<<<<< HEAD
 import { useSession, signOut } from 'next-auth/react';
+=======
+// Mock auth functions - replace with actual backend integration
+const useSession = () => ({ data: { user: { name: 'Mock User', email: 'mock@example.com' } } });
+const signOut = async (options: any) => {};
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 import { useRouter } from 'next/navigation';
 
 export default function DashboardHeader() {
@@ -11,7 +17,12 @@ export default function DashboardHeader() {
   const router = useRouter();
 
   const handleSignOut = async () => {
+<<<<<<< HEAD
     await signOut({ redirect: false });
+=======
+    // Mock sign out - replace with actual backend integration
+    console.log('Sign out attempt');
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
     router.push('/');
   };
 

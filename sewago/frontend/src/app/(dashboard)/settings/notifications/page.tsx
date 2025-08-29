@@ -1,9 +1,14 @@
+<<<<<<< HEAD
 import { getServerSession } from 'next-auth';
+=======
+'use client';
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 
 // Force dynamic rendering to prevent build-time issues
 export const dynamic = "force-dynamic";
 
 import { redirect } from 'next/navigation';
+<<<<<<< HEAD
 import { authOptions } from '@/lib/auth';
 import { NotificationSettings } from '@/components/NotificationSettings';
 
@@ -13,6 +18,13 @@ export default async function NotificationSettingsPage() {
   if (!session?.user) {
     redirect('/auth/signin');
   }
+=======
+import { NotificationSettings } from '@/components/NotificationSettings';
+
+export default function NotificationSettingsPage() {
+  // Notification settings are disabled in frontend-only mode
+  redirect('/dashboard');
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">

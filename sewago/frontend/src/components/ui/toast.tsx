@@ -45,7 +45,11 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     setToasts(prev => [...prev, newToast]);
 
     // Auto-remove toast after duration
+<<<<<<< HEAD
     if (newToast.duration > 0) {
+=======
+    if (newToast.duration && newToast.duration > 0) {
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
       setTimeout(() => {
         removeToast(id);
       }, newToast.duration);

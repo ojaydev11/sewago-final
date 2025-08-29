@@ -1,9 +1,51 @@
 {
+<<<<<<< HEAD
+=======
+  "common": {
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "close": "Close",
+    "yes": "Yes",
+    "no": "No",
+    "ok": "OK",
+    "error": "Error",
+    "success": "Success",
+    "warning": "Warning",
+    "info": "Information",
+    "refresh": "Refresh",
+    "retry": "Retry",
+    "bookNow": "Book Now",
+    "viewMore": "View More",
+    "showLess": "Show Less"
+  },
+  "navigation": {
+    "home": "Home",
+    "services": "Services",
+    "about": "About",
+    "contact": "Contact",
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout",
+    "dashboard": "Dashboard",
+    "profile": "Profile"
+  },
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
   "nav": {
     "home": "Home",
     "services": "Services",
     "about": "About",
     "contact": "Contact",
+<<<<<<< HEAD
     "faq": "FAQ",
     "pricing": "Pricing"
   },
@@ -98,5 +140,756 @@
     "services": "Services",
     "profile": "Profile",
     "settings": "Settings"
+=======
+    "faq": "FAQs",
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout",
+    "dashboard": "Dashboard",
+    "profile": "Profile"
+  },
+  "auth": {
+    "login": {
+      "title": "Login to SewaGo",
+      "email": "Email",
+      "password": "Password",
+      "forgotPassword": "Forgot Password?",
+      "noAccount": "Don't have an account?",
+      "signUp": "Sign Up"
+    },
+    "register": {
+      "title": "Create SewaGo Account",
+      "name": "Full Name",
+      "email": "Email",
+      "phone": "Phone Number",
+      "password": "Password",
+      "confirmPassword": "Confirm Password",
+      "agreeTerms": "I agree to the Terms of Service and Privacy Policy",
+      "hasAccount": "Already have an account?",
+      "signIn": "Sign In",
+      "userType": "Account Type",
+      "customer": "Customer",
+      "provider": "Service Provider"
+    },
+    "errors": {
+      "invalidCredentials": "Invalid email or password",
+      "emailExists": "Email already exists",
+      "phoneExists": "Phone number already exists",
+      "passwordsNotMatch": "Passwords do not match",
+      "termsRequired": "You must agree to the terms and conditions"
+    }
+  },
+  "services": {
+    "title": "Our Services",
+    "searchPlaceholder": "Search for services...",
+    "categories": {
+      "plumbing": "Plumbing",
+      "electrical": "Electrical",
+      "cleaning": "Cleaning",
+      "painting": "Painting",
+      "carpentry": "Carpentry",
+      "appliance": "Appliance Repair",
+      "gardening": "Gardening",
+      "moving": "Moving & Packing"
+    },
+    "bookNow": "Book Now",
+    "startingFrom": "Starting from",
+    "perHour": "per hour",
+    "viewDetails": "View Details",
+    "noServices": "No services found",
+    "rating": "Rating",
+    "reviews": "Reviews",
+    "by": "by"
+  },
+  "gamification": {
+    "dashboard": {
+      "title": "Rewards Dashboard",
+      "greeting": {
+        "morning": "Good Morning",
+        "afternoon": "Good Afternoon",
+        "evening": "Good Evening"
+      },
+      "motivational": {
+        "start": "Start your reward journey!",
+        "progress": "Great start! Keep going!",
+        "excellent": "Excellent! You're on fire!",
+        "champion": "Amazing! You're a champion!"
+      },
+      "tabs": {
+        "overview": "Overview",
+        "points": "Points",
+        "badges": "Badges",
+        "streaks": "Streaks",
+        "challenges": "Challenges"
+      }
+    },
+    "points": {
+      "title": "Loyalty Points",
+      "balance": "Available Points",
+      "total": "Total",
+      "lifetime": "Lifetime",
+      "description": "Earn points by using services and unlock rewards",
+      "history": "History",
+      "transactions": "Recent Transactions",
+      "noTransactions": "No transactions found",
+      "redeem": "Redeem",
+      "earnMore": "Earn More",
+      "nextMilestone": "Next milestone",
+      "pointsLeft": "points to go",
+      "equivalent": "equivalent value"
+    },
+    "badges": {
+      "title": "Badge Collection",
+      "description": "Unlock achievements and showcase your expertise",
+      "unlocked": "Unlocked",
+      "remaining": "Remaining",
+      "complete": "Complete",
+      "all": "All",
+      "locked": "Locked",
+      "progress": "Progress",
+      "unlockedOn": "Unlocked:",
+      "noBadges": "No badges found",
+      "startEarning": "Start using services to earn your first badge!",
+      "types": {
+        "REGULAR_CUSTOMER": "Regular Customer",
+        "TOP_REVIEWER": "Top Reviewer",
+        "EARLY_ADOPTER": "Early Adopter",
+        "SERVICE_EXPERT": "Service Expert",
+        "LOYAL_MEMBER": "Loyal Member",
+        "STREAK_MASTER": "Streak Master",
+        "CHALLENGE_CHAMPION": "Challenge Champion",
+        "REFERRAL_HERO": "Referral Hero"
+      },
+      "descriptions": {
+        "REGULAR_CUSTOMER": "Complete 5 service bookings",
+        "TOP_REVIEWER": "Write 20 service reviews",
+        "EARLY_ADOPTER": "One of our first users",
+        "SERVICE_EXPERT": "Book 10 services in same category",
+        "LOYAL_MEMBER": "Active for 1+ years",
+        "STREAK_MASTER": "Maintain 4+ week streak",
+        "CHALLENGE_CHAMPION": "Complete seasonal challenge",
+        "REFERRAL_HERO": "Refer 5+ successful users"
+      }
+    },
+    "streaks": {
+      "title": "Activity Streaks",
+      "description": "Maintain consistent activity to earn bonus rewards",
+      "bestStreak": "Best Streak",
+      "longestEver": "Longest Ever",
+      "bonusMultiplier": "Bonus Multiplier",
+      "current": "Current",
+      "status": {
+        "active": "Active",
+        "warning": "At Risk",
+        "expired": "Expired",
+        "inactive": "Inactive"
+      },
+      "nextReward": "Next reward",
+      "lastActivity": "Last activity:",
+      "never": "Never",
+      "howToMaintain": "How to maintain:",
+      "noStreaks": "No streaks yet",
+      "startFirst": "Start your first streak by using services regularly!",
+      "types": {
+        "WEEKLY_BOOKING": "Weekly Booking Streak",
+        "MONTHLY_ACTIVITY": "Monthly Activity Streak",
+        "REVIEW_STREAK": "Review Streak"
+      },
+      "descriptions": {
+        "WEEKLY_BOOKING": "Book a service every week",
+        "MONTHLY_ACTIVITY": "Stay active every month",
+        "REVIEW_STREAK": "Write reviews consistently"
+      }
+    },
+    "challenges": {
+      "title": "Seasonal Challenges",
+      "description": "Complete special challenges for extra rewards",
+      "active": "Active",
+      "completed": "Completed",
+      "join": "Join Challenge",
+      "joinChallenge": "Join Challenge",
+      "claimReward": "Claim Reward",
+      "progress": "Progress",
+      "rewards": "Rewards",
+      "points": "points",
+      "badge": "Badge",
+      "daysLeft": "days left",
+      "dayLeft": "day left",
+      "ended": "Ended",
+      "joined": "Joined successfully!",
+      "claimed": "Reward claimed successfully!",
+      "failedJoin": "Failed to join challenge",
+      "failedClaim": "Failed to claim reward",
+      "noChallenges": "No Active Challenges",
+      "comingSoon": "New challenges coming soon!",
+      "status": {
+        "available": "Available",
+        "active": "Active",
+        "completed": "Completed",
+        "rewardClaimed": "Reward Claimed"
+      }
+    },
+    "store": {
+      "title": "Points Store",
+      "description": "Convert your points into valuable discounts",
+      "availablePoints": "Available Points",
+      "redeem": "Redeem",
+      "history": "History",
+      "serviceAmount": "Service Amount (Optional)",
+      "enterAmount": "Enter amount in NPR",
+      "accurateDiscount": "Enter service amount for accurate discount calculation",
+      "discount": "discount",
+      "maxDiscount": "Max discount:",
+      "pointsNeeded": "points needed",
+      "redeemNow": "Redeem Now",
+      "redeemed": "Successfully redeemed {points} points!",
+      "failed": "Failed to redeem points",
+      "noRedemptions": "No redemptions yet",
+      "redeemFirst": "Redeem your first discount!",
+      "status": {
+        "Applied": "Applied",
+        "Pending": "Pending",
+        "Expired": "Expired",
+        "Cancelled": "Cancelled"
+      },
+      "tiers": {
+        "discount_5": "5% Discount",
+        "discount_10": "10% Discount",
+        "discount_15": "15% Discount",
+        "discount_20": "20% Discount",
+        "free_service": "Free Service (up to NPR 50)"
+      }
+    },
+    "achievements": {
+      "badgeUnlocked": "Badge Unlocked!",
+      "pointsEarned": "Points Earned!",
+      "streakAchieved": "Streak Achieved!",
+      "challengeComplete": "Challenge Complete!",
+      "levelUp": "Level Up!",
+      "achievement": "Achievement!",
+      "claimReward": "Claim Reward",
+      "awesome": "Awesome!",
+      "rareAchievement": "🎉 This is a rare achievement! Congratulations!",
+      "pointsMilestone": "Points Milestone!",
+      "earnedPoints": "You earned {points} points!",
+      "streakMilestone": "Streak Milestone!",
+      "streakCount": "{count} {type} streak!"
+    },
+    "notifications": {
+      "pointsAwarded": "You earned {points} points!",
+      "badgeUnlocked": "New badge unlocked: {badge}!",
+      "streakContinued": "Streak continued! Bonus: {multiplier}x",
+      "challengeJoined": "Successfully joined challenge!",
+      "challengeCompleted": "Challenge completed! Claim your reward!",
+      "rewardClaimed": "Reward claimed successfully!"
+    }
+  },
+  "booking": {
+    "title": "Book Service",
+    "selectDate": "Select Date",
+    "selectTime": "Select Time",
+    "address": "Service Address",
+    "notes": "Additional Notes",
+    "optional": "Optional",
+    "total": "Total",
+    "proceedToPayment": "Proceed to Payment",
+    "confirmBooking": "Confirm Booking",
+    "bookingConfirmed": "Booking Confirmed!",
+    "paymentMethod": "Payment Method",
+    "esewa": "eSewa",
+    "khalti": "Khalti",
+    "cash": "Cash on Service",
+    "status": {
+      "pending": "Pending",
+      "confirmed": "Confirmed",
+      "inProgress": "In Progress",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    }
+  },
+  "dashboard": {
+    "welcome": "Welcome back",
+    "myBookings": "My Bookings",
+    "myServices": "My Services",
+    "earnings": "Earnings",
+    "reviews": "Reviews",
+    "profile": "Profile Settings",
+    "noBookings": "No bookings yet",
+    "noServices": "No services added yet",
+    "addService": "Add New Service"
+  },
+  "payment": {
+    "success": {
+      "title": "Payment Successful!",
+      "message": "Your payment has been processed successfully. Your service provider will be notified shortly.",
+      "bookingReference": "Booking Reference",
+      "viewBookings": "View My Bookings",
+      "bookAnother": "Book Another Service"
+    },
+    "failed": {
+      "title": "Payment Failed",
+      "message": "Your payment could not be completed. Please try again.",
+      "tryAgain": "Try Payment Again",
+      "contactSupport": "Contact Support",
+      "backHome": "Back to Home",
+      "refundNotice": "If money was deducted from your account, it will be automatically refunded within 5-7 business days."
+    }
+  },
+  "currency": {
+    "npr": "NPR",
+    "format": "Rs {amount}"
+  },
+  "footer": {
+    "description": "SewaGo is Nepal's trusted platform for home services. Get quality services from verified professionals.",
+    "quickLinks": "Quick Links",
+    "services": "Services",
+    "support": "Support",
+    "legal": "Legal",
+    "followUs": "Follow Us",
+    "allRightsReserved": "All rights reserved"
+  },
+  "contact": {
+    "title": "Contact Us",
+    "phone": "Phone",
+    "email": "Email",
+    "chat": "Live Chat",
+    "available": "Available 24/7"
+  },
+  "errors": {
+    "404": {
+      "title": "Page Not Found",
+      "message": "The page you're looking for doesn't exist or has been moved.",
+      "goHome": "Go Home",
+      "browseServices": "Browse Services"
+    },
+    "500": {
+      "title": "Something went wrong!",
+      "message": "We encountered an unexpected error. Our team has been notified and is working to fix it.",
+      "tryAgain": "Try Again",
+      "goHome": "Go Home"
+    }
+  },
+  "gamification": {
+    "points": {
+      "title": "Points",
+      "balance": "Points Balance",
+      "available": "Available Points",
+      "total": "Total Points",
+      "lifetime": "Lifetime Points",
+      "earned": "Earned",
+      "redeemed": "Redeemed",
+      "earning": {
+        "booking": "Points for booking",
+        "review": "Points for review",
+        "referral": "Points for referral",
+        "challenge": "Points for challenge"
+      },
+      "redemption": {
+        "title": "Redeem Points",
+        "discount": "Use for discount",
+        "minPoints": "Minimum points",
+        "maxDiscount": "Maximum discount",
+        "confirm": "Redeem",
+        "success": "Points redeemed successfully!"
+      }
+    },
+    "badges": {
+      "title": "Badges",
+      "unlocked": "Unlocked",
+      "locked": "Locked",
+      "progress": "Progress",
+      "earned": "Earned",
+      "types": {
+        "regularCustomer": {
+          "name": "Regular Customer",
+          "description": "Complete 5 or more bookings"
+        },
+        "topReviewer": {
+          "name": "Top Reviewer",
+          "description": "Write 20 or more reviews"
+        },
+        "earlyAdopter": {
+          "name": "Early Adopter",
+          "description": "Join in the first month"
+        },
+        "serviceExpert": {
+          "name": "Service Expert",
+          "description": "Book 10 or more services in the same category"
+        },
+        "loyalMember": {
+          "name": "Loyal Member",
+          "description": "Stay active for 1 year or more"
+        },
+        "streakMaster": {
+          "name": "Streak Master",
+          "description": "Maintain a 4+ week streak"
+        },
+        "challengeChampion": {
+          "name": "Challenge Champion",
+          "description": "Complete a seasonal challenge"
+        },
+        "referralHero": {
+          "name": "Referral Hero",
+          "description": "Make 5 or more successful referrals"
+        }
+      }
+    },
+    "streaks": {
+      "title": "Streaks",
+      "current": "Current Streak",
+      "longest": "Longest Streak",
+      "active": "Active",
+      "broken": "Broken",
+      "days": "days",
+      "weeks": "weeks",
+      "types": {
+        "weeklyBooking": {
+          "name": "Weekly Booking",
+          "description": "Book at least one service every week"
+        },
+        "monthlyActivity": {
+          "name": "Monthly Activity",
+          "description": "Stay active every month"
+        },
+        "reviewStreak": {
+          "name": "Review Streak",
+          "description": "Write consecutive reviews"
+        }
+      },
+      "bonusMultiplier": "Bonus Multiplier",
+      "keepGoing": "Keep going!"
+    },
+    "challenges": {
+      "title": "Challenges",
+      "seasonal": "Seasonal Challenges",
+      "active": "Active Challenges",
+      "completed": "Completed Challenges",
+      "join": "Join",
+      "progress": "Progress",
+      "reward": "Reward",
+      "timeLeft": "Time Left",
+      "daysLeft": "days left",
+      "hoursLeft": "hours left",
+      "completed": "Completed!",
+      "claimReward": "Claim Reward",
+      "festivals": {
+        "dashain": {
+          "name": "Dashain Cleaning Challenge",
+          "description": "Deep clean your home in preparation for Dashain",
+          "greeting": "Happy Dashain! Time to make your home sparkle."
+        },
+        "tihar": {
+          "name": "Tihar Decoration Challenge",
+          "description": "Decorate your home for Tihar festival",
+          "greeting": "Happy Tihar! Get ready for the festival of lights."
+        },
+        "newYear": {
+          "name": "New Year Organization Challenge",
+          "description": "Organize your home for a fresh start",
+          "greeting": "Happy New Year! Let's organize for a fresh beginning."
+        },
+        "summer": {
+          "name": "Summer Maintenance Challenge",
+          "description": "Prepare your home for summer season",
+          "greeting": "Get ready for summer season!"
+        },
+        "monsoon": {
+          "name": "Monsoon Preparation Challenge",
+          "description": "Prepare your home for monsoon season",
+          "greeting": "Get ready for monsoon season!"
+        }
+      }
+    },
+    "dashboard": {
+      "title": "My Gamification",
+      "overview": "Overview",
+      "pointsSummary": "Points Summary",
+      "badgeProgress": "Badge Progress",
+      "activeStreaks": "Active Streaks",
+      "availableChallenges": "Available Challenges",
+      "recentAchievements": "Recent Achievements",
+      "settings": "Gamification Settings"
+    },
+    "notifications": {
+      "pointsEarned": "You earned {points} points!",
+      "badgeUnlocked": "New badge unlocked: {badgeName}",
+      "streakMilestone": "Congratulations! You've reached a {streak} day streak.",
+      "challengeCompleted": "Challenge completed: {challengeName}",
+      "streakWarning": "Warning! Your streak is about to break.",
+      "challengeEnding": "Challenge {challengeName} is ending soon."
+    },
+    "settings": {
+      "title": "Gamification Settings",
+      "notifications": "Enable notifications",
+      "badgeProgress": "Show badge progress",
+      "streakCounter": "Show streak counter",
+      "pointsBalance": "Show points balance",
+      "challengeReminders": "Challenge reminders",
+      "save": "Save Settings",
+      "saved": "Settings saved!"
+    }
+  },
+  "personalization": {
+    "dashboard": {
+      "title": "My Dashboard",
+      "welcome": "Welcome, {name}!",
+      "memberSince": "Member since {date}",
+      "refresh": "Refresh",
+      "retry": "Try Again",
+      "quickActions": "Quick Actions",
+      "recommendedServices": "Recommended for You",
+      "serviceRecommendationsDesc": "Services curated based on your preferences and activity",
+      "recommendedProviders": "Top Providers",
+      "personalizedOffers": "Special Offers",
+      "usageInsights": "Your Usage Insights",
+      "upcomingBookings": "Upcoming Bookings",
+      "noUpcomingBookings": "No upcoming bookings",
+      "goals": "Your Goals",
+      "recentActivity": "Recent Activity"
+    },
+    "smartGrid": {
+      "title": "Smart Recommendations",
+      "description": "Showing {count} personalized recommendations using {algorithm} algorithm",
+      "searchPlaceholder": "Search services...",
+      "noResults": "No recommendations found",
+      "noResultsHint": "Try adjusting your filters or search terms"
+    },
+    "carousel": {
+      "title": {
+        "services": "Recommended Services",
+        "providers": "Top Providers",
+        "offers": "Special Offers",
+        "mixed": "Personalized for You"
+      },
+      "description": {
+        "services": "Services tailored to your preferences ({count} available)",
+        "providers": "Highly rated providers in your area ({count} available)",
+        "offers": "Exclusive offers just for you ({count} available)",
+        "mixed": "A mix of services, providers, and offers ({count} items)"
+      },
+      "noRecommendations": "No recommendations available at the moment"
+    },
+    "preferences": {
+      "title": "Your Preferences",
+      "categories": "Preferred Categories",
+      "timeSlots": "Preferred Time Slots",
+      "budget": "Budget Range",
+      "location": "Location Preferences",
+      "notifications": "Notification Settings",
+      "language": "Language Preference",
+      "cultural": "Cultural Preferences",
+      "save": "Save Preferences",
+      "saved": "Preferences saved successfully!",
+      "error": "Failed to save preferences"
+    },
+    "onboarding": {
+      "welcome": "Welcome to SewaGo!",
+      "subtitle": "Let's personalize your experience",
+      "step1": {
+        "title": "What services interest you?",
+        "description": "Select the services you're most likely to need"
+      },
+      "step2": {
+        "title": "When do you prefer services?",
+        "description": "Choose your preferred booking times"
+      },
+      "step3": {
+        "title": "What's your budget range?",
+        "description": "Help us show you appropriate options"
+      },
+      "step4": {
+        "title": "Any cultural preferences?",
+        "description": "We can customize recommendations for festivals and traditions"
+      },
+      "complete": "Complete Setup",
+      "skip": "Skip for now"
+    },
+    "insights": {
+      "title": "Your Service Insights",
+      "totalBookings": "Total Bookings",
+      "totalSpent": "Total Spent",
+      "favoriteCategories": "Favorite Categories",
+      "topProviders": "Most Used Providers",
+      "timePatterns": "Booking Patterns",
+      "savingsAchieved": "Savings Achieved",
+      "comparison": {
+        "above": "above average",
+        "below": "below average",
+        "similar": "similar to average"
+      }
+    },
+    "offers": {
+      "personalizedFor": "Personalized for you",
+      "validUntil": "Valid until {date}",
+      "claimOffer": "Claim Offer",
+      "termsApply": "Terms and conditions apply",
+      "limitedTime": "Limited time offer",
+      "festivalSpecial": "{festival} Special"
+    },
+    "scheduling": {
+      "smartSuggestions": "Smart Scheduling",
+      "bestTimes": "Best times for you",
+      "basedOnHistory": "Based on your booking history",
+      "priceOptimized": "Price optimized",
+      "weatherConsidered": "Weather considered",
+      "providerAvailable": "Provider available",
+      "potentialSavings": "Potential savings: NPR {amount}"
+    },
+    "location": {
+      "nearYou": "Popular near you",
+      "trending": "Trending in {area}",
+      "peakTimes": "Peak booking times",
+      "averagePricing": "Average pricing",
+      "culturalEvents": "Upcoming cultural events"
+    },
+    "feedback": {
+      "helpful": "Was this helpful?",
+      "like": "Like",
+      "dislike": "Dislike",
+      "improve": "How can we improve?",
+      "submit": "Submit Feedback"
+    },
+    "algorithms": {
+      "hybrid": "Smart Mix",
+      "collaborative": "Similar Users",
+      "content": "Your Preferences",
+      "location": "Nearby Services",
+      "seasonal": "Trending Now"
+    }
+  },
+  "subscription": {
+    "dashboard": "Subscription Dashboard",
+    "currentPlan": "Current Plan",
+    "upgradePlan": "Upgrade Plan",
+    "manageBilling": "Manage Billing",
+    "familyPlan": "Family Plan",
+    "benefits": "Benefits",
+    "usage": "Usage",
+    "billing": "Billing",
+    "plans": "Plans",
+    "free": "Free",
+    "plus": "Plus",
+    "pro": "Pro",
+    "monthly": "Monthly",
+    "yearly": "Yearly",
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "cancelled": "Cancelled",
+      "expired": "Expired",
+      "pending": "Pending"
+    },
+    "tiers": {
+      "free": {
+        "name": "SewaGo Free",
+        "description": "Perfect for getting started",
+        "price": "Free"
+      },
+      "plus": {
+        "name": "SewaGo Plus",
+        "description": "Enhanced features for regular users",
+        "price": "NPR 299/month"
+      },
+      "pro": {
+        "name": "SewaGo Pro",
+        "description": "Premium experience for power users",
+        "price": "NPR 599/month"
+      }
+    },
+    "features": {
+      "standardBooking": "Standard booking experience",
+      "basicSearch": "Basic search functionality",
+      "basicSupport": "Basic customer support",
+      "discount15": "15% discount on all services",
+      "discount25": "25% discount on all services",
+      "credits100": "NPR 100 monthly service credits",
+      "credits250": "NPR 250 monthly service credits",
+      "prioritySupport": "Priority customer support",
+      "premiumSupport": "Premium 24/7 support",
+      "advancedBooking": "Advanced booking scheduling",
+      "seasonalDeals": "Exclusive seasonal deals",
+      "unlimitedBookings": "Unlimited service bookings",
+      "aiRecommendations": "Advanced AI recommendations",
+      "serviceBundle": "Service bundling with extra discounts",
+      "serviceGuarantee": "Premium service guarantees & insurance",
+      "earlyAccess": "Early access to new services",
+      "conciergeService": "Concierge booking assistance",
+      "providerPreference": "Provider preference guarantees"
+    },
+    "billing": {
+      "title": "Billing & Payments",
+      "nextBilling": "Next Billing",
+      "lastPayment": "Last Payment",
+      "paymentMethod": "Payment Method",
+      "autoRenew": "Auto-Renewal",
+      "billingHistory": "Billing History",
+      "updatePayment": "Update Payment Method",
+      "cancelSubscription": "Cancel Subscription",
+      "reactivateSubscription": "Reactivate Subscription",
+      "billingCycle": "Billing Cycle",
+      "currentCost": "Current Cost",
+      "dueDate": "Due Date",
+      "amount": "Amount",
+      "downloadInvoice": "Download Invoice"
+    },
+    "family": {
+      "title": "Family Plan",
+      "createPlan": "Create Family Plan",
+      "inviteMember": "Invite Family Member",
+      "removeMember": "Remove Member",
+      "familyOwner": "Family Plan Owner",
+      "maxMembers": "Max Members",
+      "currentMembers": "Current Members",
+      "sharedCredits": "Shared Credits",
+      "pendingInvitations": "Pending Invitations",
+      "familyBenefits": "Family Plan Benefits",
+      "inviteEmail": "Invite by Email",
+      "memberManagement": "Easy member management",
+      "familyDashboard": "Family dashboard",
+      "sharedBenefits": "Shared subscription benefits",
+      "invitationSent": "Invitation sent successfully",
+      "memberRemoved": "Member removed successfully"
+    },
+    "benefits": {
+      "title": "Your Benefits",
+      "totalSavings": "Total Savings",
+      "activebenefits": "Active Benefits",
+      "usageThisMonth": "Usage This Month",
+      "utilizationPercentage": "Utilization",
+      "remainingUsage": "Remaining",
+      "benefitValue": "Benefit Value",
+      "nearLimit": "Near Limit",
+      "recommendations": "Recommendations"
+    },
+    "upgrade": {
+      "title": "Upgrade Your Plan",
+      "unlockFeatures": "Unlock Premium Features",
+      "startSaving": "Start Saving Today",
+      "upgradeNow": "Upgrade Now",
+      "compareFeatures": "Compare Features",
+      "chooseYourPlan": "Choose Your Plan",
+      "mostPopular": "Most Popular",
+      "bestValue": "Best Value",
+      "upgrade": "Upgrade",
+      "currentPlan": "Current Plan",
+      "alwaysFree": "Always Free",
+      "save10Percent": "Save 10%",
+      "freeCredits": "Free Credits",
+      "maximumSavings": "Maximum Savings",
+      "vipTreatment": "VIP Treatment",
+      "personalService": "Personal Service"
+    },
+    "notifications": {
+      "upgradeSuccess": "Successfully upgraded to {tier}!",
+      "downgradedToFree": "Your subscription has been downgraded to the free tier.",
+      "paymentMethodUpdated": "Payment method updated successfully.",
+      "autoRenewEnabled": "Auto-renewal enabled for your subscription.",
+      "autoRenewDisabled": "Auto-renewal disabled for your subscription.",
+      "subscriptionCancelled": "Your subscription has been cancelled.",
+      "familyInvitationSent": "Family invitation sent successfully.",
+      "memberRemovedFromFamily": "Member removed from family plan.",
+      "welcomeBack": "Welcome back! Your subscription has been reactivated."
+    }
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
   }
 }

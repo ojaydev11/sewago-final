@@ -11,7 +11,13 @@ import { useParams } from "next/navigation";
 type Message = { _id: string; fromUserId: string; toUserId: string; content: string; createdAt: string };
 
 export default function ChatPage() {
+<<<<<<< HEAD
   const { bookingId } = useParams<{ bookingId: string }>();
+=======
+  const params = useParams<{ bookingId: string }>();
+  const bookingId = params?.bookingId;
+  
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
   const [messages, setMessages] = useState<Message[]>([]);
   const [content, setContent] = useState("");
 
@@ -27,11 +33,26 @@ export default function ChatPage() {
   }, [bookingId]);
 
   const send = async () => {
+<<<<<<< HEAD
+=======
+    if (!bookingId) return;
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
     const res = await api.post(`/messages/${bookingId}`, { content });
     socket.emit("message:send", { bookingId, message: res.data });
     setContent("");
   };
 
+<<<<<<< HEAD
+=======
+  if (!bookingId) {
+    return (
+      <div className="max-w-xl mx-auto px-4 py-6">
+        <div className="text-center text-gray-500">Invalid booking ID</div>
+      </div>
+    );
+  }
+
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
   return (
     <div className="max-w-xl mx-auto px-4 py-6">
       <div className="border rounded h-[60vh] overflow-y-auto p-3 space-y-2">

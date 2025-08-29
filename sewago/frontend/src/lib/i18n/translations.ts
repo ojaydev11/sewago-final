@@ -133,7 +133,14 @@ export const translations: Record<Locale, Translations> = {
       selectService: 'Choose the service you need',
       chooseProvider: 'Select your preferred provider',
       scheduleTime: 'Pick a convenient time',
+<<<<<<< HEAD
       confirmBooking: 'Review and confirm your booking'
+=======
+      confirmBooking: 'Review and confirm your booking',
+      next: 'Next',
+      previous: 'Previous',
+      confirm: 'Confirm'
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
     },
     common: {
       loading: 'Loading...',
@@ -220,7 +227,14 @@ export const translations: Record<Locale, Translations> = {
       selectService: 'तपाईंलाई चाहिने सेवा छान्नुहोस्',
       chooseProvider: 'आफ्नो मनपर्ने सेवा प्रदायक छान्नुहोस्',
       scheduleTime: 'सुविधाजनक समय छान्नुहोस्',
+<<<<<<< HEAD
       confirmBooking: 'आफ्नो बुकिङ समीक्षा गरेर पुष्टि गर्नुहोस्'
+=======
+      confirmBooking: 'आफ्नो बुकिङ समीक्षा गरेर पुष्टि गर्नुहोस्',
+      next: 'अर्को',
+      previous: 'अघिल्लो',
+      confirm: 'पुष्टि गर्नुहोस्'
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
     },
     common: {
       loading: 'लोड हुँदै...',

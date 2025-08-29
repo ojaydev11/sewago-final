@@ -1,4 +1,8 @@
 'use client';
+<<<<<<< HEAD
+=======
+import 'client-only';
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 
 import { useEffect } from 'react';
 
@@ -48,12 +52,24 @@ export function usePerformanceMonitoring() {
       // First Input Delay
       new PerformanceObserver((entryList) => {
         for (const entry of entryList.getEntries()) {
+<<<<<<< HEAD
           const fid = entry.processingStart - entry.startTime;
           console.log('FID:', fid);
           
           // Send to analytics if FID is poor (>300ms)
           if (fid > 300) {
             console.warn('Poor FID detected:', fid);
+=======
+          const firstInputEntry = entry as PerformanceEventTiming;
+          if (firstInputEntry.processingStart) {
+            const fid = firstInputEntry.processingStart - firstInputEntry.startTime;
+            console.log('FID:', fid);
+            
+            // Send to analytics if FID is poor (>300ms)
+            if (fid > 300) {
+              console.warn('Poor FID detected:', fid);
+            }
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
           }
         }
       }).observe({ entryTypes: ['first-input'] });
@@ -62,8 +78,14 @@ export function usePerformanceMonitoring() {
       let cls = 0;
       new PerformanceObserver((entryList) => {
         for (const entry of entryList.getEntries()) {
+<<<<<<< HEAD
           if (!entry.hadRecentInput) {
             cls += (entry as any).value;
+=======
+          const layoutShiftEntry = entry as PerformanceEntry & { hadRecentInput?: boolean; value?: number };
+          if (!layoutShiftEntry.hadRecentInput && layoutShiftEntry.value) {
+            cls += layoutShiftEntry.value;
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
           }
         }
         console.log('CLS:', cls);

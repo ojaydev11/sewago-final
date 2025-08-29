@@ -1,6 +1,13 @@
 'use client';
 
+<<<<<<< HEAD
 import { useState, useEffect } from 'react';
+=======
+// Force dynamic rendering to prevent build-time prerendering
+export const dynamic = 'force-dynamic';
+
+import React, { useState, useEffect, useCallback } from 'react';
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 import { 
   MagnifyingGlassIcon,
   FunnelIcon,
@@ -57,11 +64,15 @@ export default function AdminProvidersPage() {
     pages: 0
   });
 
+<<<<<<< HEAD
   useEffect(() => {
     fetchProviders();
   }, [filters, pagination.page]);
 
   const fetchProviders = async () => {
+=======
+  const fetchProviders = useCallback(async () => {
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
     try {
       setLoading(true);
       
@@ -98,7 +109,15 @@ export default function AdminProvidersPage() {
     } finally {
       setLoading(false);
     }
+<<<<<<< HEAD
   };
+=======
+  }, [filters, pagination.page, pagination.limit]);
+
+  useEffect(() => {
+    fetchProviders();
+  }, [fetchProviders]);
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 
   const getMockProviders = (): Provider[] => [
     {
@@ -192,8 +211,14 @@ export default function AdminProvidersPage() {
   };
 
   const handleToggleProviderStatus = async (providerId: string, isOnline: boolean) => {
+<<<<<<< HEAD
     try {
       const action = isOnline ? 'activate' : 'pause';
+=======
+    const action = isOnline ? 'activate' : 'pause';
+    
+    try {
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
       const response = await fetch(`/api/admin/providers/${providerId}/${action}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' }

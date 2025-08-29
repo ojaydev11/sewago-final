@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -euo pipefail
+echo "🔎 SSR guard checks…"
+npm run scan:ssr
+npm run check:sentinels
+echo "🧹 Lint staged…"
+npx lint-staged

@@ -1,8 +1,35 @@
 'use client';
 
 import React, { useState } from 'react';
+<<<<<<< HEAD
 import { ServiceBundle } from '@/models/ServiceBundle';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+=======
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+
+// Local type definition to avoid DB imports
+interface ServiceBundle {
+  id: string;
+  name: string;
+  description: string;
+  services: Array<{
+    serviceId: string;
+    serviceName: string;
+    serviceCategory: string;
+    estimatedDuration: number;
+    individualPrice: number;
+    isRequired: boolean;
+  }>;
+  originalPrice: number;
+  discountedPrice: number;
+  discountPercentage: number;
+  category: string;
+  tags: string[];
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Clock, Users, Star, CheckCircle, Gift, Eye, EyeOff, AlertCircle } from 'lucide-react';

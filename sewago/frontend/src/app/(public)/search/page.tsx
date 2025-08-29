@@ -4,7 +4,11 @@
 // Force dynamic rendering to prevent build-time prerendering
 export const dynamic = 'force-dynamic';
 
+<<<<<<< HEAD
 import { useState, useEffect } from 'react';
+=======
+import React, { useState, useEffect, useCallback } from 'react';
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 import { useSearchParams, useRouter } from 'next/navigation';
 import { searchEngine } from '@/lib/search';
 import { FEATURE_FLAGS } from '@/lib/feature-flags';
@@ -18,6 +22,7 @@ export default function SearchPage() {
   const [suggestions, setSuggestions] = useState<string[]>([]);
   
   const [filters, setFilters] = useState<SearchFilters>({
+<<<<<<< HEAD
     query: searchParams.get('q') || '',
     serviceCategory: searchParams.get('category') || '',
     city: searchParams.get('city') || '',
@@ -31,6 +36,15 @@ export default function SearchPage() {
   }, [filters]);
 
   const performSearch = async () => {
+=======
+    query: searchParams?.get('q') || '',
+    serviceCategory: searchParams?.get('category') || '',
+    city: searchParams?.get('city') || '',
+    verifiedProvidersOnly: searchParams?.get('verified') === 'true',
+  });
+
+  const performSearch = useCallback(async () => {
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
     setLoading(true);
     try {
       const response = await searchEngine.search(filters, 'user_123');
@@ -41,7 +55,17 @@ export default function SearchPage() {
     } finally {
       setLoading(false);
     }
+<<<<<<< HEAD
   };
+=======
+  }, [filters]);
+
+  useEffect(() => {
+    if (FEATURE_FLAGS.SEARCH_ENABLED) {
+      performSearch();
+    }
+  }, [performSearch]);
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 
   const updateFilters = (newFilters: Partial<SearchFilters>) => {
     const updatedFilters = { ...filters, ...newFilters };

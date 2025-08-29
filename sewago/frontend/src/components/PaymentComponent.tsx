@@ -136,7 +136,11 @@ export default function PaymentComponent({
           {paymentMethods.map((method) => {
             const IconComponent = method.icon;
             const isSelected = selectedMethod === method.id;
+<<<<<<< HEAD
             const isProcessing = isProcessing && selectedMethod === method.id;
+=======
+            const isMethodProcessing = isProcessing && selectedMethod === method.id;
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
             
             return (
               <Card 
@@ -144,7 +148,11 @@ export default function PaymentComponent({
                 className={`bg-white/5 border-white/20 text-white cursor-pointer transition-all duration-200 hover:bg-white/10 ${
                   isSelected ? 'ring-2 ring-accent bg-white/10' : ''
                 }`}
+<<<<<<< HEAD
                 onClick={() => !isProcessing && handlePayment(method.id)}
+=======
+                onClick={() => !isMethodProcessing && handlePayment(method.id)}
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
               >
                 <CardContent className="p-4">
                   <div className="flex items-center justify-between">
@@ -172,14 +180,22 @@ export default function PaymentComponent({
                     </div>
                     
                     <div className="flex items-center gap-2">
+<<<<<<< HEAD
                       {isProcessing ? (
+=======
+                      {isMethodProcessing ? (
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
                         <Loader2 className="w-5 h-5 animate-spin text-accent" />
                       ) : (
                         <Button
                           variant="outline"
                           size="sm"
                           className="border-white/20 text-white hover:bg-white/20"
+<<<<<<< HEAD
                           disabled={isProcessing}
+=======
+                          disabled={isMethodProcessing}
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
                         >
                           {method.id === 'cod' ? 'Select' : 'Pay'}
                         </Button>

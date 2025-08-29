@@ -4,7 +4,10 @@ import { Metadata } from 'next';
 export const dynamic = "force-dynamic";
 
 import Link from 'next/link';
+<<<<<<< HEAD
 import { getServices } from '@/lib/services';
+=======
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 import ServiceGrid from '@/components/services/ServiceGrid';
 import { designUtils, componentStyles } from '@/lib/design-system';
 
@@ -14,8 +17,81 @@ export const metadata: Metadata = {
   keywords: 'local services Nepal, electrician Kathmandu, plumber Pokhara, cleaner Lalitpur, tutor Nepal, home services, professional services, verified providers, SewaGo, सेवागो, स्थानीय सेवाहरू',
 };
 
+<<<<<<< HEAD
 export default async function ServicesPage() {
   const services = await getServices();
+=======
+export default function ServicesPage() {
+  // Mock services data for frontend-only mode
+  const services = [
+    {
+      id: 1,
+      name: 'House Cleaning',
+      slug: 'house-cleaning',
+      description: 'Professional house cleaning services',
+      icon: '🧹',
+      category: 'Cleaning',
+      basePrice: 1500,
+      rating: 4.8,
+      reviewCount: 127
+    },
+    {
+      id: 2,
+      name: 'Plumbing',
+      slug: 'plumbing',
+      description: 'Expert plumbing and repair services',
+      icon: '🔧',
+      category: 'Repair',
+      basePrice: 2000,
+      rating: 4.9,
+      reviewCount: 89
+    },
+    {
+      id: 3,
+      name: 'Electrical',
+      slug: 'electrical',
+      description: 'Certified electrical work and repairs',
+      icon: '⚡',
+      category: 'Repair',
+      basePrice: 2500,
+      rating: 4.7,
+      reviewCount: 156
+    },
+    {
+      id: 4,
+      name: 'Gardening',
+      slug: 'gardening',
+      description: 'Landscaping and garden maintenance',
+      icon: '🌱',
+      category: 'Outdoor',
+      basePrice: 1200,
+      rating: 4.6,
+      reviewCount: 73
+    },
+    {
+      id: 5,
+      name: 'Painting',
+      slug: 'painting',
+      description: 'Interior and exterior painting services',
+      icon: '🎨',
+      category: 'Home Improvement',
+      basePrice: 3000,
+      rating: 4.8,
+      reviewCount: 94
+    },
+    {
+      id: 6,
+      name: 'Carpentry',
+      slug: 'carpentry',
+      description: 'Custom woodwork and repairs',
+      icon: '🔨',
+      category: 'Repair',
+      basePrice: 1800,
+      rating: 4.7,
+      reviewCount: 112
+    }
+  ];
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 
   return (
     <main className='min-h-screen relative overflow-hidden'>
@@ -98,6 +174,7 @@ export default async function ServicesPage() {
                     <div className='w-6 h-6 bg-accent rounded-full flex-shrink-0 mt-1'></div>
                     <div>
                       <h3 className='font-semibold text-white mb-1'>Local Knowledge</h3>
+<<<<<<< HEAD
                       <p className='text-white/80'>From traditional Newari homes to modern apartments, they know the unique characteristics of Nepali architecture and infrastructure.</p>
                     </div>
                   </div>
@@ -113,10 +190,14 @@ export default async function ServicesPage() {
                     <div>
                       <h3 className='font-semibold text-white mb-1'>Community Trust</h3>
                       <p className='text-white/80'>Build lasting relationships with local professionals who are part of your community and invested in your satisfaction.</p>
+=======
+                      <p className='text-white/80'>They know the best materials, techniques, and suppliers in your area, saving you time and money.</p>
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
                     </div>
                   </div>
                 </div>
               </div>
+<<<<<<< HEAD
               
               <div className={componentStyles.card.base + ' p-8 text-center'}>
                 <h3 className='text-2xl font-bold text-white mb-6'>
@@ -136,6 +217,8 @@ export default async function ServicesPage() {
                   And many more cities and villages across Nepal
                 </p>
               </div>
+=======
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
             </div>
           </div>
         </div>

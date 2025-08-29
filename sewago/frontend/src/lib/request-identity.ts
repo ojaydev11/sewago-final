@@ -2,7 +2,12 @@ import { NextRequest } from 'next/server';
 import { createHash } from 'crypto';
 
 // Get the salt for IP hashing from environment
+<<<<<<< HEAD
 const RATE_LIMIT_SALT = process.env.RATE_LIMIT_SALT || 'default-salt-change-in-production';
+=======
+// Rate limiting is now handled server-side via API
+const RATE_LIMIT_SALT = 'client-side-salt';
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 
 /**
  * Get a secure identifier for a request
@@ -74,10 +79,14 @@ function getClientIP(req: NextRequest): string {
     return realIP;
   }
   
+<<<<<<< HEAD
   // Fall back to request IP (if available)
   if (req.ip && isValidIP(req.ip)) {
     return req.ip;
   }
+=======
+  // Note: NextRequest doesn't have an ip property, we rely on headers
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
   
   // Default fallback
   return 'unknown';

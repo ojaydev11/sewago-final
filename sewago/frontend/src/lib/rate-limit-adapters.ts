@@ -229,12 +229,16 @@ export class RedisAdapter implements RateLimitAdapter {
 
 // Factory function to get the appropriate adapter
 export function getLimiter(): RateLimitAdapter {
+<<<<<<< HEAD
   const useRedis = process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN;
   
   if (useRedis) {
     return new RedisAdapter();
   }
   
+=======
+  // Always use memory adapter for client-side, Redis is handled server-side via API
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
   return new MemoryAdapter();
 }
 

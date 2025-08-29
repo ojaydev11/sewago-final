@@ -1,9 +1,86 @@
 'use client';
 
+<<<<<<< HEAD
 import React, { useState } from 'react';
 import { ServiceBundle, BundleService } from '@/models/ServiceBundle';
 import { sampleServiceBundles } from '@/models/ServiceBundle';
 import ServiceBundleCard from '@/components/ServiceBundleCard';
+=======
+// Force dynamic rendering to prevent build-time prerendering
+export const dynamic = 'force-dynamic';
+
+// Build-time guard to prevent execution during build
+const isBuild = process.env.NEXT_PHASE === 'phase-production-build';
+
+import React, { useState } from 'react';
+import ServiceBundleCard from '@/components/ServiceBundleCard';
+import { useSafeLocalStorage, useClientOnly } from '@/hooks/useClientOnly';
+
+// Local type definitions to avoid DB imports
+interface ServiceBundle {
+  id: string;
+  name: string;
+  description: string;
+  services: BundleService[];
+  originalPrice: number;
+  discountedPrice: number;
+  discountPercentage: number;
+  category: string;
+  tags: string[];
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+interface BundleService {
+  serviceId: string;
+  serviceName: string;
+  serviceCategory: string;
+  estimatedDuration: number;
+  individualPrice: number;
+  isRequired: boolean;
+}
+
+// Mock data for build-time safety
+const sampleServiceBundles: ServiceBundle[] = [
+  {
+    id: 'spring-cleaning-bundle',
+    name: 'Spring Cleaning Bundle',
+    description: 'Complete home cleaning package including deep cleaning, window washing, and organization',
+    services: [
+      { serviceId: 'house-cleaning', serviceName: 'House Cleaning', serviceCategory: 'cleaning', estimatedDuration: 120, individualPrice: 1500, isRequired: true },
+      { serviceId: 'window-cleaning', serviceName: 'Window Cleaning', serviceCategory: 'cleaning', estimatedDuration: 90, individualPrice: 800, isRequired: true },
+      { serviceId: 'organization', serviceName: 'Home Organization', serviceCategory: 'cleaning', estimatedDuration: 180, individualPrice: 1200, isRequired: true }
+    ],
+    originalPrice: 3500,
+    discountedPrice: 2800,
+    discountPercentage: 20,
+    category: 'cleaning',
+    tags: ['cleaning', 'spring', 'bundle', 'popular'],
+    isActive: true,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  },
+  {
+    id: 'electrical-maintenance-bundle',
+    name: 'Electrical Maintenance Bundle',
+    description: 'Comprehensive electrical safety check and maintenance package',
+    services: [
+      { serviceId: 'electrical-inspection', serviceName: 'Electrical Inspection', serviceCategory: 'electrical', estimatedDuration: 120, individualPrice: 2000, isRequired: true },
+      { serviceId: 'wiring-repair', serviceName: 'Wiring Repair', serviceCategory: 'electrical', estimatedDuration: 90, individualPrice: 1500, isRequired: true },
+      { serviceId: 'safety-upgrade', serviceName: 'Safety Upgrades', serviceCategory: 'electrical', estimatedDuration: 180, individualPrice: 2500, isRequired: true }
+    ],
+    originalPrice: 6000,
+    discountedPrice: 4800,
+    discountPercentage: 20,
+    category: 'electrical',
+    tags: ['electrical', 'maintenance', 'safety', 'limited'],
+    isActive: true,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  }
+];
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 import { useRouter } from 'next/navigation';
 import { formatNPR } from '@/lib/currency';
 import { 
@@ -22,6 +99,15 @@ export default function ServiceBundlesPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [sortBy, setSortBy] = useState<'price' | 'discount' | 'name'>('price');
   const router = useRouter();
+<<<<<<< HEAD
+=======
+  
+  // Use safe hooks
+  const [storedBundleOrder, setStoredBundleOrder] = useSafeLocalStorage<any>('selectedBundleOrder', null);
+  const isClient = useClientOnly();
+
+
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 
   const categories = [
     { id: 'all', name: 'All Categories', count: sampleServiceBundles.length },
@@ -58,6 +144,7 @@ export default function ServiceBundlesPage() {
     setSelectedServices(services);
   };
 
+<<<<<<< HEAD
   const handleBookBundle = () => {
     if (!selectedBundle) return;
     
@@ -72,6 +159,20 @@ export default function ServiceBundlesPage() {
     };
     
     localStorage.setItem('selectedBundleOrder', JSON.stringify(bundleOrder));
+=======
+  const handleBundleOrder = () => {
+    if (!selectedBundle) return;
+    
+    const bundleOrder = {
+      bundleId: selectedBundle.id,
+      services: selectedServices,
+      totalPrice: selectedBundle.discountedPrice,
+      timestamp: new Date().toISOString()
+    };
+    
+    // Use safe localStorage hook
+    setStoredBundleOrder(bundleOrder);
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
     
     // Navigate to booking page
     router.push('/book?type=bundle');
@@ -202,7 +303,11 @@ export default function ServiceBundlesPage() {
                   </div>
                 </div>
                 <button
+<<<<<<< HEAD
                   onClick={handleBookBundle}
+=======
+                  onClick={handleBundleOrder}
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
                   className="px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors"
                 >
                   Book Now

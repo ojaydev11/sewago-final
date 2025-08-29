@@ -159,16 +159,28 @@ export function ErrorBoundaryFunctional({
       handleError(new Error(event.reason));
     };
 
+<<<<<<< HEAD
     const handleError = (event: ErrorEvent) => {
+=======
+    const handleErrorEvent = (event: ErrorEvent) => {
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
       handleError(new Error(event.message));
     };
 
     window.addEventListener('unhandledrejection', handleUnhandledRejection);
+<<<<<<< HEAD
     window.addEventListener('error', handleError);
 
     return () => {
       window.removeEventListener('unhandledrejection', handleUnhandledRejection);
       window.removeEventListener('error', handleError);
+=======
+    window.addEventListener('error', handleErrorEvent);
+
+    return () => {
+      window.removeEventListener('unhandledrejection', handleUnhandledRejection);
+      window.removeEventListener('error', handleErrorEvent);
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
     };
   }, [handleError]);
 

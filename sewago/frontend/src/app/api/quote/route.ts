@@ -1,3 +1,10 @@
+<<<<<<< HEAD
+=======
+import 'server-only';
+// Force dynamic rendering to prevent build-time prerendering
+export const dynamic = 'force-dynamic';
+
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { pricing as pricingConfig } from '@/config/pricing';
@@ -31,7 +38,11 @@ export interface QuoteResponse {
 
 // simple per-IP rate limiter
 declare global {
+<<<<<<< HEAD
   // eslint-disable-next-line no-var
+=======
+   
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
   var __quote_hits: Map<string, { count: number; ts: number }> | undefined
 }
 
@@ -59,7 +70,11 @@ export async function POST(request: NextRequest) {
     if (!parsed.success) {
       return NextResponse.json({ success: false, message: 'Invalid input', errors: parsed.error.flatten() }, { status: 400, headers: { 'Cache-Control': 'no-store' } });
     }
+<<<<<<< HEAD
     const { serviceSlug, basePrice, isExpress, hasWarranty, city, extraBlocks } = parsed.data;
+=======
+    const { serviceSlug, basePrice, isExpress, hasWarranty, extraBlocks } = parsed.data;
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 
     // derive extra block price from config when available
     const extra15 = (pricingConfig.services as any)?.[serviceSlug]?.extra15 ?? 150;

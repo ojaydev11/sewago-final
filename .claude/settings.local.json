@@ -1,0 +1,39 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install)",
+      "Bash(npm run build:*)",
+      "Bash(find:*)",
+      "Bash(cross-env NEXT_PHASE=phase-production-build npm run build)",
+      "Bash(npm install:*)",
+      "Bash(SKIP_DB=true npm run build)",
+      "Bash(rm:*)",
+      "Bash(npm test)",
+      "Bash(mongod:*)",
+      "Bash(npm run dev:*)",
+      "Bash(curl:*)",
+      "Bash(npx next dev:*)",
+      "mcp__ide__getDiagnostics",
+      "Bash(npm run seed:test:*)",
+      "Bash(node:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(npm audit:*)",
+      "Bash(npx eslint:*)",
+      "Bash(mkdir:*)",
+      "Bash(npm test:*)",
+      "Bash(npm run type-check:*)",
+      "Bash(npm run production-ready:*)",
+      "Bash(timeout 300 npm run build:production)",
+      "Bash(timeout:*)",
+      "WebFetch(domain:sewago-final.vercel.app)",
+      "Bash(npx @modelcontextprotocol/server-puppeteer:*)",
+      "Bash(npm start)",
+      "Bash(npx next start:*)",
+      "Bash(git reset:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

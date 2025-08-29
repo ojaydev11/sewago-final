@@ -1,10 +1,21 @@
 
 'use client';
 
+<<<<<<< HEAD
 import { useState, useEffect } from 'react';
 import { walletService } from '@/lib/wallet';
 import { FEATURE_FLAGS } from '@/lib/feature-flags';
 import type { WalletBalance, WalletEntry } from '@/lib/wallet';
+=======
+// Force dynamic rendering to prevent build-time prerendering
+export const dynamic = 'force-dynamic';
+
+import React, { useState, useEffect, useCallback } from 'react';
+import { walletService } from '@/lib/wallet';
+import { FEATURE_FLAGS } from '@/lib/feature-flags';
+import type { WalletBalance, WalletEntry } from '@/lib/wallet';
+import { safeDownloadFile } from '@/hooks/useClientOnly';
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 
 export default function WalletPage() {
   const [balance, setBalance] = useState<WalletBalance | null>(null);
@@ -12,6 +23,7 @@ export default function WalletPage() {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<'all' | 'loyalty' | 'referral' | 'resolution' | 'promotion'>('all');
 
+<<<<<<< HEAD
   useEffect(() => {
     if (FEATURE_FLAGS.WALLET_ENABLED) {
       loadWalletData();
@@ -21,6 +33,9 @@ export default function WalletPage() {
   }, [filter]);
 
   const loadWalletData = async () => {
+=======
+  const loadWalletData = useCallback(async () => {
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
     setLoading(true);
     try {
       // Mock user ID - in real app, get from auth context
@@ -41,13 +56,26 @@ export default function WalletPage() {
     } finally {
       setLoading(false);
     }
+<<<<<<< HEAD
   };
+=======
+  }, [filter]);
+
+  useEffect(() => {
+    if (FEATURE_FLAGS.WALLET_ENABLED) {
+      loadWalletData();
+    } else {
+      setLoading(false);
+    }
+  }, [loadWalletData]);
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 
   const exportHistory = async () => {
     try {
       const userId = 'user_123';
       const csvData = await walletService.exportHistory(userId);
       
+<<<<<<< HEAD
       const blob = new Blob([csvData], { type: 'text/csv' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -57,6 +85,11 @@ export default function WalletPage() {
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
+=======
+      // Use safe download utility
+      const filename = `wallet-history-${new Date().toISOString().split('T')[0]}.csv`;
+      safeDownloadFile(csvData, filename, 'text/csv');
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
     } catch (error) {
       console.error('Export failed:', error);
     }

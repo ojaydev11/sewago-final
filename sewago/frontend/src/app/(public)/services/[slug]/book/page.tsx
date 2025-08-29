@@ -1,8 +1,16 @@
 'use client';
 
+<<<<<<< HEAD
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
+=======
+import { useState, useEffect, useCallback } from 'react';
+import { useParams, useRouter } from 'next/navigation';
+import { useSafeLocalStorage } from '@/hooks/useClientOnly';
+// Mock session hook - replace with actual backend integration
+const useSession = () => ({ data: { user: { id: 'mock-user-id', name: 'Mock User', email: 'mock@example.com' } } });
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -12,7 +20,11 @@ import QuoteForm, { QuoteData } from '@/components/booking/QuoteForm';
 import { getServiceBySlug } from '@/lib/services';
 import { Label } from '@/components/ui/label';
 import { formatNPR } from '@/lib/currency';
+<<<<<<< HEAD
 import { useCallback } from 'react';
+=======
+import { UserIcon } from 'lucide-react';
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 
 // Force dynamic rendering to prevent build-time pre-rendering
 export const dynamic = 'force-dynamic';
@@ -24,16 +36,27 @@ interface ServiceData {
   shortDesc: string;
 }
 
+<<<<<<< HEAD
 export default function BookingPage() {
   const params = useParams();
   const router = useRouter();
   const { data: session } = useSession();
+=======
+export default function ServiceBookingPage() {
+  const params = useParams();
+  const router = useRouter();
+  const { data: session } = useSession();
+  const slug = params?.slug as string;
+  
+  // State variables
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [quoteData, setQuoteData] = useState<QuoteData | null>(null);
   const [serviceData, setServiceData] = useState<ServiceData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
+<<<<<<< HEAD
 
   const slug = params.slug as string;
 
@@ -46,6 +69,25 @@ export default function BookingPage() {
         if (cached) {
           const service = JSON.parse(cached);
           setServiceData(service);
+=======
+  const [isClient, setIsClient] = useState(false);
+  
+  // Use safe hooks
+  const [cachedService, setCachedService] = useSafeLocalStorage<any>(`service_${slug}`, null);
+  const [savedStep, setSavedStep] = useSafeLocalStorage<number>(`booking_step_${slug}`, 1);
+  const [savedQuote, setSavedQuote] = useSafeLocalStorage<any>(`booking_quote_${slug}`, null);
+
+  // Load service data
+  useEffect(() => {
+    setIsClient(true);
+    if (!slug) return;
+    
+    const loadService = async () => {
+      try {
+        // Check cached data first for instant render
+        if (cachedService) {
+          setServiceData(cachedService);
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
           setIsLoading(false);
         }
 
@@ -57,6 +99,7 @@ export default function BookingPage() {
         const fetchPromise = getServiceBySlug(slug);
         const service = await Promise.race([fetchPromise, timeoutPromise]);
         
+<<<<<<< HEAD
         if (service) {
           const serviceData = {
             name: service.name,
@@ -66,6 +109,17 @@ export default function BookingPage() {
           };
           setServiceData(serviceData);
           localStorage.setItem(`service_${slug}`, JSON.stringify(serviceData));
+=======
+        if (service && typeof service === 'object' && 'name' in service) {
+          const serviceData = {
+            name: (service as any).name || '',
+            basePrice: (service as any).basePrice || 0,
+            category: (service as any).category || '',
+            shortDesc: (service as any).shortDesc || ''
+          };
+          setServiceData(serviceData);
+          setCachedService(serviceData);
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
           setIsLoading(false);
         }
       } catch (error) {
@@ -75,6 +129,7 @@ export default function BookingPage() {
       }
     };
     loadService();
+<<<<<<< HEAD
   }, [slug]);
 
   // Persist step and quote data to localStorage
@@ -104,6 +159,36 @@ export default function BookingPage() {
   }, [slug]);
 
   const handleQuoteUpdate = useCallback(async (quote: QuoteData) => {
+=======
+  }, [slug, cachedService, setCachedService]);
+
+  // Persist step and quote data
+  useEffect(() => {
+    if (currentStep > 1) {
+      setSavedStep(currentStep);
+    }
+  }, [currentStep, setSavedStep]);
+
+  useEffect(() => {
+    if (quoteData) {
+      setSavedQuote(quoteData);
+    }
+  }, [quoteData, setSavedQuote]);
+
+  // Restore from saved data on mount
+  useEffect(() => {
+    if (savedStep > 1) {
+      setCurrentStep(savedStep);
+    }
+    if (savedQuote) {
+      setQuoteData(savedQuote);
+    }
+  }, [savedStep, savedQuote]);
+
+  const handleQuoteUpdate = useCallback(async (quote: QuoteData) => {
+    if (!serviceData) return;
+    
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
     try {
       // Call server to get authoritative quote
       const res = await fetch('/api/quote', {
@@ -111,8 +196,13 @@ export default function BookingPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           serviceSlug: slug,
+<<<<<<< HEAD
           serviceName: serviceData?.name ?? '',
           basePrice: serviceData?.basePrice ?? 0,
+=======
+          serviceName: serviceData.name,
+          basePrice: serviceData.basePrice,
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
           isExpress: quote.isExpress,
           hasWarranty: quote.hasWarranty,
           city: 'Kathmandu',
@@ -142,10 +232,32 @@ export default function BookingPage() {
     }
   }, [slug, serviceData]);
 
+<<<<<<< HEAD
   // Redirect if not authenticated
   if (!session?.user) {
     router.push(`/auth/login?callbackUrl=/services/${slug}/book`);
     return null;
+=======
+  // Check if user is authenticated
+  if (!session?.user) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-gray-400 mb-4">
+            <UserIcon className="w-16 h-16 mx-auto" />
+          </div>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">Authentication Required</h3>
+          <p className="text-gray-600 mb-4">Please log in to book this service.</p>
+          <button
+            onClick={() => router.push('/auth/login')}
+            className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Log In
+          </button>
+        </div>
+      </div>
+    );
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
   }
 
   const handleSubmit = async () => {
@@ -176,7 +288,11 @@ export default function BookingPage() {
       });
 
       if (response.ok) {
+<<<<<<< HEAD
         const { booking } = await response.json();
+=======
+        await response.json(); // Just consume the response
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
         toast.success('Booking created successfully!');
         setCurrentStep(3); // Show confirmation
       } else {
@@ -275,7 +391,15 @@ export default function BookingPage() {
               We're having trouble loading this service. Please try again later.
             </p>
             <button 
+<<<<<<< HEAD
               onClick={() => window.location.reload()}
+=======
+              onClick={() => {
+                if (isClient) {
+                  window.location.reload();
+                }
+              }}
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
               className="bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary/90 transition-colors"
             >
               Retry
@@ -286,6 +410,24 @@ export default function BookingPage() {
     );
   }
 
+<<<<<<< HEAD
+=======
+  // Ensure serviceData is available before rendering
+  if (!serviceData) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-gray-400 mb-4">
+            <Clock className="w-16 h-16 mx-auto" />
+          </div>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">Loading service...</h3>
+          <p className="text-gray-600">Please wait while we load the service details.</p>
+        </div>
+      </div>
+    );
+  }
+
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="container mx-auto px-4 max-w-6xl">

@@ -1,3 +1,9 @@
+<<<<<<< HEAD
+=======
+// Force dynamic rendering to prevent build-time issues
+export const dynamic = "force-dynamic";
+
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 import { 
   ShieldCheckIcon,
   EyeIcon,
@@ -9,9 +15,12 @@ import {
 import { Metadata } from 'next';
 import Link from 'next/link';
 
+<<<<<<< HEAD
 // Force dynamic rendering to prevent build-time issues
 export const dynamic = "force-dynamic";
 
+=======
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 export const metadata: Metadata = {
   title: 'Privacy Policy - SewaGo | Data Protection & Privacy',
   description: 'Learn about how SewaGo protects your personal information and maintains your privacy. Read our comprehensive privacy policy and data protection practices.',

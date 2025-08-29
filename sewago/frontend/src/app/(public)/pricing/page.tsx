@@ -6,9 +6,13 @@ export const dynamic = "force-dynamic";
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+<<<<<<< HEAD
 import { Badge } from '@/components/ui/badge';
 import { Check, Star, Shield, Clock, Users } from 'lucide-react';
 import { getServices } from '@/lib/services';
+=======
+import { Check, Star, Shield, Clock, Users } from 'lucide-react';
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 
 export const metadata: Metadata = {
   title: 'Pricing - SewaGo',
@@ -18,8 +22,21 @@ export const metadata: Metadata = {
 
 export const revalidate = 3600; // Revalidate every hour
 
+<<<<<<< HEAD
 export default async function PricingPage() {
   const services = await getServices();
+=======
+export default function PricingPage() {
+  // Mock services data for frontend-only mode
+  const services = [
+    { id: 1, name: 'House Cleaning', basePrice: 1500, description: 'Professional house cleaning services' },
+    { id: 2, name: 'Plumbing', basePrice: 2000, description: 'Expert plumbing and repair services' },
+    { id: 3, name: 'Electrical', basePrice: 2500, description: 'Certified electrical work and repairs' },
+    { id: 4, name: 'Gardening', basePrice: 1200, description: 'Landscaping and garden maintenance' },
+    { id: 5, name: 'Painting', basePrice: 3000, description: 'Interior and exterior painting services' },
+    { id: 6, name: 'Carpentry', basePrice: 1800, description: 'Custom woodwork and repairs' }
+  ];
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 
   const features = [
     'Verified service providers',
@@ -95,6 +112,7 @@ export default async function PricingPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
           {services.map((service) => (
+<<<<<<< HEAD
             <Card key={service._id} className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
               <CardHeader className="text-center pb-4">
                 <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
@@ -144,6 +162,22 @@ export default async function PricingPage() {
                     View Details
                   </Button>
                 </Link>
+=======
+            <Card key={service.id} className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+              <CardHeader className="text-center pb-4">
+                <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
+                  <Star className="w-8 h-8 text-primary" />
+                </div>
+                <CardTitle className="text-xl font-semibold text-gray-900">{service.name}</CardTitle>
+                <CardDescription className="text-gray-600">{service.description}</CardDescription>
+              </CardHeader>
+              <CardContent className="text-center">
+                <div className="mb-4">
+                  <span className="text-3xl font-bold text-gray-900">रु {service.basePrice}</span>
+                  <span className="text-gray-500">/service</span>
+                </div>
+                <Button className="w-full">Book Now</Button>
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
               </CardContent>
             </Card>
           ))}

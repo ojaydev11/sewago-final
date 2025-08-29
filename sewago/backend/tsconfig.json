@@ -8,9 +8,26 @@
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
+<<<<<<< HEAD
     "strict": true
   },
   "include": ["src/**/*"]
+=======
+    "strict": false,
+    "noImplicitAny": false,
+    "strictNullChecks": false,
+    "strictFunctionTypes": false,
+    "noImplicitReturns": false,
+    "noImplicitThis": false,
+    "alwaysStrict": false
+  },
+  "include": ["src/**/*"],
+  "compileOnSave": false,
+  "ts-node": {
+    "transpileOnly": true,
+    "files": true
+  }
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 }
 
 

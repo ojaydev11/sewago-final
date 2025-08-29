@@ -2,14 +2,23 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+<<<<<<< HEAD
 import { useSession } from 'next-auth/react';
+=======
+// Mock session hook - replace with actual backend integration
+const useSession = () => ({ data: { user: { name: 'Mock User', email: 'mock@example.com', role: 'provider' } }, status: 'authenticated' });
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+<<<<<<< HEAD
 import { X, Plus, User, Briefcase, Star } from 'lucide-react';
+=======
+import { X, Plus, Briefcase, Star } from 'lucide-react';
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 
 export default function ProviderOnboardingClient() {
   const { data: session, status } = useSession();

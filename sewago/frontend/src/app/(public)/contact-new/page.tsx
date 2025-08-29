@@ -11,7 +11,11 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+<<<<<<< HEAD
 import { Mail, Phone, MapPin, Clock, Send, MessageCircle } from 'lucide-react';
+=======
+import { Mail, Phone, Clock, Send, MessageCircle } from 'lucide-react';
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 import { designUtils, componentStyles } from '@/lib/design-system';
 import Location from '@/components/Location';
 

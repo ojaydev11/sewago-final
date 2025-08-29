@@ -1,8 +1,21 @@
 'use client';
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
+<<<<<<< HEAD
 import { useSession } from 'next-auth/react';
 import { notificationService } from '@/lib/notificationService';
+=======
+// Mock session hook - replace with actual backend integration
+const useSession = () => ({ data: { user: { id: 'mock-user-id', name: 'Mock User', email: 'mock@example.com' } } });
+// Mock notification services - replace with actual backend integration
+const notificationService = {
+  getUserNotifications: async () => ({ notifications: [], unreadCount: 0 }),
+  createNotification: async (data: any) => ({ id: 'mock', ...data }),
+  markAsRead: async () => {},
+  markAllAsRead: async () => {},
+  deleteNotification: async () => {}
+};
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 import { pushNotificationService } from '@/lib/pushNotificationService';
 import { useToast } from '@/components/ui/toast';
 
@@ -90,10 +103,14 @@ export function NotificationProvider({ children }: NotificationProviderProps) {
 
     try {
       setError(null);
+<<<<<<< HEAD
       const result = await notificationService.getUserNotifications({
         userId: session.user.id,
         limit: 50,
       });
+=======
+      const result = await notificationService.getUserNotifications();
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
       
       setNotifications(result.notifications);
       setUnreadCount(result.unreadCount);
@@ -135,7 +152,11 @@ export function NotificationProvider({ children }: NotificationProviderProps) {
 
     try {
       setError(null);
+<<<<<<< HEAD
       await notificationService.markAsRead(id, session.user.id);
+=======
+      await notificationService.markAsRead();
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
       
       // Update local state
       setNotifications(prev => 
@@ -157,7 +178,11 @@ export function NotificationProvider({ children }: NotificationProviderProps) {
 
     try {
       setError(null);
+<<<<<<< HEAD
       await notificationService.markAllAsRead(session.user.id);
+=======
+      await notificationService.markAllAsRead();
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
       
       // Update local state
       setNotifications(prev => 
@@ -181,7 +206,11 @@ export function NotificationProvider({ children }: NotificationProviderProps) {
 
     try {
       setError(null);
+<<<<<<< HEAD
       await notificationService.deleteNotification(id, session.user.id);
+=======
+      await notificationService.deleteNotification();
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
       
       // Update local state
       const deletedNotification = notifications.find(n => n.id === id);

@@ -1,6 +1,13 @@
 'use client';
 
+<<<<<<< HEAD
 import { useState, useEffect } from 'react';
+=======
+// Force dynamic rendering to prevent build-time prerendering
+export const dynamic = 'force-dynamic';
+
+import { useState, useEffect, useCallback } from 'react';
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 import { useParams } from 'next/navigation';
 import { 
   MapPinIcon,
@@ -49,8 +56,13 @@ interface TrackingUpdate {
 
 export default function BookingTrackPage() {
   const params = useParams();
+<<<<<<< HEAD
   const bookingId = params.id as string;
   
+=======
+  
+  // All hooks must be called unconditionally at the top level
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
   const [booking, setBooking] = useState<Booking | null>(null);
   const [loading, setLoading] = useState(true);
   const [trackingUpdates, setTrackingUpdates] = useState<TrackingUpdate[]>([]);
@@ -58,12 +70,63 @@ export default function BookingTrackPage() {
   
   const { socket, isConnected } = useSocket();
 
+<<<<<<< HEAD
   useEffect(() => {
     fetchBooking();
   }, [bookingId]);
 
   useEffect(() => {
     if (socket && isConnected) {
+=======
+  // Get bookingId safely - will be undefined if params.id doesn't exist
+  const bookingId = typeof params?.id === 'string' ? params.id : undefined;
+
+  const fetchBooking = useCallback(async () => {
+    if (!bookingId) return;
+    
+    try {
+      setLoading(true);
+      // Mock API call - replace with actual backend integration
+      const mockBooking: Booking = {
+        id: bookingId,
+        status: 'IN_PROGRESS',
+        serviceId: {
+          name: 'House Cleaning',
+          category: 'Cleaning',
+          basePrice: 1500
+        },
+        providerId: {
+          name: 'John Doe',
+          phone: '+977-9800000001',
+          verified: true,
+          currentLat: 27.7172,
+          currentLng: 85.3240,
+          isOnline: true
+        },
+        address: 'Thamel, Kathmandu',
+        total: 1500,
+        createdAt: new Date().toISOString(),
+        scheduledAt: new Date(Date.now() + 2 * 60 * 60 * 1000).toISOString(),
+        notes: 'Deep cleaning required'
+      };
+      
+      setBooking(mockBooking);
+    } catch (error) {
+      console.error('Failed to fetch booking:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, [bookingId]);
+
+  useEffect(() => {
+    if (bookingId) {
+      fetchBooking();
+    }
+  }, [fetchBooking, bookingId]);
+
+  useEffect(() => {
+    if (socket && isConnected && bookingId) {
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
       // Join the booking room for real-time updates
       socket.emit('joinBookingRoom', { 
         bookingId, 
@@ -143,6 +206,7 @@ export default function BookingTrackPage() {
     }
   }, [socket, isConnected, bookingId, booking]);
 
+<<<<<<< HEAD
   const fetchBooking = async () => {
     try {
       setLoading(true);
@@ -169,6 +233,8 @@ export default function BookingTrackPage() {
     }
   };
 
+=======
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
   const fetchETA = async (bookingId: string) => {
     try {
       const response = await fetch(`/api/tracking/${bookingId}/eta`);

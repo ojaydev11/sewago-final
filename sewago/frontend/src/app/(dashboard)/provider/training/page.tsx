@@ -5,7 +5,10 @@ import { useState, useEffect } from 'react';
 
 import Link from 'next/link';
 import { 
+<<<<<<< HEAD
   AcademicCapIcon,
+=======
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
   StarIcon,
   ClockIcon,
   CheckCircleIcon,
@@ -281,7 +284,11 @@ export default function ProviderTraining() {
             course={selectedCourse}
             providerId={session.user.id}
             onClose={() => setSelectedCourse(null)}
+<<<<<<< HEAD
             onComplete={fetchTrainingData}
+=======
+            onComplete={() => fetchTrainingData(session.user.id)}
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
           />
         )}
       </div>

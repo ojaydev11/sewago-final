@@ -1,3 +1,10 @@
+<<<<<<< HEAD
+=======
+'use client';
+import 'client-only';
+
+import { performanceOptimizer } from './performance-ux';
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 
 export interface AnalyticsEvent {
   id: string;

@@ -2,11 +2,17 @@
 
 // Force dynamic rendering to prevent build-time prerendering
 export const dynamic = 'force-dynamic';
+<<<<<<< HEAD
 export const revalidate = 0;
 
 import React, { useState } from 'react';
 import { signIn, getSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+=======
+
+import React, { useState } from 'react';
+// Mock auth functions - replace with actual backend integration
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 import Link from 'next/link';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 
@@ -16,7 +22,10 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+<<<<<<< HEAD
   const router = useRouter();
+=======
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,6 +33,7 @@ export default function LoginPage() {
     setError('');
 
     try {
+<<<<<<< HEAD
       const result = await signIn('credentials', {
         email,
         password,
@@ -40,6 +50,12 @@ export default function LoginPage() {
         }
       }
     } catch (error) {
+=======
+      // Mock authentication - replace with actual backend API call
+      console.log('Login attempt:', { email, password });
+      setError('Authentication is disabled in frontend-only mode. Please integrate with backend API.');
+    } catch {
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
       setError('An error occurred. Please try again.');
     } finally {
       setIsLoading(false);

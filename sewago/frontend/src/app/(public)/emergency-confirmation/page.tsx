@@ -12,6 +12,10 @@ import {
   StarIcon
 } from '@heroicons/react/24/outline';
 import { CheckCircleIcon as CheckCircleSolid } from '@heroicons/react/24/solid';
+<<<<<<< HEAD
+=======
+import { useSafeLocalStorage } from '@/hooks/useClientOnly';
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 
 interface EmergencyBooking {
   serviceId: string;
@@ -42,6 +46,7 @@ export default function EmergencyConfirmationPage() {
   const [foundProviders, setFoundProviders] = useState<Provider[]>([]);
   const [selectedProvider, setSelectedProvider] = useState<Provider | null>(null);
   const [eta, setEta] = useState<string>('Calculating...');
+<<<<<<< HEAD
   const router = useRouter();
 
   useEffect(() => {
@@ -49,15 +54,34 @@ export default function EmergencyConfirmationPage() {
     const storedData = localStorage.getItem('emergencyBooking');
     if (storedData) {
       setEmergencyData(JSON.parse(storedData));
+=======
+  const [isClient, setIsClient] = useState(false);
+  const router = useRouter();
+  
+  // Use safe hooks
+  const [storedEmergencyData] = useSafeLocalStorage<EmergencyBooking | null>('emergencyBooking', null);
+
+  useEffect(() => {
+    setIsClient(true);
+    // Use safe localStorage data
+    if (storedEmergencyData) {
+      setEmergencyData(storedEmergencyData);
+      // Simulate the emergency service process
+      simulateEmergencyProcess();
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
     } else {
       // Redirect if no emergency data
       router.push('/');
       return;
     }
+<<<<<<< HEAD
 
     // Simulate the emergency service process
     simulateEmergencyProcess();
   }, [router]);
+=======
+  }, [storedEmergencyData, router]);
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 
   const simulateEmergencyProcess = async () => {
     // Step 1: Searching for providers
@@ -132,7 +156,17 @@ export default function EmergencyConfirmationPage() {
 
   const handleContactProvider = () => {
     // In a real app, this would initiate a call or chat
+<<<<<<< HEAD
     window.open(`tel:+9779800000001`, '_blank');
+=======
+    if (isClient) {
+      try {
+        window.open(`tel:+9779800000001`, '_blank');
+      } catch (error) {
+        console.error('Failed to open phone link:', error);
+      }
+    }
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
   };
 
   const handleTrackService = () => {

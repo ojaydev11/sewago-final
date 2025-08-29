@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // Force dynamic rendering to prevent build-time prerendering
 export const dynamic = 'force-dynamic';
 
@@ -14,6 +15,25 @@ export default async function AccountPage() {
 
   // Type assertion to include role property
   const userWithRole = user as typeof user & { role?: string };
+=======
+'use client';
+
+// Force dynamic rendering to prevent build-time prerendering
+export const dynamic = 'force-dynamic';
+
+import Link from 'next/link';
+
+export default function AccountPage() {
+  // Mock user data for frontend-only mode
+  const mockUser = {
+    name: 'Demo User',
+    email: 'demo@example.com',
+    role: 'customer'
+  };
+
+  // Use mock user data since getCurrentUser returns null in frontend mode
+  const userWithRole = mockUser as typeof mockUser & { role?: string };
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
@@ -23,7 +43,11 @@ export default async function AccountPage() {
           <div className="px-4 py-5 sm:p-6 border-b border-gray-200">
             <h1 className="text-2xl font-bold text-gray-900">My Account</h1>
             <p className="mt-1 text-sm text-gray-600">
+<<<<<<< HEAD
               Welcome back, {user.name}
+=======
+              Welcome back, {mockUser.name}
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
             </p>
           </div>
 
@@ -33,11 +57,19 @@ export default async function AccountPage() {
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
                 <label className="block text-sm font-medium text-gray-700">Name</label>
+<<<<<<< HEAD
                 <p className="mt-1 text-sm text-gray-900">{user.name}</p>
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700">Email</label>
                 <p className="mt-1 text-sm text-gray-900">{user.email}</p>
+=======
+                <p className="mt-1 text-sm text-gray-900">{mockUser.name}</p>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Email</label>
+                <p className="mt-1 text-sm text-gray-900">{mockUser.email}</p>
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700">Account Type</label>
@@ -95,7 +127,11 @@ export default async function AccountPage() {
                   <div className="flex-1 min-w-0">
                     <span className="absolute inset-0" aria-hidden="true" />
                     <p className="text-sm font-medium text-gray-900">Provider Dashboard</p>
+<<<<<<< HEAD
                     <p className="text-sm text-gray-500">Manage service requests</p>
+=======
+                    <p className="text-sm text-gray-500">Manage your services</p>
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
                   </div>
                 </Link>
               )}

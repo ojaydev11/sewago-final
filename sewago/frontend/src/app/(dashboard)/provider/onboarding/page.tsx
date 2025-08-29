@@ -1,10 +1,15 @@
 'use client';
 
+<<<<<<< HEAD
 import { useState, useEffect } from 'react';
+=======
+import ProviderOnboardingClient from './onboarding-client';
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 
 // Force dynamic rendering to prevent build-time pre-rendering
 export const dynamic = 'force-dynamic';
 
+<<<<<<< HEAD
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
@@ -85,4 +90,8 @@ export default function ProviderOnboardingPage() {
       </div>
     </div>
   );
+=======
+export default function ProviderOnboardingPage() {
+  return <ProviderOnboardingClient />;
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 }

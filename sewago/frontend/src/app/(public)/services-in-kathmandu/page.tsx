@@ -6,7 +6,11 @@ export const dynamic = "force-dynamic";
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+<<<<<<< HEAD
 import { MapPin, Star, Clock, Shield, Users, CheckCircle } from 'lucide-react';
+=======
+import { MapPin, Star, Clock, Shield, Users } from 'lucide-react';
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 import { designUtils, componentStyles } from '@/lib/design-system';
 import SchemaMarkup from '@/components/SchemaMarkup';
 
@@ -163,7 +167,11 @@ export default function ServicesInKathmanduPage() {
                     <div className='space-y-2'>
                       {service.features.map((feature, featureIndex) => (
                         <div key={featureIndex} className='flex items-center gap-2 text-sm text-white/80'>
+<<<<<<< HEAD
                           <CheckCircle className='w-4 h-4 text-accent flex-shrink-0' />
+=======
+                          <Users className='w-4 h-4 text-accent flex-shrink-0' />
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
                           <span>{feature}</span>
                         </div>
                       ))}

@@ -9,7 +9,11 @@ interface LoadingSpinnerProps {
   showText?: boolean;
 }
 
+<<<<<<< HEAD
 export default function LoadingSpinner({
+=======
+export function LoadingSpinner({
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
   size = "default",
   variant = "default",
   className,
@@ -117,3 +121,8 @@ export function ButtonSpinner({
     />
   );
 }
+<<<<<<< HEAD
+=======
+
+export default LoadingSpinner;
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245

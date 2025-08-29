@@ -6,6 +6,7 @@ import { createSocketServer } from "./socket-server";
 import { pathToFileURL } from "url";
 
 export async function bootstrap() {
+<<<<<<< HEAD
   await connectToDatabase();
 
   const server = http.createServer();
@@ -21,6 +22,37 @@ export async function bootstrap() {
     console.log(`API on http://localhost:${env.port}/api`);
     console.log(`WebSocket server ready on port ${env.port}`);
   });
+=======
+  try {
+    console.log("🚀 Starting SewaGo Backend Server...");
+    console.log(`📍 Environment: ${env.nodeEnv}`);
+    console.log(`🔌 Port: ${env.port}`);
+    
+    await connectToDatabase();
+    console.log("✅ Database connection established");
+
+    const server = http.createServer();
+    
+    // Create Socket.IO server
+    const io = createSocketServer(server);
+    console.log("✅ WebSocket server initialized");
+    
+    // Create Express app with Socket.IO instance
+    const app = createApp(io);
+    server.on('request', app);
+    console.log("✅ Express app configured");
+    
+    server.listen(env.port, () => {
+      console.log(`🎉 SewaGo API running on http://localhost:${env.port}/api`);
+      console.log(`🔥 WebSocket server ready on port ${env.port}`);
+      console.log("🛡️  Enterprise security enabled");
+    });
+  } catch (error) {
+    console.error("❌ Failed to start server:", error);
+    console.error("🔧 Please check your configuration and try again");
+    process.exit(1);
+  }
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 }
 
 const isDirectRun = (() => {

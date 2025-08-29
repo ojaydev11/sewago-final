@@ -1,9 +1,19 @@
+<<<<<<< HEAD
 
 import { Metadata } from 'next';
+=======
+'use client';
+
+import Link from 'next/link';
+import { notFound } from 'next/navigation';
+import { StarIcon, MapPinIcon, PhoneIcon, CheckIcon } from '@heroicons/react/24/outline';
+import React from 'react'; // Added missing import
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 
 // Force dynamic rendering to prevent build-time issues
 export const dynamic = "force-dynamic";
 
+<<<<<<< HEAD
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { 
@@ -14,6 +24,9 @@ import {
 } from '@heroicons/react/24/solid';
 
 const CITIES = ['kathmandu', 'lalitpur', 'bhaktapur'] as const;
+=======
+// Mock data for frontend-only mode
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 const SERVICES = [
   {
     slug: 'house-cleaning',
@@ -21,6 +34,7 @@ const SERVICES = [
     description: 'Professional house cleaning service',
     category: 'Cleaning',
     price: { min: 2000, max: 5000 },
+<<<<<<< HEAD
     features: ['Deep cleaning', 'Sanitization', 'Eco-friendly products']
   },
   {
@@ -30,12 +44,32 @@ const SERVICES = [
     category: 'Electrical',
     price: { min: 1500, max: 8000 },
     features: ['Wiring', 'Installation', 'Troubleshooting']
+=======
+    features: ['Deep cleaning', 'Eco-friendly products', 'Flexible scheduling']
+  },
+  {
+    slug: 'plumbing',
+    name: 'Plumbing',
+    description: 'Expert plumbing and repair services',
+    category: 'Repair',
+    price: { min: 1500, max: 8000 },
+    features: ['24/7 emergency service', 'Licensed plumbers', 'Warranty included']
+  },
+  {
+    slug: 'electrical',
+    name: 'Electrical',
+    description: 'Certified electrical work and repairs',
+    category: 'Electrical',
+    price: { min: 2000, max: 10000 },
+    features: ['Safety certified', 'Modern equipment', 'Code compliant']
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
   }
 ];
 
 const CITY_INFO = {
   kathmandu: {
     name: 'Kathmandu',
+<<<<<<< HEAD
     description: 'Nepal\'s capital and largest city',
     areas: ['Thamel', 'Baluwatar', 'New Baneshwor', 'Kalanki', 'Koteshwor']
   },
@@ -127,6 +161,69 @@ export default function ServiceCityPage({
   const service = SERVICES.find(s => s.slug === params.slug);
   const cityInfo = CITY_INFO[params.city as keyof typeof CITY_INFO];
   
+=======
+    description: 'Capital city with modern amenities and traditional charm',
+    areas: ['Thamel', 'Durbar Square', 'Boudhanath', 'Pashupatinath', 'Swayambhunath']
+  },
+  lalitpur: {
+    name: 'Lalitpur',
+    description: 'City of fine arts and ancient architecture',
+    areas: ['Patan Durbar Square', 'Krishna Mandir', 'Golden Temple', 'Mangal Bazaar']
+  },
+  bhaktapur: {
+    name: 'Bhaktapur',
+    description: 'Preserved medieval city with rich cultural heritage',
+    areas: ['Durbar Square', 'Nyatapola Temple', 'Dattatreya Square', 'Pottery Square']
+  }
+};
+
+export default function ServiceCityPage({ 
+  params 
+}: { 
+  params: Promise<{ slug: string; city: string }> 
+}) {
+  // Since this is a client component, we'll handle params synchronously
+  // In a real app, you might want to use useEffect to handle the async params
+  const [service, setService] = React.useState<any>(null);
+  const [cityInfo, setCityInfo] = React.useState<any>(null);
+  const [loading, setLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    const resolveParams = async () => {
+      try {
+        const resolvedParams = await params;
+        const foundService = SERVICES.find(s => s.slug === resolvedParams.slug);
+        const foundCityInfo = CITY_INFO[resolvedParams.city as keyof typeof CITY_INFO];
+        
+        if (!foundService || !foundCityInfo) {
+          notFound();
+        }
+        
+        setService(foundService);
+        setCityInfo(foundCityInfo);
+      } catch (error) {
+        console.error('Error resolving params:', error);
+        notFound();
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    resolveParams();
+  }, [params]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
   if (!service || !cityInfo) {
     notFound();
   }
@@ -189,7 +286,11 @@ export default function ServiceCityPage({
             <div className="bg-gray-100 rounded-lg p-6">
               <h3 className="text-lg font-semibold mb-4">Service Areas in {cityInfo.name}</h3>
               <div className="grid grid-cols-2 gap-2">
+<<<<<<< HEAD
                 {cityInfo.areas.map((area, index) => (
+=======
+                {cityInfo.areas.map((area: string, index: number) => (
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
                   <div key={index} className="flex items-center gap-2">
                     <CheckIcon className="w-4 h-4 text-green-600" />
                     <span className="text-sm">{area}</span>
@@ -212,7 +313,11 @@ export default function ServiceCityPage({
                 <div>
                   <h3 className="font-semibold mb-3">What's Included</h3>
                   <div className="space-y-2">
+<<<<<<< HEAD
                     {service.features.map((feature, index) => (
+=======
+                    {service.features.map((feature: string, index: number) => (
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
                       <div key={index} className="flex items-center gap-2">
                         <CheckIcon className="w-4 h-4 text-green-600" />
                         <span className="text-sm">{feature}</span>

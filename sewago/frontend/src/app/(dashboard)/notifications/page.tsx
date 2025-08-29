@@ -1,7 +1,16 @@
 'use client';
 
+<<<<<<< HEAD
 import { useEffect } from 'react';
 import { useSession } from 'next-auth/react';
+=======
+// Force dynamic rendering to prevent build-time prerendering
+export const dynamic = 'force-dynamic';
+
+import { useEffect } from 'react';
+// Mock session hook - replace with actual backend integration
+const useSession = () => ({ data: { user: { name: 'Mock User', email: 'mock@example.com' } } });
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 import { useRouter } from 'next/navigation';
 import { isNotificationsEnabled } from '@/lib/featureFlags';
 

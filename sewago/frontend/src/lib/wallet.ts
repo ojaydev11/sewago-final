@@ -144,7 +144,11 @@ export class WalletService {
 
     return {
       success: true,
+<<<<<<< HEAD
       deductedAmount,
+=======
+      deductedAmount: deductionAmount,
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
       entries: [deductionEntry]
     };
   }

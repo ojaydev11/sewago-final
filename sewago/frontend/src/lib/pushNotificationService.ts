@@ -1,3 +1,11 @@
+<<<<<<< HEAD
+=======
+'use client';
+import 'client-only';
+
+
+
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 export interface PushNotificationPayload {
   title: string;
   body: string;
@@ -93,9 +101,16 @@ export class PushNotificationService {
     }
 
     try {
+<<<<<<< HEAD
       const subscription = await this.swRegistration.pushManager.subscribe({
         userVisibleOnly: true,
         applicationServerKey: this.urlBase64ToUint8Array(process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || ''),
+=======
+      const vapidKey = this.urlBase64ToUint8Array(process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || '') as any;
+      const subscription = await this.swRegistration.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: vapidKey as any,
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
       });
 
       console.log('Push subscription created:', subscription);
@@ -157,6 +172,7 @@ export class PushNotificationService {
         body: payload.body,
         icon: payload.icon || '/icons/icon-192x192.png',
         badge: payload.badge || '/icons/icon-192x192.png',
+<<<<<<< HEAD
         image: payload.image,
         tag: payload.tag,
         data: payload.data,
@@ -164,6 +180,13 @@ export class PushNotificationService {
         requireInteraction: payload.requireInteraction || false,
         silent: payload.silent || false,
         vibrate: payload.vibrate || [100, 50, 100],
+=======
+        tag: payload.tag,
+        data: payload.data,
+
+        requireInteraction: payload.requireInteraction || false,
+        silent: payload.silent || false,
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
       });
     } catch (error) {
       console.error('Error showing notification:', error);
@@ -201,7 +224,11 @@ export class PushNotificationService {
     for (let i = 0; i < rawData.length; ++i) {
       outputArray[i] = rawData.charCodeAt(i);
     }
+<<<<<<< HEAD
     return outputArray;
+=======
+    return outputArray as Uint8Array;
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
   }
 
   /**

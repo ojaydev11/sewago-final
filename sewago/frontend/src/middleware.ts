@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getToken } from 'next-auth/jwt';
@@ -138,10 +139,28 @@ export async function middleware(request: NextRequest) {
   }
 
   return response;
+=======
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+
+export function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+  
+  // Check if demos are enabled
+  const demosEnabled = process.env.NEXT_PUBLIC_ENABLE_DEMOS === 'true';
+  
+  // Block demo routes if demos are disabled
+  if (!demosEnabled && pathname.startsWith('/demo')) {
+    return NextResponse.redirect(new URL('/', request.url));
+  }
+  
+  return NextResponse.next();
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 }
 
 export const config = {
   matcher: [
+<<<<<<< HEAD
     /*
      * Match all request paths except for the ones starting with:
      * - _next/static (static files)
@@ -154,5 +173,9 @@ export const config = {
      * - API routes
      */
     '/((?!_next/static|_next/image|_next/data|_rsc|_flight|favicon.ico|public|api|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+=======
+    // everything EXCEPT api, next assets & favicon
+    '/((?!api|_next/static|_next/image|favicon.ico).*)',
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
   ],
 };

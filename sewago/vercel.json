@@ -2,14 +2,75 @@
   "version": 2,
   "builds": [
     {
+<<<<<<< HEAD
       "src": "backend/dist/server.js",
       "use": "@vercel/node"
+=======
+      "src": "frontend/package.json",
+      "use": "@vercel/next"
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
+<<<<<<< HEAD
       "dest": "backend/dist/server.js"
     }
   ]
+=======
+      "dest": "frontend/$1"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=()"
+        }
+      ]
+    },
+    {
+      "source": "/_next/static/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    }
+  ],
+  "env": {
+    "NEXT_PUBLIC_API_URL": "https://sewago-backend.railway.app",
+    "NEXT_PUBLIC_BASE_URL": "https://sewago.vercel.app",
+    "NODE_ENV": "production"
+  },
+  "functions": {
+    "frontend/src/app/**/*.ts": {
+      "maxDuration": 30
+    }
+  },
+  "i18n": {
+    "locales": ["en", "ne"],
+    "defaultLocale": "en"
+  }
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 }

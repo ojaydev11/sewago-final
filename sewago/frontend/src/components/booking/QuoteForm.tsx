@@ -8,11 +8,21 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
+<<<<<<< HEAD
 import { Clock, MapPin, Shield, Zap, Calculator, User, Phone } from 'lucide-react';
+=======
+import { Clock, MapPin, Shield, Zap, Calculator, User, Phone, Crown, Gift } from 'lucide-react';
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 import { pricingEngine } from '@/lib/pricing';
 import { pricing as pricingConfig } from '@/config/pricing';
 import { formatNPR } from '@/lib/currency';
 import { getServicePromises } from '@/lib/service-promises';
+<<<<<<< HEAD
+=======
+import { calculateServicePrice, type SubscriptionTier } from '@/lib/subscription-pricing';
+import { TierBadge } from '@/components/subscriptions/TierBadge';
+import { BookingUpgradePrompt } from '@/components/subscriptions/UpgradePrompt';
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 
 interface QuoteFormProps {
   serviceSlug: string;
@@ -69,6 +79,16 @@ export default function QuoteForm({ serviceSlug, serviceName, basePrice, onQuote
   });
 
   const [extraBlocks, setExtraBlocks] = useState<number>(0);
+<<<<<<< HEAD
+=======
+  
+  // Mock subscription data - in real app, this would come from auth context
+  // Mock subscription data - in real app, this would come from auth context
+  const userTier = 'PLUS' as SubscriptionTier; // This would be fetched from user's subscription - mock for now
+  const isAuthenticated = true; // This would come from auth context
+  const availableCredits = 15000; // NPR 150 in paisa - from user's subscription
+  const [useCredits, setUseCredits] = useState(false);
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 
   const [priceBreakdown, setPriceBreakdown] = useState<PriceBreakdown>({
     basePrice: basePrice,
@@ -95,7 +115,32 @@ export default function QuoteForm({ serviceSlug, serviceName, basePrice, onQuote
     const bookingFee = pricingConfig.bookingFee;
     const coinsCap = Math.round((basePrice + extras + expressSurcharge + warrantyFee) * (pricingConfig.coins.maxRedeemPctOnLabour ?? 0.1));
 
+<<<<<<< HEAD
     const total = basePrice + extras + expressSurcharge + warrantyFee + bookingFee;
+=======
+    // Calculate total before subscription discounts
+    const subtotal = basePrice + extras + expressSurcharge + warrantyFee + bookingFee;
+    
+    // Apply subscription pricing if user is authenticated
+    let finalPricing = {
+      originalPrice: subtotal,
+      discountedPrice: subtotal,
+      discountAmount: 0,
+      discountPercentage: 0,
+      creditsApplied: 0,
+      finalPrice: subtotal,
+      savings: 0
+    };
+
+    if (isAuthenticated) {
+      finalPricing = calculateServicePrice(
+        subtotal,
+        userTier,
+        useCredits ? availableCredits : 0,
+        useCredits
+      );
+    }
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 
     const newBreakdown: PriceBreakdown = {
       basePrice: basePrice,
@@ -105,18 +150,35 @@ export default function QuoteForm({ serviceSlug, serviceName, basePrice, onQuote
       warrantyFee,
       bookingFee,
       coinsCap,
+<<<<<<< HEAD
       total
     };
+=======
+      total: finalPricing.finalPrice,
+      // Add subscription-specific fields
+      subscriptionDiscount: finalPricing.discountAmount,
+      creditsUsed: finalPricing.creditsApplied,
+      originalTotal: subtotal,
+      totalSavings: finalPricing.savings
+    } as any;
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 
     setPriceBreakdown(newBreakdown);
 
     onQuoteUpdate({
       ...formData,
       ...options,
+<<<<<<< HEAD
       totalPrice: newBreakdown.total,
       breakdown: newBreakdown
     });
   }, [options, basePrice, extraBlocks, formData, onQuoteUpdate, serviceSlug]);
+=======
+      totalPrice: finalPricing.finalPrice,
+      breakdown: newBreakdown
+    });
+  }, [options, basePrice, extraBlocks, formData, onQuoteUpdate, serviceSlug, isAuthenticated, userTier, useCredits, availableCredits]);
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -281,6 +343,55 @@ export default function QuoteForm({ serviceSlug, serviceName, basePrice, onQuote
           />
         </div>
 
+<<<<<<< HEAD
+=======
+        {/* Subscription Status and Credits */}
+        {isAuthenticated && (
+          <div className="bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-lg p-4">
+            <div className="flex items-center justify-between mb-3">
+              <h4 className="font-medium text-gray-900 flex items-center gap-2">
+                <Crown className="h-4 w-4 text-purple-600" />
+                Your Subscription Benefits
+              </h4>
+              <TierBadge tier={userTier} size="sm" />
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+              {userTier !== 'FREE' && (
+                <div className="flex items-center gap-2">
+                  <Gift className="h-4 w-4 text-green-600" />
+                  <span>
+                    {userTier === 'PLUS' ? '15%' : '25%'} member discount applied
+                  </span>
+                </div>
+              )}
+              
+              {availableCredits > 0 && (
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Gift className="h-4 w-4 text-purple-600" />
+                    <span>Service Credits: {formatNPR(availableCredits)}</span>
+                  </div>
+                  <Switch
+                    checked={useCredits}
+                    onCheckedChange={setUseCredits}
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Upgrade Prompt for FREE users */}
+        {isAuthenticated && userTier === 'FREE' && (
+          <BookingUpgradePrompt 
+            currentTier={userTier}
+            estimatedSavings={(priceBreakdown as any).originalTotal || priceBreakdown.total}
+            onUpgrade={(tier) => console.log(`Upgrade to ${tier}`)}
+          />
+        )}
+
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
         {/* Price Breakdown */}
         <div className="bg-gray-50 p-4 rounded-lg space-y-3">
           <h4 className="font-medium text-gray-900">Price Breakdown</h4>
@@ -316,11 +427,64 @@ export default function QuoteForm({ serviceSlug, serviceName, basePrice, onQuote
               <span>Coins Cap (≤10%):</span>
               <span>-{formatNPR(priceBreakdown.coinsCap)}</span>
             </div>
+<<<<<<< HEAD
             <div className="border-t pt-2">
               <div className="flex justify-between font-semibold text-lg">
                 <span>Total:</span>
                 <span className="text-primary">{formatNPR(priceBreakdown.total)}</span>
               </div>
+=======
+            
+            {/* Subscription Pricing */}
+            {isAuthenticated && (priceBreakdown as any).originalTotal && (
+              <>
+                <div className="border-t pt-2">
+                  <div className="flex justify-between text-gray-700">
+                    <span>Subtotal:</span>
+                    <span>{formatNPR((priceBreakdown as any).originalTotal)}</span>
+                  </div>
+                </div>
+                
+                {(priceBreakdown as any).subscriptionDiscount > 0 && (
+                  <div className="flex justify-between text-green-600">
+                    <span className="flex items-center gap-1">
+                      <Crown className="h-3 w-3" />
+                      {userTier} Discount ({userTier === 'PLUS' ? '15%' : '25%'}):
+                    </span>
+                    <span>-{formatNPR((priceBreakdown as any).subscriptionDiscount)}</span>
+                  </div>
+                )}
+                
+                {(priceBreakdown as any).creditsUsed > 0 && (
+                  <div className="flex justify-between text-purple-600">
+                    <span className="flex items-center gap-1">
+                      <Gift className="h-3 w-3" />
+                      Service Credits Applied:
+                    </span>
+                    <span>-{formatNPR((priceBreakdown as any).creditsUsed)}</span>
+                  </div>
+                )}
+                
+                {(priceBreakdown as any).totalSavings > 0 && (
+                  <div className="flex justify-between text-green-700 bg-green-50 p-2 rounded font-medium">
+                    <span>Your Total Savings:</span>
+                    <span>-{formatNPR((priceBreakdown as any).totalSavings)}</span>
+                  </div>
+                )}
+              </>
+            )}
+            
+            <div className="border-t pt-2">
+              <div className="flex justify-between font-semibold text-lg">
+                <span>Final Total:</span>
+                <span className="text-primary">{formatNPR(priceBreakdown.total)}</span>
+              </div>
+              {isAuthenticated && (priceBreakdown as any).originalTotal && (priceBreakdown as any).originalTotal > priceBreakdown.total && (
+                <div className="text-xs text-gray-500 text-right">
+                  Regular price: <span className="line-through">{formatNPR((priceBreakdown as any).originalTotal)}</span>
+                </div>
+              )}
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
             </div>
           </div>
         </div>

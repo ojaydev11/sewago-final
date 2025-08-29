@@ -1,3 +1,30 @@
+<<<<<<< HEAD
+=======
+// Service Worker for SewaGo PWA
+// This file should not be processed by webpack during SSR to avoid 'self is not defined' errors
+
+// Universal polyfill for server environments to prevent 'self is not defined' errors
+(function() {
+  if (typeof self === 'undefined') {
+    if (typeof global !== 'undefined') {
+      global.self = global;
+      global.window = global;
+      global.document = {};
+      global.navigator = {};
+      global.location = {};
+    } else {
+      // Create minimal global context
+      var globalScope = typeof window !== 'undefined' ? window : {};
+      globalScope.self = globalScope;
+      globalScope.window = globalScope;
+      globalScope.document = globalScope.document || {};
+      globalScope.navigator = globalScope.navigator || {};
+      globalScope.location = globalScope.location || {};
+    }
+  }
+})();
+
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 const CACHE_NAME = 'sewago-v1';
 const STATIC_CACHE = 'sewago-static-v1';
 const DYNAMIC_CACHE = 'sewago-dynamic-v1';

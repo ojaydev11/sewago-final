@@ -1,5 +1,20 @@
+<<<<<<< HEAD
 import { getRequestConfig } from 'next-intl/server';
 
+=======
+// Temporarily disabled for deployment to prevent build issues
+// import { getRequestConfig } from 'next-intl/server';
+
+// Prevent this config from running during build phase
+const config = process.env.NEXT_PHASE === 'phase-production-build'
+  ? () => ({ messages: {}, locale: 'en' })
+  : () => ({ messages: {}, locale: 'en' });
+
+export default config;
+
+// Legacy code - disabled for deployment
+/*
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 export default getRequestConfig(async ({ locale }) => {
   // Handle undefined or invalid locales gracefully
   if (!locale || !['en', 'ne'].includes(locale)) {
@@ -22,6 +37,10 @@ export default getRequestConfig(async ({ locale }) => {
     };
   }
 });
+<<<<<<< HEAD
+=======
+*/
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 
 export const locales = ['en', 'ne'] as const;
 export const defaultLocale = 'en' as const;

@@ -1,3 +1,9 @@
+<<<<<<< HEAD
+=======
+'use client';
+import 'client-only';
+
+>>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 // Internationalization for SewaGo
 // Supports English (en) and Nepali (ne)
 
