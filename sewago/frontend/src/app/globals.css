@@ -6,278 +6,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Tiro+Devanagari+Nepali:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
 
+/* Custom CSS Variables */
 :root {
-  /* Nepali-Inspired Color Palette */
-  --primary-color: #DC143C;      /* Crimson Red - representing the Nepali flag */
-  --accent-color: #FF9933;       /* Saffron Yellow - representing the Nepali flag */
-  --dark-color: #003366;         /* Deep Himalayan Blue - representing the mountains */
-  --secondary-color: #8B4513;    /* Saddle Brown - representing the earth */
-  --accent-light: #FFB366;       /* Light Saffron */
-  --primary-light: #FF6B6B;      /* Light Crimson */
-  --dark-light: #0066CC;         /* Light Himalayan Blue */
-  
-  /* Typography */
-  --font-devanagari: 'Tiro Devanagari Nepali', serif;
-  --font-body: 'Poppins', sans-serif;
-  --font-heading: 'Tiro Devanagari Nepali', serif;
-  
-  /* Spacing */
-  --spacing-xs: 0.5rem;
-  --spacing-sm: 0.75rem;
-  --spacing-md: 1rem;
-  --spacing-lg: 1.5rem;
-  --spacing-xl: 2rem;
-  --spacing-2xl: 3rem;
-  --spacing-3xl: 4rem;
-  
-  /* Border Radius */
-  --radius-sm: 0.375rem;
-  --radius-md: 0.5rem;
-  --radius-lg: 0.75rem;
-  --radius-xl: 1rem;
-  --radius-2xl: 1.5rem;
-  
-  /* Shadows */
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  --primary-blue: #3b82f6;
+  --primary-purple: #8b5cf6;
+  --accent-green: #10b981;
+  --accent-yellow: #f59e0b;
+  --accent-red: #ef4444;
+  --accent-indigo: #6366f1;
 }
 
-@layer base {
-  html {
-    scroll-behavior: smooth;
-  }
-  
-  body {
-    @apply text-gray-900 font-sans antialiased;
-    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
-    background: linear-gradient(135deg, var(--dark-color), var(--primary-color));
-    min-height: 100vh;
-    font-family: var(--font-body);
-  }
-
-  /* Typography */
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-black tracking-tight;
-    font-family: var(--font-heading);
-  }
-
-  /* Focus Management */
-  *:focus-visible {
-    @apply outline-none ring-2 ring-primary ring-offset-2 ring-offset-white;
-  }
-
-  /* Reduced Motion */
-  @media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
-      animation-duration: 0.01ms !important;
-      animation-iteration-count: 1 !important;
-      transition-duration: 0.01ms !important;
-    }
-  }
-}
-
-@layer components {
-  /* Button System */
-  .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-2xl font-semibold transition-all duration-300 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
-  }
-
-  .btn-primary {
-    @apply bg-gradient-to-r from-primary to-accent text-white hover:scale-105 active:scale-95 px-8 py-4 text-base shadow-lg hover:shadow-xl hover:shadow-primary/25;
-  }
-
-  .btn-secondary {
-    @apply bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white/20 hover:border-white/40 px-6 py-3 text-base;
-  }
-
-  .btn-outline {
-    @apply border-2 border-white/30 text-white hover:bg-white/10 hover:border-white/50 px-6 py-3 text-base;
-  }
-
-  /* Glassmorphism Card System */
-  .glass-card {
-    @apply bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300;
-  }
-
-  .card {
-    @apply glass-card;
-  }
-
-  .card-elevated {
-    @apply glass-card hover:scale-105 hover:bg-white/15;
-  }
-
-  /* Section System */
-  .section {
-    @apply py-20;
-  }
-
-  .section-sm {
-    @apply py-16;
-  }
-
-  .section-lg {
-    @apply py-24;
-  }
-
-  .container {
-    @apply mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl;
-  }
-
-  /* Glass Effect */
-  .glass-effect {
-    @apply bg-white/10 backdrop-blur-md border border-white/20;
-  }
-
-  /* Modern gradient backgrounds */
-  .gradient-hero {
-    background: linear-gradient(135deg, var(--dark-color) 0%, var(--primary-color) 100%);
-  }
-
-  .gradient-accent {
-    background: linear-gradient(135deg, var(--accent-color) 0%, var(--primary-color) 100%);
-  }
-
-  .gradient-primary {
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
-  }
-
-  /* Nepali Mandala Background Pattern */
-  .nepali-mandala-bg {
-    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3Ccircle cx='30' cy='30' r='8'/%3E%3Ccircle cx='30' cy='30' r='14'/%3E%3Ccircle cx='30' cy='30' r='20'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-    background-size: 60px 60px;
-  }
-
-  /* Nepali-inspired accent elements */
-  .nepali-accent {
-    background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
-  }
-
-  .nepali-border {
-    border: 2px solid var(--accent-color);
-    border-radius: var(--radius-lg);
-  }
-}
-
-@layer utilities {
-  /* Custom Utilities */
-  .text-balance {
-    text-wrap: balance;
-  }
-
-  .scrollbar-hide {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-
-  .scrollbar-hide::-webkit-scrollbar {
-    display: none;
-  }
-
-  /* Custom Scrollbar */
-  .custom-scrollbar::-webkit-scrollbar {
-    width: 6px;
-  }
-
-  .custom-scrollbar::-webkit-scrollbar-track {
-    @apply bg-white/10 rounded-full;
-  }
-
-  .custom-scrollbar::-webkit-scrollbar-thumb {
-    @apply bg-white/30 rounded-full hover:bg-white/50;
-  }
-
-  /* Animation utilities */
-  .animate-fade-up {
-    animation: fadeUp 0.6s ease-out forwards;
-  }
-
-  .animate-slide-up {
-    animation: slideUp 0.6s ease-out forwards;
-  }
-
-  .animate-float {
-    animation: float 6s ease-in-out infinite;
-  }
-
-  .animate-pulse-glow {
-    animation: pulseGlow 2s ease-in-out infinite;
-  }
-
-  /* Nepali-specific utilities */
-  .text-devanagari {
-    font-family: var(--font-devanagari);
-  }
-
-  .text-nepali {
-    font-family: var(--font-devanagari);
-  }
-
-  .bg-nepali-primary {
-    background-color: var(--primary-color);
-  }
-
-  .bg-nepali-accent {
-    background-color: var(--accent-color);
-  }
-
-  .bg-nepali-dark {
-    background-color: var(--dark-color);
-  }
-
-  .text-nepali-primary {
-    color: var(--primary-color);
-  }
-
-  .text-nepali-accent {
-    color: var(--accent-color);
-  }
-
-  .text-nepali-dark {
-    color: var(--dark-color);
-  }
-
-  /* Text shadow utilities for better visibility */
-  .text-shadow-sm {
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
-  }
-
-  .text-shadow-md {
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
-  }
-
-  .text-shadow-lg {
-    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.8);
-  }
-}
-
-/* Keyframe animations */
-@keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
+/* Custom Animations */
 @keyframes float {
   0%, 100% {
     transform: translateY(0px);
@@ -287,7 +26,7 @@
   }
 }
 
-@keyframes pulseGlow {
+@keyframes pulse-glow {
   0%, 100% {
     opacity: 0.5;
     transform: scale(1);
@@ -298,23 +37,246 @@
   }
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-  .section {
-    @apply py-16;
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
   }
-
-  .section-lg {
-    @apply py-20;
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-@media (max-width: 480px) {
-  .section {
-    @apply py-12;
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
   }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
-  .section-lg {
-    @apply py-16;
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Animation Classes */
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.animate-slide-up {
+  animation: slide-up 0.6s ease-out forwards;
+}
+
+.animate-fade-up {
+  animation: fade-up 0.8s ease-out forwards;
+}
+
+.animate-scale-in {
+  animation: scale-in 0.5s ease-out forwards;
+}
+
+/* Glassmorphism Effects */
+.glass-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.glass-card-dark {
+  background: rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Gradient Text */
+.gradient-text {
+  background: linear-gradient(135deg, var(--primary-blue), var(--primary-purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, var(--primary-blue), var(--primary-purple));
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #2563eb, #7c3aed);
+}
+
+/* Smooth Scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Focus Styles */
+.focus-ring {
+  @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2;
+}
+
+/* Button Hover Effects */
+.btn-hover {
+  @apply transition-all duration-300 transform hover:scale-105 hover:shadow-lg;
+}
+
+.btn-hover:active {
+  @apply transform scale-95;
+}
+
+/* Card Hover Effects */
+.card-hover {
+  @apply transition-all duration-300 hover:shadow-xl hover:-translate-y-1;
+}
+
+/* Text Selection */
+::selection {
+  background: rgba(59, 130, 246, 0.2);
+  color: #1e40af;
+}
+
+/* Loading States */
+.loading-shimmer {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Responsive Typography */
+.text-responsive {
+  font-size: clamp(1rem, 2.5vw, 1.5rem);
+}
+
+.heading-responsive {
+  font-size: clamp(2rem, 5vw, 4rem);
+}
+
+/* Custom Shadows */
+.shadow-soft {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.shadow-medium {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.shadow-strong {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Hover Transitions */
+.hover-lift {
+  @apply transition-all duration-300 hover:-translate-y-2 hover:shadow-lg;
+}
+
+.hover-glow {
+  @apply transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/25;
+}
+
+/* Background Patterns */
+.bg-pattern-dots {
+  background-image: radial-gradient(circle, #e5e7eb 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.bg-pattern-grid {
+  background-image: linear-gradient(rgba(59, 130, 246, 0.1) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(59, 130, 246, 0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* Utility Classes */
+.text-balance {
+  text-wrap: balance;
+}
+
+.aspect-video {
+  aspect-ratio: 16 / 9;
+}
+
+.aspect-square {
+  aspect-ratio: 1 / 1;
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-primary: #0f172a;
+    --text-primary: #f8fafc;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  .border {
+    border-width: 2px;
+  }
+  
+  .text-gray-600 {
+    color: #374151;
+  }
+  
+  .text-gray-400 {
+    color: #9ca3af;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .animate-float,
+  .animate-pulse-glow,
+  .animate-slide-up,
+  .animate-fade-up,
+  .animate-scale-in {
+    animation: none;
   }
 }

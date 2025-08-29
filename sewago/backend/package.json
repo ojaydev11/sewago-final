@@ -7,14 +7,6 @@
   },
   "scripts": {
     "dev": "tsx watch src/server.ts",
-<<<<<<< HEAD
-    "build": "tsc -p .",
-    "start": "node dist/server.js",
-    "dev:test": "cross-env NODE_ENV=test PORT=4000 tsx src/server.ts",
-    "lint": "eslint . --ext .ts",
-    "test": "vitest run",
-    "health": "curl -sS http://localhost:${PORT:-8001}/api/health || true"
-=======
     "build": "node build-force.js",
     "build:ts": "tsc -p . --noEmitOnError false",
     "build:dev": "tsx src/server.ts",
@@ -34,7 +26,6 @@
     "test:integration": "node test-system-integration.js",
     "test:performance": "artillery run tests/performance/scenarios.yml",
     "test:p0": "node test-p0-features.js"
->>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
   },
   "keywords": [],
   "author": "",
@@ -61,16 +52,10 @@
     "morgan": "^1.10.1",
     "multer": "^2.0.2",
     "prom-client": "^15.1.3",
-<<<<<<< HEAD
-    "socket.io": "^4.8.1",
-    "uuid": "^11.1.0",
-    "xss-clean": "^0.1.4"
-=======
     "redis": "^5.8.2",
     "socket.io": "^4.8.1",
     "uuid": "^11.1.0",
     "zod": "^3.23.8"
->>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.6.4",
@@ -88,10 +73,7 @@
     "concurrently": "^9.2.0",
     "cross-env": "^7.0.3",
     "eslint": "^9.33.0",
-<<<<<<< HEAD
-=======
     "eslint-plugin-security": "^3.0.1",
->>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
     "jsdom": "^26.1.0",
     "mongodb-memory-server": "^10.2.0",
     "supertest": "^7.1.4",

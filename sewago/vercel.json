@@ -2,23 +2,13 @@
   "version": 2,
   "builds": [
     {
-<<<<<<< HEAD
-      "src": "backend/dist/server.js",
-      "use": "@vercel/node"
-=======
       "src": "frontend/package.json",
       "use": "@vercel/next"
->>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-<<<<<<< HEAD
-      "dest": "backend/dist/server.js"
-    }
-  ]
-=======
       "dest": "frontend/$1"
     }
   ],
@@ -72,5 +62,4 @@
     "locales": ["en", "ne"],
     "defaultLocale": "en"
   }
->>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 }

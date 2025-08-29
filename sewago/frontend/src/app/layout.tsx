@@ -1,9 +1,4 @@
-<<<<<<< HEAD
 import type { Metadata } from 'next';
-
-// Force dynamic rendering to prevent build-time issues
-export const dynamic = "force-dynamic";
-
 import { Inter } from 'next/font/google';
 import { Suspense } from 'react';
 import './globals.css';
@@ -11,27 +6,19 @@ import './globals.css';
 import Analytics from '@/components/Analytics';
 import CookieConsent from '@/components/CookieConsent';
 import EmergencyServiceButton from '@/components/EmergencyServiceButton';
-import { AuthProvider } from '@/providers/auth';
+import { AuthProvider } from '@/contexts/AuthContext';
 import { ReactQueryProvider } from '@/providers/react-query';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
+import { Toaster } from 'react-hot-toast';
 
-=======
-import 'server-only';
-import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
-import './globals.css';
+// Force dynamic rendering to prevent build-time issues
+export const dynamic = "force-dynamic";
 
->>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 const inter = Inter({ subsets: ['latin'] });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://sewago-final.vercel.app';
+const siteUrl = (process.env as any).NEXT_PUBLIC_SITE_URL || 'https://sewago-final.vercel.app';
 
-<<<<<<< HEAD
-// Force dynamic rendering to prevent build-time prerendering issues
-
-=======
->>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 export async function generateMetadata(): Promise<Metadata> {
   return {
     title: 'SewaGo - Local Services in Nepal',
@@ -93,40 +80,29 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-<<<<<<< HEAD
 // Prevent static generation - return empty array to force dynamic rendering
 export async function generateStaticParams() {
   return [];
 }
 
-=======
->>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 export default async function RootLayout({
   children,
-  params
+  params,
 }: {
   children: React.ReactNode;
-<<<<<<< HEAD
-  params: { locale?: string };
+  params: { locale: string };
 }) {
-  // Handle missing locale gracefully
-  const locale = params?.locale || 'en';
   const messages = await getMessages();
-=======
-  params: Promise<{ locale?: string }>;
-}) {
-  // Handle missing locale gracefully
-  const resolvedParams = await params;
-  const locale = resolvedParams?.locale || 'en';
->>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
 
   return (
-    <html lang={locale}>
+    <html lang="en" suppressHydrationWarning>
       <head>
-        {/* Preconnect to external domains for performance */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link rel="preconnect" href="https://www.googletagmanager.com" />
+        {/* Character encoding and language */}
+        <meta charSet="utf-8" />
+        <meta name="language" content="en" />
+        <meta name="geo.region" content="NP" />
+        <meta name="geo.country" content="Nepal" />
+        <meta name="geo.placename" content="Kathmandu" />
         
         {/* DNS prefetch for performance */}
         <link rel="dns-prefetch" href="//fonts.googleapis.com" />
@@ -150,8 +126,6 @@ export default async function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         
-<<<<<<< HEAD
-=======
         {/* Enhanced accessibility and performance */}
         <meta name="color-scheme" content="dark light" />
         <meta name="supported-color-schemes" content="dark light" />
@@ -163,7 +137,6 @@ export default async function RootLayout({
         <meta httpEquiv="X-XSS-Protection" content="1; mode=block" />
         <meta name="referrer" content="strict-origin-when-cross-origin" />
         
->>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
         {/* Structured data for SEO */}
         <script
           type="application/ld+json"
@@ -192,12 +165,11 @@ export default async function RootLayout({
           }}
         />
       </head>
-<<<<<<< HEAD
-      <body className={inter.className}>
+      <body className={inter.className} suppressHydrationWarning>
         {/* Google Analytics - only in production */}
         {process.env.NODE_ENV === 'production' && (
           <Suspense fallback={null}>
-            <Analytics measurementId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || 'G-XXXXXXXXXX'} />
+            <Analytics measurementId={(process.env as any).NEXT_PUBLIC_GA_MEASUREMENT_ID || 'G-XXXXXXXXXX'} />
           </Suspense>
         )}
         
@@ -213,15 +185,35 @@ export default async function RootLayout({
               
               {/* Cookie Consent for GDPR compliance */}
               <CookieConsent />
+              
+              {/* Toast notifications */}
+              <Toaster 
+                position="top-right"
+                toastOptions={{
+                  duration: 4000,
+                  style: {
+                    background: '#363636',
+                    color: '#fff',
+                  },
+                  success: {
+                    duration: 3000,
+                    iconTheme: {
+                      primary: '#10b981',
+                      secondary: '#fff',
+                    },
+                  },
+                  error: {
+                    duration: 5000,
+                    iconTheme: {
+                      primary: '#ef4444',
+                      secondary: '#fff',
+                    },
+                  },
+                }}
+              />
             </ReactQueryProvider>
           </AuthProvider>
         </NextIntlClientProvider>
-=======
-      <body className={inter.className} suppressHydrationWarning>
-        <main className="min-h-screen bg-gray-50">
-          {children}
-        </main>
->>>>>>> d7ae416fad47e198a4cbb3bc4d0928f6cb7c7245
       </body>
     </html>
   );
